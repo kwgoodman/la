@@ -1,5 +1,7 @@
 2009-09-24 Keith
 
+    * __init__.py: Remove deflarry from namespace created when you import la.
+
     * initial svn import of la package.
 
 
