@@ -386,26 +386,7 @@ def covMissing(R):
 
     C = (R * R.T) / normalization
 
-    return C 
-    
-# Utility function ---------------------------------------------------------
-
-# TODO: replace nanmedian below with nanfunc.namedian
-def nanmedian(x, axis=0):
-    "Median along axis of matrix ignoring NaNs."
-    if axis == 1:
-        x = x.T
-    nc = x.shape[1]    
-    mx = mp.nan * mp.ones((1, nc))    
-    for i in xrange(nc):
-        idx = mp.where(~mp.isnan(x[:,i]).A)[0]
-        if len(idx) > 1:
-            mx[0,i] = mp.median(x[idx,i].A)
-        elif len(idx) == 1:
-            mx[0,i] = x[idx,i]         
-    if axis == 1:
-        mx = mx.T
-    return mx   
+    return C   
 
 # NaN functions -------------------------------------------------------------
 

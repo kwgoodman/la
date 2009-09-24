@@ -1,5 +1,9 @@
 2009-09-24 Keith
 
+    * afunc.py(nanmedian): There were two nanmedian functions: one that used
+      numpy matrices and one taken from scipy that uses numpy arrays. I
+      deleted the matrx version.
+
     * svn_export.py(svn_export): Fixed typo in path.
 
     * svn_export.py: Added a module that exports the la package from svn and
