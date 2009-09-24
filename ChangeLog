@@ -1,5 +1,8 @@
 2009-09-24 Keith
 
+    * svn_export.py: Added a module that exports the la package from svn and
+      tar and bz2 it.
+
     * __init__.py: Remove deflarry from namespace created when you import la.
 
     * initial svn import of la package.
