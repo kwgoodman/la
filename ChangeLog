@@ -1,5 +1,7 @@
 2009-09-24 Keith
 
+    * svn_export.py(svn_export): Fixed typo in path.
+
     * svn_export.py: Added a module that exports the la package from svn and
       tar and bz2 it.
 

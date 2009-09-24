@@ -10,7 +10,7 @@ except:
     print 'Cannot import pysvn'    
 
 
-def svn_export(svnrepos='file:///ba/svn/la',
+def svn_export(svnrepos='file:///ba/svn/la/trunk/',
                dirroot='/ba/send',
                packagename='la'):
     """
