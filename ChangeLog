@@ -1,3 +1,9 @@
+2009-09-29 Keith
+
+    * core/deflarry.py: Made it possible to subclass larry without having it
+      revert back to a regular larry when certain methods are called. I did
+      that by changing larry(x, label) to type(self)(x, label) in many places.
+
 2009-09-24 Keith
 
     * afunc.py(nanmedian): There were two nanmedian functions: one that used

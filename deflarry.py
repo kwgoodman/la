@@ -245,7 +245,7 @@ class larry(object):
         if isinstance(other, larry):       
             x, y, label = self.__align(other)
             x += y
-            return larry(x, label)
+            return type(self)(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             y = self.copy()
             y.x += other
@@ -258,7 +258,7 @@ class larry(object):
         if isinstance(other, larry):
             x, y, label = self.__align(other)        
             x -= y
-            return larry(x, label)
+            return type(self)(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             y = self.copy()
             y.x -= other
@@ -272,7 +272,7 @@ class larry(object):
         if isinstance(other, larry):
             x, y, label = self.__align(other)        
             x /= y
-            return larry(x, label)
+            return type(self)(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             y = self.copy()
             y.x /= other
@@ -283,7 +283,7 @@ class larry(object):
         if isinstance(other, larry):
             x, y, label = self.__align(other)        
             x = x / y
-            return larry(x, label)
+            return type(self)(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             y = self.copy()
             y.x = other / y.x
@@ -294,7 +294,7 @@ class larry(object):
         if isinstance(other, larry):
             x, y, label = self.__align(other)
             np.multiply(x, y, x)
-            return larry(x, label)
+            return type(self)(x, label)
         if np.isscalar(other):
             y = self.copy()
             y.x *= other
@@ -512,7 +512,7 @@ class larry(object):
             else:    
                 label = self.copylabel()
                 label.pop(axis)
-                return larry(x, label)      
+                return type(self)(x, label)      
         elif axis is None:
             return op(self.x, axis)
         else:
@@ -538,7 +538,7 @@ class larry(object):
         label = self.copylabel()
         label[1] = [label[1][-1]]
         x = np.asarray(lastrank(np.asmatrix(self.x)))
-        return larry(x, label)
+        return type(self)(x, label)
         
     def lastrank_decay(self, decay):
         """Exponentially decayed rank of elements in last column, ignoring NaNs.
@@ -567,7 +567,7 @@ class larry(object):
         label = self.copylabel()
         label[1] = [label[1][-1]]
         x = np.asarray(lastrank_decay(np.asmatrix(self.x), decay))
-        return larry(x, label)                                 
+        return type(self)(x, label)                                 
         
     # Comparision ------------------------------------------------------------                                              
         
@@ -623,7 +623,7 @@ class larry(object):
                 x = x >= y                              
             else:
                 raise ValueError, 'Unknown comparison operator'              
-            return larry(x, label)
+            return type(self)(x, label)
         else:
             raise TypeError, 'Input must be scalar, numpy matrix, or larry.'
 
@@ -715,7 +715,7 @@ class larry(object):
             raise IndexError, msg        
         if np.isscalar(x):
             return x                                
-        return larry(x, label)
+        return type(self)(x, label)
         
     def __setitem__(self, index, value):
         if isinstance(index, larry):
@@ -1258,7 +1258,7 @@ class larry(object):
         x[index1] = self.x[index2]
         lab = self.copylabel()
         lab[axis] = label
-        return larry(x, lab)
+        return type(self)(x, lab)
         
     def morph_like(self, lar):
         """Morph to line up with the specified larry.
@@ -1352,7 +1352,7 @@ class larry(object):
         for i in idx:
             label.append(self.label[i])    
         x = self.x.squeeze()
-        return larry(x, label)
+        return type(self)(x, label)
         
     def pull(self, name, axis):
         """Pull out the values for a given label name along a specified axis.
@@ -1394,7 +1394,7 @@ class larry(object):
         x = self.x[index]
         if x.shape == (1,):
             return x[0]
-        return larry(x, label)
+        return type(self)(x, label)
 
     def lag(self, nlag, axis=-1):
         """Lag the values along the specified axis.
@@ -1529,7 +1529,7 @@ class larry(object):
     def copy(self):
         label = deepcopy(self.label)
         x = self.x.copy()
-        return larry(x, label)
+        return type(self)(x, label)
         
     def copylabel(self):
         return deepcopy(self.label)        
@@ -1550,10 +1550,10 @@ class larry(object):
     def isnan(self):
         label = self.copylabel()
         x = np.isnan(self.x)
-        return larry(x, label)                             
+        return type(self)(x, label)                             
 
     def isfinite(self):
         label = self.copylabel()
         x = np.isfinite(self.x)
-        return larry(x, label)
+        return type(self)(x, label)
         
