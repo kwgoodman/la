@@ -2,6 +2,8 @@
 
 2009-10-21 Josef (alias Carrasco)
 
+	* correct import in func 
+
     * add nosetesting via numpy, fix one import error in tests after relocation
     
     * change/deepen directory structure

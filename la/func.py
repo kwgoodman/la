@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from am.core.deflarry import larry
+from la.deflarry import larry
 
 
 def union(axis, *args):
