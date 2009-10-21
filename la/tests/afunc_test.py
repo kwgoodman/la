@@ -7,7 +7,7 @@ M.seterr(divide='ignore')
 M.seterr(invalid='ignore')
 nan = M.nan
 
-from la.test import printfail
+from test import printfail
 from la.afunc import sector_rank, sector_mean, sector_median
 from la.afunc import (movingsum, ranking_1N, movingrank, ranking_norm,
                       movingsum_forward, geometric_mean, ranking)
