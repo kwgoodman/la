@@ -1,3 +1,13 @@
+
+
+2009-10-21 Josef (alias Carrasco)
+
+    * add nosetesting via numpy, fix one import error in tests after relocation
+    
+    * change/deepen directory structure
+
+
+
 2009-09-29 Keith
 
     * core/deflarry.py: Made it possible to subclass larry without having it
