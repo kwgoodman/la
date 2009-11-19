@@ -1,5 +1,10 @@
 
 
+2009-11-18 Josef
+
+	* afunc_test.py: fix failing/incorrect tests for array version of movingsum,
+	  removed one test because q option is not available anymore
+
 2009-10-21 Josef (alias Carrasco)
 
 	* correct import in func 
