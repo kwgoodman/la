@@ -143,28 +143,33 @@ def unique_sector(sectors):
     
 # Normalize functions -------------------------------------------------------
 
-@wraptomatrix1
+@wraptoarray1
 def geometric_mean(x, axis=1, check_for_greater_than_zero=True):
     """Return the geometric mean of matrix x along axis, ignore NaNs.
     
     Raise an exception if any element of x is zero or less.
+    
+    Notes
+    -----
+    The return array has the dimension so it can be broadcasted to 
+    the original array and not the reduced dimension of np.mean 
     """
     if (x <= 0).any() and check_for_greater_than_zero:
         msg = 'All elements of x (except NaNs) must be greater than zero.'
         raise ValueError, msg
     x = x.copy()
-    m = M.isnan(x)
+    m = np.isnan(x)
     x[m] = 1.0
-    m = M.asmatrix(~m, M.float64)
+    m = np.asarray(~m, M.float64)
     m = m.sum(axis)
-    x = M.log(x).sum(axis)
+    x = np.log(x).sum(axis)
     g = 1.0/m
-    x = M.multiply(g, x)
-    x = M.exp(x)
-    idx = M.ones(x.shape)
-    idx[m == 0] = M.nan
-    x = M.multiply(x, idx)
-    return x
+    x = np.multiply(g, x)
+    x = np.exp(x)
+    idx = np.ones(x.shape)
+    idx[m == 0] = np.nan
+    x = np.multiply(x, idx)
+    return np.expand_dims(x, axis) 
 
 def movingsum(x, window, axis=-1, norm=False):
     """Moving sum optionally normalized for missing (NaN) data."""

@@ -1,6 +1,7 @@
 
 2009-11-19 Josef
 
+	* convert geometric mean to using arrays, maintain same dimension
 	* convert sector functions to using arrays
 	* add afunc sector functions to return type tests, decorate.
 	  convert sector_dummy to build an array
