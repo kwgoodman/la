@@ -937,7 +937,7 @@ class larry(object):
     def movingsum(self, window, axis=-1, norm=False):
         """Moving sum, NaNs treated as 0, optionally normalized for NaNs."""
         y = self.copy()
-        y.label[axis] = y.label[axis][window-1:]
+        #y.label[axis] = y.label[axis][window-1:]  #add dropped init obs back in
         y.x = movingsum(y.x, window, axis, norm)
         return y 
         

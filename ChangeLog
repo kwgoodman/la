@@ -1,6 +1,7 @@
 
 2009-11-19 Josef
 
+	* fix larry.movingsum tests, all tests pass again
 	* convert movingsum_forward to using arrays, add dropped rows/columns
 	  back into movingsum, correct shape in afun tests, deflarry_test for
 	  movingsum are wrong now

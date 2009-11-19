@@ -171,6 +171,7 @@ def geometric_mean(x, axis=1, check_for_greater_than_zero=True):
     x = np.multiply(x, idx)
     return np.expand_dims(x, axis) 
 
+@wraptoarray1
 def movingsum(x, window, axis=-1, norm=False):
     """Moving sum optionally normalized for missing (NaN) data."""
     if window < 1:  

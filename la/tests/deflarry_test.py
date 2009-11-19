@@ -2195,14 +2195,20 @@ class Test_calc(unittest.TestCase):
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l4), 'Reference found')
 
+
     def test_movingsum_1(self):
         "larry.movingsum_1"
         t = np.array([[ 4.0, 5.0, 4.0],
                       [ 5.0, 4.0, 3.0],
                       [ 2.0, 2.0, 2.0]])
-        label = [[0, 1, 2], [1, 2, 3]]
+        t = np.array([[ nan,   4.0,   5.0,   4.0],
+                      [ nan,   5.0,   4.0,   3.0],
+                      [ nan,   2.0,   2.0,   2.0]])
+        label = [[0, 1, 2], [0, 1, 2, 3]]
         p = self.l1.movingsum(2)
-        msg = printfail(t, p.x, 'x')       
+        msg = printfail(t, p.x, 'x')    
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode        
         self.assert_((abs(t - p.x) < self.tol).all(), msg)
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l1), 'Reference found')
@@ -2212,9 +2218,14 @@ class Test_calc(unittest.TestCase):
         t = np.array([[ 4.0, 5.0, 4.0],
                       [ 5.0, 4.0, 3.0],
                       [ 2.0, 2.0, 2.0]])
-        label = [[0, 1, 2], [1, 2, 3]]
+        t = np.array([[ nan,   4.,   5.,   4.],
+                      [ nan,   5.,   4.,   3.],
+                      [ nan,   2.,   2.,   2.]])
+        label = [[0, 1, 2], [0, 1, 2, 3]]
         p = self.l1.movingsum(2, norm=True)
-        msg = printfail(t, p.x, 'x')       
+        msg = printfail(t, p.x, 'x')    
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode        
         self.assert_((abs(t - p.x) < self.tol).all(), msg)
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l1), 'Reference found')            
@@ -2223,9 +2234,14 @@ class Test_calc(unittest.TestCase):
         "larry.movingsum_3"
         t = np.array([[ 5.0, 4.0, 5.0, 2.0],
                       [ 4.0, 3.0, 3.0, 2.0]])
-        label = [[1, 2], [0, 1, 2, 3]]
+        t = np.array([[ nan,  nan,  nan,  nan],
+                       [  5.,   4.,   5.,   2.],
+                       [  4.,   3.,   3.,   2.]])
+        label = [[0, 1, 2], [0, 1, 2, 3]]
         p = self.l1.movingsum(2, axis=0)
-        msg = printfail(t, p.x, 'x')       
+        msg = printfail(t, p.x, 'x')    
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode        
         self.assert_((abs(t - p.x) < self.tol).all(), msg)
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l1), 'Reference found')
@@ -2237,7 +2253,9 @@ class Test_calc(unittest.TestCase):
                       [ 1.0, 1.0, 1.0, 1.0]])
         label = [[0, 1, 2], [0, 1, 2, 3]]
         p = self.l1.movingsum(1, axis=0)
-        msg = printfail(t, p.x, 'x')       
+        msg = printfail(t, p.x, 'x')    
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode   
         self.assert_((abs(t - p.x) < self.tol).all(), msg)
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l1), 'Reference found')
@@ -2246,8 +2264,11 @@ class Test_calc(unittest.TestCase):
         "larry.movingsum_5"
         t = np.array([[ 4.0, 2.0, 1.0],
                       [ nan, nan, 1.0],
-                      [ 2.0, 1.0, 1.0]])                      
-        label = [[0, 1, 2], [1, 2, 3]]
+                      [ 2.0, 1.0, 1.0]])  
+        t = np.array([[ nan, 4.0, 2.0, 1.0],
+                      [ nan, nan, nan, 1.0],
+                      [ nan, 2.0, 1.0, 1.0]])                       
+        label = [[0, 1, 2], [0, 1, 2, 3]]
         p = self.l2.movingsum(2)
         msg = printfail(t, p.x, 'x') 
         t[np.isnan(t)] = self.nancode
@@ -2258,10 +2279,10 @@ class Test_calc(unittest.TestCase):
         
     def test_movingsum_6(self):
         "larry.movingsum_6"
-        t = np.array([[ 4.0, 4.0, 2.0],
-                      [ nan, nan, 2.0],
-                      [ 2.0, 2.0, 2.0]]) 
-        label = [[0, 1, 2], [1, 2, 3]]
+        t = np.array([[ nan, 4.0, 4.0, 2.0],
+                      [ nan, nan, nan, 2.0],
+                      [ nan, 2.0, 2.0, 2.0]]) 
+        label = [[0, 1, 2], [0, 1, 2, 3]]
         p = self.l2.movingsum(2, norm=True)
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
@@ -2272,9 +2293,10 @@ class Test_calc(unittest.TestCase):
 
     def test_movingsum_7(self):
         "larry.movingsum_7"
-        t = np.array([[ 2.0, 2.0, nan, 2.0],
+        t = np.array([[ nan, nan, nan, nan],
+                      [ 2.0, 2.0, nan, 2.0],
                       [ 1.0, 1.0, nan, 2.0]])                                            
-        label = [[1, 2], [0, 1, 2, 3]]
+        label = [[0, 1, 2], [0, 1, 2, 3]]
         p = self.l2.movingsum(2, axis=0)
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
@@ -2299,10 +2321,12 @@ class Test_calc(unittest.TestCase):
         
     def test_movingsum_9(self):
         "larry.movingsum_9"
-        t = np.array([ 3.0, 5.0, 7.0, 9.0])
-        label = [[1, 2, 3, 4]]
+        t = np.array([nan, 3.0, 5.0, 7.0, 9.0])
+        label = [[0, 1, 2, 3, 4]]
         p = self.l3.movingsum(2, axis=0)
-        msg = printfail(t, p.x, 'x')            
+        msg = printfail(t, p.x, 'x')    
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode          
         self.assert_((abs(t - p.x) < self.tol).all(), msg)
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l3), 'Reference found')        
