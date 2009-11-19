@@ -1,6 +1,8 @@
 
 2009-11-19 Josef
 
+	* convert quantile to use arrays internally, switch decorator, 
+	  additional minor changes
 	* convert covMissing to use arrays internally, switch decorator
 	* decorate remaining afunc functions with wrong return type,
 	  add decorator wraptoarray1, now all return type tests pass,

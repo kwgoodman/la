@@ -382,37 +382,44 @@ def fillforward_partially(x, n):
         recent[idx] = y[idx,i]
     return y #np.asmatrix(y) 
 
-@wraptomatrix1    
+@wraptoarray1    
 def quantile(x, q):
     """
     Convert elements in each column to integers between 1 and q then normalize.
     
     Result is normalized to -1, 1.
+    
+    Parameters
+    ----------
+    x : array_like, 1d or 2d
+    q : int
+        quantile between 2 and number of elements in first axis (x.shape[0])
     """
     assert q > 1, 'q must be greater than one.'
     assert q <= x.shape[0], 'q must be less than or equal to the number of rows in x.'
-    y = M.nan * M.asarray(x)
+    y = np.nan * np.asarray(x)
     for i in xrange(x.shape[1]):
         xi = x[:,i]
-        idx = M.where(M.isfinite(xi).A)[0]
+        idx = np.where(np.isfinite(xi))[0]
         xi = xi[idx,:]
-        idx = M.asarray(M.asmatrix(idx).T)
+        #idx = np.asarray(idx[:,None])
         nx = idx.size
         if nx:
             jdx = xi.argsort(axis=0).argsort(axis=0)
-            mdx = M.nan * jdx
-            kdx = 1.0 * (nx - 1) / (q) * M.ones((q,1))
+            mdx = np.nan * jdx
+            kdx = 1.0 * (nx - 1) / (q) * np.ones((q,1))
             kdx = kdx.cumsum(axis=0)
-            kdx = M.concatenate((M.matrix(-1), kdx), 0)
+            kdx = np.concatenate((-1*np.ones((1,kdx.shape[1])), kdx), 0)
             kdx[-1,0] = nx
             for j in xrange(1, q+1):
                 mdx[(jdx > kdx[j-1]) & (jdx <= kdx[j]),:] = j
             y[idx,i] = mdx
-    y = M.asmatrix(y)
+    y = np.asarray(y)
     y = y - 1.0
     y = 1.0 * y / (q - 1.0)
     y = 2.0 * (y - 0.5)
     return y 
+
     
 # Calc functions -----------------------------------------------------------
 
