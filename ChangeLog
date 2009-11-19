@@ -2,6 +2,11 @@
 
 2009-11-18 Josef
 
+	* la.__init__.py: del Tester after use
+
+
+2009-11-18 Josef
+
 	* afunc_test.py: fix failing/incorrect tests for array version of movingsum,
 	  removed one test because q option is not available anymore
 
