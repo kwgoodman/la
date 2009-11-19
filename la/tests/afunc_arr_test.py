@@ -237,16 +237,16 @@ class Test_ranking_1N(unittest.TestCase):
         
     def test_ranking_1N_4(self):
         """afunc.ranking_1N #4""" 
-        x = np.array([3.0, 1.0, 2.0]).T
-        theory = np.array([2, 0, 1]).T
+        x = np.array([3.0, 1.0, 2.0])[:,None]
+        theory = np.array([2, 0, 1])[:,None]
         practice = ranking_1N(x, axis=0)
         msg = printfail(theory, practice)    
         self.assert_((theory == practice).all(), msg) 
 
     def test_ranking_1N_5(self):
         """afunc.ranking_1N #5"""  
-        x = np.array([3.0, 1.0, 2.0]).T
-        theory = np.array([0, 0, 0]).T
+        x = np.array([3.0, 1.0, 2.0])[:,None]
+        theory = np.array([0, 0, 0])[:,None]
         practice = ranking_1N(x, axis=1)
         msg = printfail(theory, practice)    
         self.assert_((theory == practice).all(), msg)        
@@ -304,16 +304,16 @@ class Test_ranking_norm(unittest.TestCase):
         
     def test_ranking_norm_4(self):
         """afunc.ranking_norm #4"""  
-        x = np.array([3.0, 1.0, 2.0]).T
-        theory = np.array([1.0,-1.0, 0.0]).T
+        x = np.array([3.0, 1.0, 2.0])[:,None]
+        theory = np.array([1.0,-1.0, 0.0])[:,None]
         practice = ranking_norm(x, axis=0)
         msg = printfail(theory, practice)    
         self.assert_((theory == practice).all(), msg) 
 
     def test_ranking_norm_5(self):
         """afunc.ranking_norm #5"""  
-        x = np.array([3.0, 1.0, 2.0]).T
-        theory = np.array([0.0, 0.0, 0.0]).T
+        x = np.array([3.0, 1.0, 2.0])[:,None]
+        theory = np.array([0.0, 0.0, 0.0])[:,None]
         practice = ranking_norm(x, axis=1)
         msg = printfail(theory, practice)    
         self.assert_((theory == practice).all(), msg)

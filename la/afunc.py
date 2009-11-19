@@ -101,6 +101,7 @@ def unique_sector(sectors):
     
 # Normalize functions -------------------------------------------------------
 
+@wraptomatrix1
 def geometric_mean(x, axis=1, check_for_greater_than_zero=True):
     """Return the geometric mean of matrix x along axis, ignore NaNs.
     
@@ -185,7 +186,8 @@ def movingsum_old(x, window, axis=1, norm=False, q=1.0):
     if axis == 0:
         ms = ms.T  
     return ms    
-    
+
+@wraptomatrix1    
 def movingsum_forward(x, window, skip=0, axis=1, norm=False):
     """Movingsum in the forward direction skipping skip dates."""
     if axis == 0:
@@ -201,7 +203,8 @@ def movingsum_forward(x, window, skip=0, axis=1, norm=False):
     if axis == 0:
         ms = ms.T
     return ms
-    
+
+@wraptomatrix1  
 def movingrank(x, window, axis=1):
     """Moving rank (normalized to -1 and 1) of a given window along axis.
 
@@ -250,6 +253,7 @@ def lastrank_decay(x, decay):
     r[~M.isfinite(x[:,-1])] = M.nan
     return r       
 
+@wraptomatrix1
 def ranking_1N(x, axis=0):
     """Rank elements of matrix x, ignore NaNs."""
     if axis not in (0,1):
@@ -284,7 +288,8 @@ def ranking_1N(x, axis=0):
         if axis == 1:
             z = z.T    
     return z
-    
+
+@wraptomatrix1    
 def ranking_norm(x, axis=0):
     """Same as ranking_1N but normalize range to -1 to 1."""  
     xnanidx = M.isnan(x) 

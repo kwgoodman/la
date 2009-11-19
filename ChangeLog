@@ -1,4 +1,12 @@
 
+
+
+2009-11-18 Josef
+
+	* apply @wraptomatrix1 to remaining afunc functions, now all tests pass for
+	  array and for matrices, rename afunc_arr_test.py so it is picked up by nose.
+	  some larry functions still convert to matrices
+
 2009-11-18 Josef
 
 	* add decorator module (from pypi), add decorator to convert to matrix,

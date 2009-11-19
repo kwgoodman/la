@@ -945,8 +945,9 @@ class larry(object):
         """Movingsum in the forward direction skipping skip dates"""
         self._2donly()        
         y = self.copy()
-        y.x = movingsum_forward(np.asmatrix(y.x), window, skip, axis, norm)
-        y.x = np.asarray(y.x)
+        #y.x = movingsum_forward(np.asmatrix(y.x), window, skip, axis, norm)
+        #y.x = np.asarray(y.x)
+        y.x = movingsum_forward(y.x, window, skip, axis, norm)
         return y
                          
     def ranking(self, axis=0):
@@ -969,7 +970,8 @@ class larry(object):
         """
         self._2donly()
         y = self.copy()
-        y.x = np.asarray(movingrank(np.asmatrix(y.x), window, axis))
+        #y.x = np.asarray(movingrank(np.asmatrix(y.x), window, axis))
+        y.x = movingrank(y.x, window, axis)
         return y
         
     def quantile(self, q):
