@@ -1,6 +1,9 @@
 
 2009-11-19 Josef
 
+	* convert movingrank and lastrank to use arrays
+	  API break: lastrank returns 1d not 2d column vector
+	  1 test, larry.lastrank_1, fails, maybe change back to 2d
 	* fix larry.movingsum tests, all tests pass again
 	* convert movingsum_forward to using arrays, add dropped rows/columns
 	  back into movingsum, correct shape in afun tests, deflarry_test for

@@ -258,7 +258,7 @@ def movingsum_forward(x, window, skip=0, axis=1, norm=False):
         ms = ms.T
     return ms
 
-@wraptomatrix1  
+@wraptoarray1  
 def movingrank(x, window, axis=1):
     """Moving rank (normalized to -1 and 1) of a given window along axis.
 
@@ -273,22 +273,24 @@ def movingrank(x, window, axis=1):
     if axis == 0:
         x = x.T
     nr, nt = x.shape
-    mr = M.nan * M.zeros((nr,nt))        
+    mr = np.nan * np.zeros((nr,nt))        
     for i in xrange(window-1,nt): 
-        mr[:,i] = lastrank(x[:,(i-window+1):(i+1)])        
+        mr[:,i] = lastrank(x[:,(i-window+1):(i+1)])  #check i:i+1      
     if axis == 0:
         mr = mr.T
     return mr
-    
+
+@wraptoarray1    
 def lastrank(x):
     "Rank of last column only"
-    g = (x[:,-1] > x).sum(1)
-    e = (x[:,-1] == x).sum(1)
-    n = M.isfinite(x).sum(1)
+    g = (x[:,-1:] > x).sum(1)
+    e = (x[:,-1:] == x).sum(1)
+    n = np.isfinite(x).sum(1)#[:,None]
     r = (g + g + e - 1.0) / 2.0
     r = r / (n - 1.0)
     r = 2.0 * (r - 0.5)
-    r[~M.isfinite(x[:,-1])] = M.nan
+    r[~np.isfinite(x[:,-1])] = np.nan
+    #raise ValueError
     return r
 
 @wraptomatrix1    
