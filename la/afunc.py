@@ -52,7 +52,7 @@ def wraptoarray1(func, *args, **kwds):
 
 # Sector functions ----------------------------------------------------------
 
-@wraptomatrix1
+@wraptoarray1
 def sector_rank(x, sectors):
     """Rank normalize x within each sector to be between -1 and 1."""
   
@@ -60,16 +60,16 @@ def sector_rank(x, sectors):
     usectors = unique_sector(sectors)
     
     # Convert sectors to a numpy array
-    sectors = M.asarray(sectors, dtype=object)
+    sectors = np.asarray(sectors, dtype=object)
   
     # Loop through unique sectors and normalize
-    xnorm = M.nan * M.zeros(x.shape)
+    xnorm = np.nan * np.zeros(x.shape)
     for sec in usectors:
         idx = sectors == sec
         xnorm[idx,:] = ranking(x[idx,:], axis=0)    
     return xnorm
 
-@wraptomatrix1
+@wraptoarray1
 def sector_mean(x, sectors):
     """Sector mean."""
 
@@ -77,15 +77,16 @@ def sector_mean(x, sectors):
     usectors = unique_sector(sectors)
     
     # Convert sectors to a numpy array
-    sectors = M.asarray(sectors, dtype=object)    
+    sectors = np.asarray(sectors, dtype=object)    
   
     # Loop through unique sectors and normalize
-    xmean = M.nan * M.zeros(x.shape)
+    # this will be slow if there are many sectors
+    xmean = np.nan * np.zeros(x.shape)
     for sec in usectors:
         idx = sectors == sec
         if idx.sum() > 0:
-            norm = 1.0 * (~M.isnan(x[idx,:])).sum(0)
-            xmean[idx,:] = M.nansum(x[idx,:], axis=0) / norm
+            norm = 1.0 * (~np.isnan(x[idx,:])).sum(0)
+            xmean[idx,:] = np.nansum(x[idx,:], axis=0) / norm
     return xmean
 
 @wraptomatrix1  
@@ -96,10 +97,10 @@ def sector_median(x, sectors):
     usectors = unique_sector(sectors)
     
     # Convert sectors to a numpy array
-    sectors = M.asarray(sectors, dtype=object)    
+    sectors = np.asarray(sectors, dtype=object)    
   
     # Loop through unique sectors and normalize
-    xmedian = M.nan * M.zeros(x.shape)
+    xmedian = np.nan * np.zeros(x.shape)
     for sec in usectors:
         idx = sectors == sec
         if idx.sum() > 0:

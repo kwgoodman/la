@@ -1,4 +1,4 @@
-
+# these are tests for use with nose using generators, not for unittest.
 
 import numpy as np
 from numpy.testing import assert_  # could look for nose
