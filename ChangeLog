@@ -1,5 +1,11 @@
 
 
+
+2009-11-18 Josef
+
+	* add afunc_arr_tes_.py: raw translation of afunc_test for arrays instead
+	  of matrices, 30 out of 54 tests with error or failures
+
 2009-11-18 Josef
 
 	* la.__init__.py: del Tester after use
