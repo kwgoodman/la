@@ -14,7 +14,7 @@ def wraptomatrix1(func, *args, **kwds):
     for use as a decorator
     '''
     #new = asarray(a)
-    print args
+    #print args
     a = args[0]
     new = np.asmatrix(a)
     wrap = getattr(a, "__array_prepare__", new.__array_wrap__)
@@ -320,7 +320,7 @@ def ranking(x, axis=0):
     
     Uses a brute force method---slow.
     """
-    print x
+
     where = M.where
     if axis == 1:
         x = x.T
@@ -357,7 +357,8 @@ def fillforward_partially(x, n):
         count[idx] = i
         recent[idx] = y[idx,i]
     return np.asmatrix(y) 
-    
+
+@wraptomatrix1    
 def quantile(x, q):
     """
     Convert elements in each column to integers between 1 and q then normalize.
@@ -391,6 +392,7 @@ def quantile(x, q):
     
 # Calc functions -----------------------------------------------------------
 
+@wraptomatrix1
 def covMissing(R):
     """
     Covariance matrix adjusted for missing returns.
@@ -401,15 +403,16 @@ def covMissing(R):
     Note the mean of each row of R is assumed to be zero. So returns are not
     demeaned and the covariance is normalized by T not T-1.
     """
+    #TODO: no test failures with array, but needs to be checked (returns matrix?)
 
-    M = isnan(R)
+    M = np.isnan(R)
     R[M] = 0
-    M = asmatrix(M, float64)
+    M = np.asmatrix(M, np.float64)
     M = 1 - M # Change meaning of missing matrix to present matrix  
 
     normalization = M * M.T
 
-    if any((normalization < 2).sum()):
+    if np.any(normalization < 2):
         raise ValueError, 'covMissing: not enough observations'
 
     C = (R * R.T) / normalization

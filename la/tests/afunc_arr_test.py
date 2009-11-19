@@ -11,7 +11,8 @@ nan = np.nan
 from test import printfail
 from la.afunc import sector_rank, sector_mean, sector_median
 from la.afunc import (movingsum, ranking_1N, movingrank, ranking_norm,
-                      movingsum_forward, geometric_mean, ranking)
+                      movingsum_forward, geometric_mean, ranking, unique_sector,
+                      sector_dummy)
 
 # Sector functions ----------------------------------------------------------
 
@@ -181,7 +182,44 @@ class Test_sector_median(unittest.TestCase):
         theory[np.isnan(theory)] = self.nancode
         practice[np.isnan(practice)] = self.nancode        
         self.assert_((abs(theory - practice) < self.tol).all(), msg)
+
+
+class Test_sector_oth(unittest.TestCase):
+    """Test afunc.sector_mean"""
+    
+    def setUp(self):
+        self.nancode = -9999
+        self.tol = 1e-8
+                
+    def test_sector_dummy_1(self):
+        "afunc.sector_dummy #1"
+        sectors = ['a', 'b', 'a', 'b', 'a', 'c']
+        theory1 = np.matrix([[ 1.,  0.,  0.],
+                            [ 0.,  1.,  0.],
+                            [ 1.,  0.,  0.],
+                            [ 0.,  1.,  0.],
+                            [ 1.,  0.,  0.],
+                            [ 0.,  0.,  1.]])
+        theory2 = ['a', 'b', 'c']
+        theory = (theory1, theory2)
+        practice = sector_dummy(sectors)
+        msg = printfail(theory, practice)
+        theory1[np.isnan(theory1)] = self.nancode
+        practice[0][np.isnan(practice[0])] = self.nancode        
+        self.assert_(np.all(theory[0] == practice[0]), msg) 
+        self.assert_(theory[1] == practice[1], msg) 
         
+    def test_sector_unique_1(self):
+        "afunc.unique_sector #1"
+        sectors = ['a', 'b', 'a', 'b', 'a', 'c']
+        theory = ['a', 'b', 'c']
+        practice = unique_sector(sectors)
+        msg = printfail(theory, practice)
+        #theory[np.isnan(theory)] = self.nancode
+        #practice[np.isnan(practice)] = self.nancode        
+        self.assert_(theory == practice, msg)      
+
+    
 # Normalize functions -------------------------------------------------------
 
 class Test_ranking_1N(unittest.TestCase):

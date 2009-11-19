@@ -980,7 +980,7 @@ class larry(object):
         """
         self._2donly()
         y = self.copy()
-        y.x = np.asarray(quantile(np.asmatrix(y.x), q))       
+        y.x = quantile(y.x, q)       
         return y
                
     def cut_missing(self, fraction, axis):
@@ -1052,7 +1052,7 @@ class larry(object):
         self._2donly()       
         y = self.copy()
         y.label[1] = list(y.label[0])
-        y.x = np.asarray(covMissing(np.asmatrix(y.x)))
+        y.x = covMissing(y.x)
         return y         
         
     def keep_label(self, op, value, axis):

@@ -1,5 +1,11 @@
 
 
+2009-11-19 Josef
+
+	* changing some methods of larry to not use matrix conversion breaks test.
+	  add decorator to quantile and covMissing, add one test for larry.cov,
+	  fix errors in covMissing, all current tests pass
+	* add missing tests for afunc.sector_dummy and afunc.unique_sector 
 
 2009-11-18 Josef
 

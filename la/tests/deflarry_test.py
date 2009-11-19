@@ -2676,6 +2676,29 @@ class Test_calc(unittest.TestCase):
         self.assert_((abs(t - p.x) < self.tol).all(), msg)
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l4), 'Reference found')
+        
+    def test_cov_1(self):
+        "larry.cov_1" 
+        self.l1dm = self.l1.copy()
+        #demean by rows
+        self.l1dm.x = self.x1 - self.x1.mean(1)[:,None]
+        #TODO: what's the right answer for zero variance
+        t = np.array([[ 1. ,  0.5,  nan],
+                   [ 0.5,  1. ,  nan],
+                   [ nan,  nan,  nan]])
+        
+        t = np.array([[ 0.5,   0.25,  0.  ],
+                     [ 0.25,  0.5,   0.  ],
+                     [ 0.,    0.,    0.  ]])
+          
+        label = [range(3), range(3)]                                    
+        p = self.l1dm.cov()
+        msg = printfail(t, p.x, 'x')  
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode               
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, self.l1), 'Reference found')
 
 # Here's where I left off with my unit test review: cov                  
 
