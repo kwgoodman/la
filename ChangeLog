@@ -1,4 +1,8 @@
 
+2009-11-19 Josef
+
+	* add more_test.py: check return type, and 3d input,
+	  (errors=10, failures=8) out of 48 tests
 
 2009-11-19 Josef
 
