@@ -187,16 +187,22 @@ def movingsum(x, window, axis=-1, norm=False):
     index2[axis] = slice(None, -window) 
     msx = csx[index1]
     index3 = [slice(None)] * x.ndim
-    index3[axis] = slice(1, None) 
+    index3[axis] = slice(1, None) # form slice(1,None)
     msx[index3] = msx[index3] - csx[index2] 
     csm = m.cumsum(axis)     
     msm = csm[index1]
-    msm[index3] = msm[index3] - csm[index2]    
+    msm[index3] = msm[index3] - csm[index2]  
+    
     if norm:
         ms = 1.0 * window * msx / msm
     else:
         ms = msx
         ms[msm == 0] = np.nan
+
+    initshape = list(x.shape)  
+    initshape[axis] = window - 1
+    nans = np.nan * np.zeros(initshape)
+    ms = np.concatenate((nans, ms), axis) 
     return ms
     
 def movingsum_old(x, window, axis=1, norm=False, q=1.0):
@@ -234,19 +240,19 @@ def movingsum_old(x, window, axis=1, norm=False, q=1.0):
         ms = ms.T  
     return ms    
 
-@wraptomatrix1    
+@wraptoarray1    
 def movingsum_forward(x, window, skip=0, axis=1, norm=False):
     """Movingsum in the forward direction skipping skip dates."""
     if axis == 0:
         x = x.T
-    x = M.fliplr(x)
+    x = np.fliplr(x)
     nr, nc = x.shape
     if skip > nc:
         raise IndexError, 'Your skip is too large.'
-    ms = movingsum_old(x, window, axis=1, norm=norm)
-    ms = M.fliplr(ms)
-    nans = M.nan * M.zeros((nr, skip))
-    ms = M.concatenate((ms[:,skip:], nans), 1)  
+    ms = movingsum(x, window, axis=1, norm=norm)
+    ms = np.fliplr(ms)
+    nans = np.nan * np.zeros((nr, skip))
+    ms = np.concatenate((ms[:,skip:], nans), 1)  
     if axis == 0:
         ms = ms.T
     return ms

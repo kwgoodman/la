@@ -1,6 +1,9 @@
 
 2009-11-19 Josef
 
+	* convert movingsum_forward to using arrays, add dropped rows/columns
+	  back into movingsum, correct shape in afun tests, deflarry_test for
+	  movingsum are wrong now
 	* convert geometric mean to using arrays, maintain same dimension
 	* convert sector functions to using arrays
 	* add afunc sector functions to return type tests, decorate.

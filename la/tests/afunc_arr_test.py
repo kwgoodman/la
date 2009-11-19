@@ -620,7 +620,7 @@ class Test_movingsum(unittest.TestCase):
 
     def test_movingsum_1(self):
         """afunc.movingsum #1"""    
-        theory = self.xnan2   
+        theory = self.xnan 
         practice = movingsum(self.xnan, self.window, norm=True)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
@@ -629,7 +629,7 @@ class Test_movingsum(unittest.TestCase):
 
     def test_movingsum_2(self):
         """afunc.movingsum #2"""    
-        theory = self.xnan2
+        theory = self.xnan
         practice = movingsum(self.xnan, self.window, norm=False)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
@@ -640,7 +640,7 @@ class Test_movingsum(unittest.TestCase):
         """afunc.movingsum #3"""    
         theory = np.array([[  nan, 2.0, 12.0, 6.0, 8.0],
                            [  nan, 6.0, 12.0, 8.0,-1.0]])   
-        theory = np.asarray(theory[:,1:])
+        #theory = np.asarray(theory[:,1:])
         practice = movingsum(self.x, self.window, norm=True)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
@@ -651,7 +651,7 @@ class Test_movingsum(unittest.TestCase):
         """afunc.movingsum #4"""    
         theory = np.array([[  nan, 1.0,  6.0, 6.0, 8.0],
                            [  nan, 6.0, 12.0, 8.0,-1.0]])
-        theory = np.asarray(theory[:,1:])
+        #theory = np.asarray(theory[:,1:])
         practice = movingsum(self.x, self.window, norm=False)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
@@ -662,7 +662,7 @@ class Test_movingsum(unittest.TestCase):
         """afunc.movingsum #5"""    
         theory = np.array([[nan,  nan,  nan,  nan,  nan],
                            [3.0,  8.0,  14.0, 0.0,  7.0]])
-        theory = np.asarray(theory[1,:])
+        #theory = np.asarray(theory[1,:])
         practice = movingsum(self.x, self.window, axis=0, norm=True)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
@@ -673,7 +673,7 @@ class Test_movingsum(unittest.TestCase):
         """afunc.movingsum #6"""    
         theory = np.array([[nan,  nan,  nan,  nan,  nan],
                            [3.0,  4.0,  14.0, 0.0,  7.0]])
-        theory = np.asarray(theory[1,:])
+        #theory = np.asarray(theory[1,:])
         practice = movingsum(self.x, self.window, axis=0, norm=False)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
@@ -685,7 +685,7 @@ class Test_movingsum(unittest.TestCase):
         theory = np.array([[nan, 4.0],
                            [nan, 4.0],
                            [nan, 4.0]])
-        theory = np.asarray(theory[:,1:])
+        #theory = np.asarray(theory[:,1:])
         practice = movingsum(self.x2, self.window)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
@@ -697,7 +697,7 @@ class Test_movingsum(unittest.TestCase):
         #skip for now
         theory = np.array([[nan, 1.4142135623730951, 8.4852813742385713, 6.0, 8.0],
                            [nan, 6.0, 12.0, 8.0,-1.0]])
-        theory = np.asarray(theory[:,1:]) 
+        #theory = np.asarray(theory[:,1:]) 
         practice = movingsum(self.x, self.window, axis=1, norm=True, q=0.5)
         #q is not a valid argument to the new movingsum
         practice = movingsum(self.x, self.window, axis=1, norm=True)
@@ -721,7 +721,8 @@ class Test_movingsum_forward(unittest.TestCase):
         """afunc.movingsum_forward #1"""
         theory = np.array([[2.0, 12.0, 6.0, 8.0, nan],
                            [6.0, 12.0, 8.0,-1.0, nan]]) 
-        skip = 0                     
+        skip = 0
+        #theory = theory[:,:-1]             
         practice = movingsum_forward(self.x, self.window, skip, norm=True)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
@@ -732,6 +733,7 @@ class Test_movingsum_forward(unittest.TestCase):
         """afunc.movingsum_forward #2"""    
         theory = np.array([[1.0,  6.0, 6.0, 8.0, nan],
                            [6.0, 12.0, 8.0,-1.0, nan]]) 
+        #theory = theory[:,:-1]
         skip = 0                     
         practice = movingsum_forward(self.x, self.window, skip, norm=False)
         msg = printfail(theory, practice)    
@@ -743,7 +745,8 @@ class Test_movingsum_forward(unittest.TestCase):
         """afunc.movingsum_forward #3"""    
         theory = np.array([[12.0, 6.0, 8.0, nan, nan],
                            [12.0, 8.0,-1.0, nan, nan]]) 
-        skip = 1                     
+        skip = 1             
+        #theory = theory[:,:-1]        
         practice = movingsum_forward(self.x, self.window, skip, norm=True)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
