@@ -61,6 +61,7 @@ def test_return_array():
                    [3.0, 0.0, 2.0, nan, nan, nan],
                    [4.0, 4.0, 3.0, 0.0, 2.0, nan],
                    [5.0, 5.0, 4.0, 4.0, nan, nan]])
+    sectors = ['a', 'b', 'a', 'b', 'a', 'c']
     x = x+1 #geometric requires >0
     
     for func in funcs_one:
@@ -77,6 +78,13 @@ def test_return_array():
         xc = x.copy()
         args = (xc, 0.5)
         yield check_return_array, func, args
+        
+    for func in funcs_sect:
+        xc = x.copy()
+        args = (xc, sectors)
+        yield check_return_array, func, args
+    
+    yield check_return_array, sector_dummy, (sectors,)
     
 
 def test_return_matrix():
@@ -86,6 +94,7 @@ def test_return_matrix():
                    [3.0, 0.0, 2.0, nan, nan, nan],
                    [4.0, 4.0, 3.0, 0.0, 2.0, nan],
                    [5.0, 5.0, 4.0, 4.0, nan, nan]])
+    sectors = ['a', 'b', 'a', 'b', 'a', 'c']
     x = x+1 #geometric requires >0
     for func in funcs_one:
         xc = x.copy()
@@ -100,6 +109,11 @@ def test_return_matrix():
     for func in funcs_onefrac:
         xc = x.copy()
         args = (xc, 0.5)
+        yield check_return_matrix, func, args
+        
+    for func in funcs_sect:
+        xc = x.copy()
+        args = (xc, sectors)
         yield check_return_matrix, func, args
 
 def check_3d(func, args):
@@ -117,6 +131,7 @@ def _est_3d():
                    [3.0, 0.0, 2.0, nan, nan, nan],
                    [4.0, 4.0, 3.0, 0.0, 2.0, nan],
                    [5.0, 5.0, 4.0, 4.0, nan, nan]])
+    sectors = ['a', 'b', 'a', 'b', 'a', 'c']
     x = x+1 #geometric requires >0
     x = np.dstack((x,x))
     
@@ -133,4 +148,9 @@ def _est_3d():
     for func in funcs_onefrac:
         xc = x.copy()
         args = (xc, 0.5)
+        yield check_3d, func, args
+    
+    for func in funcs_sect:
+        xc = x.copy()
+        args = (xc, sectors)
         yield check_3d, func, args

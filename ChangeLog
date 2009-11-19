@@ -1,6 +1,8 @@
 
 2009-11-19 Josef
 
+	* add afunc sector functions to return type tests, decorate.
+	  convert sector_dummy to build an array
 	* convert quantile to use arrays internally, switch decorator, 
 	  additional minor changes
 	* convert covMissing to use arrays internally, switch decorator
@@ -22,22 +24,13 @@
 	  array and for matrices, rename afunc_arr_test.py so it is picked up by nose.
 	  some larry functions still convert to matrices
 
-2009-11-18 Josef
-
 	* add decorator module (from pypi), add decorator to convert to matrix,
 	  use with afunc.ranking, afunc_arr_tes_.py:Test_ranking and deflarry_test pass
-
-2009-11-18 Josef
 
 	* add afunc_arr_tes_.py: raw translation of afunc_test for arrays instead
 	  of matrices, 30 out of 54 tests with error or failures
 
-2009-11-18 Josef
-
 	* la.__init__.py: del Tester after use
-
-
-2009-11-18 Josef
 
 	* afunc_test.py: fix failing/incorrect tests for array version of movingsum,
 	  removed one test because q option is not available anymore

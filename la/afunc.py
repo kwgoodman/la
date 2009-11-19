@@ -52,6 +52,7 @@ def wraptoarray1(func, *args, **kwds):
 
 # Sector functions ----------------------------------------------------------
 
+@wraptomatrix1
 def sector_rank(x, sectors):
     """Rank normalize x within each sector to be between -1 and 1."""
   
@@ -68,6 +69,7 @@ def sector_rank(x, sectors):
         xnorm[idx,:] = ranking(x[idx,:], axis=0)    
     return xnorm
 
+@wraptomatrix1
 def sector_mean(x, sectors):
     """Sector mean."""
 
@@ -85,7 +87,8 @@ def sector_mean(x, sectors):
             norm = 1.0 * (~M.isnan(x[idx,:])).sum(0)
             xmean[idx,:] = M.nansum(x[idx,:], axis=0) / norm
     return xmean
-  
+
+@wraptomatrix1  
 def sector_median(x, sectors):
     """Sector median."""
 
@@ -104,14 +107,30 @@ def sector_median(x, sectors):
     return xmedian
     
 def sector_dummy(sectors):
-    """Create a NxS sector dummy matrix of N stocks and S unique sectors."""
+    """Create a NxS sector dummy matrix of N stocks and S unique sectors.
+    
+    Parameters
+    ----------
+    sectors : list
+    
+    Returns
+    -------
+    dummy : 2d array
+    usesectors : list
+        unique sectors
+    
+    Notes
+    -----
+    this always returns array, not a matrix
+    """
     if type(sectors) is not list:
         raise TypeError, 'Sector input must be a list'
     usectors = unique_sector(sectors)
-    dummy = M.zeros((len(sectors), len(usectors)))
-    sectors = M.asmatrix(sectors, dtype=object).T
-    for i, sec in enumerate(usectors):
-        dummy[:,i] = sectors == sec
+#    dummy = np.zeros((len(sectors), len(usectors)))
+    sectors = np.asarray(sectors, dtype=object).T
+#    for i, sec in enumerate(usectors):
+#        dummy[:,i] = sectors == sec
+    dummy = (sectors[:,None] == usectors).astype(float)
     return dummy, usectors    
     
 def unique_sector(sectors):
