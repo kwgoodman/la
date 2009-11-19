@@ -1,6 +1,7 @@
 
 2009-11-19 Josef
 
+	* convert covMissing to use arrays internally, switch decorator
 	* decorate remaining afunc functions with wrong return type,
 	  add decorator wraptoarray1, now all return type tests pass,
 	  add scalar handling to decorators, add additional larry.cov test,

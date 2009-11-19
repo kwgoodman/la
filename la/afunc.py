@@ -416,7 +416,7 @@ def quantile(x, q):
     
 # Calc functions -----------------------------------------------------------
 
-@wraptomatrix1
+@wraptoarray1
 def covMissing(R):
     """
     Covariance matrix adjusted for missing returns.
@@ -435,19 +435,19 @@ def covMissing(R):
     l7.demean(axis=1).cov().x -np.ma.cov(np.ma.fix_invalid(x7), bias=1).data
     
     """
-    #TODO: no test failures with array, but needs to be checked (returns matrix?)
+    #TODO: no test failures with array, but needs to be checked (returns matrix?) DONE
 
     mask = np.isnan(R)
     R[mask] = 0
-    mask = np.asmatrix(mask, np.float64)
+    mask = np.asarray(mask, np.float64)
     mask = 1 - mask # Change meaning of missing matrix to present matrix  
 
-    normalization = mask * mask.T
+    normalization = np.dot(mask, mask.T)
 
     if np.any(normalization < 2):
         raise ValueError, 'covMissing: not enough observations'
 
-    C = (R * R.T) / normalization
+    C = np.dot(R, R.T) / normalization
 
     return C   
 

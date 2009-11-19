@@ -2705,7 +2705,7 @@ class Test_calc(unittest.TestCase):
         self.assert_(noreference(p, self.l1), 'Reference found')
     
     def test_cov_2(self):
-        "larry.cov_1" 
+        "larry.cov_2" 
         l8dm = self.l8.demean(1)
         t = np.ma.cov(np.ma.fix_invalid(l8dm.x), bias=1).data
           
@@ -2717,8 +2717,8 @@ class Test_calc(unittest.TestCase):
         self.assert_((abs(t - p.x) < self.tol).all(), msg)
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l1), 'Reference found')
-        
-        #l7.demean(axis=1).cov().x -np.ma.cov(np.ma.fix_invalid(x7), bias=1).data
+        #same as
+        #l8.demean(axis=1).cov().x - np.ma.cov(np.ma.fix_invalid(x8), bias=1).data
 
 # Here's where I left off with my unit test review: cov                  
 
