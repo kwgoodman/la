@@ -3,8 +3,29 @@
 import numpy as np
 
 import numpy.matlib as M
+from decorator import decorator
+
 M.seterr(divide='ignore')
 M.seterr(invalid='ignore')
+
+@decorator
+def wraptomatrix1(func, *args, **kwds):
+    '''wrapping function to convert first argument to matrix
+    for use as a decorator
+    '''
+    #new = asarray(a)
+    print args
+    a = args[0]
+    new = np.asmatrix(a)
+    wrap = getattr(a, "__array_prepare__", new.__array_wrap__)
+    if len(args)>1:
+        res = func(new, *args[1:], **kwds)
+    else:
+        res = func(new, **kwds)
+    if type(res) is tuple:
+        return map(wrap, res)
+    else:
+        return wrap(res)
 
 
 # Sector functions ----------------------------------------------------------
@@ -288,11 +309,13 @@ def ranking_norm(x, axis=0):
     zscaled[xnanidx] = M.nan               
     return zscaled           
 
+@wraptomatrix1
 def ranking(x, axis=0):
     """Same as ranking_norm but break ties.
     
     Uses a brute force method---slow.
     """
+    print x
     where = M.where
     if axis == 1:
         x = x.T

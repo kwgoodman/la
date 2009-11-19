@@ -956,7 +956,8 @@ class larry(object):
         """
         self._2donly()
         y = self.copy()
-        y.x = np.asarray(ranking(np.asmatrix(y.x), axis))
+        #y.x = np.asarray(ranking(np.asmatrix(y.x), axis))
+        y.x = ranking(y.x, axis)
         return y
                             
     def movingrank(self, window, axis=1):

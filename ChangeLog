@@ -1,5 +1,8 @@
 
+2009-11-18 Josef
 
+	* add decorator module (from pypi), add decorator to convert to matrix,
+	  use with afunc.ranking, afunc_arr_tes_.py:Test_ranking and deflarry_test pass
 
 2009-11-18 Josef
 

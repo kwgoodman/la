@@ -4,8 +4,8 @@ import unittest
 
 import numpy as np
 import numpy.matlib as M
-M.seterr(divide='ignore')
-M.seterr(invalid='ignore')
+np.seterr(divide='ignore')
+np.seterr(invalid='ignore')
 nan = np.nan
 
 from test import printfail
@@ -371,16 +371,16 @@ class Test_ranking(unittest.TestCase):
         
     def test_ranking_4(self):
         """afunc.ranking #4"""  
-        x = np.array([3.0, 1.0, 2.0]).T
-        theory = np.array([1.0,-1.0, 0.0]).T
+        x = np.array([3.0, 1.0, 2.0])[:,None]
+        theory = np.array([1.0,-1.0, 0.0])[:,None]
         practice = ranking(x, axis=0)
         msg = printfail(theory, practice)    
         self.assert_((theory == practice).all(), msg) 
 
     def test_ranking_5(self):
         """afunc.ranking #5"""  
-        x = np.array([3.0, 1.0, 2.0]).T
-        theory = np.array([0.0, 0.0, 0.0]).T
+        x = np.array([3.0, 1.0, 2.0])[:,None]
+        theory = np.array([0.0, 0.0, 0.0])[:,None]
         practice = ranking(x, axis=1)
         msg = printfail(theory, practice)    
         self.assert_((theory == practice).all(), msg)
