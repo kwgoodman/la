@@ -2026,7 +2026,11 @@ class Test_calc(unittest.TestCase):
         self.x7 = np.array([[nan, 2.0],
                             [1.0, 3.0],
                             [3.0, 1.0]])  
-        self.l7 = larry(self.x7)                                         
+        self.l7 = larry(self.x7)     
+        self.x8 = np.array([[nan, 2.0, 1.0],
+                            [2.0, 3.0, 1.0],
+                            [4.0, 1.0, 1.0]])  
+        self.l8 = larry(self.x8)                                    
     
     def test_demean_1(self):
         "larry.demean_1"
@@ -2679,9 +2683,9 @@ class Test_calc(unittest.TestCase):
         
     def test_cov_1(self):
         "larry.cov_1" 
-        self.l1dm = self.l1.copy()
+        l1dm = self.l1.copy()
         #demean by rows
-        self.l1dm.x = self.x1 - self.x1.mean(1)[:,None]
+        l1dm.x = self.x1 - self.x1.mean(1)[:,None]
         #TODO: what's the right answer for zero variance
         t = np.array([[ 1. ,  0.5,  nan],
                    [ 0.5,  1. ,  nan],
@@ -2692,13 +2696,29 @@ class Test_calc(unittest.TestCase):
                      [ 0.,    0.,    0.  ]])
           
         label = [range(3), range(3)]                                    
-        p = self.l1dm.cov()
+        p = l1dm.cov()
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode               
         self.assert_((abs(t - p.x) < self.tol).all(), msg)
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l1), 'Reference found')
+    
+    def test_cov_2(self):
+        "larry.cov_1" 
+        l8dm = self.l8.demean(1)
+        t = np.ma.cov(np.ma.fix_invalid(l8dm.x), bias=1).data
+          
+        label = [range(3), range(3)]                                    
+        p = l8dm.cov()
+        msg = printfail(t, p.x, 'x')  
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode               
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, self.l1), 'Reference found')
+        
+        #l7.demean(axis=1).cov().x -np.ma.cov(np.ma.fix_invalid(x7), bias=1).data
 
 # Here's where I left off with my unit test review: cov                  
 

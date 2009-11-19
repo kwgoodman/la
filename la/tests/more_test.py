@@ -36,11 +36,23 @@ funcs_sector = [unique_sector, sector_dummy]
 funcs_special = [nans]
 
 
-def check_return_array(func, res1):
-    assert_(type(res1) is np.ndarray, repr(func)+'does not return array')
+def check_return_array(func, args):
+    res = func(*args)
+    if type(res) is tuple:
+        res1 = res[0]
+    else:
+        res1 = res
+    assert_(type(res1) is np.ndarray or np.isscalar(res1), \
+            repr(func)+'does not return array')
 
-def check_return_matrix(func, res1):
-    assert_(type(res1) is np.matrix, repr(func)+'does not return array')
+def check_return_matrix(func, args):
+    res = func(*args)
+    if type(res) is tuple:
+        res1 = res[0]
+    else:
+        res1 = res
+    assert_(type(res1) is np.matrix or np.isscalar(res1), \
+            repr(func)+'does not return matrix')
     
 def test_return_array():
     x = np.array([[0.0, 3.0, nan, nan, 0.0, nan],
@@ -50,35 +62,22 @@ def test_return_array():
                    [4.0, 4.0, 3.0, 0.0, 2.0, nan],
                    [5.0, 5.0, 4.0, 4.0, nan, nan]])
     x = x+1 #geometric requires >0
+    
     for func in funcs_one:
         xc = x.copy()
-        res = func(xc)
-        if type(res) is tuple:
-            res1 = res[0]
-        else:
-            res1 = res
-        #yield assert_, (type(res1) is np.ndarray), repr(func)+'does not return array'
-        yield check_return_array, func, res1
+        args = (xc,)
+        yield check_return_array, func, args
         
     for func in funcs_oneint:
         xc = x.copy()
-        res = func(xc, 2)
-        if type(res) is tuple:
-            res1 = res[0]
-        else:
-            res1 = res
-        #yield assert_, (type(res1) is np.ndarray), repr(func)+'does not return array'
-        yield check_return_array, func, res1
+        args = (xc,2)
+        yield check_return_array, func, args
         
     for func in funcs_onefrac:
         xc = x.copy()
-        res = func(xc, 0.5)
-        if type(res) is tuple:
-            res1 = res[0]
-        else:
-            res1 = res
-        #yield assert_, (type(res1) is np.ndarray), repr(func)+'does not return array'
-        yield check_return_array, func, res1
+        args = (xc, 0.5)
+        yield check_return_array, func, args
+    
 
 def test_return_matrix():
     x = np.matrix([[0.0, 3.0, nan, nan, 0.0, nan],
@@ -90,33 +89,18 @@ def test_return_matrix():
     x = x+1 #geometric requires >0
     for func in funcs_one:
         xc = x.copy()
-        res = func(xc)
-        if type(res) is tuple:
-            res1 = res[0]
-        else:
-            res1 = res
-        #yield assert_, (type(res1) is np.ndarray), repr(func)+'does not return matrix'
-        yield check_return_matrix, func, res1
+        args = (xc,)
+        yield check_return_matrix, func, args
         
     for func in funcs_oneint:
         xc = x.copy()
-        res = func(xc, 2)
-        if type(res) is tuple:
-            res1 = res[0]
-        else:
-            res1 = res
-        #yield assert_, (type(res1) is np.ndarray), repr(func)+'does not return matrix'
-        yield check_return_matrix, func, res1
+        args = (xc,2)
+        yield check_return_matrix, func, args
         
     for func in funcs_onefrac:
         xc = x.copy()
-        res = func(xc, 0.5)
-        if type(res) is tuple:
-            res1 = res[0]
-        else:
-            res1 = res
-        #yield assert_, (type(res1) is np.ndarray), repr(func)+'does not return matrix'
-        yield check_return_matrix, func, res1
+        args = (xc, 0.5)
+        yield check_return_matrix, func, args
 
 def check_3d(func, args):
     res = func(*args)
@@ -124,9 +108,9 @@ def check_3d(func, args):
         res1 = res[0]
     else:
         res1 = res
-    assert_(type(res1) is np.ndarray, repr(func)+'does not return array')
+    assert_(np.shape(res1)>0, repr(func)+'does not return array for 3d')
    
-def test_3d():
+def _est_3d():
     x = np.array([[0.0, 3.0, nan, nan, 0.0, nan],
                    [1.0, 1.0, 1.0, nan, nan, nan],
                    [2.0, 2.0, 0.0, nan, 1.0, nan],

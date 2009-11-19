@@ -22,11 +22,33 @@ def wraptomatrix1(func, *args, **kwds):
         res = func(new, *args[1:], **kwds)
     else:
         res = func(new, **kwds)
-    if type(res) is tuple:
+    if np.isscalar(res):
+        return res
+    elif type(res) is tuple:
         return map(wrap, res)
     else:
         return wrap(res)
 
+@decorator
+def wraptoarray1(func, *args, **kwds):
+    '''wrapping function to convert first argument to matrix
+    for use as a decorator
+    '''
+    #new = asarray(a)
+    #print args
+    a = args[0]
+    new = np.asarray(a)
+    wrap = getattr(a, "__array_prepare__", new.__array_wrap__)
+    if len(args)>1:
+        res = func(new, *args[1:], **kwds)
+    else:
+        res = func(new, **kwds)
+    if np.isscalar(res):
+        return res
+    elif type(res) is tuple:
+        return map(wrap, res)
+    else:
+        return wrap(res)
 
 # Sector functions ----------------------------------------------------------
 
@@ -236,7 +258,8 @@ def lastrank(x):
     r = 2.0 * (r - 0.5)
     r[~M.isfinite(x[:,-1])] = M.nan
     return r
-    
+
+@wraptomatrix1    
 def lastrank_decay(x, decay):
     "Exponential decay rank of last column only"
     assert decay >= 0, 'Min decay is 0.'
@@ -341,7 +364,8 @@ def ranking(x, axis=0):
     if axis == 1:
         y = y.T
     return y
-    
+
+@wraptoarray1  
 def fillforward_partially(x, n):
     "Fill missing values (NaN) with most recent non-missing values if recent."
     y = np.asarray(x.copy())
@@ -356,7 +380,7 @@ def fillforward_partially(x, n):
         idx = fidx[:,i]
         count[idx] = i
         recent[idx] = y[idx,i]
-    return np.asmatrix(y) 
+    return y #np.asmatrix(y) 
 
 @wraptomatrix1    
 def quantile(x, q):
@@ -402,15 +426,23 @@ def covMissing(R):
 
     Note the mean of each row of R is assumed to be zero. So returns are not
     demeaned and the covariance is normalized by T not T-1.
+    
+    
+    Notes
+    -----
+    
+    equivalence to using numpy masked array function
+    l7.demean(axis=1).cov().x -np.ma.cov(np.ma.fix_invalid(x7), bias=1).data
+    
     """
     #TODO: no test failures with array, but needs to be checked (returns matrix?)
 
-    M = np.isnan(R)
-    R[M] = 0
-    M = np.asmatrix(M, np.float64)
-    M = 1 - M # Change meaning of missing matrix to present matrix  
+    mask = np.isnan(R)
+    R[mask] = 0
+    mask = np.asmatrix(mask, np.float64)
+    mask = 1 - mask # Change meaning of missing matrix to present matrix  
 
-    normalization = M * M.T
+    normalization = mask * mask.T
 
     if np.any(normalization < 2):
         raise ValueError, 'covMissing: not enough observations'
@@ -430,6 +462,7 @@ def nans(shape, dtype=float):
     a.fill(np.nan)
     return a
 
+@wraptoarray1
 def nanmean(x, axis=0):
     """Compute the mean over the given axis ignoring nans.
 
@@ -450,6 +483,7 @@ def nanmean(x, axis=0):
     x[np.isnan(x)] = 0
     return np.mean(x,axis)/factor
 
+@wraptoarray1
 def nanstd(x, axis=0, bias=True):
     """Compute the standard deviation over the given axis ignoring nans
 
@@ -509,6 +543,7 @@ def _nanmedian(arr1d):  # This only works on 1d arrays
         return np.nan
     return median(x)
 
+@wraptoarray1
 def nanmedian(x, axis=0):
     """ Compute the median along the given axis ignoring nan values
 
