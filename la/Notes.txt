@@ -29,3 +29,12 @@ which dtypes should be allowed for a larry ?
     * object for sector names
     * integers
     * strings ?
+
+ranking functions
+    * more flexibility axis, 3d ? 
+    * meaning of 3d lastrank is not clear (maybe better with nd2table)
+    * ranking_norm : for 1d the default changes 
+      (matrix with 1 row axis=0, is different from 1d array with axis=0)
+      newr = ranking_norm(x[0,:])
+      oldr = la.afunc.ranking_norm(x[0,:], axis=1)
+    

@@ -1,5 +1,7 @@
 
 2009-12-16 Josef
+    * convert ranking_norm to using arrays, rename old version
+	  (tested against old for 1d,2d - tests not included)
     * convert lastrank_decay to using arrays, rename old version
 	  (tested against old for 1d,2d - tests not included), remove forgotten print
 	* convert ranking_1N to using arrays, rename old version

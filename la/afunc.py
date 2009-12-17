@@ -409,8 +409,39 @@ def ranking_1N_old(x, axis=0):
             z = z.T    
     return z
 
-@wraptomatrix1    
+@wraptoarray1
 def ranking_norm(x, axis=0):
+    """Same as ranking_1N but normalize range to -1 to 1.""" 
+    #x = np.asmatrix(x) 
+    xnanidx = np.isnan(x) 
+    z = 1.0 * ranking_1N(x, axis)  
+    zmin = np.expand_dims(np.nanmin(z, axis), axis) #[:,None] # problem with axis = 1
+    zmax = np.expand_dims(np.nanmax(z, axis), axis) #[:,None] # find the right function again
+    # not sure what the next did: 
+#    if type(zmin) == float:
+#        zmin = np.matrix(zmin)
+#    if type(zmin) == float:        
+#        zmax = np.matrix(zmax)
+    zscaled = 2.0 * (z - zmin) / (zmax - zmin) - 1.0    
+    idx = zmin == zmax   
+    
+    if x.ndim == 1:
+        zscaled[idx] = 0.0
+    elif axis == 0:
+        idx = np.where(idx)[1]    
+        zscaled[:, idx] = 0.0
+    elif axis == 1:
+        idx = np.where(idx)[0]
+        #idx = np.asmatrix(idx).T 
+        zscaled[idx, :] = 0.0 
+    else:
+        raise ValueError, 'axis must be 0 or 1.'
+    zscaled[xnanidx] = np.nan               
+    return zscaled
+
+
+@wraptomatrix1    
+def ranking_norm_old(x, axis=0):
     """Same as ranking_1N but normalize range to -1 to 1."""  
     xnanidx = M.isnan(x) 
     z = 1.0 * ranking_1N(x, axis)  
