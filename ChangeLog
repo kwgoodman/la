@@ -1,5 +1,6 @@
 
 2009-12-16 Josef
+	* fix type in slicing_test, uncovered 2 failing cases in larry
     * add generator tests for slicing in 2d and 3d, (currently 40 tests)
 	* convert ranking to using arrays, rename old version
 	  (tested against old for 1d,2d - tests not included), API for 1d ?

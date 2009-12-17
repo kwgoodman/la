@@ -49,21 +49,42 @@ def getnplabel3d(idx, slices, reduced=True):
     
 
 slices = (slice(None), slice(None), slice(None,2))
-larli = [la1_3d, la1_2d0]
+larli = [la1_3d]#, la1_2d0]
 sliceli = [(slice(None), slice(None), slice(None,2)),
            (slice(None), slice(None), slice(2)),
-           (slice(None), slice(2))]
+           (slice(None), slice(2)),
+           ([0,2,1], slice(None), slice(None))]
+           
+sliceli = [(slice(None), slice(None), slice(None,2)),
+               (slice(None), slice(None,1), slice(None,2)),
+               (slice(None,1), slice(None), slice(None,2)),
+               (slice(None), slice(None), slice(2)),
+               (slice(None), slice(None), 0),
+               (slice(None), 0, 0),
+               (slice(None), slice(2)),
+               #([0,1], [0,1], [0,1]),
+               #(np.array([0,1])[:,None], [0,1], [0,1]), #broadcasting
+               (0,0,0)
+               ]           
 
 for lar in larli:
-    for ss in sliceli:
+    for slices in sliceli:
         ndim = lar.ndim
         # create arrays corresponding to labels for slicing
         idxslice = [slice(0,nn) for nn in lar.shape]
         idx = np.mgrid[idxslice]
         slices = slices[:ndim]  # to run same loop on 2d and 3d
         lasliced = lar[slices]
-        print np.all(lasliced.x == lar.x[slices])
-        print lasliced.label == getnplabel3d(idx, slices)
+        
+        if not np.isscalar(lasliced):
+            lasliced_x = lasliced.x
+            lasliced_label = lasliced.label
+        else:
+            lasliced_x = lasliced
+            lasliced_label = []
+            
+        print np.all(lasliced_x == lar.x[slices])
+        print lasliced_label == getnplabel3d(idx, slices)
 
 
 
