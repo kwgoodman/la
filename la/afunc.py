@@ -89,7 +89,7 @@ def sector_mean(x, sectors):
             xmean[idx,:] = np.nansum(x[idx,:], axis=0) / norm
     return xmean
 
-@wraptomatrix1  
+@wraptoarray1  # should work for arrays and matrix, but failure doesn't return array
 def sector_median(x, sectors):
     """Sector median."""
 
@@ -310,8 +310,54 @@ def lastrank_decay(x, decay):
     r[~M.isfinite(x[:,-1])] = M.nan
     return r       
 
-@wraptomatrix1
+@wraptoarray1
 def ranking_1N(x, axis=0):
+    """Rank elements of matrix x, ignore NaNs."""
+    if axis not in (0,1) or (axis > x.ndim):
+        ValueError, 'axis(=%d) out of bounds'
+    if (~np.isnan(x)).all():
+        z = x.argsort(axis).argsort(axis)
+    else:
+        ndim = x.ndim #remember
+        if axis == 1:
+            x = x.T
+        if x.ndim == 1:
+            x = x[:,None]
+            
+
+        ax = 0
+        sannanidx = np.isnan(x).sum(ax) == 0
+        nanidx = ~sannanidx
+        sannanidx = np.where(sannanidx)[0]
+        nanidx = np.where(nanidx)[0]
+        z = np.nan * np.zeros(x.shape)
+        z[:, sannanidx] = x[:, sannanidx].argsort(ax).argsort(ax)
+        middle = (x.shape[ax] + 1.0)/2.0 - 1.0 
+        nax = z.shape[ax]    
+        for i in nanidx:
+            idx = np.where(~np.isnan(x[:, i]))[0]
+            #idx = np.asmatrix(idx).T
+            if len(idx) == 0:
+                z[idx, i:i+1] = np.nan
+            elif len(idx) == 1:
+                print 'in2 ', idx, middle
+                z[idx, i] = middle
+            else:
+                print 'in3 ', idx
+                zi = x[idx, i:i+1].argsort(ax).argsort(ax)
+                zmin = np.nanmin(zi, ax)[:,None]         
+                zmax = np.nanmax(zi, ax)[:,None]
+                zi = (nax - 1.0) * (zi - zmin) / (zmax - zmin)                 
+                z[idx, i:i+1] = zi
+        if axis == 1:
+            z = z.T
+        if ndim == 1:
+            z = np.squeeze(z)
+            
+    return z
+
+@wraptomatrix1
+def ranking_1N_old(x, axis=0):
     """Rank elements of matrix x, ignore NaNs."""
     if axis not in (0,1):
         ValueError, 'axis(=%d) out of bounds'
