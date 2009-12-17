@@ -629,7 +629,7 @@ class larry(object):
 
     # Any, all ---------------------------------------------------------------           
                 
-    def any(self):
+    def any(self, axis=None):
         """Return true if any elements of x is true.
         
         Note: NaN is True since it is not equal to 0.
@@ -643,9 +643,13 @@ class larry(object):
         out : {True, False}
         
         """
-        return self.x.any()
+        if axis is None:
+            return self.x.any()
+        else:
+            return self.__reduce(axis, np.any)
+
         
-    def all(self):
+    def all(self, axis=None):
         """Return true if all elements of x are true.
         
         Note: NaN is True since it is not equal to 0.        
@@ -659,7 +663,10 @@ class larry(object):
         out : {True, False}
         
         """
-        return self.x.all()
+        if axis is None:
+            return self.x.all()
+        else:
+            return self.__reduce(axis, np.all)
 
     # Get and set ------------------------------------------------------------
     
@@ -955,6 +962,7 @@ class larry(object):
         
         Output is between -1 and 1, ties are broken, and NaNs are handled.
         """
+        #XXX: why is default axis=0 and not 1 as usual
         self._2donly()
         y = self.copy()
         #y.x = np.asarray(ranking(np.asmatrix(y.x), axis))
