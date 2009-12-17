@@ -465,8 +465,41 @@ def ranking_norm_old(x, axis=0):
     zscaled[xnanidx] = M.nan               
     return zscaled           
 
-@wraptomatrix1
+@wraptoarray1
 def ranking(x, axis=0):
+    """Same as ranking_norm but break ties.
+    
+    Uses a brute force method---slow.
+    """
+    #x = np.asmatrix(x)
+    where = np.where
+    ndim = x.ndim #remember
+    if axis == 1:
+        x = x.T
+    if x.ndim == 1:
+        x = x[:,None]
+    y = ranking_norm(x, axis=0)
+    sx = x.copy()
+    sx[np.isnan(sx)] = np.inf
+    sx.sort(axis=0)
+    dsx = np.diff(sx, axis=0)
+    idx = (dsx == 0).sum(axis=0)[None,:]#[:, None]
+    idx = np.where(idx)[1]
+    for i in idx:
+        yi = y[:,i]
+        xi = x[:,i]
+        ux = np.unique(xi)
+        for uxi in ux:
+            jdx = where(xi == uxi)[0]
+            y[jdx,i] = yi[jdx].mean()
+    if axis == 1:
+        y = y.T
+    if ndim == 1:
+        y = np.squeeze(y)
+    return y
+
+@wraptomatrix1
+def ranking_old(x, axis=0):
     """Same as ranking_norm but break ties.
     
     Uses a brute force method---slow.
@@ -497,7 +530,7 @@ def ranking(x, axis=0):
 def fillforward_partially(x, n):
     "Fill missing values (NaN) with most recent non-missing values if recent."
     y = np.asarray(x.copy())
-    fidx = M.isfinite(y)
+    fidx = np.isfinite(y)
     recent = np.nan * np.ones(y.shape[0])  
     count = np.nan * np.ones(y.shape[0])          
     for i in xrange(y.shape[1]):
