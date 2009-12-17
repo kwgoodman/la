@@ -1,4 +1,11 @@
 
+2009-12-16 Josef
+    * remove matrix conversion from larry group methods (covered by tests)
+    * add new nose test file and notes.txt to repository
+	* add axis argument to larry.any and larry.all (consistency with numpy and ma)
+	* add axis back into lastrank (is a reduce operation but keeps dimension)
+
+
 2009-11-19 Josef
 
 	* convert movingrank and lastrank to use arrays

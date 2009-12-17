@@ -1176,8 +1176,8 @@ class larry(object):
         """ 
         self._2donly()
         y = self.copy()
-        aligned_group_list = y._group_align(group) 
-        y.x = np.asarray(sector_rank(np.asmatrix(y.x), aligned_group_list))
+        aligned_group_list = y._group_align(group)
+        y.x = sector_rank(y.x, aligned_group_list)
         return y
             
     def group_mean(self, group):
@@ -1189,7 +1189,7 @@ class larry(object):
         self._2donly()  
         y = self.copy() 
         aligned_group_list = y._group_align(group)
-        y.x = np.asarray(sector_mean(np.asmatrix(y.x), aligned_group_list))                                            
+        y.x = sector_mean(y.x, aligned_group_list)                                         
         return y
         
     def group_median(self, group):
@@ -1201,7 +1201,7 @@ class larry(object):
         self._2donly()
         y = self.copy()
         aligned_group_list = y._group_align(group)   
-        y.x = np.asarray(sector_median(np.asmatrix(y.x), aligned_group_list))
+        y.x = sector_median(y.x, aligned_group_list)
         return y
                 
     def _group_align(self, group):
