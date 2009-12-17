@@ -1,0 +1,31 @@
+
+
+cut_missing, and vacuum extension to 3d, axis is keep not frop
+	e.g.  vaccuum, remove a row 
+	indxb = isfinite(x).any(1).any(1) # is 1d boolean for not all nan, i.e. keep if true
+	idx = np.nonzero(idx)  # integer index
+	newx = x[idxb]
+	newlabel = label.deepcopy()
+	newlabel[axis] = label[idx]
+	
+	
+convert nd (n>2) to 2d 
+	rollaxis for cross-section/columns (axis 2) to front or end
+	reshape 
+	loop labels to create combined labels of rows
+	reverse/inverse operation
+	useful also for using methods and functions that work only for 2d
+	
+sector/group functions axis argument ?
+
+integer overflow possible problems - promote to float
+    * larry.sum uses np.nansum
+      >>> np.nansum([1,2,3])
+	  6
+	* other cases - not checked
+
+which dtypes should be allowed for a larry ?
+    * float
+    * object for sector names
+    * integers
+    * strings ?
