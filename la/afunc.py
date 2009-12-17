@@ -293,8 +293,27 @@ def lastrank(x):
     #raise ValueError
     return r[:,None]  #add axis back in
 
-@wraptomatrix1    
+@wraptoarray1 
 def lastrank_decay(x, decay):
+    "Exponential decay rank of last column only"
+    assert decay >= 0, 'Min decay is 0.'
+    x = np.atleast_2d(x) # so that indexing and axis work correctly
+    nt = x.shape[1]
+    w = nt - np.ones((1,nt)).cumsum(1)
+    w = np.exp(-decay * w)
+    w = nt * w / w.sum()
+    # inner or dot ?
+    g = np.inner((x[:,-1:] > x), w).sum(1)
+    e = np.inner((x[:,-1:] == x), w).sum(1)
+    n = np.inner(np.isfinite(x), w).sum(1)
+    r = (g + g + e - w[0,-1]) / 2.0
+    r = r / (n - w[0,-1])
+    r = 2.0 * (r - 0.5)
+    r[~np.isfinite(x[:,-1])] = np.nan
+    return r[:,None]
+
+@wraptomatrix1    
+def lastrank_decay_old(x, decay):
     "Exponential decay rank of last column only"
     assert decay >= 0, 'Min decay is 0.'
     nt = x.shape[1]
@@ -340,10 +359,8 @@ def ranking_1N(x, axis=0):
             if len(idx) == 0:
                 z[idx, i:i+1] = np.nan
             elif len(idx) == 1:
-                print 'in2 ', idx, middle
                 z[idx, i] = middle
             else:
-                print 'in3 ', idx
                 zi = x[idx, i:i+1].argsort(ax).argsort(ax)
                 zmin = np.nanmin(zi, ax)[:,None]         
                 zmax = np.nanmax(zi, ax)[:,None]

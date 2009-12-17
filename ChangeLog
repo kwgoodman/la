@@ -1,5 +1,7 @@
 
 2009-12-16 Josef
+    * convert lastrank_decay to using arrays, rename old version
+	  (tested against old for 1d,2d - tests not included), remove forgotten print
 	* convert ranking_1N to using arrays, rename old version
 	  (tested against old for 1d,2d(axis=0,1) - tests not included
     * remove matrix conversion from larry group methods (covered by tests)
