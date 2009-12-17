@@ -275,7 +275,7 @@ def movingrank(x, window, axis=1):
     nr, nt = x.shape
     mr = np.nan * np.zeros((nr,nt))        
     for i in xrange(window-1,nt): 
-        mr[:,i] = lastrank(x[:,(i-window+1):(i+1)])  #check i:i+1      
+        mr[:,i] = np.squeeze(lastrank(x[:,(i-window+1):(i+1)]))  #check i:i+1      
     if axis == 0:
         mr = mr.T
     return mr
@@ -291,7 +291,7 @@ def lastrank(x):
     r = 2.0 * (r - 0.5)
     r[~np.isfinite(x[:,-1])] = np.nan
     #raise ValueError
-    return r
+    return r[:,None]  #add axis back in
 
 @wraptomatrix1    
 def lastrank_decay(x, decay):
