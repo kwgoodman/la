@@ -24,10 +24,11 @@ funcs_all = [covMissing, fillforward_partially, geometric_mean, lastrank,
             ranking, ranking_1N, ranking_norm, sector_dummy, sector_mean, 
             sector_median, sector_rank, unique_sector]
 
+
+# the following lists add up to all functions except movingsum_old
 funcs_one = [covMissing, geometric_mean, lastrank, 
             median, nanmean, nanmedian, nanstd, 
             ranking, ranking_1N, ranking_norm]
-#not: movingsum_old
 funcs_oneint = [movingrank, movingsum, movingsum_forward,quantile, 
                 fillforward_partially]
 funcs_onefrac = [lastrank_decay]
@@ -125,6 +126,7 @@ def check_3d(func, args):
     assert_(np.shape(res1)>0, repr(func)+'does not return array for 3d')
    
 def _est_3d():
+    # many of these tests fail, skip to reduce noise during testing
     x = np.array([[0.0, 3.0, nan, nan, 0.0, nan],
                    [1.0, 1.0, 1.0, nan, nan, nan],
                    [2.0, 2.0, 0.0, nan, 1.0, nan],
@@ -143,7 +145,7 @@ def _est_3d():
     for func in funcs_oneint:
         xc = x.copy()
         args = (xc,2)
-        yield check_3d, func, args
+        #yield check_3d, func, args
         
     for func in funcs_onefrac:
         xc = x.copy()
@@ -154,3 +156,4 @@ def _est_3d():
         xc = x.copy()
         args = (xc, sectors)
         yield check_3d, func, args
+ 
