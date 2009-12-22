@@ -1,5 +1,8 @@
 2009-12-22 Josef
 
+    * deflarry.py, deflarry_test.py: add new merge method with tests,
+      formatting and docstring by Keith
+
     * more_test.py: remove uncommented matrix tests 
 
     * afunc.py: remove comments from refactoring,

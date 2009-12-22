@@ -1300,6 +1300,49 @@ class larry(object):
             y = y.morph(lar.getlabel(i), axis=i)     
         return y        
 
+    def merge(self, other, update=False):
+        '''
+        Merge, or optionally update, a larry with a second larry.
+     
+        Parameters
+        ----------
+        other : larry
+            The larry to merge or to use to update the values. It must have the
+            same number of dimensions as as the existing larry.
+        update : bool
+            Raise a ValueError (default) if there is any overlap in the two
+            larrys. An overlap is defined as a common label in both larrys that
+            contains a finite value in both larrys. If `update` is True then the
+            overlapped values in the current larry will be overwritten with the
+            values in `other`.            
+     
+        Returns
+        -------
+        lar1 : larry
+            The merged larry.
+     
+        '''
+
+        ndim = self.ndim
+        if ndim != other.ndim:
+            raise IndexError, 'larrys must be of the same dimension.'
+        lar1 = self
+        lar2 = other
+        for ax in range(ndim):
+            mergelabel = sorted(set(lar1.label[ax]).union(set(lar2.label[ax])))
+            lar1 = lar1.morph(mergelabel, ax)
+            lar2 = lar2.morph(mergelabel, ax)
+     
+        # Check for overlap if requested
+        if (not update) and (np.isfinite(lar1.x)*np.isfinite(lar2.x)).any():
+            raise ValueError('overlapping values')
+        else:
+            mask = np.isfinite(lar2.x)
+            lar1.x[mask] = lar2.x[mask]
+     
+        return lar1
+     
+
     def vacuum(self, axis=None):
         """Remove all rows and/or columns that contain all NaNs.
         

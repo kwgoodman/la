@@ -2865,7 +2865,139 @@ class Test_properties_01(unittest.TestCase):
         msg = printfail(t, p, 'T')
         t.x[np.isnan(t.x)] = self.nancode
         p.x[np.isnan(p.x)] = self.nancode 
-        self.assert_(t == p, msg)             
+        self.assert_(t == p, msg)    
+
+
+#new test function 
+
+from numpy.testing import assert_, assert_almost_equal, assert_raises
+
+
+class Test_merge(unittest.TestCase):
+    "Test merge functions of the larry class"
+    
+    def test_merge1(self):
+        lar1 = larry(
+               np.array([[ 2.,  2.,  3.,  1.],
+               [ 3.,  2.,  2.,  1.],
+               [ 1.,  1.,  1.,  1.]]), 
+               [[1, 2, 3], [1, 2, 3, 4]])
+        lar2 = larry(
+               np.array([[ 2.,  2.,  3.,  1.],
+               [ 3.,  2.,  2.,  1.],
+               [ 1.,  1.,  1.,  1.]]), 
+               [[1, 2, 3], ['A', 2, 3, 4]])
+        larr = larry(
+               np.array([[ 2.,  2.,  3.,  1.,  2.],
+               [ 3.,  2.,  2.,  1.,  3.],
+               [ 1.,  1.,  1.,  1.,  1.]]), 
+               [[1, 2, 3], [1, 2, 3, 4, 'A']])
+        larm = lar1.merge(lar2, update=True)
+        assert_almost_equal(larr.x, larm.x)
+        assert_(larr.label == larm.label)
+        assert_raises(ValueError, lar1.merge, lar2, update=False)
+    
+    
+    def test_merge2(self):
+        lar1 = larry(
+               np.array([[  2.,   2.,  nan,  nan],
+                       [  3.,   2.,  nan,  nan],
+                       [  1.,   1.,  nan,  nan]]), 
+               [[1, 2, 3], [1, 2, 3, 4]])
+        lar2 = larry(
+               np.array([[  2.,  nan,   3.,   1.],
+                       [  3.,  nan,   2.,   1.],
+                       [  1.,  nan,   1.,   6.]]), 
+               [[1, 2, 3], ['A', 2, 3, 4]])
+        larr = larry(
+               np.array([[ 2.,  2.,  3.,  1.,  2.],
+                       [ 3.,  2.,  2.,  1.,  3.],
+                       [ 1.,  1.,  1.,  6.,  1.]]), 
+               [[1, 2, 3], [1, 2, 3, 4, 'A']])
+        larm = lar1.merge(lar2, update=False)
+        assert_almost_equal(larr.x, larm.x)
+        assert_(larr.label == larm.label)
+    
+    
+    def test_merge3(self):
+        lar1 = larry(
+               np.array([[  2.,   2.,   3.,   1.],
+                       [  3.,   2.,   2.,   1.],
+                       [ nan,  nan,  nan,  nan]]), 
+               [[1, 2, 3], [1, 2, 3, 4]])
+        lar2 = larry(
+               np.array([[  2.,  nan,   3.,   1.],
+                       [  3.,  nan,   2.,   1.],
+                       [  1.,  nan,   1.,   6.]]), 
+               [[1, 2, 3], ['A', 2, 3, 4]])
+        larr = larry(
+               np.array([[  2.,   2.,   3.,   1.,   2.],
+                       [  3.,   2.,   2.,   1.,   3.],
+                       [ nan,  nan,   1.,   6.,   1.]]), 
+               [[1, 2, 3], [1, 2, 3, 4, 'A']])
+        larm = lar1.merge(lar2, update=True)
+        assert_almost_equal(larr.x, larm.x)
+        assert_(larr.label == larm.label)
+    
+    
+    def test_merge4(self):
+        lar1 = larry(
+               np.array([[  2.,   2.,   3.,   1.],
+                       [  3.,   2.,   2.,   1.],
+                       [ nan,  nan,  nan,  nan]]), 
+               [[1, 2, 3], [1, 2, 3, 4]])
+        lar2 = larry(
+               np.array([[ 1.,  1.,  1.,  6.]]), 
+               [[3], [1, 2, 3, 4]])
+        larr = larry(
+               np.array([[ 2.,  2.,  3.,  1.],
+                       [ 3.,  2.,  2.,  1.],
+                       [ 1.,  1.,  1.,  6.]]), 
+               [[1, 2, 3], [1, 2, 3, 4]])
+        larm = lar1.merge(lar2, update=True)
+        assert_almost_equal(larr.x, larm.x)
+        assert_(larr.label == larm.label)
+    
+    
+    def test_merge5(self):
+        lar1 = larry(
+               np.array([[ 2.,  2.,  3.,  1.],
+                       [ 3.,  2.,  2.,  1.],
+                       [ 1.,  1.,  1.,  6.]]), 
+               [[1, 2, 3], [1, 2, 3, 4]])
+        lar2 = larry(
+               np.array([[ 10.,  10.,  10.,  60.]]), 
+               [[4], [1, 2, 3, 4]])
+        larr = larry(
+               np.array([[  2.,   2.,   3.,   1.],
+                       [  3.,   2.,   2.,   1.],
+                       [  1.,   1.,   1.,   6.],
+                       [ 10.,  10.,  10.,  60.]]), 
+               [[1, 2, 3, 4], [1, 2, 3, 4]])
+        larm = lar1.merge(lar2, update=True)
+        assert_almost_equal(larr.x, larm.x)
+        assert_(larr.label == larm.label)
+    
+    
+    def test_merge6(self):
+        lar1 = larry(
+               np.array([[ 2.,  2.,  3.,  1.],
+                         [ 3.,  2.,  2.,  1.],
+                         [ 1.,  1.,  1.,  6.]]), 
+               [[1, 2, 3], [1, 2, 3, 4]])
+        lar2 = larry(
+               np.array([[ 20.,  10.],
+               [ 10.,  60.]]), 
+               [[1, 2], [5, 6]])
+        larr = larry(
+               np.array([[  2.,   2.,   3.,   1.,  20.,  10.],
+                         [  3.,   2.,   2.,   1.,  10.,  60.],
+                         [  1.,   1.,   1.,   6.,  nan,  nan]]), 
+               [[1, 2, 3], [1, 2, 3, 4, 5, 6]])
+        larm = lar1.merge(lar2, update=False)
+        assert_almost_equal(larr.x, larm.x)
+        assert_(larr.label == larm.label)
+         
         
 def printfail(theory, practice, header):
     x = []
