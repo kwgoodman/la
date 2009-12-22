@@ -46,15 +46,6 @@ def check_return_array(func, args):
     assert_(type(res1) is np.ndarray or np.isscalar(res1), \
             repr(func)+'does not return array')
 
-def check_return_matrix(func, args):
-    res = func(*args)
-    if type(res) is tuple:
-        res1 = res[0]
-    else:
-        res1 = res
-    assert_(type(res1) is np.matrix or np.isscalar(res1), \
-            repr(func)+'does not return matrix')
-    
 def test_return_array():
     x = np.array([[0.0, 3.0, nan, nan, 0.0, nan],
                    [1.0, 1.0, 1.0, nan, nan, nan],
@@ -88,34 +79,6 @@ def test_return_array():
     yield check_return_array, sector_dummy, (sectors,)
     
 
-def _est_return_matrix():
-    x = np.matrix([[0.0, 3.0, nan, nan, 0.0, nan],
-                   [1.0, 1.0, 1.0, nan, nan, nan],
-                   [2.0, 2.0, 0.0, nan, 1.0, nan],
-                   [3.0, 0.0, 2.0, nan, nan, nan],
-                   [4.0, 4.0, 3.0, 0.0, 2.0, nan],
-                   [5.0, 5.0, 4.0, 4.0, nan, nan]])
-    sectors = ['a', 'b', 'a', 'b', 'a', 'c']
-    x = x+1 #geometric requires >0
-    for func in funcs_one:
-        xc = x.copy()
-        args = (xc,)
-        yield check_return_matrix, func, args
-        
-    for func in funcs_oneint:
-        xc = x.copy()
-        args = (xc,2)
-        yield check_return_matrix, func, args
-        
-    for func in funcs_onefrac:
-        xc = x.copy()
-        args = (xc, 0.5)
-        yield check_return_matrix, func, args
-        
-    for func in funcs_sect:
-        xc = x.copy()
-        args = (xc, sectors)
-        yield check_return_matrix, func, args
 
 def check_3d(func, args):
     res = func(*args)

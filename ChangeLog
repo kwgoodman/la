@@ -1,5 +1,7 @@
 2009-12-22 Josef
 
+    * more_test.py: remove uncommented matrix tests 
+
     * afunc.py: remove comments from refactoring,
       remove redundant .T in sector_dummy
 
