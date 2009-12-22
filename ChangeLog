@@ -1,5 +1,7 @@
 2009-12-22 Josef
 
+    * decorator.py: delete, not used anymore
+
     * afunc.py: remove decorators and xxx_old functions, all tests pass
 
     * afunc.py and tests: disable @wraptoarray1 decorators and matrix tests
