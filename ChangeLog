@@ -1,5 +1,8 @@
 2009-12-22 Josef
 
+    * afunc.py and tests: disable @wraptoarray1 decorators and matrix tests
+      delete afunc_test.py
+
     * deflarry.py: remove remaining matrix usage
 
     * tests/more_test.py: minor changes from previous 3d testing
