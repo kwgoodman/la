@@ -1,69 +1,92 @@
+2009-12-22 Josef
+
+    * slicing_test: delete wrongly committed file, add it in test directory
+      reformat changelog
 
 2009-12-16 Josef
-	* fix type in slicing_test, uncovered 2 failing cases in larry
+
+    * fix typo in slicing_test, uncovered 2 failing cases in larry
+    
     * add generator tests for slicing in 2d and 3d, (currently 40 tests)
-	* convert ranking to using arrays, rename old version
-	  (tested against old for 1d,2d - tests not included), API for 1d ?
+    
+    * convert ranking to using arrays, rename old version
+      (tested against old for 1d,2d - tests not included), API for 1d ?
+      
     * convert ranking_norm to using arrays, rename old version
-	  (tested against old for 1d,2d - tests not included)
+      (tested against old for 1d,2d - tests not included)
+      
     * convert lastrank_decay to using arrays, rename old version
-	  (tested against old for 1d,2d - tests not included), remove forgotten print
-	* convert ranking_1N to using arrays, rename old version
-	  (tested against old for 1d,2d(axis=0,1) - tests not included
+      (tested against old for 1d,2d - tests not included), remove forgotten print
+      
+    * convert ranking_1N to using arrays, rename old version
+      (tested against old for 1d,2d(axis=0,1) - tests not included
+      
     * remove matrix conversion from larry group methods (covered by tests)
+    
     * add new nose test file and notes.txt to repository
-	* add axis argument to larry.any and larry.all (consistency with numpy and ma)
-	* add axis back into lastrank (is a reduce operation but keeps dimension)
+    
+    * add axis argument to larry.any and larry.all (consistency with numpy and ma)
+    
+    * add axis back into lastrank (is a reduce operation but keeps dimension)
 
 
 2009-11-19 Josef
 
-	* convert movingrank and lastrank to use arrays
-	  API break: lastrank returns 1d not 2d column vector
-	  1 test, larry.lastrank_1, fails, maybe change back to 2d
-	* fix larry.movingsum tests, all tests pass again
-	* convert movingsum_forward to using arrays, add dropped rows/columns
-	  back into movingsum, correct shape in afun tests, deflarry_test for
-	  movingsum are wrong now
-	* convert geometric mean to using arrays, maintain same dimension
-	* convert sector functions to using arrays
-	* add afunc sector functions to return type tests, decorate.
-	  convert sector_dummy to build an array
-	* convert quantile to use arrays internally, switch decorator, 
-	  additional minor changes
-	* convert covMissing to use arrays internally, switch decorator
-	* decorate remaining afunc functions with wrong return type,
-	  add decorator wraptoarray1, now all return type tests pass,
-	  add scalar handling to decorators, add additional larry.cov test,
-	  rename M in covMissing (shadows matlib M), 
-	* remove some boilerplate in more_test, skip 3d tests for now
-	* add more_test.py: check return type, and 3d input,
-	  (errors=10, failures=8) out of 48 tests
-	* changing some methods of larry to not use matrix conversion breaks test.
-	  add decorator to quantile and covMissing, add one test for larry.cov,
-	  fix errors in covMissing, all current tests pass
-	* add missing tests for afunc.sector_dummy and afunc.unique_sector 
+    * convert movingrank and lastrank to use arrays
+      API break: lastrank returns 1d not 2d column vector
+      1 test, larry.lastrank_1, fails, maybe change back to 2d
+      
+    * fix larry.movingsum tests, all tests pass again
+    
+    * convert movingsum_forward to using arrays, add dropped rows/columns
+      back into movingsum, correct shape in afun tests, deflarry_test for
+      movingsum are wrong now
+      
+    * convert geometric mean to using arrays, maintain same dimension
+    * convert sector functions to using arrays
+    
+    * add afunc sector functions to return type tests, decorate.
+      convert sector_dummy to build an array
+      
+    * convert quantile to use arrays internally, switch decorator, 
+      additional minor changes
+      
+    * convert covMissing to use arrays internally, switch decorator
+    
+    * decorate remaining afunc functions with wrong return type,
+      add decorator wraptoarray1, now all return type tests pass,
+      add scalar handling to decorators, add additional larry.cov test,
+      rename M in covMissing (shadows matlib M), 
+      remove some boilerplate in more_test, skip 3d tests for now
+
+    * add more_test.py: check return type, and 3d input,
+      (errors=10, failures=8) out of 48 tests
+
+    * changing some methods of larry to not use matrix conversion breaks test.
+      add decorator to quantile and covMissing, add one test for larry.cov,
+      fix errors in covMissing, all current tests pass
+      add missing tests for afunc.sector_dummy and afunc.unique_sector 
 
 2009-11-18 Josef
 
-	* apply @wraptomatrix1 to remaining afunc functions, now all tests pass for
-	  array and for matrices, rename afunc_arr_test.py so it is picked up by nose.
-	  some larry functions still convert to matrices
+    * apply @wraptomatrix1 to remaining afunc functions, now all tests pass for
+      array and for matrices, rename afunc_arr_test.py so it is picked up by nose.
+      some larry functions still convert to matrices
 
-	* add decorator module (from pypi), add decorator to convert to matrix,
-	  use with afunc.ranking, afunc_arr_tes_.py:Test_ranking and deflarry_test pass
+    * add decorator module (from pypi), add decorator to convert to matrix,
+      use with afunc.ranking, afunc_arr_tes_.py:Test_ranking and deflarry_test pass
 
-	* add afunc_arr_tes_.py: raw translation of afunc_test for arrays instead
-	  of matrices, 30 out of 54 tests with error or failures
+    * add afunc_arr_tes_.py: raw translation of afunc_test for arrays instead
+      of matrices, 30 out of 54 tests with error or failures
 
-	* la.__init__.py: del Tester after use
+    * la.__init__.py: del Tester after use
 
-	* afunc_test.py: fix failing/incorrect tests for array version of movingsum,
-	  removed one test because q option is not available anymore
+    * afunc_test.py: fix failing/incorrect tests for array version of movingsum,
+      removed one test because q option is not available anymore
 
 2009-10-21 Josef (alias Carrasco)
 
-	* correct import in func 
+    * correct import in func 
 
     * add nosetesting via numpy, fix one import error in tests after relocation
     
