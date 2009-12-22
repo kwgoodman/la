@@ -537,7 +537,7 @@ class larry(object):
         self._2donly()
         label = self.copylabel()
         label[1] = [label[1][-1]]
-        x = np.asarray(lastrank(np.asmatrix(self.x)))
+        x = lastrank(self.x)
         return type(self)(x, label)
         
     def lastrank_decay(self, decay):
@@ -566,7 +566,7 @@ class larry(object):
         self._2donly()
         label = self.copylabel()
         label[1] = [label[1][-1]]
-        x = np.asarray(lastrank_decay(np.asmatrix(self.x), decay))
+        x = lastrank_decay(self.x, decay)
         return type(self)(x, label)                                 
         
     # Comparision ------------------------------------------------------------                                              
@@ -625,7 +625,7 @@ class larry(object):
                 raise ValueError, 'Unknown comparison operator'              
             return type(self)(x, label)
         else:
-            raise TypeError, 'Input must be scalar, numpy matrix, or larry.'
+            raise TypeError, 'Input must be scalar, numpy array, or larry.'
 
     # Any, all ---------------------------------------------------------------           
                 
@@ -938,7 +938,7 @@ class larry(object):
         """
         self._2donly()
         y = self.copy()
-        y.x = np.asarray(fillforward_partially(np.asmatrix(y.x), window))
+        y.x = fillforward_partially(y.x, window)
         return y
             
     def movingsum(self, window, axis=-1, norm=False):
@@ -952,8 +952,6 @@ class larry(object):
         """Movingsum in the forward direction skipping skip dates"""
         self._2donly()        
         y = self.copy()
-        #y.x = movingsum_forward(np.asmatrix(y.x), window, skip, axis, norm)
-        #y.x = np.asarray(y.x)
         y.x = movingsum_forward(y.x, window, skip, axis, norm)
         return y
                          
@@ -965,7 +963,6 @@ class larry(object):
         #XXX: why is default axis=0 and not 1 as usual
         self._2donly()
         y = self.copy()
-        #y.x = np.asarray(ranking(np.asmatrix(y.x), axis))
         y.x = ranking(y.x, axis)
         return y
                             
@@ -978,7 +975,6 @@ class larry(object):
         """
         self._2donly()
         y = self.copy()
-        #y.x = np.asarray(movingrank(np.asmatrix(y.x), window, axis))
         y.x = movingrank(y.x, window, axis)
         return y
         

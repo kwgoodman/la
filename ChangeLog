@@ -1,5 +1,7 @@
 2009-12-22 Josef
 
+    * deflarry.py: remove remaining matrix usage
+
     * tests/more_test.py: minor changes from previous 3d testing
 
     * slicing_test: delete wrongly committed file, add it in test directory
