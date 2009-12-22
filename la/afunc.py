@@ -2,52 +2,11 @@
 
 import numpy as np
 
-from decorator import decorator
 
 np.seterr(divide='ignore')
 np.seterr(invalid='ignore')
 
-@decorator
-def wraptomatrix1(func, *args, **kwds):
-    '''wrapping function to convert first argument to matrix
-    for use as a decorator
-    '''
-    #new = asarray(a)
-    #print args
-    a = args[0]
-    new = np.asmatrix(a)
-    wrap = getattr(a, "__array_prepare__", new.__array_wrap__)
-    if len(args)>1:
-        res = func(new, *args[1:], **kwds)
-    else:
-        res = func(new, **kwds)
-    if np.isscalar(res):
-        return res
-    elif type(res) is tuple:
-        return map(wrap, res)
-    else:
-        return wrap(res)
 
-@decorator
-def wraptoarray1(func, *args, **kwds):
-    '''wrapping function to convert first argument to matrix
-    for use as a decorator
-    '''
-    #new = asarray(a)
-    #print args
-    a = args[0]
-    new = np.asarray(a)
-    wrap = getattr(a, "__array_prepare__", new.__array_wrap__)
-    if len(args)>1:
-        res = func(new, *args[1:], **kwds)
-    else:
-        res = func(new, **kwds)
-    if np.isscalar(res):
-        return res
-    elif type(res) is tuple:
-        return map(wrap, res)
-    else:
-        return wrap(res)
 
 # Sector functions ----------------------------------------------------------
 
@@ -68,7 +27,7 @@ def sector_rank(x, sectors):
         xnorm[idx,:] = ranking(x[idx,:], axis=0)    
     return xnorm
 
-#@wraptoarray1
+
 def sector_mean(x, sectors):
     """Sector mean."""
 
@@ -88,7 +47,7 @@ def sector_mean(x, sectors):
             xmean[idx,:] = np.nansum(x[idx,:], axis=0) / norm
     return xmean
 
-#@wraptoarray1  # should work for arrays and matrix, but failure doesn't return array
+  # should work for arrays and matrix, but failure doesn't return array
 def sector_median(x, sectors):
     """Sector median."""
 
@@ -142,7 +101,7 @@ def unique_sector(sectors):
     
 # Normalize functions -------------------------------------------------------
 
-#@wraptoarray1
+
 def geometric_mean(x, axis=1, check_for_greater_than_zero=True):
     """Return the geometric mean of matrix x along axis, ignore NaNs.
     
@@ -170,7 +129,7 @@ def geometric_mean(x, axis=1, check_for_greater_than_zero=True):
     x = np.multiply(x, idx)
     return np.expand_dims(x, axis) 
 
-#@wraptoarray1
+
 def movingsum(x, window, axis=-1, norm=False):
     """Moving sum optionally normalized for missing (NaN) data."""
     if window < 1:  
@@ -204,44 +163,9 @@ def movingsum(x, window, axis=-1, norm=False):
     nans = np.nan * np.zeros(initshape)
     ms = np.concatenate((nans, ms), axis) 
     return ms
-    
-def movingsum_old(x, window, axis=1, norm=False, q=1.0):
-    """
-    Moving sum optionally normalized for missing (NaN) data.
-    
-    This is the old matrix version. Unlike the new array version the output is
-    the same shape as the input. I've kept for use in movingsum_forward until
-    movingsum_forward is made to work on with the new movingsum function.
-    """
-    import numpy.matlib as M
-    if norm is False and q != 1.0:
-        raise ValueError, 'Since norm is False, q will be ignored.'
-    if window > x.shape[axis]:
-        raise ValueError, 'Window is too big.' 
-    if axis == 0:
-        x = x.T 
-    x = 1.0 * x       
-    nr = x.shape[0]  
-    x = M.concatenate((M.zeros((nr,1)), x), 1)  
-    m = M.asmatrix(~M.isnan(x), M.float64)
-    x[m == 0] = 0
-    csx = x.cumsum(1)  
-    msx = csx[:,window:] - csx[:,:-window]
-    csm = m.cumsum(1)     
-    msm = csm[:,window:] - csm[:,:-window]    
-    if norm:
-        ms = M.multiply(M.power(window / msm, q), msx)
-    else:
-        ms = msx
-        ms[msm == 0] = M.nan          
-    x = x[:,1:]
-    nans = M.nan * M.zeros((nr, window-1))
-    ms = M.concatenate((nans, ms), 1) 
-    if axis == 0:
-        ms = ms.T  
-    return ms    
+ 
 
-#@wraptoarray1    
+    
 def movingsum_forward(x, window, skip=0, axis=1, norm=False):
     """Movingsum in the forward direction skipping skip dates."""
     if axis == 0:
@@ -258,7 +182,7 @@ def movingsum_forward(x, window, skip=0, axis=1, norm=False):
         ms = ms.T
     return ms
 
-#@wraptoarray1  
+  
 def movingrank(x, window, axis=1):
     """Moving rank (normalized to -1 and 1) of a given window along axis.
 
@@ -280,7 +204,7 @@ def movingrank(x, window, axis=1):
         mr = mr.T
     return mr
 
-#@wraptoarray1    
+    
 def lastrank(x):
     "Rank of last column only"
     g = (x[:,-1:] > x).sum(1)
@@ -293,7 +217,7 @@ def lastrank(x):
     #raise ValueError
     return r[:,None]  #add axis back in
 
-#@wraptoarray1 
+ 
 def lastrank_decay(x, decay):
     "Exponential decay rank of last column only"
     assert decay >= 0, 'Min decay is 0.'
@@ -312,24 +236,6 @@ def lastrank_decay(x, decay):
     r[~np.isfinite(x[:,-1])] = np.nan
     return r[:,None]
 
-@wraptomatrix1    
-def lastrank_decay_old(x, decay):
-    "Exponential decay rank of last column only"
-    assert decay >= 0, 'Min decay is 0.'
-    nt = x.shape[1]
-    w = nt - M.ones((1,nt)).cumsum(1)
-    w = M.exp(-decay * w)
-    w = nt * w / w.sum()
-    g = M.multiply((x[:,-1] > x), w).sum(1)
-    e = M.multiply((x[:,-1] == x), w).sum(1)
-    n = M.multiply(M.isfinite(x), w).sum(1)
-    r = (g + g + e - w[0,-1]) / 2.0
-    r = r / (n - w[0,-1])
-    r = 2.0 * (r - 0.5)
-    r[~M.isfinite(x[:,-1])] = M.nan
-    return r       
-
-#@wraptoarray1
 def ranking_1N(x, axis=0):
     """Rank elements of matrix x, ignore NaNs."""
     if axis not in (0,1) or (axis > x.ndim):
@@ -373,43 +279,9 @@ def ranking_1N(x, axis=0):
             
     return z
 
-@wraptomatrix1
-def ranking_1N_old(x, axis=0):
-    """Rank elements of matrix x, ignore NaNs."""
-    if axis not in (0,1):
-        ValueError, 'axis(=%d) out of bounds'
-    if (~M.isnan(x)).all():
-        z = x.argsort(axis).argsort(axis)
-    else:
-        if axis == 1:
-            x = x.T
-        ax = 0      
-        sannanidx = M.isnan(x).sum(ax) == 0
-        nanidx = ~sannanidx
-        sannanidx = M.where(sannanidx.A)[1]
-        nanidx = M.where(nanidx.A)[1]
-        z = M.nan * M.zeros(x.shape)
-        z[:, sannanidx] = x[:, sannanidx].argsort(ax).argsort(ax)
-        middle = (x.shape[ax] + 1.0)/2.0 - 1.0 
-        nax = z.shape[ax]    
-        for i in nanidx:
-            idx = M.where(~M.isnan(x[:, i].A))[0]
-            idx = M.asmatrix(idx).T
-            if len(idx) == 0:
-                z[idx, i] = M.nan
-            elif len(idx) == 1:
-                z[idx, i] = middle
-            else:                    
-                zi = x[idx, i].argsort(ax).argsort(ax)
-                zmin = M.nanmin(zi, ax)         
-                zmax = M.nanmax(zi, ax)
-                zi = (nax - 1.0) * (zi - zmin) / (zmax - zmin)                 
-                z[idx, i] = zi
-        if axis == 1:
-            z = z.T    
-    return z
 
-#@wraptoarray1
+
+
 def ranking_norm(x, axis=0):
     """Same as ranking_1N but normalize range to -1 to 1.""" 
     #x = np.asmatrix(x) 
@@ -438,34 +310,8 @@ def ranking_norm(x, axis=0):
         raise ValueError, 'axis must be 0 or 1.'
     zscaled[xnanidx] = np.nan               
     return zscaled
+ 
 
-
-@wraptomatrix1    
-def ranking_norm_old(x, axis=0):
-    """Same as ranking_1N but normalize range to -1 to 1."""  
-    xnanidx = M.isnan(x) 
-    z = 1.0 * ranking_1N(x, axis)  
-    zmin = M.nanmin(z, axis)
-    zmax = M.nanmax(z, axis) 
-    if type(zmin) == float:
-        zmin = M.matrix(zmin)
-    if type(zmin) == float:        
-        zmax = M.matrix(zmax)
-    zscaled = 2.0 * (z - zmin) / (zmax - zmin) - 1.0    
-    idx = zmin == zmax   
-    if axis == 0:
-        idx = M.where(idx.A)[1]    
-        zscaled[:, idx] = 0.0
-    elif axis == 1:
-        idx = M.where(idx.A)[0]
-        idx = M.asmatrix(idx).T 
-        zscaled[idx, :] = 0.0 
-    else:
-        raise ValueError, 'axis must be 0 or 1.'
-    zscaled[xnanidx] = M.nan               
-    return zscaled           
-
-#@wraptoarray1
 def ranking(x, axis=0):
     """Same as ranking_norm but break ties.
     
@@ -498,36 +344,8 @@ def ranking(x, axis=0):
         y = np.squeeze(y)
     return y
 
-@wraptomatrix1
-def ranking_old(x, axis=0):
-    """Same as ranking_norm but break ties.
-    
-    Uses a brute force method---slow.
-    """
-    import numpy.matlib as M
 
-    where = M.where
-    if axis == 1:
-        x = x.T
-    y = ranking_norm(x, axis=0)
-    sx = x.copy()
-    sx[M.isnan(sx)] = M.inf
-    sx.sort(axis=0)
-    dsx = M.diff(sx, axis=0)
-    idx = (dsx == 0).sum(axis=0)
-    idx = M.where(idx.A)[1]
-    for i in idx:
-        yi = y[:,i]
-        xi = x[:,i].A
-        ux = M.unique(xi)
-        for uxi in ux:
-            jdx = where(xi == uxi)[0]
-            y[jdx,i] = yi[jdx].mean()
-    if axis == 1:
-        y = y.T
-    return y
-
-#@wraptoarray1  
+  
 def fillforward_partially(x, n):
     "Fill missing values (NaN) with most recent non-missing values if recent."
     y = np.asarray(x.copy())
@@ -544,7 +362,7 @@ def fillforward_partially(x, n):
         recent[idx] = y[idx,i]
     return y #np.asmatrix(y) 
 
-#@wraptoarray1    
+    
 def quantile(x, q):
     """
     Convert elements in each column to integers between 1 and q then normalize.
@@ -585,7 +403,7 @@ def quantile(x, q):
     
 # Calc functions -----------------------------------------------------------
 
-#@wraptoarray1
+
 def covMissing(R):
     """
     Covariance matrix adjusted for missing returns.
@@ -631,7 +449,7 @@ def nans(shape, dtype=float):
     a.fill(np.nan)
     return a
 
-#@wraptoarray1
+
 def nanmean(x, axis=0):
     """Compute the mean over the given axis ignoring nans.
 
@@ -652,7 +470,7 @@ def nanmean(x, axis=0):
     x[np.isnan(x)] = 0
     return np.mean(x,axis)/factor
 
-#@wraptoarray1
+
 def nanstd(x, axis=0, bias=True):
     """Compute the standard deviation over the given axis ignoring nans
 
@@ -712,7 +530,7 @@ def _nanmedian(arr1d):  # This only works on 1d arrays
         return np.nan
     return median(x)
 
-#@wraptoarray1
+
 def nanmedian(x, axis=0):
     """ Compute the median along the given axis ignoring nan values
 

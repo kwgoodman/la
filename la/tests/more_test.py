@@ -10,7 +10,7 @@ nan = np.nan
 from test import printfail
 from la.afunc import (covMissing, fillforward_partially, geometric_mean, lastrank, 
             lastrank_decay, median, movingrank, movingsum, movingsum_forward, 
-            movingsum_old, nanmean, nanmedian, nans, nanstd, quantile, 
+            nanmean, nanmedian, nans, nanstd, quantile, 
             ranking, ranking_1N, ranking_norm, sector_dummy, sector_mean, 
             sector_median, sector_rank, unique_sector)
 
@@ -20,12 +20,12 @@ funcs_tested = [sector_rank, sector_mean, sector_median,
                       sector_dummy]
 funcs_all = [covMissing, fillforward_partially, geometric_mean, lastrank, 
             lastrank_decay, median, movingrank, movingsum, movingsum_forward, 
-            movingsum_old, nanmean, nanmedian, nans, nanstd, quantile, 
+            nanmean, nanmedian, nans, nanstd, quantile, 
             ranking, ranking_1N, ranking_norm, sector_dummy, sector_mean, 
             sector_median, sector_rank, unique_sector]
 
 
-# the following lists add up to all functions except movingsum_old
+# the following lists add up to all functions
 funcs_one = [covMissing, geometric_mean, lastrank, 
             median, nanmean, nanmedian, nanstd, 
             ranking, ranking_1N, ranking_norm]
