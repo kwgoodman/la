@@ -10,7 +10,6 @@ np.seterr(invalid='ignore')
 
 # Sector functions ----------------------------------------------------------
 
-#@wraptoarray1
 def sector_rank(x, sectors):
     """Rank normalize x within each sector to be between -1 and 1."""
   
@@ -47,7 +46,7 @@ def sector_mean(x, sectors):
             xmean[idx,:] = np.nansum(x[idx,:], axis=0) / norm
     return xmean
 
-  # should work for arrays and matrix, but failure doesn't return array
+
 def sector_median(x, sectors):
     """Sector median."""
 
@@ -80,15 +79,12 @@ def sector_dummy(sectors):
     
     Notes
     -----
-    this always returns array, not a matrix
+    this always returns array
     """
     if type(sectors) is not list:
         raise TypeError, 'Sector input must be a list'
     usectors = unique_sector(sectors)
-#    dummy = np.zeros((len(sectors), len(usectors)))
-    sectors = np.asarray(sectors, dtype=object).T
-#    for i, sec in enumerate(usectors):
-#        dummy[:,i] = sectors == sec
+    sectors = np.asarray(sectors, dtype=object)
     dummy = (sectors[:,None] == usectors).astype(float)
     return dummy, usectors    
     
@@ -280,20 +276,12 @@ def ranking_1N(x, axis=0):
     return z
 
 
-
-
 def ranking_norm(x, axis=0):
     """Same as ranking_1N but normalize range to -1 to 1.""" 
-    #x = np.asmatrix(x) 
     xnanidx = np.isnan(x) 
     z = 1.0 * ranking_1N(x, axis)  
     zmin = np.expand_dims(np.nanmin(z, axis), axis) #[:,None] # problem with axis = 1
     zmax = np.expand_dims(np.nanmax(z, axis), axis) #[:,None] # find the right function again
-    # not sure what the next did: 
-#    if type(zmin) == float:
-#        zmin = np.matrix(zmin)
-#    if type(zmin) == float:        
-#        zmax = np.matrix(zmax)
     zscaled = 2.0 * (z - zmin) / (zmax - zmin) - 1.0    
     idx = zmin == zmax   
     
@@ -304,7 +292,6 @@ def ranking_norm(x, axis=0):
         zscaled[:, idx] = 0.0
     elif axis == 1:
         idx = np.where(idx)[0]
-        #idx = np.asmatrix(idx).T 
         zscaled[idx, :] = 0.0 
     else:
         raise ValueError, 'axis must be 0 or 1.'
@@ -317,9 +304,8 @@ def ranking(x, axis=0):
     
     Uses a brute force method---slow.
     """
-    #x = np.asmatrix(x)
     where = np.where
-    ndim = x.ndim #remember
+    ndim = x.ndim 
     if axis == 1:
         x = x.T
     if x.ndim == 1:
@@ -329,7 +315,7 @@ def ranking(x, axis=0):
     sx[np.isnan(sx)] = np.inf
     sx.sort(axis=0)
     dsx = np.diff(sx, axis=0)
-    idx = (dsx == 0).sum(axis=0)[None,:]#[:, None]
+    idx = (dsx == 0).sum(axis=0)[None,:]
     idx = np.where(idx)[1]
     for i in idx:
         yi = y[:,i]
@@ -360,7 +346,7 @@ def fillforward_partially(x, n):
         idx = fidx[:,i]
         count[idx] = i
         recent[idx] = y[idx,i]
-    return y #np.asmatrix(y) 
+    return y
 
     
 def quantile(x, q):
@@ -382,7 +368,6 @@ def quantile(x, q):
         xi = x[:,i]
         idx = np.where(np.isfinite(xi))[0]
         xi = xi[idx,:]
-        #idx = np.asarray(idx[:,None])
         nx = idx.size
         if nx:
             jdx = xi.argsort(axis=0).argsort(axis=0)
@@ -422,8 +407,6 @@ def covMissing(R):
     l7.demean(axis=1).cov().x -np.ma.cov(np.ma.fix_invalid(x7), bias=1).data
     
     """
-    #TODO: no test failures with array, but needs to be checked (returns matrix?) DONE
-
     mask = np.isnan(R)
     R[mask] = 0
     mask = np.asarray(mask, np.float64)

@@ -1,5 +1,8 @@
 2009-12-22 Josef
 
+    * afunc.py: remove comments from refactoring,
+      remove redundant .T in sector_dummy
+
     * decorator.py: delete, not used anymore
 
     * afunc.py: remove decorators and xxx_old functions, all tests pass
