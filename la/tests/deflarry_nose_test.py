@@ -81,7 +81,7 @@ def dup23(x):
     '''
     return np.rollaxis(np.dstack([x,x]),2)
 
-from numpy.testing import assert_
+from numpy.testing import assert_, assert_equal
 
 tol = 1e-8
 nancode = -9999  
@@ -425,7 +425,7 @@ class eest_calc_la23(Test_calc_la2):
         self.labelmedian = [[0,1], [0, 1, 2], [0, 1, 2, 3]]
         
         
-class est_groups(object):
+class est_groups_moving(object):
     "Test calc functions of larry class"
     # still too much boiler plate
     
@@ -483,8 +483,32 @@ class est_groups(object):
         label = self.label3
         p = self.lar3.group_median(self.sectors)
         self.check_function(t, label, p, self.lar3)
+        
+    def test_movingsum31(self):
+        "larry.movingsum 3d 1"
+        t = self.tmovingsum3
+        label = self.label3
+        p = self.lar3.movingsum(2, axis=1, norm=False)
+        self.check_function(t, label, p, self.lar3) 
+        
+    def test_movingsum32(self):
+        "larry.groupmedian 3d 2"
+        #requires numpy 1.4 for nan equality testing 
+        lar3r = self.lar3.movingsum(2, axis=0, norm=True)
+        lar2r = self.lar.movingsum(2, axis=0, norm=True)
+        assert_equal(self.label3, lar3r.label)
+        assert_equal(lar3r.x[:,:,0], lar2r.x)
+        assert_equal(lar3r.x[:,:,1], lar2r.x)
+        
+    def test_movingsum33(self):
+        "larry.groupmedian 3d 3"
+        #requires numpy 1.4 for nan equality testing 
+        lar3r = self.lar3.movingsum(2, axis=2, norm=True)
+        assert_equal(self.label3, lar3r.label)
+        assert_(not np.isfinite(lar3r.x[:,:,0]).any())
+        assert_equal(lar3r.x[:,:,1], 2*self.lar3.x[:,:,1])
 
-class Test_group(est_groups):
+class Test_group_moving(est_groups_moving):
     "Test calc functions of larry class"
     #this runs all methods with `test_` of the super class as tests
     #check by introducing a failure in original data self.x2
@@ -538,4 +562,12 @@ class Test_group(est_groups):
                                [ 5.0, 5.0,  4.0, 4.0,  nan, nan]])
         
         self.tmedian3 = np.dstack([self.tmedian1, self.tmedian1])
+        self.tmovingsum1 = np.array([[ nan,   3.,   3.,  nan,   0.,   0.],
+                               [ nan,   2.,   2.,   1.,  nan,  nan],
+                               [ nan,   4.,   2.,   0.,   1.,   1.],
+                               [ nan,   3.,   2.,   2.,  nan,  nan],
+                               [ nan,   8.,   7.,   3.,   2.,   2.],
+                               [ nan,  10.,   9.,   8.,   4.,  nan]])
+        self.tmovingsum3 = np.dstack([self.tmovingsum1, 
+                                      self.tmovingsum1])
              

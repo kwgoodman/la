@@ -1,5 +1,8 @@
 2009-12-22 Josef
 
+    * deflarry_nose_test.py: add test for 3d movingsum, pass without 
+      code changes, tests require numpy 1.4 for nan equality testing
+
     * deflarry.py, afunc.py, deflarry_nose_test.py: enable nd groupmean and
       groupmedian, add 3d test for larry methods
 
