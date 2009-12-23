@@ -1,4 +1,8 @@
 
+2009-12-23 Josef
+
+    * afunc.py: replace ranking, ranking_norm, and ranking_1N with new nd
+      implementation, rename old functions, one test failure
 
 2009-12-23 Keith
 

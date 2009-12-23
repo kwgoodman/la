@@ -17,6 +17,8 @@ convert nd (n>2) to 2d (function array2table)
 	useful also for using methods and functions that work only for 2d
 	
 sector/group functions axis argument ?
+    use rollaxis to transfer to zero and then back again
+    grouprank for nd after ranking is nd
 
 integer overflow possible problems - promote to float
     * larry.sum uses np.nansum

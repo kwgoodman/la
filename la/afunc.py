@@ -229,7 +229,7 @@ def lastrank_decay(x, decay):
     r[~np.isfinite(x[:,-1])] = np.nan
     return r[:,None]
 
-def ranking_1N(x, axis=0):
+def ranking_1N_old(x, axis=0):
     """Rank elements of matrix x, ignore NaNs."""
     if axis not in (0,1) or (axis > x.ndim):
         ValueError, 'axis(=%d) out of bounds'
@@ -272,8 +272,7 @@ def ranking_1N(x, axis=0):
             
     return z
 
-
-def ranking_norm(x, axis=0):
+def ranking_norm_old(x, axis=0):
     """Same as ranking_1N but normalize range to -1 to 1.""" 
     xnanidx = np.isnan(x) 
     z = 1.0 * ranking_1N(x, axis)  
@@ -295,8 +294,58 @@ def ranking_norm(x, axis=0):
     zscaled[xnanidx] = np.nan               
     return zscaled
  
+def ranking_1N(x, axis=0):
+    return ranking(x, axis=axis, norm='0,N-1', ties=False)
 
-def ranking(x, axis=0):
+def ranking_norm(x, axis=0):
+    return ranking(x, axis=axis, norm='-1,1', ties=False)
+
+def ranking(x, axis=0, norm='-1,1', ties=True):
+    ax = axis
+    masknan = ~np.isfinite(x)
+    countnan = np.expand_dims(masknan.sum(ax), ax)
+    countnotnan = x.shape[ax] - countnan
+    if not ties:
+        if masknan.any():
+            x = x.copy()
+            x[masknan] = np.inf
+        idxraw = x.argsort(ax).argsort(ax)
+        idx = idxraw.astype(float)
+        idx[masknan] = np.nan
+    else:
+        from scipy import stats
+        rank1d = stats.rankdata #stats.rankdata starts ranks at 1
+        idx = np.nan * np.ones(x.shape)
+        itshape = list(x.shape)
+        itshape.pop(ax)
+        for ij in np.ndindex(*itshape):
+            ijslice = list(ij[:ax]) + [slice(None)] + list(ij[ax:])
+            x1d = x[ijslice]
+            mask1d = np.isfinite(x1d)
+            x1d[mask1d] = rank1d(x1d[mask1d])-1  #stats.rankdata starts at 1
+            idx[ijslice] = x1d
+
+    if norm == '-1,1':
+        idx /= (countnotnan - 1)
+        idx *= 2
+        idx -= 1
+        middle = 0.0
+    elif norm == '0,N-1':
+        idx *= ((x.shape[ax] - 1) / (countnotnan - 1))
+        middle = (idx.shape[ax] + 1.0) / 2.0 - 1.0
+    elif norm == 'gaussian':
+        from scipy.special import ndtri
+        idx *= ((x.shape[ax] - 1) / (countnotnan - 1))
+        idx = ndtri((idx + 1.0) / (x.shape[ax] + 1.0))
+        middle = 0.0
+    else:
+        msg = "norm must be '-1,1', '0,N-1', or 'gaussian'."
+        raise ValueError(msg)
+    idx[(countnotnan==1)*(~masknan)] = middle
+    return idx
+
+
+def ranking_old(x, axis=0):
     """Same as ranking_norm but break ties.
     
     Uses a brute force method---slow.
