@@ -340,28 +340,29 @@ class larry(object):
         idxs = []
         idxo = []
         label = []
-        shape = []  
+        shape = []
         for ls, lo  in zip(self.copylabel(), other.label):
             if ls == lo:
                 lab = ls
                 ids = range(len(lab))
-                ido = ids 
-            else:    
+                ido = ids
+            else:
                 lab = list(frozenset(ls) & frozenset(lo))
                 if len(lab) == 0:
                     raise IndexError, 'A dimension has no matching labels'
                 lab.sort()
                 ids = [ls.index(i) for i in lab]
                 ido = [lo.index(i) for i in lab]
-            label.append(lab)    
+            label.append(lab)
             idxs.append(ids)
             idxo.append(ido)
             shape.append(len(lab))
-        shape = tuple(shape)            
-        x = np.zeros(shape)               
+        shape = tuple(shape)
+        x = np.zeros(shape, dtype=self.x.dtype)
         x += self.x[np.ix_(*idxs)]
         y = other.x[np.ix_(*idxo)]
-        return x, y, label                     
+        return x, y, label
+                  
 
     # Reduce functions -------------------------------------------------------   
         
