@@ -1,10 +1,19 @@
-2009-12-22 Josef
+
+
+2009-12-23 Keith
+
+   * deflarry.py(__add__), deflarry.py(__or__), deflarry.py(__radd__),
+     deflarry.py(__ror__): New functions.
+
+2009-12-23 Josef
 
     * deflarry_nose_test.py: add test for 3d movingsum, pass without 
       code changes, tests require numpy 1.4 for nan equality testing
 
     * deflarry.py, afunc.py, deflarry_nose_test.py: enable nd groupmean and
       groupmedian, add 3d test for larry methods
+
+2009-12-22 Josef
 
     * deflarry.py, deflarry_test.py: vacuum reverse definition of axis argument
       to make it consistent with old behavior

@@ -307,6 +307,32 @@ class larry(object):
 
     __rmul__ = __mul__
 
+    def __and__(self, other):
+       if isinstance(other, larry):
+           x, y, label = self.__align(other)
+           x &= y
+           return type(self)(x, label)
+       if np.isscalar(other) or isinstance(other, np.ndarray):
+           y = self.copy()
+           y.x &= other
+           return y
+       raise TypeError, 'Input must be scalar, array, or larry.'
+
+    __rand__ = __and__
+
+    def __or__(self, other):
+       if isinstance(other, larry):
+           x, y, label = self.__align(other)
+           x |= y
+           return type(self)(x, label)
+       if np.isscalar(other) or isinstance(other, np.ndarray):
+           y = self.copy()
+           y.x |= other
+           return y
+       raise TypeError, 'Input must be scalar, array, or larry.'
+
+    __ror__ = __or__
+
     def __align(self, other):
         if self.ndim != other.ndim:
             msg = 'Binary operation on two larrys with different dimension'
