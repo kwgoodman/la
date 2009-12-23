@@ -1,5 +1,8 @@
 2009-12-22 Josef
 
+    * deflarry.py, deflarry_test.py: nd version of vacuum with tests,
+      keep currently vacuum_old 
+
     * deflarry.py, deflarry_test.py: add new merge method with tests,
       formatting and docstring by Keith
 

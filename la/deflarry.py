@@ -1342,8 +1342,66 @@ class larry(object):
      
         return lar1
      
-
     def vacuum(self, axis=None):
+        """Remove all rows and/or columns that contain all NaNs.
+              
+        
+        Parameters
+        ----------
+        axis : None or int or tuple of int
+            Remove columns (0) or rows (1) or both (None, default) that contain
+            no finite values, for nd arrays see Notes.
+            
+        Returns
+        -------
+        out : larry
+            Return a copy with rows and/or columns removed that contain all
+            NaNs.  
+            
+        Notes
+        -----
+        
+        For nd arrays, axis can also be a tuple. In this case, all other 
+        axes are checked for nans. If the corresponding slice of the array
+        contains only nans then the slice is removed.
+                
+        """        
+
+        y = self.copy()
+        ndim = y.ndim
+        
+        if axis is None:
+            axes = range(ndim)
+        elif not hasattr(axis, '__iter__'):
+            axes = [axis]
+        else:
+            axes = axis
+        
+        idxsl = []
+        labsnew = []
+        for ax in range(ndim):
+            sl = [None]*ndim
+            if ax not in axes:
+                labsnew.append(y.label[ax])
+                sl[ax] = slice(None)
+                idxsl.append(np.arange(y.shape[ax])[sl])
+                continue
+            
+            # find all nans over all other axes
+            xtmp = np.rollaxis(np.isfinite(y.x), ax, 0)
+            for _ in range(ndim-1):
+                xtmp = xtmp.any(-1)
+    
+            labsnew.append([y.label[ax][ii] for ii in np.nonzero(xtmp)[0]])
+            sl[ax] = slice(None)
+            idxsl.append(np.nonzero(xtmp)[0][sl])
+        
+        y.x = y.x[idxsl]
+        y.label = labsnew
+        return y
+
+
+    def vacuum_old(self, axis=None):
         """Remove all rows and/or columns that contain all NaNs.
         
         Note: Only works on 2d larrys.        
