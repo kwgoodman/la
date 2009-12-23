@@ -1460,11 +1460,12 @@ class larry(object):
             axes = range(ndim)
         elif not hasattr(axis, '__iter__'):
             axes = [axis]
+            #reverse
+            axes = [a for a in range(ndim) if a not in axes]
         else:
             axes = axis
-            
-        #reverse
-        #axes = [a for a in range(ndim) if a not in axes]
+            #reverse
+            axes = [a for a in range(ndim) if a not in axes]
         
         idxsl = []
         labsnew = []
