@@ -3,8 +3,6 @@
 import numpy as np
 
 
-
-
 # Sector functions ----------------------------------------------------------
 
 def sector_rank(x, sectors):
@@ -22,7 +20,6 @@ def sector_rank(x, sectors):
         idx = sectors == sec
         xnorm[idx,:] = ranking(x[idx,:], axis=0)    
     return xnorm
-
 
 def sector_mean(x, sectors):
     """Sector mean."""
@@ -42,7 +39,6 @@ def sector_mean(x, sectors):
             norm = 1.0 * (~np.isnan(x[idx,...])).sum(0)
             xmean[idx,...] = np.nansum(x[idx,...], axis=0) / norm
     return xmean
-
 
 def sector_median(x, sectors):
     """Sector median."""
@@ -94,7 +90,6 @@ def unique_sector(sectors):
     
 # Normalize functions -------------------------------------------------------
 
-
 def geometric_mean(x, axis=1, check_for_greater_than_zero=True):
     """Return the geometric mean of matrix x along axis, ignore NaNs.
     
@@ -122,7 +117,6 @@ def geometric_mean(x, axis=1, check_for_greater_than_zero=True):
     x = np.multiply(x, idx)
     return np.expand_dims(x, axis) 
 
-
 def movingsum(x, window, axis=-1, norm=False):
     """Moving sum optionally normalized for missing (NaN) data."""
     if window < 1:  
@@ -139,7 +133,7 @@ def movingsum(x, window, axis=-1, norm=False):
     index2[axis] = slice(None, -window) 
     msx = csx[index1]
     index3 = [slice(None)] * x.ndim
-    index3[axis] = slice(1, None) # form slice(1,None)
+    index3[axis] = slice(1, None)
     msx[index3] = msx[index3] - csx[index2] 
     csm = m.cumsum(axis)     
     msm = csm[index1]
@@ -156,9 +150,7 @@ def movingsum(x, window, axis=-1, norm=False):
     nans = np.nan * np.zeros(initshape)
     ms = np.concatenate((nans, ms), axis) 
     return ms
- 
-
-    
+  
 def movingsum_forward(x, window, skip=0, axis=1, norm=False):
     """Movingsum in the forward direction skipping skip dates."""
     if axis == 0:
@@ -175,7 +167,6 @@ def movingsum_forward(x, window, skip=0, axis=1, norm=False):
         ms = ms.T
     return ms
 
-  
 def movingrank(x, window, axis=1):
     """Moving rank (normalized to -1 and 1) of a given window along axis.
 
@@ -196,21 +187,18 @@ def movingrank(x, window, axis=1):
     if axis == 0:
         mr = mr.T
     return mr
-
-    
+   
 def lastrank(x):
     "Rank of last column only"
     g = (x[:,-1:] > x).sum(1)
     e = (x[:,-1:] == x).sum(1)
-    n = np.isfinite(x).sum(1)#[:,None]
+    n = np.isfinite(x).sum(1)
     r = (g + g + e - 1.0) / 2.0
     r = r / (n - 1.0)
     r = 2.0 * (r - 0.5)
     r[~np.isfinite(x[:,-1])] = np.nan
-    #raise ValueError
-    return r[:,None]  #add axis back in
+    return r[:,None]
 
- 
 def lastrank_decay(x, decay):
     "Exponential decay rank of last column only"
     assert decay >= 0, 'Min decay is 0.'
@@ -228,71 +216,6 @@ def lastrank_decay(x, decay):
     r = 2.0 * (r - 0.5)
     r[~np.isfinite(x[:,-1])] = np.nan
     return r[:,None]
-
-def ranking_1N_old(x, axis=0):
-    """Rank elements of matrix x, ignore NaNs."""
-    if axis not in (0,1) or (axis > x.ndim):
-        ValueError, 'axis(=%d) out of bounds'
-    if (~np.isnan(x)).all():
-        z = x.argsort(axis).argsort(axis)
-    else:
-        ndim = x.ndim #remember
-        if axis == 1:
-            x = x.T
-        if x.ndim == 1:
-            x = x[:,None]
-            
-
-        ax = 0
-        sannanidx = np.isnan(x).sum(ax) == 0
-        nanidx = ~sannanidx
-        sannanidx = np.where(sannanidx)[0]
-        nanidx = np.where(nanidx)[0]
-        z = np.nan * np.zeros(x.shape)
-        z[:, sannanidx] = x[:, sannanidx].argsort(ax).argsort(ax)
-        middle = (x.shape[ax] + 1.0)/2.0 - 1.0 
-        nax = z.shape[ax]    
-        for i in nanidx:
-            idx = np.where(~np.isnan(x[:, i]))[0]
-            #idx = np.asmatrix(idx).T
-            if len(idx) == 0:
-                z[idx, i:i+1] = np.nan
-            elif len(idx) == 1:
-                z[idx, i] = middle
-            else:
-                zi = x[idx, i:i+1].argsort(ax).argsort(ax)
-                zmin = np.nanmin(zi, ax)[:,None]         
-                zmax = np.nanmax(zi, ax)[:,None]
-                zi = (nax - 1.0) * (zi - zmin) / (zmax - zmin)                 
-                z[idx, i:i+1] = zi
-        if axis == 1:
-            z = z.T
-        if ndim == 1:
-            z = np.squeeze(z)
-            
-    return z
-
-def ranking_norm_old(x, axis=0):
-    """Same as ranking_1N but normalize range to -1 to 1.""" 
-    xnanidx = np.isnan(x) 
-    z = 1.0 * ranking_1N(x, axis)  
-    zmin = np.expand_dims(np.nanmin(z, axis), axis) #[:,None] # problem with axis = 1
-    zmax = np.expand_dims(np.nanmax(z, axis), axis) #[:,None] # find the right function again
-    zscaled = 2.0 * (z - zmin) / (zmax - zmin) - 1.0    
-    idx = zmin == zmax   
-    
-    if x.ndim == 1:
-        zscaled[idx] = 0.0
-    elif axis == 0:
-        idx = np.where(idx)[1]    
-        zscaled[:, idx] = 0.0
-    elif axis == 1:
-        idx = np.where(idx)[0]
-        zscaled[idx, :] = 0.0 
-    else:
-        raise ValueError, 'axis must be 0 or 1.'
-    zscaled[xnanidx] = np.nan               
-    return zscaled
  
 def ranking_1N(x, axis=0):
     return ranking(x, axis=axis, norm='0,N-1', ties=False)
@@ -324,18 +247,17 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
             mask1d = np.isfinite(x1d)
             x1d[mask1d] = rank1d(x1d[mask1d])-1  #stats.rankdata starts at 1
             idx[ijslice] = x1d
-
     if norm == '-1,1':
         idx /= (countnotnan - 1)
         idx *= 2
         idx -= 1
         middle = 0.0
     elif norm == '0,N-1':
-        idx *= ((x.shape[ax] - 1) / (countnotnan - 1))
+        idx *= (1.0 * (x.shape[ax] - 1) / (countnotnan - 1))
         middle = (idx.shape[ax] + 1.0) / 2.0 - 1.0
     elif norm == 'gaussian':
         from scipy.special import ndtri
-        idx *= ((x.shape[ax] - 1) / (countnotnan - 1))
+        idx *= (1.0 * (x.shape[ax] - 1) / (countnotnan - 1))
         idx = ndtri((idx + 1.0) / (x.shape[ax] + 1.0))
         middle = 0.0
     else:
@@ -344,40 +266,6 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
     idx[(countnotnan==1)*(~masknan)] = middle
     return idx
 
-
-def ranking_old(x, axis=0):
-    """Same as ranking_norm but break ties.
-    
-    Uses a brute force method---slow.
-    """
-    where = np.where
-    ndim = x.ndim 
-    if axis == 1:
-        x = x.T
-    if x.ndim == 1:
-        x = x[:,None]
-    y = ranking_norm(x, axis=0)
-    sx = x.copy()
-    sx[np.isnan(sx)] = np.inf
-    sx.sort(axis=0)
-    dsx = np.diff(sx, axis=0)
-    idx = (dsx == 0).sum(axis=0)[None,:]
-    idx = np.where(idx)[1]
-    for i in idx:
-        yi = y[:,i]
-        xi = x[:,i]
-        ux = np.unique(xi)
-        for uxi in ux:
-            jdx = where(xi == uxi)[0]
-            y[jdx,i] = yi[jdx].mean()
-    if axis == 1:
-        y = y.T
-    if ndim == 1:
-        y = np.squeeze(y)
-    return y
-
-
-  
 def fillforward_partially(x, n):
     "Fill missing values (NaN) with most recent non-missing values if recent."
     y = np.asarray(x.copy())
@@ -394,7 +282,6 @@ def fillforward_partially(x, n):
         recent[idx] = y[idx,i]
     return y
 
-    
 def quantile(x, q):
     """
     Convert elements in each column to integers between 1 and q then normalize.
@@ -430,10 +317,8 @@ def quantile(x, q):
     y = 1.0 * y / (q - 1.0)
     y = 2.0 * (y - 0.5)
     return y 
-
-    
+   
 # Calc functions -----------------------------------------------------------
-
 
 def covMissing(R):
     """

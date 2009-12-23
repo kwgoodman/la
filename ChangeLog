@@ -1,3 +1,10 @@
+2009-12-23 Keith
+
+    * afunc.py(ranking): Bug fix: '0,N-1' and 'gaussian' normalization used
+      integer division. Corrected to use float division.
+
+    * afunc.py(ranking_1N_old), afunc.py(ranking_norm_old),
+      afunc.py(ranking_old): Removed the old version of the ranking functions.
 
 2009-12-23 Josef
 
@@ -86,7 +93,6 @@
     
     * add axis back into lastrank (is a reduce operation but keeps dimension)
 
-
 2009-11-19 Josef
 
     * convert movingrank and lastrank to use arrays
@@ -148,8 +154,6 @@
     * add nosetesting via numpy, fix one import error in tests after relocation
     
     * change/deepen directory structure
-
-
 
 2009-09-29 Keith
 
