@@ -2,11 +2,13 @@
 
 2009-12-23 Keith
 
-   * deflarry.py(__align): Bug fix: dtype of int and bool were converted to
-     float. Now dtype are kept.
+    * afunc.py: remove np.seterr
 
-   * deflarry.py(__and__), deflarry.py(__or__), deflarry.py(__radd__),
-     deflarry.py(__ror__): New functions.
+    * deflarry.py(__align): Bug fix: dtype of int and bool were converted to
+      float. Now dtype are kept.
+
+    * deflarry.py(__and__), deflarry.py(__or__), deflarry.py(__radd__),
+      deflarry.py(__ror__): New functions.
 
 2009-12-23 Josef
 
