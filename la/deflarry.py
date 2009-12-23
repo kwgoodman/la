@@ -986,8 +986,94 @@ class larry(object):
         y = self.copy()
         y.x = quantile(y.x, q)       
         return y
+
+
+    def cut_missing(self, fraction, axis=None):
+        """Cut rows and columns that contain too many NaNs.
+        
+        Note: Only works on 2d larrys. 
+        
+        Parameters
+        ----------
+        fraction : scalar
+            Usually a float that give the minimum allowable fraction of missing
+            data before the row or column is cut.
+        axis : {0, 1}
+            Look for missing data along this axis. So for axis=0, the missing
+            data along columns are checked and columns are cut. For axis=1, the
+            missing data along rows are checked and rows are cut.
+            
+        Returns
+        -------
+        out : larry
+            Returns a copy with rows or columns with lots of missing data cut.                
+        
+        Raises
+        ------
+        ValueError
+            If larry is not 2d.        
+        IndexError
+            If axis is not 0 or 1.
+            
+        """    
+        
+        y = self.copy()
+        ndim = y.ndim
+        
+        if axis is None:
+            axes = range(ndim)
+        elif not hasattr(axis, '__iter__'):
+            axes = [axis]
+        else:
+            axes = axis
+        #reverse
+        axes = [a for a in range(ndim) if a not in axes]    
+        
+        threshold = (1.0 - fraction) * np.array(y.shape)  # added
+        idxsl = []
+        labsnew = []
+        for ax in range(ndim):
+            sl = [None]*ndim
+            if ax not in axes:
+                labsnew.append(y.label[ax])
+                sl[ax] = slice(None)
+                idxsl.append(np.arange(y.shape[ax])[sl])
+                continue
+            
+            # find all nans over all other axes
+            xtmp = np.rollaxis(np.isfinite(y.x), ax, 0)
+            #count = 1. #
+            count = np.ones(xtmp.shape)
+            for _ in range(ndim-1):
+                #xtmp = xtmp.any(-1)
+                xtmp = xtmp.sum(-1)  # changed
+                #count *= xtmp.shape[-1]
+                count = count.sum(-1)
+    
+            xtmp = xtmp > (1.0 - fraction)* count #threshold[ax] # added
+            # slicing would be easier if labelindex where a ndarray
+            labsnew.append([y.label[ax][ii] for ii in np.nonzero(xtmp)[0]])
+            sl[ax] = slice(None)
+            idxsl.append(np.nonzero(xtmp)[0][sl])
+    
+         #for trying out
+    #    try:
+    #        ret = (larry(np.squeeze(lar.x[idxsl]), labsnew), idxsl, labsnew)
+    #    except IndexError:
+    #        ret = (lar.x[idxsl], idxsl, labsnew) # return array
+    #    return ret
+        
+        y.x = y.x[idxsl]
+        y.label = labsnew
+        if y.x.size == 0: 
+            # empty larry left over
+            return larry(np.array([]))
+        else:
+            #squeeze or not ?
+            return y
+
                
-    def cut_missing(self, fraction, axis):
+    def cut_missing_old(self, fraction, axis):
         """Cut rows and columns that contain too many NaNs.
         
         Note: Only works on 2d larrys. 
@@ -1376,6 +1462,9 @@ class larry(object):
             axes = [axis]
         else:
             axes = axis
+            
+        #reverse
+        #axes = [a for a in range(ndim) if a not in axes]
         
         idxsl = []
         labsnew = []

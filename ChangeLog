@@ -1,5 +1,8 @@
 2009-12-22 Josef
 
+    * deflarry.py, deflarry_test.py: nd version of cut_missing, no new tests,
+      keep currently cut_missing_old 
+
     * deflarry.py, deflarry_test.py: nd version of vacuum with tests,
       keep currently vacuum_old 
 
