@@ -2821,51 +2821,94 @@ class Test_alignment(unittest.TestCase):
         label = [[0, 1, 2], [1]]
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l), 'Reference found')
-        
+
 class Test_properties_01(unittest.TestCase):
     "Test properties larry class"
-    
+
     def setUp(self):
         self.nancode = -9999
         self.x = np.array([[ 1.0, nan],
                            [ 1.0, 1.0],
-                           [ 1.0, 1.0]])                 
-        self.l = larry(self.x)                                               
-        
+                           [ 1.0, 1.0]])
+        self.l = larry(self.x)
+        self.x1 = np.array([ 1.0, nan])
+        self.l1 = larry(self.x1)
+        self.x3 = np.array([[[ 1.0, nan],
+                             [ 1.0, 1.0],
+                             [ 1.0, 1.0]],
+
+                            [[ 2.0, nan],
+                             [ 3.0, 6.0],
+                             [ 4.0, 7.0]]])
+        self.l3 = larry(self.x3)
+
     def test_01(self):
-        "larry.shape"        
+        "larry.shape"
         t = self.x.shape
         p = self.l.shape
         self.assert_(t == p, printfail(t, p, 'shape'))
 
     def test_02(self):
-        "larry.ndim"        
+        "larry.ndim"
         t = self.x.ndim
         p = self.l.ndim
         self.assert_(t == p, printfail(t, p, 'ndim'))
-        
+
     def test_05(self):
-        "larry.dtype"        
+        "larry.dtype"
         t = self.x.dtype
         p = self.l.dtype
         self.assert_(t == p, printfail(t, p, 'dtype'))
-        
+
     def test_06(self):
-        "larry.nx"        
+        "larry.nx"
         t = np.isfinite(self.x).sum()
         p = self.l.nx
         self.assert_(t == p, printfail(t, p, 'nx'))
-        
+
     def test_07(self):
-        "larry.T"     
+        "larry.T_2d"
         x = self.x.copy()
         x = x.T
         t = larry(x)
         p = self.l.T
         msg = printfail(t, p, 'T')
         t.x[np.isnan(t.x)] = self.nancode
-        p.x[np.isnan(p.x)] = self.nancode 
-        self.assert_(t == p, msg)    
+        p.x[np.isnan(p.x)] = self.nancode
+        self.assert_(t == p, msg)
+
+    def test_08(self):
+        "larry.T_1d"
+        x = self.x1.copy()
+        x = x.T
+        t = larry(x)
+        p = self.l1.T
+        msg = printfail(t, p, 'T')
+        t.x[np.isnan(t.x)] = self.nancode
+        p.x[np.isnan(p.x)] = self.nancode
+        self.assert_(t == p, msg)
+
+    def test_09(self):
+        "larry.T_"
+        x = self.x3.copy()
+        x = x.T
+        t = larry(x)
+        p = self.l3.T
+        msg = printfail(t, p, 'T')
+        t.x[np.isnan(t.x)] = self.nancode
+        p.x[np.isnan(p.x)] = self.nancode
+        self.assert_(t == p, msg)
+
+    def test_10(self):
+        "larry.T_4d"
+        x = np.random.randint(0,9,(2,3,4,5))
+        x = x.T
+        t = larry(x)
+        p = larry(x).T
+        msg = printfail(t, p, 'T')
+        t.x[np.isnan(t.x)] = self.nancode
+        p.x[np.isnan(p.x)] = self.nancode
+        self.assert_(t == p, msg)
 
 
 #new test functions, were semiautomatically generated

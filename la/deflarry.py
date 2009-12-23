@@ -1761,10 +1761,9 @@ class larry(object):
 
     @property
     def T(self):
-        self._2donly()
         y = self.copy()
         y.x = y.x.T
-        y.label = [y.label[1], y.label[0]]
+        y.label = y.label[::-1]
         return y
         
     def _2donly(self):

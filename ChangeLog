@@ -2,6 +2,11 @@
 
 2009-12-23 Keith
 
+    * deflarry.py(T): Extend transpose from 2d only to arbitrary dimension.
+
+    * tests/deflarry_test.py(Test_properties_01): Added unit tests for the
+      transpose of 1d, 3d, and 4d larrys.
+
     * afunc.py: remove np.seterr
 
     * deflarry.py(__align): Bug fix: dtype of int and bool were converted to
