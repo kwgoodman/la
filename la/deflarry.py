@@ -1263,24 +1263,24 @@ class larry(object):
         return y
             
     def group_mean(self, group):
-        """Group (e.g. sector) mean along columns.
+        """Group (e.g. sector) mean along columns (zero axis).
         
         The row labels of the object must be a subset of the row labels of the
         group.
-        """ 
-        self._2donly()  
+        """
+        
         y = self.copy() 
         aligned_group_list = y._group_align(group)
         y.x = sector_mean(y.x, aligned_group_list)                                         
         return y
         
     def group_median(self, group):
-        """Group (e.g. sector) median along columns.
+        """Group (e.g. sector) median along columns (zero axis).
         
         The row labels of the object must be a subset of the row labels of the
         group.
         """ 
-        self._2donly()
+
         y = self.copy()
         aligned_group_list = y._group_align(group)   
         y.x = sector_median(y.x, aligned_group_list)

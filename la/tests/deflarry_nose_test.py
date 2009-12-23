@@ -470,6 +470,19 @@ class est_groups(object):
         p = self.lar.group_median(self.sectors)
         self.check_function(t, label, p, self.lar)
 
+    def test_groupmean3(self):
+        "larry.groupmean 3d"  #not in deflarry_test
+        t = self.tmean3
+        label = self.label3
+        p = self.lar3.group_mean(self.sectors)
+        self.check_function(t, label, p, self.lar3)
+
+    def test_groupmedian3(self):
+        "larry.groupmedian 3d"  #not in deflarry_test
+        t = self.tmedian3
+        label = self.label3
+        p = self.lar3.group_median(self.sectors)
+        self.check_function(t, label, p, self.lar3)
 
 class Test_group(est_groups):
     "Test calc functions of larry class"
@@ -481,7 +494,9 @@ class Test_group(est_groups):
         self.tol = 1e-8
         self.nancode = -9999
 
-        self.label3 = [[0,1], [0, 1, 2], [0, 1, 2, 3]]
+        #self.label3 = [[0,1], [0, 1, 2], [0, 1, 2, 3]]
+        self.label3 = [[0, 1, 2, 3, 4, 5], [0, 1, 2, 3, 4, 5],
+                       [0,1]]
         self.x = np.array([[0.0, 3.0, nan, nan, 0.0, nan],
                            [1.0, 1.0, 1.0, nan, nan, nan],
                            [2.0, 2.0, 0.0, nan, 1.0, nan],
@@ -492,7 +507,7 @@ class Test_group(est_groups):
         #labels = [[0, 1, 2, 3, 4, 5], sectors]
         self.lar = larry(self.x)
         self.sectors = larry(np.array(sectors, dtype=object))
-        self.lar3 = larry(dup23(self.x))
+        self.lar3 = larry(np.dstack([self.lar.x, self.lar.x]))
         
         self.label = [[0, 1, 2, 3, 4, 5], [0, 1, 2, 3, 4, 5]]
         
@@ -513,10 +528,14 @@ class Test_group(est_groups):
                                [ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
                                [ 5.0, 5.0,  4.0, 4.0,  nan, nan]])
         
+        self.tmean3 = np.dstack([self.tmean1, self.tmean1])
+        
         self.tmedian1 = np.array([[ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
                                [ 2.0, 0.5,  1.5, nan,  nan, nan],
                                [ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
                                [ 2.0, 0.5,  1.5, nan,  nan, nan],
                                [ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
                                [ 5.0, 5.0,  4.0, 4.0,  nan, nan]])
+        
+        self.tmedian3 = np.dstack([self.tmedian1, self.tmedian1])
              

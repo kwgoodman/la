@@ -1,5 +1,8 @@
 2009-12-22 Josef
 
+    * deflarry.py, afunc.py, deflarry_nose_test.py: enable nd groupmean and
+      groupmedian, add 3d test for larry methods
+
     * deflarry.py, deflarry_test.py: vacuum reverse definition of axis argument
       to make it consistent with old behavior
 

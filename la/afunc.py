@@ -42,8 +42,8 @@ def sector_mean(x, sectors):
     for sec in usectors:
         idx = sectors == sec
         if idx.sum() > 0:
-            norm = 1.0 * (~np.isnan(x[idx,:])).sum(0)
-            xmean[idx,:] = np.nansum(x[idx,:], axis=0) / norm
+            norm = 1.0 * (~np.isnan(x[idx,...])).sum(0)
+            xmean[idx,...] = np.nansum(x[idx,...], axis=0) / norm
     return xmean
 
 
@@ -61,7 +61,7 @@ def sector_median(x, sectors):
     for sec in usectors:
         idx = sectors == sec
         if idx.sum() > 0:
-            xmedian[idx,:] = nanmedian(x[idx,:])
+            xmedian[idx,...] = nanmedian(x[idx,...])
     return xmedian
     
 def sector_dummy(sectors):
