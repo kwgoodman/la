@@ -1,5 +1,7 @@
 2009-12-31 Keith
 
+    * tests/deflarry_test.py: More minor cleaning.
+
     * deflarry.py, tests/deflarry_test.py: Clean up.
 
     * deflarry.py, la/tests/afunc_arr_test.py, la/tests/more_test.py,

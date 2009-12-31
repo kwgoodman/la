@@ -3062,8 +3062,8 @@ class Test_vacuum(unittest.TestCase):
 
     def setUp(self):
         x1 = np.array([[ 2.0, nan, 3.0, 1.0],
-                [ 3.0, nan, 2.0, 1.0],
-                [ 1.0, nan, 1.0, 1.0]])
+                       [ 3.0, nan, 2.0, 1.0],
+                       [ 1.0, nan, 1.0, 1.0]])
 
         labels = [[0, 1, 2], ['A', 'B', 'C', 'D']]
         labels1d = [['A', 'B', 'C', 'D']]
@@ -3077,6 +3077,7 @@ class Test_vacuum(unittest.TestCase):
         la1_3dt = larry(self.la1_3d.x.T.copy(), labels3dt)
                         
     def test_vacuum1a(self):
+        "larry.vacuum_1a"
         larr = larry(
                np.array([[ 2.,  3.,  1.],
                          [ 3.,  2.,  1.],
@@ -3087,6 +3088,7 @@ class Test_vacuum(unittest.TestCase):
         assert_(larv.label == larr.label)
 
     def test_vacuum1b(self):
+        "larry.vacuum_1b"    
         larr = larry(
                np.array([[ 2.,  3.,  1.],
                          [ 3.,  2.,  1.],
@@ -3097,6 +3099,7 @@ class Test_vacuum(unittest.TestCase):
         assert_(larv.label == larr.label)
 
     def test_vacuum1c(self):
+        "larry.vacuum_1c"    
         #no vacuum of rows
         larr = self.la1_2d0
         larv = self.la1_2d0.vacuum(axis=1)
@@ -3104,6 +3107,7 @@ class Test_vacuum(unittest.TestCase):
         assert_(larv.label == larr.label)    
     
     def test_vacuum2(self):
+        "larry.vacuum_2"    
         larr = larry(
                np.array([[[ 2.,  3.,  1.],
                           [ 3.,  2.,  1.],
@@ -3118,6 +3122,7 @@ class Test_vacuum(unittest.TestCase):
         assert_(larv.label == larr.label)
         
     def test_vacuum3(self):
+        "larry.vacuum_3"    
         larr = larry(
                np.array([ 2.,  3.,  1.]), 
                [['A', 'C', 'D']])
@@ -3126,70 +3131,75 @@ class Test_vacuum(unittest.TestCase):
         assert_(larv.label == larr.label)
         
     def test_vacuum4(self):
+        "larry.vacuum_4" 
         larr = larry(
                np.array([[[ 2.,  3.,  1.],
-                        [ 3.,  2.,  1.],
-                        [ 1.,  1.,  1.]],
+                          [ 3.,  2.,  1.],
+                          [ 1.,  1.,  1.]],
                 
-                       [[ 4.,  6.,  2.],
-                        [ 6.,  4.,  2.],
-                        [ 2.,  2.,  2.]]]), 
+                         [[ 4.,  6.,  2.],
+                          [ 6.,  4.,  2.],
+                          [ 2.,  2.,  2.]]]), 
                [[0, 1], [0, 1, 2], ['A', 'C', 'D']])
         larv = self.la1_3d.vacuum(axis=1)
         assert_almost_equal(larv.x, larr.x)
         assert_(larv.label == larr.label)
         
     def test_vacuum5(self):
+        "larry.vacuum_5" 
         larr = larry(
                np.array([[[  2.,  nan,   3.,   1.],
-                        [  3.,  nan,   2.,   1.],
-                        [  1.,  nan,   1.,   1.]],
+                          [  3.,  nan,   2.,   1.],
+                          [  1.,  nan,   1.,   1.]],
                 
-                       [[  4.,  nan,   6.,   2.],
-                        [  6.,  nan,   4.,   2.],
-                        [  2.,  nan,   2.,   2.]]]), 
+                         [[  4.,  nan,   6.,   2.],
+                          [  6.,  nan,   4.,   2.],
+                          [  2.,  nan,   2.,   2.]]]), 
                [[0, 1], [0, 1, 2], ['A', 'B', 'C', 'D']])
         larv = self.la1_3d.vacuum(axis=(1,2))
         assert_almost_equal(larv.x, larr.x)
         assert_(larv.label == larr.label)
         
     def test_vacuum6(self):
+        "larry.vacuum_6" 
         larr = larry(
                np.array([[[  2.,  nan,   3.,   1.],
-                        [  3.,  nan,   2.,   1.],
-                        [  1.,  nan,   1.,   1.]],
+                          [  3.,  nan,   2.,   1.],
+                          [  1.,  nan,   1.,   1.]],
                 
-                       [[  4.,  nan,   6.,   2.],
-                        [  6.,  nan,   4.,   2.],
-                        [  2.,  nan,   2.,   2.]]]), 
+                         [[  4.,  nan,   6.,   2.],
+                          [  6.,  nan,   4.,   2.],
+                          [  2.,  nan,   2.,   2.]]]), 
                [[0, 1], [0, 1, 2], ['A', 'B', 'C', 'D']])
         larv = self.la1_3d.vacuum(axis=2)
         assert_almost_equal(larv.x, larr.x)
         assert_(larv.label == larr.label)
         
     def test_vacuum7(self):
+        "larry.vacuum_7" 
         larr = larry(
                np.array([[[ 2.,  3.,  1.],
-                        [ 3.,  2.,  1.],
-                        [ 1.,  1.,  1.]],
+                          [ 3.,  2.,  1.],
+                          [ 1.,  1.,  1.]],
                 
-                       [[ 4.,  6.,  2.],
-                        [ 6.,  4.,  2.],
-                        [ 2.,  2.,  2.]]]), 
+                         [[ 4.,  6.,  2.],
+                          [ 6.,  4.,  2.],
+                          [ 2.,  2.,  2.]]]), 
                [[0, 1], [0, 1, 2], ['A', 'C', 'D']])
         larv = self.la1_3d.vacuum(axis=0)
         assert_almost_equal(larv.x, larr.x)
         assert_(larv.label == larr.label)
         
     def test_vacuum8(self):
+        "larry.vacuum_8" 
         larr = larry(
                np.array([[[ 2.,  3.,  1.],
-                    [ 3.,  2.,  1.],
-                    [ 1.,  1.,  1.]],
+                          [ 3.,  2.,  1.],
+                          [ 1.,  1.,  1.]],
             
-                   [[ 4.,  6.,  2.],
-                    [ 6.,  4.,  2.],
-                    [ 2.,  2.,  2.]]]), 
+                         [[ 4.,  6.,  2.],
+                          [ 6.,  4.,  2.],
+                          [ 2.,  2.,  2.]]]), 
                [[0, 1], [0, 1, 2], ['A', 'C', 'D']])
         larv = self.la1_3d.vacuum(axis=(0,1))
         assert_almost_equal(larv.x, larr.x)
