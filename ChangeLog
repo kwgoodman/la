@@ -1,5 +1,11 @@
 2009-12-31 Keith
 
+    * deflarry.py(sign), tests/deflarry_nose_test.py,
+      tests/deflarry_test.py: New methos and corresponding unit tests.
+
+    * deflarry.py(__len__): Removed new method. It results in a lot of test
+      failures of the binary functions. Odd.
+
     * deflarry.py(__len__): New method.
 
     * tests/deflarry_nose_test.py: Big clean up. Removed unused functions and

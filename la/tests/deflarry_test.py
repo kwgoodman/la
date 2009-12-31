@@ -112,6 +112,20 @@ class Test_unary(unittest.TestCase):
         label = [[0,1,2], [0,1]]
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l), 'Reference found')
+        
+    def test_sign(self):
+        "larry.sign"        
+        t = np.array([[ 1.0, 1.0],
+                      [ 1.0, 1.0],
+                      [ 1.0, 1.0]])              
+        p = self.l.sign()
+        msg = printfail(t, p.x, 'x')
+        t[np.isnan(t)] = self.nancode
+        p[np.isnan(p.x)] = self.nancode        
+        self.assert_((abs(t - p) < self.tol).all(), msg) 
+        label = [[0,1,2], [0,1]]
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, self.l), 'Reference found')        
 
     def test_power(self):
         "larry.power"        

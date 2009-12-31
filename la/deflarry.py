@@ -121,7 +121,27 @@ class larry(object):
         """
         y = self.copy()        
         np.sqrt(y.x, y.x)
-        return y 
+        return y
+
+    def sign(self):
+        """
+        Element by element sign of the element.
+        
+        Returns -1 if x < 0; 0 if x == 0, and 1 if x > 0.
+                
+        Parameters
+        ----------
+        No input
+        
+        Returns
+        -------
+        out : larry
+            Returns a copy with square root of x values.
+                
+        """
+        y = self.copy()        
+        np.sign(y.x, y.x)
+        return y
         
     def power(self, q):               
         """
@@ -1638,10 +1658,7 @@ class larry(object):
         
     @property
     def dtype(self):
-        return self.x.dtype
-        
-    def __len__(self):
-        return len(self.x)    
+        return self.x.dtype  
             
     # Report -----------------------------------------------------------------            
         

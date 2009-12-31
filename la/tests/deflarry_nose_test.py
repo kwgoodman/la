@@ -40,7 +40,7 @@ def dup23(x):
 tol = 1e-8
 nancode = -9999  
 
-meth_unary1 = ['log', 'exp', 'sqrt', 'abs']
+meth_unary1 = ['log', 'exp', 'sqrt', 'abs', 'sign']
 # All reduce operations except lastrank
 meth_reduce1 = ['sum', 'mean', 'var', 'std', 'max', 'min', 'median', 'any',
                 'all']
@@ -80,7 +80,7 @@ def test_methods_unary():
     for la, laname in las:
         for opname in meth_unary1:
             npop = getattr(np,opname)
-            t = npop(la.x)   #+1  to see whether tests fail
+            t = npop(la.x)   # Add +1 here to check whether tests fail
             p = getattr(la, opname)()
             
             yield assert_larry, opname, p, t, la.label, laname
