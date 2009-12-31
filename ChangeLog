@@ -1,5 +1,10 @@
 2009-12-31 Keith
 
+    * deflarry.py(shuffle), afunc.py(shuffle): New method and corresponding
+      function. Unlike numpy's shuffle this shuffle takes an axis argument.
+
+    * README: Tweak.
+
     * tests/deflarry_test.py: More minor cleaning.
 
     * deflarry.py, tests/deflarry_test.py: Clean up.
@@ -10,7 +15,7 @@
     * deflarry.py, la/tests/afunc_arr_test.py, la/tests/more_test.py,
       afunc.py: Renamed sector_rank, sector_mean, sector_median, unique_sector
       to group_rank, group_mean, group_median, unique_group to match larry
-      method names. Less confussion. Added doc strings. Made unique_group
+      method names. Less confusion. Added doc strings. Made unique_group
       faster. Added optional import norm and ties to group_rank.
 
     * deflarry.py(sign), tests/deflarry_nose_test.py,

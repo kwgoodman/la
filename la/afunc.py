@@ -428,6 +428,30 @@ def covMissing(R):
 
     return C   
 
+# Random functions ----------------------------------------------------------
+
+def shuffle(x, axis=0, rs=None):
+    """
+    Shuffle the data inplace along the specified axis.
+    
+    Unlike numpy's shuffle, this shuffle takes an axis argument. The
+    ordering of the labels is not changed, only the data is shuffled.
+    
+    Parameters
+    ----------
+    x : ndarray
+        Array to be shuffled.
+    axis : int
+        The axis to shuffle the data along. Default is axis 0.
+        
+    Returns
+    -------
+    out : None
+        The data is shuffled inplace.        
+    
+    """
+    np.random.shuffle(np.rollaxis(x, axis))
+
 # NaN functions -------------------------------------------------------------
 
 def nans(shape, dtype=float):

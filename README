@@ -24,7 +24,8 @@ MEET LARRY
     >> from numpy import array
     >> y = larry(array([1, 2, 3]), [['a', 'b', 'c']])
     
-    Larry has many builtin methods such as movingsum, ranking, merge, zscore:
+    Larry has many builtin methods such as movingsum, ranking, merge, shuffle,
+    zscore:
     
     >> y.zscore()
        

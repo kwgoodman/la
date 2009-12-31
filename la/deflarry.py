@@ -9,7 +9,7 @@ from scipy.stats import (nanmean, nanmedian)
 from la.afunc import (group_ranking, group_mean, group_median, covMissing,
                       fillforward_partially, quantile, ranking, lastrank,
                       movingsum_forward, lastrank_decay, movingrank,
-                      movingsum, nans, nanstd)
+                      movingsum, shuffle, nans, nanstd)
 
 
 class larry(object):
@@ -1637,6 +1637,28 @@ class larry(object):
         index[axis] = slice(0,-nlag)            
         y.x = y.x[index]
         return y                         
+
+    # Random -----------------------------------------------------------------
+    
+    def shuffle(self, axis=0):
+        """
+        Shuffle the data inplace along the specified axis.
+        
+        Unlike numpy's shuffle, this shuffle takes an axis argument. The
+        ordering of the labels is not changed, only the data is shuffled.
+        
+        Parameters
+        ----------
+        axis : int
+            The axis to shuffle the data along. Default is axis 0.
+            
+        Returns
+        -------
+        out : None
+            The data is shuffled inplace.        
+        
+        """
+        shuffle(self.x, axis)
 
     # Size -------------------------------------------------------------------
 
