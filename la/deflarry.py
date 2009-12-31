@@ -1639,6 +1639,9 @@ class larry(object):
     @property
     def dtype(self):
         return self.x.dtype
+        
+    def __len__(self):
+        return len(self.x)    
             
     # Report -----------------------------------------------------------------            
         

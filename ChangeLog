@@ -1,5 +1,7 @@
 2009-12-31 Keith
 
+    * deflarry.py(__len__): New method.
+
     * tests/deflarry_nose_test.py: Big clean up. Removed unused functions and
       fixed known test failure.
 
