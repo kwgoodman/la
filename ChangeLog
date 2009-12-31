@@ -1,5 +1,14 @@
 2009-12-31 Keith
 
+    * io.py: New module to save and load larrys.
+    
+    * io.py(save_npz), io.py(load_npz): New function to save and load larrys
+      in numpy's npz format.    
+
+    * __init__.py: import save_npz and load_npz to top level.
+
+    * deflarry.py(save): Remove method.
+
     * deflarry.py(shuffle), afunc.py(shuffle): New method and corresponding
       function. Unlike numpy's shuffle this shuffle takes an axis argument.
 

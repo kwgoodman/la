@@ -1741,18 +1741,7 @@ class larry(object):
         # x
         x.append('x\n')
         x.append(repr(self.x))
-        return ''.join(x)                        
-        
-    # IO ---------------------------------------------------------------------               
-            
-    def save(self, name, commit=True):
-        """Save data to database
-        
-        Here we assume that row = ID and col = date.
-        """
-        pass
-        # I deleted this function (and some others) since it is specific to
-        # our project.
+        return ''.join(x)
                
     # Misc -------------------------------------------------------------------        
           
