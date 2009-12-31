@@ -1,0 +1,75 @@
+
+MEET LARRY
+
+    Larry is a labeled numpy array. Here's a schematic representation of a
+    2d larry:
+    
+                             date1    date2    date3
+                    'AAPL'   123.45   127.23   132.60
+                    'IBM'    234.56   234.56   234.56
+                    'DELL'   456.67   460.07   458.23
+                
+    Larry stores the data above as a list of lists (the labels) and a numpy
+    array (the data):
+    
+        y.label = [['AAPL', 'IBM', 'DELL'], [date1, date2, date3]]
+        y.x = np.array([[123.45, 127.23, 132.60],
+                        [234.56, 234.56, 234.56],
+                        [456.67, 460.07, 458.23]])               
+    
+    A larry can have any dimension. Here, for example, is one way to create a
+    1d larry:
+
+    >> from la import larry
+    >> from numpy import array
+    >> y = larry(array([1, 2, 3]), [['a', 'b', 'c']])
+    
+    Larry has many builtin methods such as movingsum, ranking, merge, zscore:
+    
+    >> y.zscore()
+       
+    label_0
+        a
+        b
+        c
+
+    x
+    array([-1,  0,  1])
+    
+    If you add (or subtract, multiply, divide) two larrys together, alignment
+    is automatic:
+    
+    >> larry(array([1,2]), [['a','b']]) + larry(array([2,1]), [['b','a']])
+       
+    label_0
+        a
+        b
+
+    x
+    array([2, 4])
+    
+    Larry treats NaNs as missing data:
+    
+    >> y = larry(array([1, np.nan]))
+    >> y.sum()
+       1.0
+    
+    For the most part larry acts like a numpy array. And, whenever you want,
+    you have direct access to the numpy array that holds your data. For
+    example if you have a function, myfunc, that works on numpy arrays and
+    doesn't change the shape pf the array, then you can use it on a larry, y,
+    like this:
+    
+    y.x = myfunc(y.x)
+    
+    So larry adds the convenience of labels to your data, provides lots of
+    builtin functions, and let's you use many of your exisiting array
+    functions.       
+
+REQUIREMENTS
+
+    To run larry you need Python, Numpy, and Scipy. Python 2.6 and Numpy 1.4
+    are recommended. Larry currently contains no extensions, just Python code,
+    so there is nothing to compile. Just save the la directory and make sure
+    Python can find it.
+    

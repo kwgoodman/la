@@ -1,3 +1,7 @@
+2009-12-31 Keith
+
+    * README: Add a README file.
+
 2009-12-30 Keith
 
     * afunc.py(sector_dummy), tests/afunc_arr_test.py, tests/more_test.py:
