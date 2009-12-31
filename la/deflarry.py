@@ -6,7 +6,7 @@ from copy import deepcopy
 import numpy as np   
 from scipy.stats import (nanmean, nanmedian)
 
-from la.afunc import (sector_rank, sector_mean, sector_median, covMissing,
+from la.afunc import (group_rank, group_mean, group_median, covMissing,
                       fillforward_partially, quantile, ranking, lastrank,
                       movingsum_forward, lastrank_decay, movingrank,
                       movingsum, nans, nanstd)
@@ -1305,7 +1305,7 @@ class larry(object):
         self._2donly()
         y = self.copy()
         aligned_group_list = y._group_align(group)
-        y.x = sector_rank(y.x, aligned_group_list)
+        y.x = group_rank(y.x, aligned_group_list)
         return y
             
     def group_mean(self, group):
@@ -1316,7 +1316,7 @@ class larry(object):
         """        
         y = self.copy() 
         aligned_group_list = y._group_align(group)
-        y.x = sector_mean(y.x, aligned_group_list)                                         
+        y.x = group_mean(y.x, aligned_group_list)                                         
         return y
         
     def group_median(self, group):
@@ -1327,7 +1327,7 @@ class larry(object):
         """ 
         y = self.copy()
         aligned_group_list = y._group_align(group)   
-        y.x = sector_median(y.x, aligned_group_list)
+        y.x = group_median(y.x, aligned_group_list)
         return y
                 
     def _group_align(self, group):

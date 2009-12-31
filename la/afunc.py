@@ -7,64 +7,130 @@ from scipy.special import ndtri
 
 # Sector functions ----------------------------------------------------------
 
-def sector_rank(x, sectors):
-    """Rank normalize x within each sector to be between -1 and 1."""
+def group_rank(x, groups, norm='-1,1', ties=True):
+    """
+    Ranking within groups along axis=0.
+    
+    Parameters
+    ----------
+    x : ndarray
+        Data to be ranked.
+    groups : list
+        List of group membership of each element along axis=0.
+    norm: str
+        A string that specifies the normalization:
+        '0,N-1'     Zero to N-1 ranking
+        '-1,1'      Scale zero to N-1 ranking to be between -1 and 1
+        'gaussian'  Rank data then scale to a Gaussian distribution
+    ties: bool
+        If two elements of `x` have the same value then they will be ranked
+        by their order in the array (False). If `ties` is set to True
+        (default), then the ranks are averaged.
+        
+    Returns
+    -------
+    idx : ndarray
+        The ranked data. The dtype of the output is always np.float even if
+        the dtype of the input is int.
+    
+    Notes
+    ----
+    If there is only one non-NaN value within a group along the axis=0, then
+    that value is set to the midpoint of the specified normalization method.
+    
+    For '0,N-1' normalization, note that N is the number of element in the
+    group even in there are NaNs.
+    
+    """
   
     # Find set of unique sectors
-    usectors = unique_sector(sectors)
+    ugroups = unique_group(groups)
     
     # Convert sectors to a numpy array
-    sectors = np.asarray(sectors, dtype=object)
+    groups = np.asarray(groups, dtype=object)
   
     # Loop through unique sectors and normalize
     xnorm = np.nan * np.zeros(x.shape)
-    for sec in usectors:
-        idx = sectors == sec
-        xnorm[idx,:] = ranking(x[idx,:], axis=0)    
+    for group in ugroups:
+        idx = groups == group
+        xnorm[idx,:] = ranking(x[idx,:], axis=0, norm=norm, ties=ties) 
+           
     return xnorm
 
-def sector_mean(x, sectors):
-    """Sector mean."""
+def group_mean(x, groups):
+    """
+    Mean with groups along axis=0.
+    
+    Parameters
+    ----------
+    x : ndarray
+        Input data.
+    groups : list
+        List of group membership of each element along axis=0.
+        
+    Returns
+    -------
+    idx : ndarray
+        The group mean of the data along axis 0.
+
+    """
 
     # Find set of unique sectors
-    usectors = unique_sector(sectors)
+    ugroups = unique_group(groups)
     
     # Convert sectors to a numpy array
-    sectors = np.asarray(sectors, dtype=object)    
+    groups = np.asarray(groups, dtype=object)    
   
     # Loop through unique sectors and normalize
-    # this will be slow if there are many sectors
     xmean = np.nan * np.zeros(x.shape)
-    for sec in usectors:
-        idx = sectors == sec
+    for group in ugroups:
+        idx = groups == group
         if idx.sum() > 0:
             norm = 1.0 * (~np.isnan(x[idx,...])).sum(0)
             xmean[idx,...] = np.nansum(x[idx,...], axis=0) / norm
+            
     return xmean
 
-def sector_median(x, sectors):
-    """Sector median."""
+def group_median(x, groups):
+    """
+    Median with groups along axis=0.
+    
+    Parameters
+    ----------
+    x : ndarray
+        Input data.
+    groups : list
+        List of group membership of each element along axis=0.
+        
+    Returns
+    -------
+    idx : ndarray
+        The group median of the data along axis 0.
+
+    """
 
     # Find set of unique sectors
-    usectors = unique_sector(sectors)
+    ugroups = unique_group(groups)
     
     # Convert sectors to a numpy array
-    sectors = np.asarray(sectors, dtype=object)    
+    groups = np.asarray(groups, dtype=object)    
   
     # Loop through unique sectors and normalize
     xmedian = np.nan * np.zeros(x.shape)
-    for sec in usectors:
-        idx = sectors == sec
+    for group in ugroups:
+        idx = groups == group
         if idx.sum() > 0:
             xmedian[idx,...] = nanmedian(x[idx,...])
+            
     return xmedian
     
-def unique_sector(sectors):
-    """Find unique sector list not including None."""    
-    usectors = set(sectors)
-    usectors = [z for z in usectors if z is not None]
-    usectors.sort()
-    return usectors    
+def unique_group(groups):
+    """Find unique groups in list not including None."""    
+    ugroups = set(groups)
+    ugroups -= set((None,))
+    ugroups = list(ugroups)
+    ugroups.sort()
+    return ugroups    
     
 # Normalize functions -------------------------------------------------------
 
