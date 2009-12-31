@@ -10,9 +10,8 @@ nan = np.nan
 
 from test import printfail
 from la.afunc import sector_rank, sector_mean, sector_median
-from la.afunc import (movingsum, ranking_1N, movingrank, ranking_norm,
-                      movingsum_forward, geometric_mean, ranking, unique_sector,
-                      sector_dummy)
+from la.afunc import (movingsum, movingrank, movingsum_forward, ranking, 
+                      geometric_mean, unique_sector, sector_dummy)
 
 # Sector functions ----------------------------------------------------------
 
@@ -237,7 +236,7 @@ class Test_ranking_1N(unittest.TestCase):
         theory = np.array([[ 0.0, nan, 0.0, nan, nan],
                            [ 1.0, 0.0, nan, nan, nan],
                            [ 2.0, 2.0, 2.0, 1.0, nan]])                     
-        practice = ranking_1N(x, axis=0)
+        practice = ranking(x, axis=0, norm='0,N-1', ties=False)
         msg = printfail(theory, practice)
         theory[np.isnan(theory)] = self.nancode
         practice[np.isnan(practice)] = self.nancode        
@@ -251,7 +250,7 @@ class Test_ranking_1N(unittest.TestCase):
         theory = np.array([[ 0.0, nan, 0.0, nan, nan],
                            [ 1.0, 0.0, nan, nan, nan],
                            [ 2.0, 2.0, 2.0, 1.0, nan]])                     
-        practice = ranking_1N(x)
+        practice = ranking(x, norm='0,N-1', ties=False)
         msg = printfail(theory, practice)
         theory[np.isnan(theory)] = self.nancode
         practice[np.isnan(practice)] = self.nancode        
@@ -267,7 +266,7 @@ class Test_ranking_1N(unittest.TestCase):
                            [ 0.0,   4.0,   nan, nan, nan],
                            [ 0.0, 4/3.0, 8/3.0, 4.0, nan],
                            [ 4.0,   2.0,   3.0, 1.0, 0.0]])                     
-        practice = ranking_1N(x, axis=1)
+        practice = ranking(x, axis=1, norm='0,N-1', ties=False)
         msg = printfail(theory, practice)
         theory[np.isnan(theory)] = self.nancode
         practice[np.isnan(practice)] = self.nancode        
@@ -277,7 +276,7 @@ class Test_ranking_1N(unittest.TestCase):
         """afunc.ranking_1N #4""" 
         x = np.array([3.0, 1.0, 2.0])[:,None]
         theory = np.array([2, 0, 1])[:,None]
-        practice = ranking_1N(x, axis=0)
+        practice = ranking(x, axis=0, norm='0,N-1', ties=False)
         msg = printfail(theory, practice)    
         self.assert_((theory == practice).all(), msg) 
 
@@ -285,7 +284,7 @@ class Test_ranking_1N(unittest.TestCase):
         """afunc.ranking_1N #5"""  
         x = np.array([3.0, 1.0, 2.0])[:,None]
         theory = np.array([0, 0, 0])[:,None]
-        practice = ranking_1N(x, axis=1)
+        practice = ranking(x, axis=1, norm='0,N-1', ties=False)
         msg = printfail(theory, practice)    
         self.assert_((theory == practice).all(), msg)        
 
@@ -304,7 +303,7 @@ class Test_ranking_norm(unittest.TestCase):
         theory = np.array([[-1.0,   nan,  -1.0,   nan,   nan],
                            [ 0.0,  -1.0,   nan,   nan,   nan],
                            [ 1.0,   1.0,   1.0,   0.0,   nan]])                     
-        practice = ranking_norm(x, axis=0)
+        practice = ranking(x, axis=0, norm='-1,1', ties=False)
         msg = printfail(theory, practice)
         theory[np.isnan(theory)] = self.nancode
         practice[np.isnan(practice)] = self.nancode        
@@ -318,7 +317,7 @@ class Test_ranking_norm(unittest.TestCase):
         theory = np.array([[-1.0,   nan,  -1.0,   nan,   nan],
                            [ 0.0,  -1.0,   nan,   nan,   nan],
                            [ 1.0,   1.0,   1.0,   0.0,   nan]])                    
-        practice = ranking_norm(x)
+        practice = ranking(x, norm='-1,1', ties=False)
         msg = printfail(theory, practice)
         theory[np.isnan(theory)] = self.nancode
         practice[np.isnan(practice)] = self.nancode        
@@ -334,7 +333,7 @@ class Test_ranking_norm(unittest.TestCase):
                            [-1.0,   1.0,   nan,   nan,   nan],
                            [-1.0,-1/3.0, 1/3.0,   1.0,   nan],
                            [ 1.0,   0.0,   0.5,  -0.5,  -1.0]])                     
-        practice = ranking_norm(x, axis=1)
+        practice = ranking(x, axis=1, norm='-1,1', ties=False)
         msg = printfail(theory, practice)
         theory[np.isnan(theory)] = self.nancode
         practice[np.isnan(practice)] = self.nancode        
@@ -344,7 +343,7 @@ class Test_ranking_norm(unittest.TestCase):
         """afunc.ranking_norm #4"""  
         x = np.array([3.0, 1.0, 2.0])[:,None]
         theory = np.array([1.0,-1.0, 0.0])[:,None]
-        practice = ranking_norm(x, axis=0)
+        practice = ranking(x, axis=0, norm='-1,1', ties=False)
         msg = printfail(theory, practice)    
         self.assert_((theory == practice).all(), msg) 
 
@@ -352,7 +351,7 @@ class Test_ranking_norm(unittest.TestCase):
         """afunc.ranking_norm #5"""  
         x = np.array([3.0, 1.0, 2.0])[:,None]
         theory = np.array([0.0, 0.0, 0.0])[:,None]
-        practice = ranking_norm(x, axis=1)
+        practice = ranking(x, axis=1, norm='-1,1', ties=False)
         msg = printfail(theory, practice)    
         self.assert_((theory == practice).all(), msg)
 

@@ -3065,8 +3065,8 @@ class Test_vacuum(unittest.TestCase):
     def test_vacuum1a(self):
         larr = larry(
                np.array([[ 2.,  3.,  1.],
-                       [ 3.,  2.,  1.],
-                       [ 1.,  1.,  1.]]), 
+                         [ 3.,  2.,  1.],
+                         [ 1.,  1.,  1.]]), 
                [[0, 1, 2], ['A', 'C', 'D']])
         larv = self.la1_2d0.vacuum(axis=None)
         assert_almost_equal(larv.x, larr.x)
@@ -3075,8 +3075,8 @@ class Test_vacuum(unittest.TestCase):
     def test_vacuum1b(self):
         larr = larry(
                np.array([[ 2.,  3.,  1.],
-                       [ 3.,  2.,  1.],
-                       [ 1.,  1.,  1.]]), 
+                        [ 3.,  2.,  1.],
+                        [ 1.,  1.,  1.]]), 
                [[0, 1, 2], ['A', 'C', 'D']])
         larv = self.la1_2d0.vacuum(axis=0)
         assert_almost_equal(larv.x, larr.x)
@@ -3087,34 +3087,7 @@ class Test_vacuum(unittest.TestCase):
         larr = self.la1_2d0
         larv = self.la1_2d0.vacuum(axis=1)
         assert_almost_equal(larv.x, larr.x)
-        assert_(larv.label == larr.label)
-
-    def test_vacuum1ao(self):
-        larr = larry(
-               np.array([[ 2.,  3.,  1.],
-                       [ 3.,  2.,  1.],
-                       [ 1.,  1.,  1.]]), 
-               [[0, 1, 2], ['A', 'C', 'D']])
-        larv = self.la1_2d0.vacuum_old(axis=None)
-        assert_almost_equal(larv.x, larr.x)
-        assert_(larv.label == larr.label)
-
-    def test_vacuum1bo(self):
-        larr = larry(
-               np.array([[ 2.,  3.,  1.],
-                       [ 3.,  2.,  1.],
-                       [ 1.,  1.,  1.]]), 
-               [[0, 1, 2], ['A', 'C', 'D']])
-        larv = self.la1_2d0.vacuum_old(axis=0)
-        assert_almost_equal(larv.x, larr.x)
-        assert_(larv.label == larr.label)
-
-    def test_vacuum1co(self):
-        #no vacuum of rows
-        larr = self.la1_2d0
-        larv = self.la1_2d0.vacuum_old(axis=1)
-        assert_almost_equal(larv.x, larr.x)
-        assert_(larv.label == larr.label)                
+        assert_(larv.label == larr.label)    
     
     def test_vacuum2(self):
         larr = larry(

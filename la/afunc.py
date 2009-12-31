@@ -216,14 +216,46 @@ def lastrank_decay(x, decay):
     r = 2.0 * (r - 0.5)
     r[~np.isfinite(x[:,-1])] = np.nan
     return r[:,None]
- 
-def ranking_1N(x, axis=0):
-    return ranking(x, axis=axis, norm='0,N-1', ties=False)
-
-def ranking_norm(x, axis=0):
-    return ranking(x, axis=axis, norm='-1,1', ties=False)
 
 def ranking(x, axis=0, norm='-1,1', ties=True):
+    """
+    Rank elements treating NaN as missing and optionally break ties.
+    
+    Parameters
+    ----------
+    x : ndarray
+        Data to be ranked.
+    axis : int, optional
+        Axis to rank over. Default axis is 0.
+    norm: str
+        A string that specifies the normalization:
+        '0,N-1'     Zero to N-1 ranking
+        '-1,1'      Scale zero to N-1 ranking to be between -1 and 1
+        'gaussian'  Rank data then scale to a Gaussian distribution
+    ties: bool
+        If two elements of `x` have the same value then they will be ranked
+        by their order in the array (False). If `ties` is set to True
+        (default), then the ranks are averaged.
+        
+    Returns
+    -------
+    idx : ndarray
+        The ranked data.The dtype of the output is always np.float even if
+        the dtype of the input is int.
+    
+    Notes
+    ----
+    If there is only one non-NaN value along the given axis, then that value
+    is set to the midpoint of the specified normalization method. For example,
+    if the input is array([1.0, nan]), then 1.0 is set to zero for the '-1,1'
+    and 'gaussian' normalizations and is set to 0.5 (mean of 0 and 1) for the
+    '0,N-1' normalization.
+    
+    For '0,N-1' normalization, note that N is x.shape[axis] even in there are
+    NaNs. That ensures that when ranking along the columns of a 2d array, for
+    example, the output will have the same min and max along all columns.
+    
+    """
     ax = axis
     masknan = ~np.isfinite(x)
     countnan = np.expand_dims(masknan.sum(ax), ax)
@@ -237,15 +269,15 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
         idx[masknan] = np.nan
     else:
         from scipy import stats
-        rank1d = stats.rankdata #stats.rankdata starts ranks at 1
+        rank1d = stats.rankdata # Note: stats.rankdata starts ranks at 1
         idx = np.nan * np.ones(x.shape)
         itshape = list(x.shape)
         itshape.pop(ax)
         for ij in np.ndindex(*itshape):
             ijslice = list(ij[:ax]) + [slice(None)] + list(ij[ax:])
-            x1d = x[ijslice]
+            x1d = x[ijslice].astype(float)
             mask1d = np.isfinite(x1d)
-            x1d[mask1d] = rank1d(x1d[mask1d])-1  #stats.rankdata starts at 1
+            x1d[mask1d] = rank1d(x1d[mask1d]) - 1
             idx[ijslice] = x1d
     if norm == '-1,1':
         idx /= (countnotnan - 1)

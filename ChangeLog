@@ -1,3 +1,30 @@
+2009-12-30 Keith
+
+    * afunc.py(ranking_1N), afunc.py(ranking_norm): Removed these functions
+      since they are special cases fo the new ranking function.
+      
+    * tests/afunc_arr_test.py: Converted all ranking_norm and ranking_1N
+      tests to ranking tests.         
+      
+    * afunc.py(ranking): Added a doc string.     
+
+    * afunc.py(ranking): Bug fix: input with dtype int and bool now runs
+      without crashing.
+       
+    * deflarry.py(ranking): Added doc string and removed requirement that
+      imput must be 2d.   
+       
+    * deflarry.py: A bunch of formating/style changes.
+     
+    * deflarry.py(__init__): Speed up init by only formatting error messages
+      string if there is an error.
+       
+    * deflarry.py(vacuum_old), deflarry.py(cut_missing_old): Removed methods.
+    
+    * tests/deflarry_test.py: Removed vacuum_old tests.
+    
+    * tests/more_test.py: Clean up. 
+
 2009-12-23 Keith
 
     * afunc.py(ranking): Bug fix: '0,N-1' and 'gaussian' normalization used

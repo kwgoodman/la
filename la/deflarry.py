@@ -15,7 +15,8 @@ class larry(object):
     "Labeled array"
 
     def __init__(self, x, label=None):
-        """Meet larry, he's a labeled array.
+        """
+        Meet larry, he's a labeled array.
         
         Parameters
         ----------
@@ -26,7 +27,8 @@ class larry(object):
             example, then label should be a list that contains two lists, one
             for the row labels and one for the column labels. If x is 1d label
             should be a list that contain one list of names. If label is None
-            (default) integers will be used to label the the row, columns, etc.
+            (default) integers will be used to label the the row, columns,
+            etc.
             
         Raises
         ------
@@ -43,12 +45,11 @@ class larry(object):
             label = [range(z) for z in x.shape]
         if x.ndim != len(label):
             ValueError, 'Exactly one label per dimension needed'
-        msg1 = 'Length mismatch in label and x along dimension %d'
-        msg2 = "Elements of label not unique along dimension %d. There are %d labels named `%s`."
         for i, l in enumerate(label):
             nlabel = len(l)
             if x.shape[i] != nlabel:
-                raise ValueError, msg1 % i
+                msg = 'Length mismatch in label and x along dimension %d'
+                raise ValueError, msg % i
             if len(frozenset(l)) != nlabel:
                 # We have duplicates in the label, give an example
                 count = {}
@@ -56,8 +57,10 @@ class larry(object):
                     count[li] = count.get(li, 0) + 1
                 for key, value in count.iteritems():
                     if value > 1:
-                        break   
-                raise ValueError, msg2 % (i, value, key)
+                        break 
+                msg = "Elements of label not unique along dimension %d. "
+                msg += "There are %d labels named `%s`."          
+                raise ValueError, msg % (i, value, key)
             if type(l) is not list:
                 raise ValueError, 'label must be a list of lists'
         self.x = x
@@ -83,7 +86,8 @@ class larry(object):
         return y  
 
     def exp(self):
-        """Element by element exponential.
+        """
+        Element by element exponential.
                 
         Parameters
         ----------
@@ -100,7 +104,8 @@ class larry(object):
         return y
         
     def sqrt(self):
-        """Element by element square root.
+        """
+        Element by element square root.
                 
         Parameters
         ----------
@@ -117,7 +122,8 @@ class larry(object):
         return y 
         
     def power(self, q):               
-        """Element by element x**q.
+        """
+        Element by element x**q.
                 
         Parameters
         ----------
@@ -138,7 +144,8 @@ class larry(object):
         return self.power(q)           
         
     def cumsum(self, axis): 
-        """Cumsum, treating NaNs as zero.
+        """
+        Cumsum, treating NaNs as zero.
         
         Parameters
         ----------
@@ -163,7 +170,8 @@ class larry(object):
         return y        
 
     def clip(self, lo, hi):
-        """Clip x values.
+        """
+        Clip x values.
 
         Parameters
         ----------
@@ -189,7 +197,8 @@ class larry(object):
         return y
 
     def nan_replace(self, replace_with=0):
-        """Replace NaNs.
+        """
+        Replace NaNs.
         
         Parameters
         ----------
@@ -215,7 +224,8 @@ class larry(object):
         return self.copy()
         
     def abs(self):
-        """Absolute value of x.
+        """
+        Absolute value of x.
                         
         Parameters
         ----------
@@ -363,11 +373,11 @@ class larry(object):
         y = other.x[np.ix_(*idxo)]
         return x, y, label
                   
-
     # Reduce functions -------------------------------------------------------   
         
     def sum(self, axis=None):
-        """Sum of values along axis, ignoring NaNs.
+        """
+        Sum of values along axis, ignoring NaNs.
 
         Parameters
         ----------
@@ -389,7 +399,8 @@ class larry(object):
         return self.__reduce(axis, np.nansum)    
 
     def mean(self, axis=None):
-        """Mean of values along axis, ignoring NaNs.
+        """
+        Mean of values along axis, ignoring NaNs.
 
         Parameters
         ----------
@@ -412,7 +423,8 @@ class larry(object):
         return self.__reduce(axis, nanmean) 
 
     def median(self, axis=None):
-        """Median of values along axis, ignoring NaNs.
+        """
+        Median of values along axis, ignoring NaNs.
 
         Parameters
         ----------
@@ -435,7 +447,8 @@ class larry(object):
         return self.__reduce(axis, nanmedian) 
             
     def std(self, axis=None):
-        """Standard deviation of values along axis, ignoring NaNs.
+        """
+        Standard deviation of values along axis, ignoring NaNs.
 
         Parameters
         ----------
@@ -458,7 +471,8 @@ class larry(object):
         return self.__reduce(axis, nanstd)  
         
     def var(self, axis=None):
-        """Variance of values along axis, ignoring NaNs.
+        """
+        Variance of values along axis, ignoring NaNs.
 
         Parameters
         ----------
@@ -486,7 +500,8 @@ class larry(object):
         return y                 
                             
     def max(self, axis=None):
-        """Maximum values along axis, ignoring NaNs.
+        """
+        Maximum values along axis, ignoring NaNs.
 
         Parameters
         ----------
@@ -509,7 +524,8 @@ class larry(object):
         return self.__reduce(axis, np.nanmax)             
            
     def min(self, axis=None):
-        """Minimum values along axis, ignoring NaNs.
+        """
+        Minimum values along axis, ignoring NaNs.
 
         Parameters
         ----------
@@ -546,7 +562,8 @@ class larry(object):
             raise ValueError, 'axis should be an integer or None'
                         
     def lastrank(self):
-        """Rank of elements in last column, ignoring NaNs.
+        """
+        Rank of elements in last column, ignoring NaNs.
         
         Note: Only works on 2d larrys.
             
@@ -568,7 +585,8 @@ class larry(object):
         return type(self)(x, label)
         
     def lastrank_decay(self, decay):
-        """Exponentially decayed rank of elements in last column, ignoring NaNs.
+        """
+        Exponentially decayed rank of elements in last column, ignoring NaNs.
         
         Note: Only works on 2d larrys.        
 
@@ -657,7 +675,8 @@ class larry(object):
     # Any, all ---------------------------------------------------------------           
                 
     def any(self, axis=None):
-        """Return true if any elements of x is true.
+        """
+        Return true if any elements of x is true.
         
         Note: NaN is True since it is not equal to 0.
         
@@ -677,7 +696,8 @@ class larry(object):
 
         
     def all(self, axis=None):
-        """Return true if all elements of x are true.
+        """
+        Return true if all elements of x are true.
         
         Note: NaN is True since it is not equal to 0.        
         
@@ -764,7 +784,8 @@ class larry(object):
             self.x[index] = value
             
     def set(self, label, value):
-        """Set one x element given a list of label names.
+        """
+        Set one x element given a list of label names.
         
         Give one label name (not label index) for each dimension.
         
@@ -795,7 +816,8 @@ class larry(object):
         self.x[tuple(index)] = value        
 
     def get(self, label):
-        """Get one x element given a list of label names.
+        """
+        Get one x element given a list of label names.
         
         Give one label name (not label index) for each dimension.
         
@@ -825,7 +847,8 @@ class larry(object):
         return self.x[tuple(index)]
                 
     def getx(self, copy=True):
-        """Return a copy of the x data or a reference to it.
+        """
+        Return a copy of the x data or a reference to it.
         
         Parameters
         ----------
@@ -844,7 +867,8 @@ class larry(object):
             return self.x
         
     def fill(self, fill_value):
-        """Inplace filling of data array with specified value.
+        """
+        Inplace filling of data array with specified value.
         
         Parameters
         ----------
@@ -884,7 +908,8 @@ class larry(object):
         return label
         
     def labelindex(self, name, axis, exact=True):
-        """Return index of given label element along specified axis.
+        """
+        Return index of given label element along specified axis.
         
         Parameters
         ----------
@@ -971,7 +996,6 @@ class larry(object):
     def movingsum(self, window, axis=-1, norm=False):
         """Moving sum, NaNs treated as 0, optionally normalized for NaNs."""
         y = self.copy()
-        #y.label[axis] = y.label[axis][window-1:]  #add dropped init obs back in
         y.x = movingsum(y.x, window, axis, norm)
         return y 
         
@@ -982,15 +1006,46 @@ class larry(object):
         y.x = movingsum_forward(y.x, window, skip, axis, norm)
         return y
                          
-    def ranking(self, axis=0):
-        """Ranking along axis.
-        
-        Output is between -1 and 1, ties are broken, and NaNs are handled.
+    def ranking(self, axis=0, norm='-1,1', ties=True):
         """
-        #XXX: why is default axis=0 and not 1 as usual
-        self._2donly()
+        Rank elements treating NaN as missing and optionally break ties.
+
+        Parameters
+        ----------
+        axis : int, optional
+            Axis to rank over. Default axis is 0.
+        norm: str
+            A string that specifies the normalization:
+            '0,N-1'     Zero to N-1 ranking
+            '-1,1'      Scale zero to N-1 ranking to be between -1 and 1
+            'gaussian'  Rank data then scale to a Gaussian distribution
+        ties: bool
+            If two elements of `x` have the same value then they will be
+            ranked by their order in the array (False). If `ties` is set to
+            True (default), then the ranks are averaged.
+            
+        Returns
+        -------
+        y : larry
+            The ranked data. The dtype of the output is always np.float even
+            if the dtype of the input is int.
+            
+        Notes
+        -----
+        If there is only one non-NaN value along the given axis, then that
+        value is set to the midpoint of the specified normalization method.
+        For example, if the input is array([1.0, nan]), then 1.0 is set to
+        zero for the '-1,1' and 'gaussian' normalizations and is set to 0.5
+        (mean of 0 and 1) for the '0,N-1' normalization.
+        
+        For '0,N-1' normalization, note that N is x.shape[axis] even in there
+        are NaNs. That ensures that when ranking along the columns of a 2d
+        array, for example, the output will have the same min and max along
+        all columns.
+        
+        """
         y = self.copy()
-        y.x = ranking(y.x, axis)
+        y.x = ranking(y.x, axis, norm, ties)
         return y
                             
     def movingrank(self, window, axis=1):
@@ -1014,11 +1069,9 @@ class larry(object):
         y.x = quantile(y.x, q)       
         return y
 
-
     def cut_missing(self, fraction, axis=None):
-        """Cut rows and columns that contain too many NaNs.
-        
-        Note: Only works on 2d larrys. 
+        """
+        Cut rows and columns that contain too many NaNs.
         
         Parameters
         ----------
@@ -1053,10 +1106,10 @@ class larry(object):
             axes = [axis]
         else:
             axes = axis
-        #reverse
+        # Reverse
         axes = [a for a in range(ndim) if a not in axes]    
         
-        threshold = (1.0 - fraction) * np.array(y.shape)  # added
+        threshold = (1.0 - fraction) * np.array(y.shape)
         idxsl = []
         labsnew = []
         for ax in range(ndim):
@@ -1067,88 +1120,30 @@ class larry(object):
                 idxsl.append(np.arange(y.shape[ax])[sl])
                 continue
             
-            # find all nans over all other axes
+            # Find all nans over all other axes
             xtmp = np.rollaxis(np.isfinite(y.x), ax, 0)
-            #count = 1. #
             count = np.ones(xtmp.shape)
             for _ in range(ndim-1):
-                #xtmp = xtmp.any(-1)
-                xtmp = xtmp.sum(-1)  # changed
-                #count *= xtmp.shape[-1]
+                xtmp = xtmp.sum(-1)
                 count = count.sum(-1)
     
-            xtmp = xtmp > (1.0 - fraction)* count #threshold[ax] # added
-            # slicing would be easier if labelindex where a ndarray
+            xtmp = xtmp > (1.0 - fraction) * count
             labsnew.append([y.label[ax][ii] for ii in np.nonzero(xtmp)[0]])
             sl[ax] = slice(None)
             idxsl.append(np.nonzero(xtmp)[0][sl])
-    
-         #for trying out
-    #    try:
-    #        ret = (larry(np.squeeze(lar.x[idxsl]), labsnew), idxsl, labsnew)
-    #    except IndexError:
-    #        ret = (lar.x[idxsl], idxsl, labsnew) # return array
-    #    return ret
         
         y.x = y.x[idxsl]
         y.label = labsnew
+        
         if y.x.size == 0: 
-            # empty larry left over
+            # Empty larry left over
             return larry(np.array([]))
         else:
-            #squeeze or not ?
             return y
-
-               
-    def cut_missing_old(self, fraction, axis):
-        """Cut rows and columns that contain too many NaNs.
-        
-        Note: Only works on 2d larrys. 
-        
-        Parameters
-        ----------
-        fraction : scalar
-            Usually a float that give the minimum allowable fraction of missing
-            data before the row or column is cut.
-        axis : {0, 1}
-            Look for missing data along this axis. So for axis=0, the missing
-            data along columns are checked and columns are cut. For axis=1, the
-            missing data along rows are checked and rows are cut.
-            
-        Returns
-        -------
-        out : larry
-            Returns a copy with rows or columns with lots of missing data cut.                
-        
-        Raises
-        ------
-        ValueError
-            If larry is not 2d.        
-        IndexError
-            If axis is not 0 or 1.
-            
-        """
-        self._2donly()
-        if axis not in (0,1):
-            raise IndexError, 'axis is out of range'
-        threshold = (1.0 - fraction) * self.shape[axis]
-        idx = np.isfinite(self.x).sum(axis) > threshold
-        if idx.all():
-            return self.copy()
-        else: 
-            idx = np.where(idx)[0]   
-            index = [idx, idx]
-            index[axis] = slice(None) 
-            y = self.copy()
-            if axis == 0:
-                y.label[1] = [y.label[1][j] for j in idx]
-            else:
-                y.label[0] = [y.label[0][j] for j in idx]
-            y.x = y.x[index]
-            return y   
      
     def cov(self):
-        """Covariance matrix adjusted for missing (NaN) values.
+        """
+        Covariance matrix adjusted for missing (NaN) values.
         
         Note: Only works on 2d larrys.
         
@@ -1173,7 +1168,8 @@ class larry(object):
         return y         
         
     def keep_label(self, op, value, axis):
-        """Keep labels (and corresponding values) that satisfy conditon.
+        """
+        Keep labels (and corresponding values) that satisfy conditon.
         
         Keep labels that satify:
         
@@ -1225,7 +1221,8 @@ class larry(object):
         return y
         
     def keep_x(self, op, value, vacuum=True):
-        """Keep labels (and corresponding values) that satisfy conditon.
+        """
+        Keep labels (and corresponding values) that satisfy conditon.
         
         Set x values that do not satify the condition to NaN. Then, if
         vacuum is True, rows and columns with all NaNs will be removed. If
@@ -1294,8 +1291,7 @@ class larry(object):
         
         The row labels of the object must be a subset of the row labels of the
         group.
-        """
-        
+        """        
         y = self.copy() 
         aligned_group_list = y._group_align(group)
         y.x = sector_mean(y.x, aligned_group_list)                                         
@@ -1307,7 +1303,6 @@ class larry(object):
         The row labels of the object must be a subset of the row labels of the
         group.
         """ 
-
         y = self.copy()
         aligned_group_list = y._group_align(group)   
         y.x = sector_median(y.x, aligned_group_list)
@@ -1332,7 +1327,8 @@ class larry(object):
     # Alignment --------------------------------------------------------------
 
     def morph(self, label, axis):
-        """Change ordering of larry along specified axis.
+        """
+        Change ordering of larry along specified axis.
         
         Supply a list with the ordering you would like. If some elements in the
         list do not exist in the larry, NaNs will be used.
@@ -1381,7 +1377,8 @@ class larry(object):
         return type(self)(x, lab)
         
     def morph_like(self, lar):
-        """Morph to line up with the specified larry.
+        """
+        Morph to line up with the specified larry.
 
         If some elements in the list do not exist in the larry, NaNs will be
         used.
@@ -1414,27 +1411,27 @@ class larry(object):
         return y        
 
     def merge(self, other, update=False):
-        '''
+        """
         Merge, or optionally update, a larry with a second larry.
      
         Parameters
         ----------
         other : larry
-            The larry to merge or to use to update the values. It must have the
-            same number of dimensions as as the existing larry.
+            The larry to merge or to use to update the values. It must have
+            the same number of dimensions as as the existing larry.
         update : bool
             Raise a ValueError (default) if there is any overlap in the two
-            larrys. An overlap is defined as a common label in both larrys that
-            contains a finite value in both larrys. If `update` is True then the
-            overlapped values in the current larry will be overwritten with the
-            values in `other`.            
+            larrys. An overlap is defined as a common label in both larrys
+            that contains a finite value in both larrys. If `update` is True
+            then the overlapped values in the current larry will be
+            overwritten with the values in `other`.            
      
         Returns
         -------
         lar1 : larry
             The merged larry.
      
-        '''
+        """
 
         ndim = self.ndim
         if ndim != other.ndim:
@@ -1456,14 +1453,14 @@ class larry(object):
         return lar1
      
     def vacuum(self, axis=None):
-        """Remove all rows and/or columns that contain all NaNs.
-              
-        
+        """
+        Remove all rows and/or columns that contain all NaNs.
+                     
         Parameters
         ----------
         axis : None or int or tuple of int
-            Remove columns (0) or rows (1) or both (None, default) that contain
-            no finite values, for nd arrays see Notes.
+            Remove columns (0) or rows (1) or both (None, default) that
+            contain no finite values, for nd arrays see Notes.
             
         Returns
         -------
@@ -1516,48 +1513,10 @@ class larry(object):
         y.x = y.x[idxsl]
         y.label = labsnew
         return y
-
-
-    def vacuum_old(self, axis=None):
-        """Remove all rows and/or columns that contain all NaNs.
-        
-        Note: Only works on 2d larrys.        
-        
-        Parameters
-        ----------
-        axis : {None, 0, 1}
-            Remove columns (0) or rows (1) or both (None, default) that contain
-            no finite values.
-            
-        Returns
-        -------
-        out : larry
-            Return a copy with rows and/or columns removed that contain all
-            NaNs.  
-            
-        Raises
-        ------
-        AssertionError
-            If axis is not None, 0, or 1.
-                
-        """
-        self._2donly()
-        assert axis in (None, 0, 1)
-        y = self.copy()
-        if axis in (None, 1):
-            idx = np.isfinite(y.x).sum(1) != 0
-            idx = np.where(idx)[0]
-            y.x = y.x[idx,:]
-            y.label[0] = [y.label[0][i] for i in idx]
-        if axis in (None, 0):
-            idx = np.isfinite(y.x).sum(0) != 0
-            idx = np.where(idx)[0]
-            y.x = y.x[:,idx]
-            y.label[1] = [y.label[1][i] for i in idx]
-        return y
         
     def squeeze(self):
-        """Eliminate all length-1 dimensions and corresponding labels.
+        """
+        Eliminate all length-1 dimensions and corresponding labels.
         
         Note that a view (reference) is returned, not a copy.
         
@@ -1580,7 +1539,8 @@ class larry(object):
         return type(self)(x, label)
         
     def pull(self, name, axis):
-        """Pull out the values for a given label name along a specified axis.
+        """
+        Pull out the values for a given label name along a specified axis.
         
         A view is returned and the dimension is reduced by one.
         
@@ -1622,7 +1582,8 @@ class larry(object):
         return type(self)(x, label)
 
     def lag(self, nlag, axis=-1):
-        """Lag the values along the specified axis.
+        """
+        Lag the values along the specified axis.
         
         Parameters
         ----------

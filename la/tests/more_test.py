@@ -2,59 +2,44 @@
 
 import numpy as np
 from numpy.testing import assert_  # could look for nose
-
-np.seterr(divide='ignore')
-np.seterr(invalid='ignore')
 nan = np.nan
 
 from test import printfail
 from la.afunc import (covMissing, fillforward_partially, geometric_mean, lastrank, 
             lastrank_decay, median, movingrank, movingsum, movingsum_forward, 
-            nanmean, nanmedian, nans, nanstd, quantile, 
-            ranking, ranking_1N, ranking_norm, sector_dummy, sector_mean, 
-            sector_median, sector_rank, unique_sector)
+            nanmean, nanmedian, nans, nanstd, quantile,  ranking,
+            sector_dummy, sector_mean, sector_median, sector_rank,
+            unique_sector)
 
-funcs_tested = [sector_rank, sector_mean, sector_median,
-            movingsum, ranking_1N, movingrank, ranking_norm,
-                      movingsum_forward, geometric_mean, ranking, unique_sector,
-                      sector_dummy]
-funcs_all = [covMissing, fillforward_partially, geometric_mean, lastrank, 
-            lastrank_decay, median, movingrank, movingsum, movingsum_forward, 
-            nanmean, nanmedian, nans, nanstd, quantile, 
-            ranking, ranking_1N, ranking_norm, sector_dummy, sector_mean, 
-            sector_median, sector_rank, unique_sector]
-
-
-# the following lists add up to all functions
-funcs_one = [covMissing, geometric_mean, lastrank, 
-            median, nanmean, nanmedian, nanstd, 
-            ranking, ranking_1N, ranking_norm]
+# Functions to test
+funcs_one = [covMissing, geometric_mean, lastrank, median, nanmean, nanmedian,
+             nanstd, ranking]
 funcs_oneint = [movingrank, movingsum, movingsum_forward,quantile, 
                 fillforward_partially]
 funcs_onefrac = [lastrank_decay]
 funcs_sect = [sector_mean, sector_median, sector_rank]
 funcs_sector = [unique_sector, sector_dummy]
-funcs_special = [nans]
-
 
 def check_return_array(func, args):
+    "Check that function returns a numpy array or a scalar."
     res = func(*args)
     if type(res) is tuple:
         res1 = res[0]
     else:
         res1 = res
-    assert_(type(res1) is np.ndarray or np.isscalar(res1), \
-            repr(func)+'does not return array')
+    assert_(type(res1) is np.ndarray or np.isscalar(res1),
+            repr(func) + 'does not return array or scalar')
 
 def test_return_array():
-    x = np.array([[0.0, 3.0, nan, nan, 0.0, nan],
-                   [1.0, 1.0, 1.0, nan, nan, nan],
-                   [2.0, 2.0, 0.0, nan, 1.0, nan],
-                   [3.0, 0.0, 2.0, nan, nan, nan],
-                   [4.0, 4.0, 3.0, 0.0, 2.0, nan],
-                   [5.0, 5.0, 4.0, 4.0, nan, nan]])
+    "Check that functions return a numpy array or a scalar."
+    
+    x = np.array([[9.0, 3.0, nan, nan, 9.0, nan],
+                  [1.0, 1.0, 1.0, nan, nan, nan],
+                  [2.0, 2.0, 9.0, nan, 1.0, nan],
+                  [3.0, 9.0, 2.0, nan, nan, nan],
+                  [4.0, 4.0, 3.0, 9.0, 2.0, nan],
+                  [5.0, 5.0, 4.0, 4.0, nan, nan]])          
     sectors = ['a', 'b', 'a', 'b', 'a', 'c']
-    x = x+1 #geometric requires >0
     
     for func in funcs_one:
         xc = x.copy()
@@ -63,7 +48,7 @@ def test_return_array():
         
     for func in funcs_oneint:
         xc = x.copy()
-        args = (xc,2)
+        args = (xc, 2)
         yield check_return_array, func, args
         
     for func in funcs_onefrac:
@@ -79,7 +64,6 @@ def test_return_array():
     yield check_return_array, sector_dummy, (sectors,)
     
 
-
 def check_3d(func, args):
     res = func(*args)
     if type(res) is tuple:
@@ -90,14 +74,13 @@ def check_3d(func, args):
    
 def _est_3d():
     # many of these tests fail, skip to reduce noise during testing
-    x = np.array([[0.0, 3.0, nan, nan, 0.0, nan],
-                   [1.0, 1.0, 1.0, nan, nan, nan],
-                   [2.0, 2.0, 0.0, nan, 1.0, nan],
-                   [3.0, 0.0, 2.0, nan, nan, nan],
-                   [4.0, 4.0, 3.0, 0.0, 2.0, nan],
-                   [5.0, 5.0, 4.0, 4.0, nan, nan]])
+    x = np.array([[9.0, 3.0, nan, nan, 9.0, nan],
+                  [1.0, 1.0, 1.0, nan, nan, nan],
+                  [2.0, 2.0, 0.0, nan, 1.0, nan],
+                  [3.0, 9.0, 2.0, nan, nan, nan],
+                  [4.0, 4.0, 3.0, 9.0, 2.0, nan],
+                  [5.0, 5.0, 4.0, 4.0, nan, nan]])
     sectors = ['a', 'b', 'a', 'b', 'a', 'c']
-    x = x+1 #geometric requires >0
     x = np.dstack((x,x))
     
     for func in funcs_one:
@@ -107,7 +90,7 @@ def _est_3d():
         
     for func in funcs_oneint:
         xc = x.copy()
-        args = (xc,2)
+        args = (xc, 2)
         #yield check_3d, func, args
         
     for func in funcs_onefrac:
