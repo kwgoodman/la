@@ -4,11 +4,12 @@ import datetime
 from copy import deepcopy
 
 import numpy as np   
+from scipy.stats import (nanmean, nanmedian)
 
 from la.afunc import (sector_rank, sector_mean, sector_median, covMissing,
                       fillforward_partially, quantile, ranking, lastrank,
                       movingsum_forward, lastrank_decay, movingrank,
-                      movingsum, nans, nanmean, nanmedian, nanstd)
+                      movingsum, nans, nanstd)
 
 
 class larry(object):
@@ -69,7 +70,8 @@ class larry(object):
     # Unary functions --------------------------------------------------------  
 
     def log(self):
-        """Element by element base e logarithm.
+        """
+        Element by element base e logarithm.
         
         Parameters
         ----------

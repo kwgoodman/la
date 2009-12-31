@@ -1,6 +1,8 @@
 "Functions that work with numpy arrays."
 
 import numpy as np
+from scipy.stats import (nanmedian, rankdata)
+from scipy.special import ndtri
 
 
 # Sector functions ----------------------------------------------------------
@@ -57,48 +59,26 @@ def sector_median(x, sectors):
             xmedian[idx,...] = nanmedian(x[idx,...])
     return xmedian
     
-def sector_dummy(sectors):
-    """Create a NxS sector dummy matrix of N stocks and S unique sectors.
-    
-    Parameters
-    ----------
-    sectors : list
-    
-    Returns
-    -------
-    dummy : 2d array
-    usesectors : list
-        unique sectors
-    
-    Notes
-    -----
-    this always returns array
-    """
-    if type(sectors) is not list:
-        raise TypeError, 'Sector input must be a list'
-    usectors = unique_sector(sectors)
-    sectors = np.asarray(sectors, dtype=object)
-    dummy = (sectors[:,None] == usectors).astype(float)
-    return dummy, usectors    
-    
 def unique_sector(sectors):
     """Find unique sector list not including None."""    
     usectors = set(sectors)
     usectors = [z for z in usectors if z is not None]
     usectors.sort()
-    return usectors
+    return usectors    
     
 # Normalize functions -------------------------------------------------------
 
 def geometric_mean(x, axis=1, check_for_greater_than_zero=True):
-    """Return the geometric mean of matrix x along axis, ignore NaNs.
+    """
+    Return the geometric mean of matrix x along axis, ignore NaNs.
     
     Raise an exception if any element of x is zero or less.
     
     Notes
     -----
     The return array has the dimension so it can be broadcasted to 
-    the original array and not the reduced dimension of np.mean 
+    the original array and not the reduced dimension of np.mean
+     
     """
     if (x <= 0).any() and check_for_greater_than_zero:
         msg = 'All elements of x (except NaNs) must be greater than zero.'
@@ -268,8 +248,7 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
         idx = idxraw.astype(float)
         idx[masknan] = np.nan
     else:
-        from scipy import stats
-        rank1d = stats.rankdata # Note: stats.rankdata starts ranks at 1
+        rank1d = rankdata # Note: stats.rankdata starts ranks at 1
         idx = np.nan * np.ones(x.shape)
         itshape = list(x.shape)
         itshape.pop(ax)
@@ -288,7 +267,6 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
         idx *= (1.0 * (x.shape[ax] - 1) / (countnotnan - 1))
         middle = (idx.shape[ax] + 1.0) / 2.0 - 1.0
     elif norm == 'gaussian':
-        from scipy.special import ndtri
         idx *= (1.0 * (x.shape[ax] - 1) / (countnotnan - 1))
         idx = ndtri((idx + 1.0) / (x.shape[ax] + 1.0))
         middle = 0.0
@@ -386,37 +364,13 @@ def covMissing(R):
 
 # NaN functions -------------------------------------------------------------
 
-# These functions where taken from scipy. Should we just import them from
-# scipy? I was trying to avoid the dependency.
-
 def nans(shape, dtype=float):
     "Works like ones and zeros except that the fill value is NaN"
     a = np.empty(shape, dtype)
     a.fill(np.nan)
     return a
 
-
-def nanmean(x, axis=0):
-    """Compute the mean over the given axis ignoring nans.
-
-    :Parameters:
-        x : ndarray
-            input array
-        axis : int
-            axis along which the mean is computed.
-
-    :Results:
-        m : float
-            the mean."""
-    x, axis = _chk_asarray(x,axis)
-    x = x.copy()
-    Norig = x.shape[axis]
-    factor = 1.0-np.sum(np.isnan(x),axis)*1.0/Norig
-
-    x[np.isnan(x)] = 0
-    return np.mean(x,axis)/factor
-
-
+# nanstd is from scipy.stats but I changed the default to bias=True
 def nanstd(x, axis=0, bias=True):
     """Compute the standard deviation over the given axis ignoring nans
 
@@ -460,62 +414,7 @@ def nanstd(x, axis=0, bias=True):
         m2c = m2 / (n - 1.)
     return np.sqrt(m2c)
 
-def _nanmedian(arr1d):  # This only works on 1d arrays
-    """Private function for rank a arrays. Compute the median ignoring Nan.
-
-    :Parameters:
-        arr1d : rank 1 ndarray
-            input array
-
-    :Results:
-        m : float
-            the median."""
-    cond = 1-np.isnan(arr1d)
-    x = np.sort(np.compress(cond,arr1d,axis=-1))
-    if x.size == 0:
-        return np.nan
-    return median(x)
-
-
-def nanmedian(x, axis=0):
-    """ Compute the median along the given axis ignoring nan values
-
-    :Parameters:
-        x : ndarray
-            input array
-        axis : int
-            axis along which the median is computed.
-
-    :Results:
-        m : float
-            the median."""
-    x, axis = _chk_asarray(x,axis)
-    x = x.copy()
-    return np.apply_along_axis(_nanmedian,axis,x)
-
-def median(a, axis=0):
-    # fixme: This would be redundant with numpy.median() except that the latter
-    # does not deal with arbitrary axes.
-    """Returns the median of the passed array along the given axis.
-
-    If there is an even number of entries, the mean of the
-    2 middle values is returned.
-
-    Parameters
-    ----------
-    a : array
-    axis=0 : int
-
-    Returns
-    -------
-    The median of each remaining axis, or of all of the values in the array
-    if axis is None.
-    """
-    a, axis = _chk_asarray(a, axis)
-    if axis != 0:
-        a = np.rollaxis(a, axis, 0)
-    return np.median(a)
-
+# Helper function for nanstd, also from scipy.stats
 def _chk_asarray(a, axis):
     if axis is None:
         a = np.ravel(a)
@@ -523,4 +422,4 @@ def _chk_asarray(a, axis):
     else:
         a = np.asarray(a)
         outaxis = axis
-    return a, outaxis                
+    return a, outaxis 

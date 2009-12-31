@@ -1,17 +1,14 @@
-"""Unit tests of sector module."""
+"""Unit tests of array functions."""
 
 import unittest
 
 import numpy as np
-import numpy.matlib as M
-np.seterr(divide='ignore')
-np.seterr(invalid='ignore')
 nan = np.nan
 
 from test import printfail
 from la.afunc import sector_rank, sector_mean, sector_median
 from la.afunc import (movingsum, movingrank, movingsum_forward, ranking, 
-                      geometric_mean, unique_sector, sector_dummy)
+                      geometric_mean, unique_sector)
 
 # Sector functions ----------------------------------------------------------
 
@@ -189,24 +186,6 @@ class Test_sector_oth(unittest.TestCase):
     def setUp(self):
         self.nancode = -9999
         self.tol = 1e-8
-                
-    def test_sector_dummy_1(self):
-        "afunc.sector_dummy #1"
-        sectors = ['a', 'b', 'a', 'b', 'a', 'c']
-        theory1 = np.matrix([[ 1.,  0.,  0.],
-                            [ 0.,  1.,  0.],
-                            [ 1.,  0.,  0.],
-                            [ 0.,  1.,  0.],
-                            [ 1.,  0.,  0.],
-                            [ 0.,  0.,  1.]])
-        theory2 = ['a', 'b', 'c']
-        theory = (theory1, theory2)
-        practice = sector_dummy(sectors)
-        msg = printfail(theory, practice)
-        theory1[np.isnan(theory1)] = self.nancode
-        practice[0][np.isnan(practice[0])] = self.nancode        
-        self.assert_(np.all(theory[0] == practice[0]), msg) 
-        self.assert_(theory[1] == practice[1], msg) 
         
     def test_sector_unique_1(self):
         "afunc.unique_sector #1"

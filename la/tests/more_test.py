@@ -5,20 +5,17 @@ from numpy.testing import assert_  # could look for nose
 nan = np.nan
 
 from test import printfail
-from la.afunc import (covMissing, fillforward_partially, geometric_mean, lastrank, 
-            lastrank_decay, median, movingrank, movingsum, movingsum_forward, 
-            nanmean, nanmedian, nans, nanstd, quantile,  ranking,
-            sector_dummy, sector_mean, sector_median, sector_rank,
-            unique_sector)
+from la.afunc import (covMissing, fillforward_partially, geometric_mean,
+                      lastrank, lastrank_decay, movingrank, movingsum,
+                      movingsum_forward, nans, nanstd, quantile, ranking,
+                      sector_mean, sector_median, sector_rank, unique_sector)
 
 # Functions to test
-funcs_one = [covMissing, geometric_mean, lastrank, median, nanmean, nanmedian,
-             nanstd, ranking]
-funcs_oneint = [movingrank, movingsum, movingsum_forward,quantile, 
+funcs_one = [covMissing, geometric_mean, lastrank, nanstd, ranking]
+funcs_oneint = [movingrank, movingsum, movingsum_forward, quantile, 
                 fillforward_partially]
 funcs_onefrac = [lastrank_decay]
 funcs_sect = [sector_mean, sector_median, sector_rank]
-funcs_sector = [unique_sector, sector_dummy]
 
 def check_return_array(func, args):
     "Check that function returns a numpy array or a scalar."
@@ -61,9 +58,6 @@ def test_return_array():
         args = (xc, sectors)
         yield check_return_array, func, args
     
-    yield check_return_array, sector_dummy, (sectors,)
-    
-
 def check_3d(func, args):
     res = func(*args)
     if type(res) is tuple:

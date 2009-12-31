@@ -1,5 +1,18 @@
 2009-12-30 Keith
 
+    * afunc.py(sector_dummy), tests/afunc_arr_test.py, tests/more_test.py:
+      Remove function and unit tests.
+    
+    * afunc.py(ranking): Give up on lazy imports of scipy. From now on the la
+      package has scipy as a dependency.
+      
+    * afunc.py(nanmean), afunc.py(_nanmedian), afunc.py(nanmedian): Remove
+      these functions and import from scipy instead.
+      
+    * deflarry.py: Import nanmean, nanmedian from scipy instead of afunc.py.  
+         
+    * tests/deflarry_test.py: Add doc string.    
+
     * afunc.py(ranking_1N), afunc.py(ranking_norm): Removed these functions
       since they are special cases fo the new ranking function.
       
