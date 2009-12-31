@@ -1128,7 +1128,7 @@ class larry(object):
             axes = [axis]
         else:
             axes = axis
-        # Reverse
+        # Change meaning of axes to axes not in original axes
         axes = [a for a in range(ndim) if a not in axes]    
         
         threshold = (1.0 - fraction) * np.array(y.shape)
@@ -1506,11 +1506,11 @@ class larry(object):
             axes = range(ndim)
         elif not hasattr(axis, '__iter__'):
             axes = [axis]
-            #reverse
+            # Change meaning of axes to axes not in original axes
             axes = [a for a in range(ndim) if a not in axes]
         else:
             axes = axis
-            #reverse
+            # Change meaning of axes to axes not in original axes
             axes = [a for a in range(ndim) if a not in axes]
         
         idxsl = []
@@ -1523,7 +1523,7 @@ class larry(object):
                 idxsl.append(np.arange(y.shape[ax])[sl])
                 continue
             
-            # find all nans over all other axes
+            # Find all nans over all other axes
             xtmp = np.rollaxis(np.isfinite(y.x), ax, 0)
             for _ in range(ndim-1):
                 xtmp = xtmp.any(-1)

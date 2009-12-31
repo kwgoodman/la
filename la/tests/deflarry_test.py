@@ -2935,6 +2935,7 @@ class Test_merge(unittest.TestCase):
     "Test merge functions of the larry class"
     
     def test_merge1(self):
+        "larry.merge_1"
         lar1 = larry(
                np.array([[ 2.,  2.,  3.,  1.],
                [ 3.,  2.,  2.,  1.],
@@ -2954,9 +2955,9 @@ class Test_merge(unittest.TestCase):
         assert_almost_equal(larr.x, larm.x)
         assert_(larr.label == larm.label)
         assert_raises(ValueError, lar1.merge, lar2, update=False)
-    
-    
+       
     def test_merge2(self):
+        "larry.merge_2"
         lar1 = larry(
                np.array([[  2.,   2.,  nan,  nan],
                        [  3.,   2.,  nan,  nan],
@@ -2975,9 +2976,9 @@ class Test_merge(unittest.TestCase):
         larm = lar1.merge(lar2, update=False)
         assert_almost_equal(larr.x, larm.x)
         assert_(larr.label == larm.label)
-    
-    
+        
     def test_merge3(self):
+        "larry.merge_3"
         lar1 = larry(
                np.array([[  2.,   2.,   3.,   1.],
                        [  3.,   2.,   2.,   1.],
@@ -2996,9 +2997,9 @@ class Test_merge(unittest.TestCase):
         larm = lar1.merge(lar2, update=True)
         assert_almost_equal(larr.x, larm.x)
         assert_(larr.label == larm.label)
-    
-    
+        
     def test_merge4(self):
+        "larry.merge_4"
         lar1 = larry(
                np.array([[  2.,   2.,   3.,   1.],
                        [  3.,   2.,   2.,   1.],
@@ -3015,9 +3016,9 @@ class Test_merge(unittest.TestCase):
         larm = lar1.merge(lar2, update=True)
         assert_almost_equal(larr.x, larm.x)
         assert_(larr.label == larm.label)
-    
-    
+        
     def test_merge5(self):
+        "larry.merge_5"
         lar1 = larry(
                np.array([[ 2.,  2.,  3.,  1.],
                        [ 3.,  2.,  2.,  1.],
@@ -3035,9 +3036,9 @@ class Test_merge(unittest.TestCase):
         larm = lar1.merge(lar2, update=True)
         assert_almost_equal(larr.x, larm.x)
         assert_(larr.label == larm.label)
-    
-    
+       
     def test_merge6(self):
+        "larry.merge_6"
         lar1 = larry(
                np.array([[ 2.,  2.,  3.,  1.],
                          [ 3.,  2.,  2.,  1.],
@@ -3055,7 +3056,6 @@ class Test_merge(unittest.TestCase):
         larm = lar1.merge(lar2, update=False)
         assert_almost_equal(larr.x, larm.x)
         assert_(larr.label == larm.label)
-
 
 class Test_vacuum(unittest.TestCase):
     "Test vacuum functions of the larry class"
@@ -3075,8 +3075,7 @@ class Test_vacuum(unittest.TestCase):
         x1_3d = np.rollaxis(np.dstack([x1,2*x1]),2)
         self.la1_3d = larry(x1_3d, labels3d)
         la1_3dt = larry(self.la1_3d.x.T.copy(), labels3dt)
-                
-        
+                        
     def test_vacuum1a(self):
         larr = larry(
                np.array([[ 2.,  3.,  1.],
@@ -3090,8 +3089,8 @@ class Test_vacuum(unittest.TestCase):
     def test_vacuum1b(self):
         larr = larry(
                np.array([[ 2.,  3.,  1.],
-                        [ 3.,  2.,  1.],
-                        [ 1.,  1.,  1.]]), 
+                         [ 3.,  2.,  1.],
+                         [ 1.,  1.,  1.]]), 
                [[0, 1, 2], ['A', 'C', 'D']])
         larv = self.la1_2d0.vacuum(axis=0)
         assert_almost_equal(larv.x, larr.x)
@@ -3107,18 +3106,17 @@ class Test_vacuum(unittest.TestCase):
     def test_vacuum2(self):
         larr = larry(
                np.array([[[ 2.,  3.,  1.],
-                        [ 3.,  2.,  1.],
-                        [ 1.,  1.,  1.]],
+                          [ 3.,  2.,  1.],
+                          [ 1.,  1.,  1.]],
                 
-                       [[ 4.,  6.,  2.],
-                        [ 6.,  4.,  2.],
-                        [ 2.,  2.,  2.]]]), 
+                         [[ 4.,  6.,  2.],
+                          [ 6.,  4.,  2.],
+                          [ 2.,  2.,  2.]]]), 
                [[0, 1], [0, 1, 2], ['A', 'C', 'D']])
         larv = self.la1_3d.vacuum(axis=None)
         assert_almost_equal(larv.x, larr.x)
         assert_(larv.label == larr.label)
-    
-    
+        
     def test_vacuum3(self):
         larr = larry(
                np.array([ 2.,  3.,  1.]), 
@@ -3126,8 +3124,7 @@ class Test_vacuum(unittest.TestCase):
         larv = self.la1_1d.vacuum(axis=None)
         assert_almost_equal(larv.x, larr.x)
         assert_(larv.label == larr.label)
-    
-    
+        
     def test_vacuum4(self):
         larr = larry(
                np.array([[[ 2.,  3.,  1.],
@@ -3141,8 +3138,7 @@ class Test_vacuum(unittest.TestCase):
         larv = self.la1_3d.vacuum(axis=1)
         assert_almost_equal(larv.x, larr.x)
         assert_(larv.label == larr.label)
-    
-    
+        
     def test_vacuum5(self):
         larr = larry(
                np.array([[[  2.,  nan,   3.,   1.],
@@ -3156,8 +3152,7 @@ class Test_vacuum(unittest.TestCase):
         larv = self.la1_3d.vacuum(axis=(1,2))
         assert_almost_equal(larv.x, larr.x)
         assert_(larv.label == larr.label)
-    
-    
+        
     def test_vacuum6(self):
         larr = larry(
                np.array([[[  2.,  nan,   3.,   1.],
@@ -3171,8 +3166,7 @@ class Test_vacuum(unittest.TestCase):
         larv = self.la1_3d.vacuum(axis=2)
         assert_almost_equal(larv.x, larr.x)
         assert_(larv.label == larr.label)
-    
-    
+        
     def test_vacuum7(self):
         larr = larry(
                np.array([[[ 2.,  3.,  1.],
@@ -3186,8 +3180,7 @@ class Test_vacuum(unittest.TestCase):
         larv = self.la1_3d.vacuum(axis=0)
         assert_almost_equal(larv.x, larr.x)
         assert_(larv.label == larr.label)
-    
-    
+        
     def test_vacuum8(self):
         larr = larry(
                np.array([[[ 2.,  3.,  1.],
