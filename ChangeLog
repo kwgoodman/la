@@ -1,10 +1,13 @@
 2009-12-31 Keith
 
     * deflarry.py, la/tests/afunc_arr_test.py, la/tests/more_test.py,
+      afunc.py: Renamed group_rank to group_ranking.
+
+    * deflarry.py, la/tests/afunc_arr_test.py, la/tests/more_test.py,
       afunc.py: Renamed sector_rank, sector_mean, sector_median, unique_sector
-      to group_rank, group_mean, group_median, unique_group. Added doc
-      strings. Made unique_group faster. Added optional import norm and ties
-      to group_rank.
+      to group_rank, group_mean, group_median, unique_group to match larry
+      method names. Less confussion. Added doc strings. Made unique_group
+      faster. Added optional import norm and ties to group_rank.
 
     * deflarry.py(sign), tests/deflarry_nose_test.py,
       tests/deflarry_test.py: New methos and corresponding unit tests.

@@ -6,14 +6,14 @@ import numpy as np
 nan = np.nan
 
 from test import printfail
-from la.afunc import group_rank, group_mean, group_median
+from la.afunc import group_ranking, group_mean, group_median
 from la.afunc import (movingsum, movingrank, movingsum_forward, ranking, 
                       geometric_mean, unique_group)
 
 # Sector functions ----------------------------------------------------------
 
-class Test_group_rank(unittest.TestCase):
-    """Test afunc.group_rank"""
+class Test_group_ranking(unittest.TestCase):
+    """Test afunc.group_ranking"""
     
     def setUp(self):
         self.nancode = -9999
@@ -25,8 +25,8 @@ class Test_group_rank(unittest.TestCase):
                            [4.0, 4.0, 3.0, 0.0, 2.0, nan],
                            [5.0, 5.0, 4.0, 4.0, nan, nan]])
         
-    def test_group_rank_1(self):
-        "afunc.group_rank #1"
+    def test_group_ranking_1(self):
+        "afunc.group_ranking #1"
         sectors = ['a', 'b', 'a', 'b', 'a', 'c']
         theory = np.array([[-1.0, 0.0,  nan, nan, -1.0, nan],
                            [-1.0, 1.0, -1.0, nan,  nan, nan],
@@ -34,14 +34,14 @@ class Test_group_rank(unittest.TestCase):
                            [ 1.0,-1.0,  1.0, nan,  nan, nan],
                            [ 1.0, 1.0,  1.0, 0.0,  1.0, nan],
                            [ 0.0, 0.0,  0.0, 0.0,  nan, nan]])
-        practice = group_rank(self.x, sectors)
+        practice = group_ranking(self.x, sectors)
         msg = printfail(theory, practice)
         theory[np.isnan(theory)] = self.nancode
         practice[np.isnan(practice)] = self.nancode        
         self.assert_((abs(theory - practice) < self.tol).all(), msg)
         
-    def test_group_rank_2(self):
-        "afunc.group_rank #2"
+    def test_group_ranking_2(self):
+        "afunc.group_ranking #2"
         sectors = ['a', 'b', 'a', 'b', 'a', None]
         theory = np.array([[-1.0,  0.0,  nan, nan,-1.0, nan],
                            [-1.0,  1.0, -1.0, nan, nan, nan],
@@ -49,7 +49,7 @@ class Test_group_rank(unittest.TestCase):
                            [ 1.0, -1.0,  1.0, nan, nan, nan],
                            [ 1.0,  1.0,  1.0, 0.0, 1.0, nan],
                            [ nan,  nan,  nan, nan, nan, nan]])
-        practice = group_rank(self.x, sectors)
+        practice = group_ranking(self.x, sectors)
         msg = printfail(theory, practice)
         theory[np.isnan(theory)] = self.nancode
         practice[np.isnan(practice)] = self.nancode        
@@ -816,7 +816,7 @@ def testsuite():
     s = []
     
     # Sector functions
-    s.append(unit(Test_group_rank))
+    s.append(unit(Test_group_ranking))
     s.append(unit(Test_group_mean)) 
     s.append(unit(Test_group_median)) 
     

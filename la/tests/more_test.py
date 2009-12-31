@@ -8,14 +8,14 @@ from test import printfail
 from la.afunc import (covMissing, fillforward_partially, geometric_mean,
                       lastrank, lastrank_decay, movingrank, movingsum,
                       movingsum_forward, nans, nanstd, quantile, ranking,
-                      group_mean, group_median, group_rank)
+                      group_mean, group_median, group_ranking)
 
 # Functions to test
 funcs_one = [covMissing, geometric_mean, lastrank, nanstd, ranking]
 funcs_oneint = [movingrank, movingsum, movingsum_forward, quantile, 
                 fillforward_partially]
 funcs_onefrac = [lastrank_decay]
-funcs_sect = [group_mean, group_median, group_rank]
+funcs_sect = [group_mean, group_median, group_ranking]
 
 def check_return_array(func, args):
     "Check that function returns a numpy array or a scalar."

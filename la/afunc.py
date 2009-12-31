@@ -7,7 +7,7 @@ from scipy.special import ndtri
 
 # Sector functions ----------------------------------------------------------
 
-def group_rank(x, groups, norm='-1,1', ties=True):
+def group_ranking(x, groups, norm='-1,1', ties=True):
     """
     Ranking within groups along axis=0.
     
