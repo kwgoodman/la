@@ -1,5 +1,8 @@
 2009-12-31 Keith
 
+    * tests/deflarry_nose_test.py: Big clean up. Removed unused functions and
+      fixed known test failure.
+
     * README: Add a README file.
 
 2009-12-30 Keith
