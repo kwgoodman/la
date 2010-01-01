@@ -14,7 +14,8 @@ def save_npz(file, **kwargs):
     Parameters
     ----------
     file : {str, file}
-        File in which to save the data.
+        File in which to save the larrys. If `file` is a str and it does not
+        end in '.npz' then '.npz' will be appended to the file name.
     kwargs : Keyword arguments
         Keyword, value pairs where keyword is the name of the larry and value
         is the larry.
@@ -53,15 +54,18 @@ def load_npz(file):
     """
     Load larrys from a numpy npz file into a dictionary of larrys.
     
+    The file can contain data other than larrys, a plain Numpy array, for
+    example. The non larry data will be ignored. 
+    
     Parameters
     ----------
     file : {str, file}
-        File in which to save the data.
+        File from which to load the larrys.
         
     Returns
     -------
     larrydict : dict
-        Returns a dictionary of larrys.
+        Returns a dictionary of all the larrys in the file.
     
     Example
     -------    
@@ -83,14 +87,22 @@ def load_npz(file):
        True
             
     """
+    
     f = np.load(file)
-    names = [z.split('.')[0] for z in f.keys()]
+    
+    # There may be non larry objects in the file (plain numpy arrays, for
+    # example). If a name has a .x and .label component, such as lar.x and
+    # lar.label, then assume lar is a larry. 
+    fkeys = f.keys()
+    names = [z.split('.')[0] for z in fkeys]
     names = list(set(names))
-    larrydict = {} 
+    larrydict = {}
     for name in names:
-        x = f[name + '.x']
-        label = f[name + '.label']
-        label = cPickle.loads(label[0])
-        larrydict[name] = larry(x, label)    
+        if ((name + '.x') in fkeys) and ((name + '.label') in fkeys):
+            x = f[name + '.x']
+            label = f[name + '.label']
+            label = cPickle.loads(label[0])
+            larrydict[name] = larry(x, label)
+                
     return larrydict
         

@@ -1,3 +1,11 @@
+2010-01-01 Keith
+
+    * io.py(load_npz): Add ability to handle files that contain non larry data
+
+    * io.py(save_npz), io.py(load_npz): Improve doc string.
+    
+    * README: Tweaks.
+
 2009-12-31 Keith
 
     * io.py: New module to save and load larrys.
