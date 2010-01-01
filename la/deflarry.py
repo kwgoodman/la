@@ -21,7 +21,7 @@ class larry(object):
         
         Parameters
         ----------
-        x : numpy array
+        x : numpy array_like
             Data, NaN are treated as missing data.
         label : {list of lists, None}, optional
             A list with labels for each dimension of x. If x is 2d, for
@@ -34,14 +34,21 @@ class larry(object):
         Raises
         ------
         ValueError
-            If x is not a numpy array, or if number of elements in label does
-            not match the dimensions of x, or if the elements in label are not
-            unique along each dimension, or if the elements of label are not
-            lists. 
+            If x cannot be converted to a numpy array, or if number of
+            elements in label does not match the dimensions of x, or if the
+            elements in label are not unique along each dimension, or if the
+            elements of label are not lists. 
 
         """
         if type(x) is not np.ndarray:
-            raise ValueError, 'x must be a numpy array'
+            # The if statement above is faster than asarray. When you add two
+            # larrys, for example, it will use __init__ to create the result,
+            # so any improvement in speed is good. that's why this entire
+            # block of code is not replaced with x = np.asarray(x)
+            try:
+                x = np.asarray(x)
+            except:
+                raise ValueError, "x must be array_like."    
         if label is None:
             label = [range(z) for z in x.shape]
         if x.ndim != len(label):

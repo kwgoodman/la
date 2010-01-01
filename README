@@ -19,52 +19,34 @@ MEET LARRY
     A larry can have any dimension. Here, for example, is one way to create a
     1d larry:
 
-    >> from la import larry
-    >> from numpy import array
-    >> y = larry(array([1, 2, 3]), [['a', 'b', 'c']])
+    >>> from la import larry
+    >>> from numpy import array
+    >>> y = larry(array([1, 2, 3]), [['a', 'b', 'c']])
+    
+    The simplest way to create a larry in an interactive session:
+    
+    >>> y = larry([1, 2, 3])
+    
+    The list is converted to a Numpy array and the labels default to range(n),
+    where n in this case is 3.
     
     Larry has many builtin methods such as movingsum, ranking, merge, shuffle,
-    zscore:
+    zscore, demean, lag as well as the typical Numpy methods like sum, max,
+    std, sign, clip. Unlike Numpy, larry treats NaNs as missing data.
     
-    >> y.zscore()
-       
-    label_0
-        a
-        b
-        c
-
-    x
-    array([-1,  0,  1])
-    
-    If you add (or subtract, multiply, divide) two larrys together, alignment
-    is automatic:
-    
-    >> larry(array([1,2]), [['a','b']]) + larry(array([2,1]), [['b','a']])
-       
-    label_0
-        a
-        b
-
-    x
-    array([2, 4])
-    
-    Larry treats NaNs as missing data:
-    
-    >> y = larry(array([1, np.nan]))
-    >> y.sum()
-       1.0
+    Alignment is automatic when you add (or subtract, multiply, divide) two
+    larrys.
     
     For the most part larry acts like a Numpy array. And, whenever you want,
     you have direct access to the Numpy array that holds your data. For
     example if you have a function, myfunc, that works on Numpy arrays and
-    doesn't change the shape pf the array, then you can use it on a larry, y,
+    doesn't change the shape of the array, then you can use it on a larry, y,
     like this:
     
                            y.x = myfunc(y.x)
     
-    So larry adds the convenience of labels to your data, provides lots of
-    builtin functions, and let's you use many of your exisiting array
-    functions.       
+    So larry adds the convenience of labels, provides many builtin functions,
+    and let's you use your exisiting array functions.       
 
 REQUIREMENTS
 

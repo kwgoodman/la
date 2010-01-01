@@ -1,5 +1,9 @@
 2010-01-01 Keith
 
+    * deflarry.py(__init__): Added ability to make a larry with lists, tuples,
+      and numpy matrices (anything that np.asarray can convert to an array).
+    * README: Rewrote.
+
     * io.py(load_npz): Add ability to handle files that contain non larry data
 
     * io.py(save_npz), io.py(load_npz): Improve doc string.
