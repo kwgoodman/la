@@ -30,6 +30,52 @@ def nocopy(larry1, larry2):
     for i in xrange(larry1.ndim):
         out = out & (larry1.label[i] is larry2.label[i])
     return out
+
+class Test_init(unittest.TestCase):
+    "Test init of larry class"
+    
+    def setUp(self):
+        self.list = [[1,2],[3,4]]
+        self.tuple = ((1,2),(3,4))
+        self.matrix = np.matrix([[1,2],[3,4]])
+        self.array = np.array([[1,2],[3,4]])                
+        self.label = [[0,1],[0,1]]                                                      
+
+    def test_init_list(self):
+        "larry.__init__list"
+        p = larry(self.list)
+        t = self.array
+        msg = printfail(t, p.x, 'x')      
+        self.assert_((p.x == t).all(), msg) 
+        self.assert_(self.label == p.label,
+                     printfail(self.label, p.label, 'label'))
+
+    def test_init_tuple(self):
+        "larry.__init__tuple"
+        p = larry(self.tuple)
+        t = self.array
+        msg = printfail(t, p.x, 'x')      
+        self.assert_((p.x == t).all(), msg) 
+        self.assert_(self.label == p.label,
+                     printfail(self.label, p.label, 'label'))
+
+    def test_init_matrix(self):
+        "larry.__init__matrix"
+        p = larry(self.matrix)
+        t = self.array
+        msg = printfail(t, p.x, 'x')      
+        self.assert_((p.x == t).all(), msg) 
+        self.assert_(self.label == p.label,
+                     printfail(self.label, p.label, 'label'))
+
+    def test_init_array(self):
+        "larry.__init__array"
+        p = larry(self.array)
+        t = self.array
+        msg = printfail(t, p.x, 'x')      
+        self.assert_((p.x == t).all(), msg) 
+        self.assert_(self.label == p.label,
+                     printfail(self.label, p.label, 'label'))
     
 class Test_unary(unittest.TestCase):
     "Test unary functions of larry class"
@@ -3219,6 +3265,7 @@ def printfail(theory, practice, header):
 def testsuite():
     s = []
     u  =unittest.TestLoader().loadTestsFromTestCase
+    s.append(u(Test_init))
     s.append(u(Test_unary))
     s.append(u(Test_binary))
     s.append(u(Test_reduce))
