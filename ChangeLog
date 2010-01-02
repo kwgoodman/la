@@ -1,5 +1,8 @@
 2010-01-01 Keith
 
+    * io.py, io, io/npz.py, io/__init__.py, __init__.py: Rename io.py to
+      npz.py and move it to a new subpackage named io.
+
     * tests/deflarry_test.py: Added unit tests for creating larrys from lists,
       tuples, matrices, and arrays.
 

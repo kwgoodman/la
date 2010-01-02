@@ -1,11 +1,9 @@
-"Functions for saving and loading larrys."
+"Functions for saving and loading larrys in Numpy npz files."
      
 import cPickle
 import numpy as np
 from la import larry
 
-
-# npz ----------------------------------------------------------------------
 
 def save_npz(file, **kwargs):
     """
