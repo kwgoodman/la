@@ -32,11 +32,21 @@ MEET LARRY
     
     Larry has many builtin methods such as movingsum, ranking, merge, shuffle,
     zscore, demean, lag as well as the typical Numpy methods like sum, max,
-    std, sign, clip. Unlike Numpy, larry treats NaNs as missing data.
+    std, sign, clip. NaNs are treated as missing data.
     
     Alignment is automatic when you add (or subtract, multiply, divide) two
     larrys.
     
+    You can save and load larrys in hdf5 or npz format using a dictionary-like
+    interface:
+    
+    >>> x = la.larry([1,2,3])
+    >>> io = la.IO('/tmp/dataset.hdf5')
+    >>> io['x'] = x   # <--- save
+    >>> z = io['x']   # <--- load
+    >>> (x == z).all()
+        True
+       
     For the most part larry acts like a Numpy array. And, whenever you want,
     you have direct access to the Numpy array that holds your data. For
     example if you have a function, myfunc, that works on Numpy arrays and

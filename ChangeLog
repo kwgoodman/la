@@ -1,5 +1,10 @@
 2010-01-02 Keith
 
+    * io/io.py, README, __init__.py: New module to save and load larrys in
+      hdf5 or npz format using a dictionary-like interface.
+      
+    * io/prettytable.py: New module to make pretty print tables.         
+
     * io/hdf5.py, __init__.py: New module for saving and loading larrys in
       HDF5 format.
 
