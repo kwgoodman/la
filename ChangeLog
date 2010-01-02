@@ -1,5 +1,7 @@
 2010-01-02 Keith
 
+    * README: Improvements.
+
     * io/io.py, README, __init__.py: New module to save and load larrys in
       hdf5 or npz format using a dictionary-like interface.
       
