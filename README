@@ -32,7 +32,7 @@ MEET LARRY
     Alignment is automatic when you add (or subtract, multiply, divide) two
     larrys.
     
-    You can archive larrys in hdf5 format using a dictionary-like interface:
+    You can archive larrys in HDF5 format using a dictionary-like interface:
     
     >>> io = la.IO('/tmp/dataset.hdf5')
     >>> io['y'] = y   # <--- save
@@ -54,7 +54,7 @@ REQUIREMENTS
 
     To run larry you need Python, Numpy, and Scipy. Python 2.6 and Numpy 1.4
     are recommended. (There are many larry unit test failures with Numpy 1.3.)
-    To save and load larrys in hdf5 format, you need h5py.
+    To save and load larrys in HDF5 format, you need h5py.
         
     Larry currently contains no extensions, just Python code, so there is
     nothing to compile. Just save the la directory and make sure Python can

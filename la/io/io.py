@@ -22,7 +22,37 @@ class IO(object):
             
         Returns
         -------
-            An IO object. 
+            An IO object.
+            
+        Notes
+        -----
+        - Because the archive interface is dictionary-like, data will be
+          overwritten when assigning a key, value pair if the key already
+          exists in the archive.
+          
+        Examples
+        --------       
+        >>> import la
+        >>> io = la.IO('/tmp/dataset.hdf5')
+        >>> io['x'] = la.larry([1,2,3])  # <-- Save
+        >>> io
+           
+        larry  dtype  shape
+        -------------------
+        x      int64  (3,) 
+
+        >>> io['x'] = la.larry([4])  # <-- Overwrite
+        >>> io
+           
+        larry  dtype  shape
+        -------------------
+        x      int64  (1,) 
+
+        >>> y = io['x']  # <-- Load
+        >>> 'x' in io
+            True
+        >>> io.keys()
+            ['x']
             
         """   
         self.file = filename
@@ -60,6 +90,10 @@ class IO(object):
         x = value.x
         label = value.label
         
+        # Does a larry with given key already exist? If so delete
+        if key in self:
+            self.__delitem__(key)    
+        
         # If you've made it this far the data looks OK so save it
         self.fid[key + '.x'] = x
         self.fid[key + '.label'] = np.asarray([cPickle.dumps(label)]) 
@@ -71,8 +105,10 @@ class IO(object):
         
     def __repr__(self):
         table = [['larry', 'dtype', 'shape']]
-        for key in self.keys():
-            # Code wouild be neater if I wrote shape = str(self[key].shape)
+        keys = self.keys()
+        keys.sort()  # Display in alphabetical order
+        for key in keys:
+            # Code would be neater if I wrote shape = str(self[key].shape)
             # but I don't want to load the array, I just want the shape
             shape = str(self.fid[key + '.x'].shape)
             dtype = str(self.fid[key + '.x'].dtype)            

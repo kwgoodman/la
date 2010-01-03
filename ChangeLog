@@ -1,8 +1,12 @@
 2010-01-03 Keith
 
+    * io/io.py(IO): Added ability to overwrite when saving a larry if the key
+      already exists. This makes the io more dictionary like. Added notes and
+      examples to the doc string. Sort by key name in repr.
+
     * io/io.py, README, __init__.py: Remove npz archive format. Just
       concentrate on one format (hdf5) for now. Also made __repr__ work
-      without needed to load the data.
+      without needing to load the data.
 
     * io/hdf5.py, io/npz.py: Remove these modules that contained save and load
       functions for hdf5 and npz format. I now use a dictionary-like
