@@ -1,5 +1,11 @@
 2010-01-03 Keith
 
+    * io/io.py(IO.__setitem__): Made more robust.
+
+    * io/io.py(IO.__contains__): Removed method. Not needed.    
+
+    * io/io.py(IO.__init__): Improved doc string.
+
     * io/io.py(IO): Added ability to overwrite when saving a larry if the key
       already exists. This makes the io more dictionary like. Added notes and
       examples to the doc string. Sort by key name in repr.

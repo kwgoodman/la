@@ -12,7 +12,10 @@ class IO(object):
     
     def __init__(self, filename):
         """
-        Save and load larrys in hdf5 format using a dictionary-like interface.        
+        Save and load larrys in HDF5 format using a dictionary-like interface.
+        
+        Dictionaries are made up of key, value pairs. In the IO object, a key
+        is the name (string) of the larry and a value is a larry object.        
         
         Parameters
         ----------
@@ -26,6 +29,9 @@ class IO(object):
             
         Notes
         -----
+        - Each larry is stored as two files in HDF5: the data partof the larry
+          is stored as a Numpy array and the label part is first pickled and
+          then placed in a one-element 1d Numpy array.
         - Because the archive interface is dictionary-like, data will be
           overwritten when assigning a key, value pair if the key already
           exists in the archive.
@@ -41,12 +47,12 @@ class IO(object):
         -------------------
         x      int64  (3,) 
 
-        >>> io['x'] = la.larry([4])  # <-- Overwrite
+        >>> io['x'] = la.larry([4.0])  # <-- Overwrite
         >>> io
            
-        larry  dtype  shape
-        -------------------
-        x      int64  (1,) 
+        larry  dtype    shape
+        ---------------------
+        x      float64  (1,) 
 
         >>> y = io['x']  # <-- Load
         >>> 'x' in io
@@ -63,10 +69,7 @@ class IO(object):
         return list2keys(self.fid.keys())            
 
     def __iter__(self):
-        return iter(self.keys())        
-        
-    def __contains__(self, key):
-        return key in self.keys()
+        return iter(self.keys())
         
     def __len__(self):
         return len(self.keys())
@@ -89,6 +92,7 @@ class IO(object):
             raise TypeError, 'value must be a larry.'
         x = value.x
         label = value.label
+        label = np.asarray([cPickle.dumps(label)])
         
         # Does a larry with given key already exist? If so delete
         if key in self:
@@ -96,7 +100,7 @@ class IO(object):
         
         # If you've made it this far the data looks OK so save it
         self.fid[key + '.x'] = x
-        self.fid[key + '.label'] = np.asarray([cPickle.dumps(label)]) 
+        self.fid[key + '.label'] = label 
         self.fid.flush()
         
     def __delitem__(self, key):
