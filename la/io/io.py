@@ -95,6 +95,10 @@ class IO_hdf5(IO_base):
         self.fid[key + '.label'] = np.asarray([cPickle.dumps(label)]) 
         self.fid.flush()
         
+    def __delitem__(self, key):
+        del self.fid[key + '.x']
+        del self.fid[key + '.label']    
+        
 class IO_npz(IO_base):
 
     def __init__(self, filename):   

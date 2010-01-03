@@ -32,12 +32,13 @@ MEET LARRY
     Alignment is automatic when you add (or subtract, multiply, divide) two
     larrys.
     
-    You can save and load larrys in hdf5 or npz format using a dictionary-like
+    You can archive larrys in hdf5 or npz format using a dictionary-like
     interface:
     
     >>> io = la.IO('/tmp/dataset.hdf5')
     >>> io['y'] = y   # <--- save
     >>> z = io['y']   # <--- load
+    >>> del io['y']   # <--- delete from archive (hdf5 mode)
        
     For the most part larry acts like a Numpy array. And, whenever you want,
     you have direct access to the Numpy array that holds your data. For

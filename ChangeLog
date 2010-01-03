@@ -1,3 +1,9 @@
+2010-01-03 Keith
+
+    * io/io.py(IO_hdf5.__deleteitem__): New method.
+    
+    * README: Tweak.    
+
 2010-01-02 Keith
 
     * README: Improvements.
