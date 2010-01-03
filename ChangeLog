@@ -1,5 +1,13 @@
 2010-01-03 Keith
 
+    * io/io.py, README, __init__.py: Remove npz archive format. Just
+      concentrate on one format (hdf5) for now. Also made __repr__ work
+      without needed to load the data.
+
+    * io/hdf5.py, io/npz.py: Remove these modules that contained save and load
+      functions for hdf5 and npz format. I now use a dictionary-like
+      interface.
+
     * io/io.py(IO_hdf5.__deleteitem__): New method.
     
     * README: Tweak.    

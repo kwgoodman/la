@@ -1,45 +1,37 @@
 
-import cPickle, zipfile
+import cPickle
 
 import numpy as np
+import h5py
 from prettytable import indent
 
 from la import larry
 
-
-def IO(filename, mode=None):
-    """
-    Save and load larrys.
-    
-    Parameters
-    ----------
-    filename : str, file object (in npz mode only)
-        The `filename` is the path to the archive. In mode 'npz' the filename
-        can be a file object.
-    mode : {'hdf5', 'npz'}, optional
-        Archive mode. To use the hdf5 mode you must have h5py installed. To
-        use the npz mode your Python distribution must have gzip. If mode is
-        None (default) then an attempt will be made to determine the mode
-        from the filename extension (.npz for npz mode; .hdf5 for hdf5 mode).
         
-    Returns
-    -------
-        An IO object.        
+class IO(object):
     
-    """
-    if mode is None:
-        if type(filename) is str:
-            if '.' in filename:
-                mode = filename.split('.')[-1]
-    if mode == 'hdf5':
-        return IO_hdf5(filename)
-    elif mode == 'npz':
-        return IO_npz(filename)    
-    else:
-        raise ValueError, "mode must be 'hdf5' or 'npz'."
-
-class IO_base(object):
+    def __init__(self, filename):
+        """
+        Save and load larrys in hdf5 format using a dictionary-like interface.        
         
+        Parameters
+        ----------
+        filename : str
+            The `filename` is the path to the archive. If the file does not
+            exists, it will be created.
+            
+        Returns
+        -------
+            An IO object. 
+            
+        """   
+        self.file = filename
+        self.fid = h5py.File(self.file)
+        
+    def keys(self):
+        """Returns a list of larrys (keys) in archive."""
+        return list2keys(self.fid.keys())            
+
     def __iter__(self):
         return iter(self.keys())        
         
@@ -48,28 +40,6 @@ class IO_base(object):
         
     def __len__(self):
         return len(self.keys())
-        
-    def __repr__(self):
-        table = [['larry', 'dtype', 'shape']]
-        for key in self.keys():
-            shape = str(self[key].shape)
-            dtype = str(self[key].dtype)            
-            table.append([key, dtype, shape])         
-        return indent(table, hasHeader=True, delim='  ')  
-        
-class IO_hdf5(IO_base):
-
-    def __init__(self, filename):
-        try:
-            # Lazy import in case user hasn't installed this great package
-            import h5py
-        except:
-            raise ImportError, 'Cannot import h5py.'    
-        self.file = filename
-        self.fid = h5py.File(self.file)
-        
-    def keys(self):
-        return list2keys(self.fid.keys())        
         
     def __getitem__(self, key):
         if key in self:
@@ -97,48 +67,17 @@ class IO_hdf5(IO_base):
         
     def __delitem__(self, key):
         del self.fid[key + '.x']
-        del self.fid[key + '.label']    
+        del self.fid[key + '.label']
         
-class IO_npz(IO_base):
-
-    def __init__(self, filename):   
-        self.file = filename
-        
-    def keys(self):
-        try:
-            fid = np.load(self.file)
-        except IOError:
-            return []    
-        return list2keys(fid.keys())        
-        
-    def __getitem__(self, key):
-        try:
-            fid = np.load(self.file)
-        except IOError:
-            raise KeyError, "File is not yet opened; does it exist?"  
-        if key in self:
-            x = fid[key + '.x']
-            label = fid[key + '.label']
-            label = cPickle.loads(label[0])   
-            return larry(x, label)
-        else:
-            raise KeyError, "A larry named %s is not in the file." % key   
-        
-    def __setitem__(self, key, value):
-        
-        # Make sure the data looks OK before saving since there is no rewind
-        if type(key) != str:
-            raise TypeError, 'key must be a string of type str.'        
-        if not isinstance(value, larry):
-            raise TypeError, 'value must be a larry.'
-        x = value.x
-        label = value.label
-        
-        # If you've made it this far the data looks OK so save it
-        kwdict = {}
-        kwdict[key + '.x'] = x
-        kwdict[key + '.label'] = (cPickle.dumps(label),)
-        np.savez(self.file, **kwdict) 
+    def __repr__(self):
+        table = [['larry', 'dtype', 'shape']]
+        for key in self.keys():
+            # Code wouild be neater if I wrote shape = str(self[key].shape)
+            # but I don't want to load the array, I just want the shape
+            shape = str(self.fid[key + '.x'].shape)
+            dtype = str(self.fid[key + '.x'].dtype)            
+            table.append([key, dtype, shape])         
+        return indent(table, hasHeader=True, delim='  ')
         
 def list2keys(x):
     names = [z.split('.')[0] for z in x]
