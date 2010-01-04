@@ -1,5 +1,10 @@
 2010-01-04 Keith
 
+    * io/io.py(space), io/io.py(freespace), io/io.py(repack),
+      io/io.py(_repack_conditional), io/io.py(__init__): New methods.
+      
+    * io/io.py(__delitem__), io/io.py(clear): Repack archive when needed.  
+      
     * io/io.py(values), io/io.py(items), io/io.py(iterkeys),
       io/io.py(itervalues), io/io.py(iteritems), io/io.py(clear): new methods.
       

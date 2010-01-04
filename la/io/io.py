@@ -1,5 +1,6 @@
 
 import cPickle
+import os
 
 import numpy as np
 import h5py
@@ -10,7 +11,7 @@ from la import larry
         
 class IO(object):
     
-    def __init__(self, filename):
+    def __init__(self, filename, max_freespace=np.inf):
         """
         Save and load larrys in HDF5 format using a dictionary-like interface.
         
@@ -22,10 +23,16 @@ class IO(object):
         filename : str
             The `filename` is the path to the archive. If the file does not
             exists, it will be created.
+        max_freespace : scalar
+            If the size of the freespace (unused archive space) exceeds
+            `max_freespace` bytes after a larry is deleted from the archive,
+            then the archive is repacked. The default (np.inf) is to never
+            repack. Repack means to transfer all the larrys to a new archive
+            (with the same name) and delete the old archive.
             
         Returns
         -------
-            An IO object.
+            A dictionary-like IO object.
             
         Notes
         -----
@@ -38,7 +45,8 @@ class IO(object):
         - Deleting a larry from the archive only unlinks it. You won't be able
           to reuse the unlinked space if you close the connection. This is
           a limitation of the HDF5 format, not a limitation of the IO class
-          or h5py.
+          or h5py. You can repack the archive with the repack method or have
+          it done automatically for you: see `freespace` above.
           
         Examples
         --------       
@@ -68,6 +76,7 @@ class IO(object):
         """   
         self.file = filename
         self.fid = h5py.File(self.file)
+        self.max_freespace = max_freespace
         
     def keys(self):
         "Return a list of larry names (keys) in archive."
@@ -111,7 +120,8 @@ class IO(object):
         Warning: this will delete (unlink) all larrys from the archive!
         """
         for key in self:
-            self.__delitem__(key)            
+            self.__delitem__(key)
+        self._repack_conditional()              
 
     def __iter__(self):
         return iter(self.keys())
@@ -150,7 +160,8 @@ class IO(object):
         
     def __delitem__(self, key):
         del self.fid[key + '.x']
-        del self.fid[key + '.label']    
+        del self.fid[key + '.label']
+        self._repack_conditional()  
         
     def __repr__(self):
         table = [['larry', 'dtype', 'shape']]
@@ -160,9 +171,38 @@ class IO(object):
             # Code would be neater if I wrote shape = str(self[key].shape)
             # but I don't want to load the array, I just want the shape
             shape = str(self.fid[key + '.x'].shape)
-            dtype = str(self.fid[key + '.x'].dtype)            
+            dtype = str(self.fid[key + '.x'].dtype)    
             table.append([key, dtype, shape])         
         return indent(table, hasHeader=True, delim='  ')
+
+    # Disk space issues ----------------------------------------------------
+        
+    def space(self):
+        "How many bytes does the archive use?"
+        return self.fid.fid.get_filesize()
+         
+    def freespace(self):
+        "How many bytes of freespace are in the archive?"
+        used = [self.fid[z].id.get_storage_size() for z in self.fid.keys()] 
+        return self.space() - sum(used)
+        
+    def repack(self):
+        "Repack the archive to remove freespace."
+        filenew = self.file + '_la_repack_tmp'
+        fidnew = h5py.File(filenew)
+        for key in self.fid.keys():
+            fidnew[key] = self.fid[key].value
+        fileold = self.file + '_la_rename_tmp'
+        os.rename(self.file, fileold)
+        os.rename(filenew, self.file)
+        self.fid = h5py.File(self.file)
+        os.remove(fileold)
+        
+    def _repack_conditional(self):
+        "Repack if `max_freespace` is exceeded."
+        if np.isfinite(self.max_freespace):
+            if self.freespace() > self.max_freespace:
+                self.repack()        
         
 def list2keys(x):
     names = [z.split('.')[0] for z in x]
