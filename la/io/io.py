@@ -14,8 +14,8 @@ class IO(object):
         """
         Save and load larrys in HDF5 format using a dictionary-like interface.
         
-        Dictionaries are made up of key, value pairs. In the IO object, a key
-        is the name (string) of the larry and a value is a larry object.        
+        Dictionaries are made up of (key, value) pairs. In an IO object, a key
+        is the name (string) of a larry and a value is a larry object.        
         
         Parameters
         ----------
@@ -29,12 +29,16 @@ class IO(object):
             
         Notes
         -----
-        - Each larry is stored as two files in HDF5: the data partof the larry
-          is stored as a Numpy array and the label part is first pickled and
-          then placed in a one-element 1d Numpy array.
+        - Each larry is stored as two files in HDF5: the data part of the
+          larry is stored as a Numpy array and the label part is first pickled
+          and then placed in a one-element 1d Numpy array.
         - Because the archive interface is dictionary-like, data will be
-          overwritten when assigning a key, value pair if the key already
+          overwritten when assigning a (key, value) pair if the key already
           exists in the archive.
+        - Deleting a larry from the archive only unlinks it. You won't be able
+          to reuse the unlinked space if you close the connection. This is
+          a limitation of the HDF5 format, not a limitation of the IO class
+          or h5py.
           
         Examples
         --------       
@@ -56,17 +60,58 @@ class IO(object):
 
         >>> y = io['x']  # <-- Load
         >>> 'x' in io
-            True
-        >>> io.keys()
-            ['x']
+            True    
+        >>> del io['x']  # <-- Delete (unlink)
+        >>> 'x' in io
+            False             
             
         """   
         self.file = filename
         self.fid = h5py.File(self.file)
         
     def keys(self):
-        """Returns a list of larrys (keys) in archive."""
-        return list2keys(self.fid.keys())            
+        "Return a list of larry names (keys) in archive."
+        return list2keys(self.fid.keys())
+        
+    def values(self):
+        "Return a list of larry objects (values) in archive."
+        v = []
+        for key in self:
+            v.append(self[key])
+        return v
+        
+    def items(self):
+        "Return a list of all (key, value) pairs."
+        i = []
+        for key in self:
+            i.append((key, self[key]))
+        return i            
+
+    def iterkeys(self):
+        "An iterator over the keys."
+        for key in self:
+            yield key
+
+    def itervalues(self):
+        "An iterator over the values."
+        for key in self:
+            yield self[key]
+        
+    def iteritems(self):
+        "An iterator over (key, value) items."
+        for key in self:
+            yield (key, self[key])                
+            
+    def has_key(self, key):
+        "True if key is in archive, False otherwise."
+        return key in self
+        
+    def clear(self):
+        """
+        Warning: this will delete (unlink) all larrys from the archive!
+        """
+        for key in self:
+            self.__delitem__(key)            
 
     def __iter__(self):
         return iter(self.keys())
@@ -105,7 +150,7 @@ class IO(object):
         
     def __delitem__(self, key):
         del self.fid[key + '.x']
-        del self.fid[key + '.label']
+        del self.fid[key + '.label']    
         
     def __repr__(self):
         table = [['larry', 'dtype', 'shape']]

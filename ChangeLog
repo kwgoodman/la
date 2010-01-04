@@ -1,3 +1,10 @@
+2010-01-04 Keith
+
+    * io/io.py(values), io/io.py(items), io/io.py(iterkeys),
+      io/io.py(itervalues), io/io.py(iteritems), io/io.py(clear): new methods.
+      
+    * io/io.py(__init__): Doc string work.   
+
 2010-01-03 Keith
 
     * io/io.py(IO.__setitem__): Made more robust.
