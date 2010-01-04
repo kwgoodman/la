@@ -1,5 +1,8 @@
 2010-01-04 Keith
 
+    * io/tests, io/tests/io_test.py: Made a unit test module for io with a few
+      unit tests in it.
+
     * io/io.py(space), io/io.py(freespace), io/io.py(repack),
       io/io.py(_repack_conditional), io/io.py(__init__): New methods.
       
