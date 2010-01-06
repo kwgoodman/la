@@ -179,10 +179,12 @@ class IO(object):
         
     def space(self):
         "How many bytes does the archive use?"
+        self.fid.flush()
         return self.fid.fid.get_filesize()
          
     def freespace(self):
         "How many bytes of freespace are in the archive?"
+        self.fid.flush()
         used = [self.fid[z].id.get_storage_size() for z in self.fid.keys()] 
         return self.space() - sum(used)
         

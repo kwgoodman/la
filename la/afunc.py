@@ -265,7 +265,7 @@ def lastrank_decay(x, decay):
 
 def ranking(x, axis=0, norm='-1,1', ties=True):
     """
-    Rank elements treating NaN as missing and optionally break ties.
+    Normalized ranking treating NaN as missing and average ties by default.
     
     Parameters
     ----------
@@ -303,16 +303,19 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
     
     """
     ax = axis
-    masknan = ~np.isfinite(x)
+    masknan = np.isnan(x)
     countnan = np.expand_dims(masknan.sum(ax), ax)
     countnotnan = x.shape[ax] - countnan
     if not ties:
+        maskinf = np.isinf(x)
+        adj = masknan.cumsum(ax)
         if masknan.any():
             x = x.copy()
             x[masknan] = np.inf
         idxraw = x.argsort(ax).argsort(ax)
         idx = idxraw.astype(float)
         idx[masknan] = np.nan
+        idx[maskinf] -= adj[maskinf]
     else:
         rank1d = rankdata # Note: stats.rankdata starts ranks at 1
         idx = np.nan * np.ones(x.shape)
@@ -321,7 +324,7 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
         for ij in np.ndindex(*itshape):
             ijslice = list(ij[:ax]) + [slice(None)] + list(ij[ax:])
             x1d = x[ijslice].astype(float)
-            mask1d = np.isfinite(x1d)
+            mask1d = ~np.isnan(x1d)
             x1d[mask1d] = rank1d(x1d[mask1d]) - 1
             idx[ijslice] = x1d
     if norm == '-1,1':

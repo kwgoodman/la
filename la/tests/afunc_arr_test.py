@@ -342,7 +342,7 @@ class Test_ranking(unittest.TestCase):
         self.tol = 1e-8    
 
     def test_ranking_1(self):
-        """afunc.ranking #1"""
+        "afunc.ranking_1"
         x = np.array([[ 1.0,   nan,   2.0,   nan,   nan],
                       [ 2.0,   2.0,   nan,   nan,   nan],
                       [ 3.0,   3.0,   3.0, 3.0  ,   nan]])
@@ -356,7 +356,7 @@ class Test_ranking(unittest.TestCase):
         self.assert_((abs(theory - practice) < self.tol).all(), msg)  
 
     def test_ranking_2(self):
-        """afunc.ranking #2"""
+        "afunc.ranking_2"
         x = np.array([[ 1.0,   nan,   2.0,   nan,   nan],
                       [ 2.0,   2.0,   nan,   nan,   nan],
                       [ 3.0,   3.0,   3.0,   3.0,   nan]])
@@ -370,7 +370,7 @@ class Test_ranking(unittest.TestCase):
         self.assert_((abs(theory - practice) < self.tol).all(), msg)  
 
     def test_ranking_3(self):
-        """afunc.ranking #3"""
+        "afunc.ranking_3"
         x = np.array([[ 1.0,   nan,   2.0,   nan,   nan],
                       [ 2.0,   2.0,   nan,   nan,   nan],
                       [ 3.0,   3.0,   3.0, 3.0  ,   nan],
@@ -386,7 +386,7 @@ class Test_ranking(unittest.TestCase):
         self.assert_((abs(theory - practice) < self.tol).all(), msg)
         
     def test_ranking_4(self):
-        """afunc.ranking #4"""  
+        "afunc.ranking_4"  
         x = np.array([3.0, 1.0, 2.0])[:,None]
         theory = np.array([1.0,-1.0, 0.0])[:,None]
         practice = ranking(x, axis=0)
@@ -394,7 +394,7 @@ class Test_ranking(unittest.TestCase):
         self.assert_((theory == practice).all(), msg) 
 
     def test_ranking_5(self):
-        """afunc.ranking #5"""  
+        "afunc.ranking_5"  
         x = np.array([3.0, 1.0, 2.0])[:,None]
         theory = np.array([0.0, 0.0, 0.0])[:,None]
         practice = ranking(x, axis=1)
@@ -402,7 +402,7 @@ class Test_ranking(unittest.TestCase):
         self.assert_((theory == practice).all(), msg)
         
     def test_ranking_6(self):
-        """afunc.ranking #6"""
+        "afunc.ranking_6"
         x = np.array([[ 1.0,   nan,   1.0,   nan,   nan],
                       [ 1.0,   1.0,   nan,   nan,   nan],
                       [ 1.0,   2.0,   0.0,   2.0,   nan],
@@ -418,7 +418,7 @@ class Test_ranking(unittest.TestCase):
         self.assert_((abs(theory - practice) < self.tol).all(), msg)        
 
     def test_ranking_7(self):
-        """afunc.ranking #7"""
+        "afunc.ranking_7"
         x = np.array([[ 1.0,   nan,   1.0,   nan,   nan],
                       [ 1.0,   1.0,   nan,   nan,   nan],
                       [ 1.0,   2.0,   0.0,   2.0,   nan],
@@ -434,7 +434,7 @@ class Test_ranking(unittest.TestCase):
         self.assert_((abs(theory - practice) < self.tol).all(), msg)
 
     def test_ranking_8(self):
-        """afunc.ranking #8"""
+        "afunc.ranking_8"
         x = np.array([[ 1.0,   1.0,   1.0,   1.0],
                       [ 1.0,   1.0,   2.0,   2.0],
                       [ 2.0,   2.0,   3.0,   2.0],
@@ -450,7 +450,7 @@ class Test_ranking(unittest.TestCase):
         self.assert_((abs(theory - practice) < self.tol).all(), msg) 
         
     def test_ranking_9(self):
-        """afunc.ranking #9"""
+        "afunc.ranking_9"
         x = np.array([[ 1.0,   1.0,   1.0,   1.0],
                       [ 1.0,   1.0,   2.0,   2.0],
                       [ 2.0,   2.0,   3.0,   2.0],
@@ -468,7 +468,7 @@ class Test_ranking(unittest.TestCase):
         self.assert_((abs(theory - practice) < self.tol).all(), msg)              
 
     def test_ranking_10(self):
-        """afunc.ranking #10"""
+        "afunc.ranking_10"
         x = np.array([[ nan],
                       [ nan],
                       [ nan]])  
@@ -482,7 +482,7 @@ class Test_ranking(unittest.TestCase):
         self.assert_((abs(theory - practice) < self.tol).all(), msg)
 
     def test_ranking_11(self):
-        """afunc.ranking #11"""
+        "afunc.ranking_11"
         x = np.array([[ nan, nan],
                       [ nan, nan],
                       [ nan, nan]])  
@@ -496,10 +496,50 @@ class Test_ranking(unittest.TestCase):
         self.assert_((abs(theory - practice) < self.tol).all(), msg)
 
     def test_ranking_12(self):
-        """afunc.ranking #12"""
+        "afunc.ranking_12"
         x = np.array([[ nan, nan, nan]])  
         theory = np.array([[ nan, nan, nan]])                                     
         practice = ranking(x, axis=1)
+        msg = printfail(theory, practice)
+        theory[np.isnan(theory)] = self.nancode
+        practice[np.isnan(practice)] = self.nancode        
+        self.assert_((abs(theory - practice) < self.tol).all(), msg)
+        
+    def test_ranking_13(self):
+        "afunc.ranking_13"
+        x = np.array([ 1.0, np.inf, 2.0])  
+        theory = np.array([-1.0, 1.0, 0.0])                                      
+        practice = ranking(x, axis=0)
+        msg = printfail(theory, practice)
+        theory[np.isnan(theory)] = self.nancode
+        practice[np.isnan(practice)] = self.nancode        
+        self.assert_((abs(theory - practice) < self.tol).all(), msg)        
+
+    def test_ranking_14(self):
+        "afunc.ranking_14"
+        x = np.array([ 1.0, np.inf, 2.0])  
+        theory = np.array([-1.0, 1.0, 0.0])                                      
+        practice = ranking(x, axis=0, ties=False)
+        msg = printfail(theory, practice)
+        theory[np.isnan(theory)] = self.nancode
+        practice[np.isnan(practice)] = self.nancode        
+        self.assert_((abs(theory - practice) < self.tol).all(), msg) 
+
+    def test_ranking_15(self):
+        "afunc.ranking_15"
+        x = np.array([ -np.inf, nan, 1.0, np.inf])  
+        theory = np.array([-1.0, nan, 0.0, 1.0])                                      
+        practice = ranking(x, axis=0)
+        msg = printfail(theory, practice)
+        theory[np.isnan(theory)] = self.nancode
+        practice[np.isnan(practice)] = self.nancode        
+        self.assert_((abs(theory - practice) < self.tol).all(), msg)
+
+    def test_ranking_16(self):
+        "afunc.ranking_16"
+        x = np.array([ -np.inf, nan, 1.0, np.inf])  
+        theory = np.array([-1.0, nan, 0.0, 1.0])                                      
+        practice = ranking(x, axis=0, ties=False)
         msg = printfail(theory, practice)
         theory[np.isnan(theory)] = self.nancode
         practice[np.isnan(practice)] = self.nancode        
@@ -565,7 +605,7 @@ class Test_geometric_mean(unittest.TestCase):
     def test_geometric_mean_6(self):
         """afunc.geometric_mean #6"""
         theory = np.array([[ 1.4142135623730951, 4.0, 6.9282032302755088, 2.0,
-                                                           2.8284271247461903]])
+                                                         2.8284271247461903]])
         practice =  geometric_mean(self.x, 0)
         msg = printfail(theory, practice)
         self.assert_((abs(theory - practice) < self.tol).all(), msg)
@@ -618,7 +658,6 @@ class Test_movingsum(unittest.TestCase):
         """afunc.movingsum #3"""    
         theory = np.array([[  nan, 2.0, 12.0, 6.0, 8.0],
                            [  nan, 6.0, 12.0, 8.0,-1.0]])   
-        #theory = np.asarray(theory[:,1:])
         practice = movingsum(self.x, self.window, norm=True)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
@@ -629,7 +668,6 @@ class Test_movingsum(unittest.TestCase):
         """afunc.movingsum #4"""    
         theory = np.array([[  nan, 1.0,  6.0, 6.0, 8.0],
                            [  nan, 6.0, 12.0, 8.0,-1.0]])
-        #theory = np.asarray(theory[:,1:])
         practice = movingsum(self.x, self.window, norm=False)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
@@ -640,7 +678,6 @@ class Test_movingsum(unittest.TestCase):
         """afunc.movingsum #5"""    
         theory = np.array([[nan,  nan,  nan,  nan,  nan],
                            [3.0,  8.0,  14.0, 0.0,  7.0]])
-        #theory = np.asarray(theory[1,:])
         practice = movingsum(self.x, self.window, axis=0, norm=True)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
@@ -651,7 +688,6 @@ class Test_movingsum(unittest.TestCase):
         """afunc.movingsum #6"""    
         theory = np.array([[nan,  nan,  nan,  nan,  nan],
                            [3.0,  4.0,  14.0, 0.0,  7.0]])
-        #theory = np.asarray(theory[1,:])
         practice = movingsum(self.x, self.window, axis=0, norm=False)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
@@ -663,22 +699,7 @@ class Test_movingsum(unittest.TestCase):
         theory = np.array([[nan, 4.0],
                            [nan, 4.0],
                            [nan, 4.0]])
-        #theory = np.asarray(theory[:,1:])
         practice = movingsum(self.x2, self.window)
-        msg = printfail(theory, practice)    
-        theory[np.isnan(theory)] = self.nancode
-        practice[np.isnan(practice)] = self.nancode
-        self.assert_(np.all(theory == practice), msg) 
-        
-    def _est_movingsum_8(self):
-        """afunc.movingsum #8"""
-        #skip for now
-        theory = np.array([[nan, 1.4142135623730951, 8.4852813742385713, 6.0, 8.0],
-                           [nan, 6.0, 12.0, 8.0,-1.0]])
-        #theory = np.asarray(theory[:,1:]) 
-        practice = movingsum(self.x, self.window, axis=1, norm=True, q=0.5)
-        #q is not a valid argument to the new movingsum
-        practice = movingsum(self.x, self.window, axis=1, norm=True)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
         practice[np.isnan(practice)] = self.nancode
@@ -699,8 +720,7 @@ class Test_movingsum_forward(unittest.TestCase):
         """afunc.movingsum_forward #1"""
         theory = np.array([[2.0, 12.0, 6.0, 8.0, nan],
                            [6.0, 12.0, 8.0,-1.0, nan]]) 
-        skip = 0
-        #theory = theory[:,:-1]             
+        skip = 0            
         practice = movingsum_forward(self.x, self.window, skip, norm=True)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
@@ -711,7 +731,6 @@ class Test_movingsum_forward(unittest.TestCase):
         """afunc.movingsum_forward #2"""    
         theory = np.array([[1.0,  6.0, 6.0, 8.0, nan],
                            [6.0, 12.0, 8.0,-1.0, nan]]) 
-        #theory = theory[:,:-1]
         skip = 0                     
         practice = movingsum_forward(self.x, self.window, skip, norm=False)
         msg = printfail(theory, practice)    
@@ -723,8 +742,7 @@ class Test_movingsum_forward(unittest.TestCase):
         """afunc.movingsum_forward #3"""    
         theory = np.array([[12.0, 6.0, 8.0, nan, nan],
                            [12.0, 8.0,-1.0, nan, nan]]) 
-        skip = 1             
-        #theory = theory[:,:-1]        
+        skip = 1                   
         practice = movingsum_forward(self.x, self.window, skip, norm=True)
         msg = printfail(theory, practice)    
         theory[np.isnan(theory)] = self.nancode
