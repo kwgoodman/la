@@ -1,5 +1,14 @@
 2010-01-06 Keith
 
+    * io/io.py(lara): A new dictionary-like larry archive class.
+      
+    * io/io.py(IO.__init), io/io.py(IO.__init),
+      io/tests/io_test.py(test_io_1): Return a lara instead of a larry.
+      Updated and extended doc string now that IO uses the lara class.
+
+    * deflarry.py(__getitem__): Small change to this function so that it can
+      be reused in the lara class.
+
     * afunc.py(ranking): Bug fix: -Inf and Inf were not properly handled.
 
     * tests/afunc_arr_test.py(Test_ranking): Added 4 ranking unit test for

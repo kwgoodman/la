@@ -28,7 +28,7 @@ class Test_io(unittest.TestCase):
         x = larry([1,2,3]) 
         io['x'] = x
         self.assert_('x' in io, 'key missing')
-        self.assert_((x == io['x']).all(), 'save and load difference')
+        self.assert_((x == io['x'][:]).all(), 'save and load difference')
         self.assert_(['x'] == io.keys(), 'keys are different')
         self.assert_(x.dtype == io['x'].dtype, 'dtype changed')
         del io['x']

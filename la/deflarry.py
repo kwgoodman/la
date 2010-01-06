@@ -798,7 +798,7 @@ class larry(object):
             raise IndexError, msg        
         if np.isscalar(x):
             return x                                
-        return type(self)(x, label)
+        return larry(x, label)
         
     def __setitem__(self, index, value):
         if isinstance(index, larry):

@@ -15,8 +15,21 @@ class IO(object):
         """
         Save and load larrys in HDF5 format using a dictionary-like interface.
         
-        Dictionaries are made up of (key, value) pairs. In an IO object, a key
-        is the name (string) of a larry and a value is a larry object.        
+        Dictionaries are made up of (key, value) pairs. In an IO object, a
+        key is the name of a larry. The value part of the dictionary is a
+        larry when saving data and is a lara, a larry-like archive object,
+        when loading data.
+        
+        (h5py has the same duality. When saving, the values are Numpy arrays;
+        when loading the values are h5py Dataset objects.)
+        
+        To convert a lara into a larry just index into the lara.
+        
+        The reason why loading does not return a larry is that you may not
+        want to load the entire larry which might, for example, be very large.
+        
+        A lara loads the labels but does not load the array data until you
+        index into it.     
         
         Parameters
         ----------
@@ -49,24 +62,37 @@ class IO(object):
           it done automatically for you: see `freespace` above.
           
         Examples
-        --------       
+        -------- 
+        Save a larry in the archive:
+             
         >>> import la
         >>> io = la.IO('/tmp/dataset.hdf5')
         >>> io['x'] = la.larry([1,2,3])  # <-- Save
+        
+        Look at what is in the archive:
+        
         >>> io
            
         larry  dtype  shape
         -------------------
-        x      int64  (3,) 
+        x      int64  (3,)
+        
+        Overwrite the contents of x in the archive: 
 
         >>> io['x'] = la.larry([4.0])  # <-- Overwrite
-        >>> io
-           
-        larry  dtype    shape
-        ---------------------
-        x      float64  (1,) 
+
+        Load from the archive:
 
         >>> y = io['x']  # <-- Load
+        >>> type(y)
+            <class 'la.io.io.lara'>
+        >>> type(y[:])
+            <class 'la.deflarry.larry'>
+        >>> type(y[2:])
+            <class 'la.deflarry.larry'> 
+            
+        Test if x is in the archive:           
+        
         >>> 'x' in io
             True    
         >>> del io['x']  # <-- Delete (unlink)
@@ -131,10 +157,10 @@ class IO(object):
         
     def __getitem__(self, key):
         if key in self:
-            x = self.fid[key + '.x'].value
+            x = self.fid[key + '.x']
             label = self.fid[key + '.label'].value[0]
             label = cPickle.loads(label)   
-            return larry(x, label)
+            return lara(x, label)
         else:
             raise KeyError, "A larry named %s is not in the file." % key   
         
@@ -204,7 +230,91 @@ class IO(object):
         "Repack if `max_freespace` is exceeded."
         if np.isfinite(self.max_freespace):
             if self.freespace() > self.max_freespace:
-                self.repack()        
+                self.repack() 
+                
+class lara(object):
+    """
+    Meet lara, a larry-like archive object.
+    
+    larry stores its data in a numpy array and a list (labels). lara stores
+    its data in a h5py Dataset object and a list (labels).
+    
+    The reason for this class is that you may want to extract only part of the
+    data from a larry in your archive. If you index into a lara you will get
+    a larry back and only the data needed will be loaded from the archive.
+    
+    The values in the dictionary-like archive object, IO, are laras. You
+    would not generally create your own lara; IO does that for you.
+    
+    """
+
+    def __init__(self, x_h5py_Dataset, label):
+        """
+        Meet lara, she's a larry-like archive object.
+        
+        Parameters
+        ----------
+        x_h5py_Dataset : h5py Dataset object
+            An object that knows how to extract all or parts of a larry in the
+            archive.
+        label : list of lists
+            A list with labels for each dimension of x. If x is 2d, for
+            example, then label should be a list that contains two lists, one
+            for the row labels and one for the column labels. If x is 1d label
+            should be a list that contain one list of names.
+            
+        Example
+        -------
+        First let's make an archive and save a larry in it:
+        
+        >>> import la
+        >>> import numpy as np
+        >>> io = la.IO('/tmp/data.hdf5')
+        >>> io['x'] = la.larry([1,2,3,4])
+
+        Next load the data from the archive:
+
+        >>> y = io['x']
+        
+        Actually, the data is not loaded. Instead y is a lara object.
+        
+        >>> type(y)
+            <class 'la.io.io.lara'>
+        >>> type(y.x)
+            <class 'h5py.highlevel.Dataset'>
+            
+        To convert to a larry you need to index into y:
+            
+        >>> type(y[:])
+            <class 'la.deflarry.larry'>
+        >>> type(y[2:])
+            <class 'la.deflarry.larry'>
+            
+        Only the data you index into is loaded from the archive.    
+        
+        """
+        self.x = x_h5py_Dataset
+        self.label = label
+    
+    # Grab these methods from larry    
+    __getitem__ = larry.__getitem__.im_func    
+    maxlabel = larry.maxlabel.im_func
+    minlabel = larry.minlabel.im_func
+    getlabel = larry.getlabel.im_func 
+    labelindex = larry.labelindex.im_func
+    shape = larry.shape
+    dtype = larry.dtype
+       
+    def __setitem__(self, index, value):
+        raise NotImplementedError, 'I will code this after I get HDF5 1.8.'         
+        
+    @property
+    def ndim(self):
+        return len(self.shape)                       
+
+    @property
+    def size(self):
+        return np.prod(self.shape, dtype=int)
         
 def list2keys(x):
     names = [z.split('.')[0] for z in x]
