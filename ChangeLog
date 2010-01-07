@@ -1,5 +1,8 @@
 2010-01-07 Keith
 
+    * deflarry.py(__align): Same speed up methos as in morph but only gave a
+      tiny speed up in __align.
+
     * deflarry.py(morph): 20% speed up!
     
     * io/io.py(lara.__setitem__): First attempt at setitem.

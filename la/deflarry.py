@@ -380,7 +380,7 @@ class larry(object):
         idxo = []
         label = []
         shape = []
-        for ls, lo  in zip(self.copylabel(), other.label):
+        for ls, lo in zip(self.copylabel(), other.label):
             if ls == lo:
                 lab = ls
                 ids = range(len(lab))
@@ -390,8 +390,8 @@ class larry(object):
                 if len(lab) == 0:
                     raise IndexError, 'A dimension has no matching labels'
                 lab.sort()
-                ids = [ls.index(i) for i in lab]
-                ido = [lo.index(i) for i in lab]
+                ids = map(ls.index, lab)
+                ido = map(lo.index, lab)
             label.append(lab)
             idxs.append(ids)
             idxo.append(ido)
