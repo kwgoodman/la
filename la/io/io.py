@@ -297,16 +297,14 @@ class lara(object):
         self.label = label
     
     # Grab these methods from larry    
-    __getitem__ = larry.__getitem__.im_func    
+    __getitem__ = larry.__getitem__.im_func
+    __setitem__ = larry.__setitem__.im_func    
     maxlabel = larry.maxlabel.im_func
     minlabel = larry.minlabel.im_func
     getlabel = larry.getlabel.im_func 
     labelindex = larry.labelindex.im_func
     shape = larry.shape
-    dtype = larry.dtype
-       
-    def __setitem__(self, index, value):
-        raise NotImplementedError, 'I will code this after I get HDF5 1.8.'         
+    dtype = larry.dtype            
         
     @property
     def ndim(self):

@@ -1,6 +1,12 @@
+2010-01-07 Keith
+
+    * deflarry.py(morph): 20% speed up!
+    
+    * io/io.py(lara.__setitem__): First attempt at setitem.
+
 2010-01-06 Keith
 
-    * io/io.py(lara): A new dictionary-like larry archive class.
+    * io/io.py(lara): A new larry-like archive class.
       
     * io/io.py(IO.__init), io/io.py(IO.__init),
       io/tests/io_test.py(test_io_1): Return a lara instead of a larry.

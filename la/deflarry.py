@@ -1393,9 +1393,9 @@ class larry(object):
             x.fill(None)
         else:
             x = nans(shape)       
-        idx0 = [z for z in self.label[axis] if z in label]
-        idx1 = [label.index(i) for i in idx0]
-        idx2 = [self.label[axis].index(i) for i in idx0]
+        idx0 = tuple(set(self.label[axis]) & set(label))
+        idx1 = map(label.index, idx0)
+        idx2 = map(self.label[axis].index, idx0)
         index1 = [slice(None)] * self.ndim
         index1[axis] = idx1
         index2 = [slice(None)] * self.ndim
@@ -1403,7 +1403,7 @@ class larry(object):
         x[index1] = self.x[index2]
         lab = self.copylabel()
         lab[axis] = label
-        return type(self)(x, lab)
+        return type(self)(x, lab)       
         
     def morph_like(self, lar):
         """
