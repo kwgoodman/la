@@ -1,6 +1,18 @@
+2010-01-09 Keith
+
+    * io/io.py(IO), io/io.py(lara), __init__.py: Complete rewrite of the io
+      module to remove pickling of larry labels. Now labels are stored as
+      Numpy arrays.
+      
+    * io/io.py(save), io/io.py(load), io/io.py(_load_label),
+      io/io.py(_list2array), io/io.py(_is_archived_larry), io/io.py(repack):
+      New functions.
+      
+    * deflarry.py(larry.__init__): Doc string typo.      
+
 2010-01-07 Keith
 
-    * deflarry.py(__align): Same speed up methos as in morph but only gave a
+    * deflarry.py(__align): Same speed up method as in morph but only gave a
       tiny speed up in __align.
 
     * deflarry.py(morph): 20% speed up!

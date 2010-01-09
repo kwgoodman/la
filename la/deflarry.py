@@ -43,7 +43,7 @@ class larry(object):
         if type(x) is not np.ndarray:
             # The if statement above is faster than asarray. When you add two
             # larrys, for example, it will use __init__ to create the result,
-            # so any improvement in speed is good. that's why this entire
+            # so any improvement in speed is good. That's why this entire
             # block of code is not replaced with x = np.asarray(x)
             try:
                 x = np.asarray(x)

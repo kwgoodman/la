@@ -1,5 +1,4 @@
 
-import cPickle
 import os
 
 import numpy as np
@@ -26,10 +25,23 @@ class IO(object):
         To convert a lara into a larry just index into the lara.
         
         The reason why loading does not return a larry is that you may not
-        want to load the entire larry which might, for example, be very large.
+        want to load the entire larry which could, for example, be very large.
         
         A lara loads the labels but does not load the array data until you
-        index into it.     
+        index into it.
+        
+        Each larry is stored in a HDF5 group. The group is assigned an
+        attribute named 'larry' which is set to True. Inside the group is a
+        HDF5 dataset containing the data (named 'x') and one dataset for each
+        dimension of the label (named str(dimension)). For example, a 2d larry
+        named 'price' is stored in a group called 'price' that contains a
+        dataset called 'x' (the price) and two datasets called '0' and '1'
+        (the labels).
+        
+        Before saving, the labels are converted to Numpy arrays, one array for
+        each dimension. Therefore, to save a larry in HDF5 format, the
+        elements of a label along any one dimension must be of the same type
+        and that type must be supported by HDF5.     
         
         Parameters
         ----------
@@ -41,17 +53,20 @@ class IO(object):
             `max_freespace` bytes after a larry is deleted from the archive,
             then the archive is repacked. The default (np.inf) is to never
             repack. Repack means to transfer all the larrys to a new archive
-            (with the same name) and delete the old archive.
+            (with the same name) and delete the old archive. HDF5 does not
+            reuse the freespace across openening and closing of the archive.
             
         Returns
         -------
             A dictionary-like IO object.
             
+        See Also
+        --------
+        save : Save larrys without a dictionary-like interface.
+        load : Load larrys without a dictionary-like interface.  
+            
         Notes
         -----
-        - Each larry is stored as two files in HDF5: the data part of the
-          larry is stored as a Numpy array and the label part is first pickled
-          and then placed in a one-element 1d Numpy array.
         - Because the archive interface is dictionary-like, data will be
           overwritten when assigning a (key, value) pair if the key already
           exists in the archive.
@@ -69,7 +84,7 @@ class IO(object):
         >>> io = la.IO('/tmp/dataset.hdf5')
         >>> io['x'] = la.larry([1,2,3])  # <-- Save
         
-        Look at what is in the archive:
+        Examine the contents of the archive:
         
         >>> io
            
@@ -106,21 +121,16 @@ class IO(object):
         
     def keys(self):
         "Return a list of larry names (keys) in archive."
-        return list2keys(self.fid.keys())
+        return [key for key in self.fid.keys() if
+                                           _is_archived_larry(self.fid, key)]
         
     def values(self):
         "Return a list of larry objects (values) in archive."
-        v = []
-        for key in self:
-            v.append(self[key])
-        return v
+        return [self[key] for key in self]
         
     def items(self):
         "Return a list of all (key, value) pairs."
-        i = []
-        for key in self:
-            i.append((key, self[key]))
-        return i            
+        return [(key, self[key]) for key in self]          
 
     def iterkeys(self):
         "An iterator over the keys."
@@ -156,37 +166,33 @@ class IO(object):
         return len(self.keys())
         
     def __getitem__(self, key):
-        if key in self:
-            x = self.fid[key + '.x']
-            label = self.fid[key + '.label'].value[0]
-            label = cPickle.loads(label)   
-            return lara(x, label)
+        if key in self: 
+            return lara(self.fid[key])
         else:
-            raise KeyError, "A larry named %s is not in the file." % key   
+            raise KeyError, "A larry named %s is not in the archive." % key   
         
     def __setitem__(self, key, value):
         
-        # Make sure the data looks OK before saving since there is no rewind
+        # Make sure the data looks OK before saving
         if type(key) != str:
             raise TypeError, 'key must be a string of type str.'        
         if not isinstance(value, larry):
             raise TypeError, 'value must be a larry.'
-        x = value.x
-        label = value.label
-        label = np.asarray([cPickle.dumps(label)])
         
-        # Does a larry with given key already exist? If so delete
-        if key in self:
+        # Does a larry with given key already exist? If so delete.
+        # Note that self.fid.keys() [all keys] is used instead of self.keys()
+        # [keys that are larrys].
+        if key in self.fid.keys():
             self.__delitem__(key)    
         
         # If you've made it this far the data looks OK so save it
-        self.fid[key + '.x'] = x
-        self.fid[key + '.label'] = label 
-        self.fid.flush()
+        save(self.fid, value, key)
         
     def __delitem__(self, key):
-        del self.fid[key + '.x']
-        del self.fid[key + '.label']
+        if key in self.fid:
+            del self.fid[key]        
+        else:
+            raise ValueError, 'key not found in archive.'            
         self._repack_conditional()  
         
     def __repr__(self):
@@ -196,8 +202,8 @@ class IO(object):
         for key in keys:
             # Code would be neater if I wrote shape = str(self[key].shape)
             # but I don't want to load the array, I just want the shape
-            shape = str(self.fid[key + '.x'].shape)
-            dtype = str(self.fid[key + '.x'].dtype)    
+            shape = str(self.fid[key]['x'].shape)
+            dtype = str(self.fid[key]['x'].dtype)    
             table.append([key, dtype, shape])         
         return indent(table, hasHeader=True, delim='  ')
 
@@ -211,26 +217,23 @@ class IO(object):
     def freespace(self):
         "How many bytes of freespace are in the archive?"
         self.fid.flush()
-        used = [self.fid[z].id.get_storage_size() for z in self.fid.keys()] 
-        return self.space() - sum(used)
+        global size
+        size = 0
+        def sizefinder(key, value):
+            global size
+            if isinstance(value, h5py.Dataset):
+                size += value.id.get_storage_size()
+        self.fid.visititems(sizefinder)
+        return self.space() - size
         
     def repack(self):
-        "Repack the archive to remove freespace."
-        filenew = self.file + '_la_repack_tmp'
-        fidnew = h5py.File(filenew)
-        for key in self.fid.keys():
-            fidnew[key] = self.fid[key].value
-        fileold = self.file + '_la_rename_tmp'
-        os.rename(self.file, fileold)
-        os.rename(filenew, self.file)
-        self.fid = h5py.File(self.file)
-        os.remove(fileold)
+        self.fid = repack(self.fid)
         
     def _repack_conditional(self):
         "Repack if `max_freespace` is exceeded."
         if np.isfinite(self.max_freespace):
             if self.freespace() > self.max_freespace:
-                self.repack() 
+                self.fid = self.repack() 
                 
 class lara(object):
     """
@@ -248,27 +251,20 @@ class lara(object):
     
     """
 
-    def __init__(self, x_h5py_Dataset, label):
+    def __init__(self, group):
         """
         Meet lara, she's a larry-like archive object.
         
         Parameters
         ----------
-        x_h5py_Dataset : h5py Dataset object
-            An object that knows how to extract all or parts of a larry in the
-            archive.
-        label : list of lists
-            A list with labels for each dimension of x. If x is 2d, for
-            example, then label should be a list that contains two lists, one
-            for the row labels and one for the column labels. If x is 1d label
-            should be a list that contain one list of names.
+        group : h5py.Group
+            An instance of the h5py Group object that contains a larry.
             
         Example
         -------
         First let's make an archive and save a larry in it:
         
         >>> import la
-        >>> import numpy as np
         >>> io = la.IO('/tmp/data.hdf5')
         >>> io['x'] = la.larry([1,2,3,4])
 
@@ -276,25 +272,25 @@ class lara(object):
 
         >>> y = io['x']
         
-        Actually, the data is not loaded. Instead y is a lara object.
+        Actually, only the labels are loaded. y is a lara object:
         
         >>> type(y)
             <class 'la.io.io.lara'>
         >>> type(y.x)
             <class 'h5py.highlevel.Dataset'>
-            
-        To convert to a larry you need to index into y:
+        >>> type(y.label)
+            <type 'list'>
+      
+        To convert y into a larry just index into y:
             
         >>> type(y[:])
             <class 'la.deflarry.larry'>
         >>> type(y[2:])
-            <class 'la.deflarry.larry'>
-            
-        Only the data you index into is loaded from the archive.    
+            <class 'la.deflarry.larry'>  
         
         """
-        self.x = x_h5py_Dataset
-        self.label = label
+        self.x = group['x']
+        self.label = _load_label(group, len(self.x.shape))
     
     # Grab these methods from larry    
     __getitem__ = larry.__getitem__.im_func
@@ -313,13 +309,221 @@ class lara(object):
     @property
     def size(self):
         return np.prod(self.shape, dtype=int)
-        
-def list2keys(x):
-    names = [z.split('.')[0] for z in x]
-    names = set(names)
-    keys = []
-    for name in names:
-        if ((name + '.x') in x) and ((name + '.label') in x):
-            keys.append(name)
-    return keys              
 
+def save(file, lar, key):
+    """
+    Save a larry in HDF5 format.
+
+    Each larry is stored in a HDF5 group. The group is assigned an
+    attribute named 'larry' which is set to True. Inside the group is a
+    HDF5 dataset containing the data (named 'x') and one dataset for each
+    dimension of the label (named str(dimension)). For example, a 2d larry
+    named 'price' is stored in a group called 'price' that contains a
+    dataset called 'x' (the price) and two datasets called '0' and '1'
+    (the labels).
+    
+    Before saving, the labels are converted to Numpy arrays, one array for
+    each dimension. Therefore, to save a larry in HDF5 format, the
+    elements of a label along any one dimension must be of the same type
+    and that type must be supported by HDF5.
+    
+    Parameters
+    ----------
+    file : str or h5py.File
+        Filename or h5py.File object of the archive.
+    lar : larry
+        Data to save.
+    key : str
+        Name of larry.
+        
+    See Also
+    --------
+    load : Load larrys without a dictionary-like interface.  
+        
+    Examples
+    --------
+    Create a larry:
+    
+    >>> la.save(x, 'x')
+
+    Save the larry:
+
+    >>> la.save('/tmp/x.hdf5', x, 'x')        
+ 
+    """
+
+    # Check input
+    if type(lar) != larry:
+        raise TypeError, 'lar must be a larry.'
+    if type(key) != str:
+        raise TypeError, 'key must be a string.'    
+    if isinstance(file, h5py.File):
+        f = file
+        close = False
+    elif type(file) == str:
+        f = h5py.File(file)
+        close = True
+    else:
+        msg = "file must be a h5py File object or a string (path)."
+        raise TypeError, msg
+        
+    # Save larry    
+    f.create_group(key)
+    fkey = f[key]
+    fkey.attrs['larry'] = True
+    fkey['x'] = lar.x
+    for i in range(lar.ndim):
+        fkey[str(i)] = _list2array(lar.label[i])
+    
+    # Close if file is a filename   
+    if close:
+        f.close()
+    else:
+        f.flush()    
+        
+def load(file, key):
+    """
+    Load a larry from a HDF5 archive.
+
+    Each larry is stored in a HDF5 group. The group is assigned an
+    attribute named 'larry' which is set to True. Inside the group is a
+    HDF5 dataset containing the data (named 'x') and one dataset for each
+    dimension of the label (named str(dimension)). For example, a 2d larry
+    named 'price' is stored in a group called 'price' that contains a
+    dataset called 'x' (the price) and two datasets called '0' and '1'
+    (the labels).
+    
+    Before saving, the labels are converted to Numpy arrays, one array for
+    each dimension. Therefore, to save a larry in HDF5 format, the
+    elements of a label along any one dimension must be of the same type
+    and that type must be supported by HDF5.
+    
+    Parameters
+    ----------
+    file : str or h5py.File
+        Filename or h5py.File object of the archive.
+    key : str
+        Name of larry.
+        
+    Returns
+    -------    
+        
+    See Also
+    --------
+    save : Save larrys without a dictionary-like interface.  
+        
+    Examples
+    --------
+    Create a larry:
+    
+    >>> la.save(x, 'x')
+
+    Save the larry:
+
+    >>> la.save('/tmp/x.hdf5', x, 'x')
+    
+    Now load it:
+    
+    >>> y = la.load('/tmp/x.hdf5', 'x')            
+ 
+    """
+    
+    # Check input
+    if type(key) != str:
+        raise TypeError, 'key must be a string.'    
+    if isinstance(file, h5py.File):
+        f = file
+        close = False
+    elif type(file) == str:
+        f = h5py.File(file)
+        close = True
+    else:
+        msg = "file must be a h5py File object or a string (path)."
+        raise TypeError, msg
+    if key not in f:
+        raise ValueError, 'key (%s) is not in archive.' % key
+    if not _is_archived_larry(f, key):
+        raise ValueError, 'key (%s) is not a larry.' % key
+        
+    # Load larry    
+    group = f[key]
+    x = group['x'][:]
+    label = _load_label(group, x.ndim)                 
+                     
+    # Close if file is a filename   
+    if close:
+        f.close()
+        
+    return larry(x, label)            
+
+def _load_label(group, ndim):
+    label = []
+    for i in range(ndim):
+        label.append(group[str(i)][:].tolist())
+    return label                     
+
+def _list2array(x):
+    if type(x) != list:
+        raise TypeError, 'x must be a list'
+    type0 = type(x[0])
+    if not all([type(i)==type0 for i in x]):
+        msg = 'Elements of a label along any one dimension must be of the '
+        msg += 'same type.'  
+        raise TypeError, msg
+    return np.asarray(x)                 
+        
+def _is_archived_larry(f, key):
+    group = f[key]
+    if 'larry' in group.attrs:
+        if group.attrs['larry']:
+            if 'x' in group:
+                ndim = len(group['x'].shape)
+                labels = map(str, range(ndim))
+                if all([label in group for label in labels]):
+                    return True
+    return False         
+
+def repack(file):
+    """
+    Repack archive to remove freespace.
+    
+    Parameters
+    ----------
+    file : h5py File or str
+        A h5py File instance of an archive such as h5py.File('/tmp/data.hdf5')
+        or a filename.
+        
+    Returns
+    -------
+    file : h5py File or None
+        If the input is a h5py.File then a h5py File instance of the
+        repacked archive is returned. The input File instance will no longer
+        be useable. If the input was a filename, then None is returned. 
+
+    """
+    if isinstance(file, h5py.File):
+        f1 = file
+        isFile = True
+    elif type(file) == str:
+        f1 = h5py.File(file)
+        isFile = False
+    else:
+        msg = "file must be a h5py File object or a string (path)."
+        raise TypeError, msg    
+    filename1 = f1.filename
+    filename2 = filename1 + '_repack_tmp'
+    f2 = h5py.File(filename2)
+    for key in f1.keys():
+        f1.copy(key, f2)
+    f1.close()
+    f2.close()
+    filename_tmp = filename1 + '_repack_rename_tmp'
+    os.rename(filename1, filename_tmp)
+    os.rename(filename2, filename1) 
+    if isFile:
+        f = h5py.File(filename1)
+        os.remove(filename_tmp)
+        return f    
+    else:
+        return        
+   

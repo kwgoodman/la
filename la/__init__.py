@@ -5,7 +5,7 @@ from la.deflarry import larry
 del deflarry  # Remove deflarry from namespace
 
 try:
-    from la.io.io import IO
+    from la.io.io import (IO, save, load)
 except ImportError:
     print "Cannot import h5py; no archiving available."        
 
