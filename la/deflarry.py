@@ -1692,68 +1692,7 @@ class larry(object):
         
     @property
     def dtype(self):
-        return self.x.dtype  
-            
-    # Report -----------------------------------------------------------------            
-        
-    def hist(self, bins=10, align='center', orientation='vertical'):
-        "Display histogram. See pylab.hist for description."
-        import pylab
-        pylab.hist(self.x.reshape(-1), bins=bins, align=align,
-                   orientation=orientation)
-        pylab.show()
-        
-    def plot(self, name, axis):
-        "Plot"        
-        import pylab
-        if self.ndim == 1:
-            pylab.plot(self.x)
-            pylab.hold(True)
-            pylab.plot(self.x, 'b.')
-        elif self.ndim == 2:
-            if axis == 0:      
-                pylab.plot(self.x[:,self.labelindex(name, axis)].T)
-            elif axis == 1:
-                pylab.plot(self.x[self.labelindex(name, axis),:].T)              
-        else:
-            raise ValueError, 'Only 1d and 2d larrys can currently be plotted'
-        pylab.ylabel(str(name))
-        pylab.show()
-        
-    def stat(self):
-        "Print some stats"  
-        print '%10.4f missing' % (1.0 * (self.size - self.nx) / self.size)
-        print '%10.4f min' % self.min()
-        print '%10.4f mean' % self.mean()
-        print '%10.4f max' % self.max() 
-        print '%10.4f positive' % (1.0 * (self.x > 0).sum() / self.nx) 
-        print '    ' + str(self.shape)       
-
-    def __repr__(self):
-
-        x = []
-
-        # Labels
-        pad = '    '
-        for i, label in enumerate(self.label):
-            x.append('label_%d\n' % i)
-            if len(label) > 10:
-                x.append(pad + str(self.label[i][0]) + '\n')
-                x.append(pad + str(self.label[i][1]) + '\n')
-                x.append(pad + str(self.label[i][2]) + '\n')
-                x.append(pad + '...\n')
-                x.append(pad + str(self.label[i][-3]) + '\n')
-                x.append(pad + str(self.label[i][-2]) + '\n')
-                x.append(pad + str(self.label[i][-1]) + '\n')
-            else:
-                for l in label:
-                    x.append(pad + str(l) + '\n')
-            x.append('\n')        
-        
-        # x
-        x.append('x\n')
-        x.append(repr(self.x))
-        return ''.join(x)
+        return self.x.dtype
                
     # Misc -------------------------------------------------------------------        
           
@@ -1786,4 +1725,30 @@ class larry(object):
         label = self.copylabel()
         x = np.isfinite(self.x)
         return type(self)(x, label)
+        
+    def __repr__(self):
+
+        x = []
+
+        # Labels
+        pad = '    '
+        for i, label in enumerate(self.label):
+            x.append('label_%d\n' % i)
+            if len(label) > 10:
+                x.append(pad + str(self.label[i][0]) + '\n')
+                x.append(pad + str(self.label[i][1]) + '\n')
+                x.append(pad + str(self.label[i][2]) + '\n')
+                x.append(pad + '...\n')
+                x.append(pad + str(self.label[i][-3]) + '\n')
+                x.append(pad + str(self.label[i][-2]) + '\n')
+                x.append(pad + str(self.label[i][-1]) + '\n')
+            else:
+                for l in label:
+                    x.append(pad + str(l) + '\n')
+            x.append('\n')        
+        
+        # x
+        x.append('x\n')
+        x.append(repr(self.x))
+        return ''.join(x)        
         
