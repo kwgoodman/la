@@ -1,3 +1,7 @@
+2010-01-10 Keith
+
+    * deflarry.py(merge): Speed up for when labels are the same along a axis.
+
 2010-01-09 Keith
 
     * io/io.py(IO), io/io.py(lara), __init__.py: Complete rewrite of the io

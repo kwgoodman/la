@@ -1468,9 +1468,11 @@ class larry(object):
         lar1 = self
         lar2 = other
         for ax in range(ndim):
-            mergelabel = sorted(set(lar1.label[ax]).union(set(lar2.label[ax])))
-            lar1 = lar1.morph(mergelabel, ax)
-            lar2 = lar2.morph(mergelabel, ax)
+            if lar1.label[ax] != lar2.label[ax]:
+                mergelabel = set(lar1.label[ax]) | set(lar2.label[ax])
+                mergelabel = sorted(mergelabel)
+                lar1 = lar1.morph(mergelabel, ax)
+                lar2 = lar2.morph(mergelabel, ax)
      
         # Check for overlap if requested
         if (not update) and (np.isfinite(lar1.x)*np.isfinite(lar2.x)).any():
