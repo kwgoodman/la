@@ -1,6 +1,13 @@
 2010-01-10 Keith
 
-    * deflarry.py(merge): Speed up for when labels are the same along a axis.
+    * deflarry.py(morph): Added ability to morph when stype is np.string_.
+    
+    * tests/deflarry_test.py(Test_alignment): Unit tests for morph when input
+      dtype is str and for object.
+    
+    * tests/deflarry_test.py(Test_merge): Formatting tweaks.
+
+    * deflarry.py(merge): Speed up for when labels are the same along an axis.
 
 2010-01-09 Keith
 

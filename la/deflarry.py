@@ -1357,19 +1357,20 @@ class larry(object):
 
     def morph(self, label, axis):
         """
-        Change ordering of larry along specified axis.
+        Reorder the elements along a specified axis.
         
-        Supply a list with the ordering you would like. If some elements in the
-        list do not exist in the larry, NaNs will be used.
+        If an element in `label` does not exist in the larry, NaNs will be
+        used for numeric dtype, None will be used for object dtype, and ''
+        will be used for string (np.string_) dtype.
         
-        Since NaNs are used to mark missing data, if the input larry uses
-        integers then the output will uses floats.
+        Since NaNs are used to mark missing scalar data, integer input is
+        converted to floats.
         
         Parameters
         ----------
         label : list
             Desired ordering of elements along specified axis.
-        axis : {None, integer}, optional
+        axis : integer
             axis along which to perform the reordering.
         
         Returns
@@ -1391,6 +1392,8 @@ class larry(object):
         if self.dtype == object:
             x = np.empty(shape, dtype=object)
             x.fill(None)
+        elif self.dtype.type == np.string_:
+            x = np.zeros(shape, dtype=self.dtype)   
         else:
             x = nans(shape)       
         idx0 = tuple(set(self.label[axis]) & set(label))
