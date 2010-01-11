@@ -1,5 +1,14 @@
 2010-01-11 Keith
 
+    * io/io.py(repack): Bug fix: remove temp file when file input is a string.
+
+    * util/misc.py(randstring), io/io.py(repack): New module for miscellaneous
+      utilities. Added a random string function to append to temp files used
+      during repack. 
+
+    * util, io/prettytable.py, util/prettytable.py: New subpackage for utility
+      functions. Move prettytable there from io.
+
     * io/io.py: Rewrite of io module. Can now save nested keys such as
       '/save/way/over/here/x'. Moved the heavy lifting out of methods and into
       functions for reuse and easier testing. Added a merge method to IO.

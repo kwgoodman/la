@@ -3,7 +3,8 @@ import os
 
 import numpy as np
 import h5py
-from prettytable import indent
+from la.util.prettytable import indent
+from la.util.misc import randstring
 
 from la import larry
 
@@ -489,21 +490,21 @@ def repack(file):
     """
     f1, opened = _openfile(file) 
     filename1 = f1.filename
-    filename2 = filename1 + '_repack_tmp'
+    filename2 = filename1 + '_repack_tmp_' + randstring(4)
     f2 = h5py.File(filename2)
     for key in f1.keys():
         f1.copy(key, f2)
     f1.close()
     f2.close()
-    filename_tmp = filename1 + '_repack_rename_tmp'
+    filename_tmp = filename1 + '_repack_rename_tmp_' + randstring(4)
     os.rename(filename1, filename_tmp)
     os.rename(filename2, filename1) 
     if opened:
-        return   
+        f = None  
     else:
         f = h5py.File(filename1)
-        os.remove(filename_tmp)
-        return f   
+    os.remove(filename_tmp)
+    return f   
     
 def is_archived_larry(file, key):
     "True if the key (larry name) is in the archive, False otherwise."
