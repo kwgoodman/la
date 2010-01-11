@@ -1,3 +1,11 @@
+2010-01-11 Keith
+
+    * io/io.py: Rewrite of io module. Can now save nested keys such as
+      '/save/way/over/here/x'. Moved the heavy lifting out of methods and into
+      functions for reuse and easier testing. Added a merge method to IO.
+    
+    * deflarry.py(sign): Typo in doc string.    
+
 2010-01-10 Keith
 
     * deflarry.py(hist), deflarry.py(plot), deflarry.py(stat): Removed these

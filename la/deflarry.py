@@ -143,7 +143,7 @@ class larry(object):
         Returns
         -------
         out : larry
-            Returns a copy with square root of x values.
+            Returns a copy with the sign of the values.
                 
         """
         y = self.copy()        

@@ -115,14 +115,12 @@ class IO(object):
             False             
             
         """   
-        self.file = filename
-        self.fid = h5py.File(self.file)
+        self.f = h5py.File(filename)
         self.max_freespace = max_freespace
         
     def keys(self):
         "Return a list of larry names (keys) in archive."
-        return [key for key in self.fid.keys() if
-                                           _is_archived_larry(self.fid, key)]
+        return archive_directory(self.f)
         
     def values(self):
         "Return a list of larry objects (values) in archive."
@@ -157,7 +155,24 @@ class IO(object):
         """
         for key in self:
             self.__delitem__(key)
-        self._repack_conditional()              
+        self._repack_conditional() 
+        
+    def merge(self, key, lar, update=False):
+        """
+        Merge, or optionally update, a larry with a second larry.
+        
+        See larry.merge for details.
+        
+        Note: the entire larry is loaded from the archive, merged with `lar`
+        and then the merged larry is saved back to the archive. The resize
+        function of h5py is not used. In other words, this function might not
+        be practical for very large larrys.
+        
+        """
+        lar1 = self[key][:]
+        lar2 = lar1.merge(lar, update=update)
+        del self.f[key]
+        self[key] = lar2 
 
     def __iter__(self):
         return iter(self.keys())
@@ -167,7 +182,7 @@ class IO(object):
         
     def __getitem__(self, key):
         if key in self: 
-            return lara(self.fid[key])
+            return lara(self.f[key])
         else:
             raise KeyError, "A larry named %s is not in the archive." % key   
         
@@ -180,17 +195,17 @@ class IO(object):
             raise TypeError, 'value must be a larry.'
         
         # Does a larry with given key already exist? If so delete.
-        # Note that self.fid.keys() [all keys] is used instead of self.keys()
+        # Note that self.f.keys() [all keys] is used instead of self.keys()
         # [keys that are larrys].
-        if key in self.fid.keys():
-            self.__delitem__(key)    
+        if key in self.f.keys():
+            self.__delitem__(key)              
         
         # If you've made it this far the data looks OK so save it
-        save(self.fid, value, key)
+        save(self.f, value, key)
         
     def __delitem__(self, key):
-        if key in self.fid:
-            del self.fid[key]        
+        if key in self.f:
+            del self.f[key]        
         else:
             raise ValueError, 'key not found in archive.'            
         self._repack_conditional()  
@@ -202,39 +217,41 @@ class IO(object):
         for key in keys:
             # Code would be neater if I wrote shape = str(self[key].shape)
             # but I don't want to load the array, I just want the shape
-            shape = str(self.fid[key]['x'].shape)
-            dtype = str(self.fid[key]['x'].dtype)    
+            shape = str(self.f[key]['x'].shape)
+            dtype = str(self.f[key]['x'].dtype)    
             table.append([key, dtype, shape])         
-        return indent(table, hasHeader=True, delim='  ')
-
-    # Disk space issues ----------------------------------------------------
+        return indent(table, hasHeader=True, delim='  ')  
         
     def space(self):
         "How many bytes does the archive use?"
-        self.fid.flush()
-        return self.fid.fid.get_filesize()
+        self.f.flush()
+        return self.f.fid.get_filesize()
          
     def freespace(self):
         "How many bytes of freespace are in the archive?"
-        self.fid.flush()
+        self.f.flush()
         global size
         size = 0
         def sizefinder(key, value):
             global size
             if isinstance(value, h5py.Dataset):
                 size += value.id.get_storage_size()
-        self.fid.visititems(sizefinder)
+        self.f.visititems(sizefinder)
         return self.space() - size
         
     def repack(self):
-        self.fid = repack(self.fid)
+        self.f = repack(self.f)
         
     def _repack_conditional(self):
         "Repack if `max_freespace` is exceeded."
         if np.isfinite(self.max_freespace):
             if self.freespace() > self.max_freespace:
-                self.fid = self.repack() 
+                self.f = self.repack() 
                 
+    @property    
+    def filename(self):
+        return self.f.filename                
+                              
 class lara(object):
     """
     Meet lara, a larry-like archive object.
@@ -309,6 +326,8 @@ class lara(object):
     @property
     def size(self):
         return np.prod(self.shape, dtype=int)
+        
+# save and load -------------------------------------------------------------        
 
 def save(file, lar, key):
     """
@@ -338,7 +357,8 @@ def save(file, lar, key):
         
     See Also
     --------
-    load : Load larrys without a dictionary-like interface.  
+    load : Load larrys without a dictionary-like interface.
+    IO : A dictionary-like interface to the archive.    
         
     Examples
     --------
@@ -357,18 +377,14 @@ def save(file, lar, key):
         raise TypeError, 'lar must be a larry.'
     if type(key) != str:
         raise TypeError, 'key must be a string.'    
-    if isinstance(file, h5py.File):
-        f = file
-        close = False
-    elif type(file) == str:
-        f = h5py.File(file)
-        close = True
-    else:
-        msg = "file must be a h5py File object or a string (path)."
-        raise TypeError, msg
+    
+    # Get a h5py.File instance
+    f, opened = _openfile(file)
+    
+    # Do we need to create any intermediate groups?
+    _create_nested_groups(f, key)  
         
-    # Save larry    
-    f.create_group(key)
+    # Save larry
     fkey = f[key]
     fkey.attrs['larry'] = True
     fkey['x'] = lar.x
@@ -376,7 +392,7 @@ def save(file, lar, key):
         fkey[str(i)] = _list2array(lar.label[i])
     
     # Close if file is a filename   
-    if close:
+    if opened:
         f.close()
     else:
         f.flush()    
@@ -406,11 +422,14 @@ def load(file, key):
         Name of larry.
         
     Returns
-    -------    
+    ------- 
+    out : larry
+        Returns the larry from the archive.   
         
     See Also
     --------
-    save : Save larrys without a dictionary-like interface.  
+    save : Save larrys without a dictionary-like interface.
+    IO : A dictionary-like interface to the archive.  
         
     Examples
     --------
@@ -431,18 +450,10 @@ def load(file, key):
     # Check input
     if type(key) != str:
         raise TypeError, 'key must be a string.'    
-    if isinstance(file, h5py.File):
-        f = file
-        close = False
-    elif type(file) == str:
-        f = h5py.File(file)
-        close = True
-    else:
-        msg = "file must be a h5py File object or a string (path)."
-        raise TypeError, msg
+    f, opened = _openfile(file)
     if key not in f:
-        raise ValueError, 'key (%s) is not in archive.' % key
-    if not _is_archived_larry(f, key):
+        raise ValueError, "A larry named '%s' is not in archive." % key
+    if not _is_archived_larry(f[key]):
         raise ValueError, 'key (%s) is not a larry.' % key
         
     # Load larry    
@@ -451,38 +462,13 @@ def load(file, key):
     label = _load_label(group, x.ndim)                 
                      
     # Close if file is a filename   
-    if close:
+    if opened:
         f.close()
         
-    return larry(x, label)            
-
-def _load_label(group, ndim):
-    label = []
-    for i in range(ndim):
-        label.append(group[str(i)][:].tolist())
-    return label                     
-
-def _list2array(x):
-    if type(x) != list:
-        raise TypeError, 'x must be a list'
-    type0 = type(x[0])
-    if not all([type(i)==type0 for i in x]):
-        msg = 'Elements of a label along any one dimension must be of the '
-        msg += 'same type.'  
-        raise TypeError, msg
-    return np.asarray(x)                 
-        
-def _is_archived_larry(f, key):
-    group = f[key]
-    if 'larry' in group.attrs:
-        if group.attrs['larry']:
-            if 'x' in group:
-                ndim = len(group['x'].shape)
-                labels = map(str, range(ndim))
-                if all([label in group for label in labels]):
-                    return True
-    return False         
-
+    return larry(x, label)
+    
+# Utility functions ---------------------------------------------------------    
+    
 def repack(file):
     """
     Repack archive to remove freespace.
@@ -501,15 +487,7 @@ def repack(file):
         be useable. If the input was a filename, then None is returned. 
 
     """
-    if isinstance(file, h5py.File):
-        f1 = file
-        isFile = True
-    elif type(file) == str:
-        f1 = h5py.File(file)
-        isFile = False
-    else:
-        msg = "file must be a h5py File object or a string (path)."
-        raise TypeError, msg    
+    f1, opened = _openfile(file) 
     filename1 = f1.filename
     filename2 = filename1 + '_repack_tmp'
     f2 = h5py.File(filename2)
@@ -520,10 +498,106 @@ def repack(file):
     filename_tmp = filename1 + '_repack_rename_tmp'
     os.rename(filename1, filename_tmp)
     os.rename(filename2, filename1) 
-    if isFile:
+    if opened:
+        return   
+    else:
         f = h5py.File(filename1)
         os.remove(filename_tmp)
-        return f    
+        return f   
+    
+def is_archived_larry(file, key):
+    "True if the key (larry name) is in the archive, False otherwise."
+    f, opened = _openfile(file)
+    if key in f:
+        answer = _is_archived_larry(f[key])
     else:
-        return        
-   
+        raise ValueError, 'key (%s) is not in archive.' % str(key)    
+    if opened:
+        f.close()                
+    return answer
+    
+def archive_directory(file):
+    "Return a list of the keys (larry names) in the archive."
+    f, opened = _openfile(file) 
+    keys = []
+    def append_larrys(name, obj):
+        if _is_archived_larry(obj):
+            keys.append(name)
+    f.visititems(append_larrys)
+    if opened:
+        f.close()
+    return keys            
+    
+# Utility functions for internal use ----------------------------------------                  
+
+def _load_label(group, ndim):
+    "Load larry labels from archive given the hpy5.Group object of the larry."
+    label = []
+    for i in range(ndim):
+        label.append(group[str(i)][:].tolist())
+    return label                     
+
+def _list2array(x):
+    "Convert list to array if elements are of the same type, raise otherwise."
+    if type(x) != list:
+        raise TypeError, 'x must be a list'
+    type0 = type(x[0])
+    if not all([type(i)==type0 for i in x]):
+        msg = 'Elements of a label along any one dimension must be of the '
+        msg += 'same type.'  
+        raise TypeError, msg
+    return np.asarray(x)                 
+    
+def _openfile(file):
+    """
+    Open an archive if input is a path.
+    
+    Parameters
+    ----------
+    file : str or h5py.File
+        Filename or h5py.File instance of the archive.
+        
+    Returns
+    ------- 
+    f : h5py.File
+        Returns a h5py.File instance.
+    opened : bool
+        True is `file` is a path; False if `file` is a h5py.File object.   
+    
+    """
+    if isinstance(file, h5py.File):
+        f = file
+        opened = False
+    elif type(file) == str:
+        f = h5py.File(file)
+        opened = True
+    else:
+        msg = "file must be a h5py.File object or a string (path)."
+        raise TypeError, msg    
+    return f, opened                 
+
+def _is_archived_larry(obj):
+    "True if obj is an archived larry, False otherwise."
+    if isinstance(obj, h5py.Group):
+        if 'larry' in obj.attrs:
+            if obj.attrs['larry'] is True:
+                if 'x' in obj:
+                    ndim = len(obj['x'].shape)
+                    labels = map(str, range(ndim))
+                    if all([label in obj for label in labels]):
+                        return True               
+    return False
+    
+def _create_nested_groups(f, path):
+    "Create a nested set of groups."
+    groups = path.split('/')
+    groups = [group for group in groups if group != '']
+    for i in range(len(groups)):
+        group = '/'.join(groups[:i+1])
+        if group not in f:
+            f.create_group(group)
+        else:
+            if not isinstance(group, h5py.Group):
+                msg = '%s already exists and is not a h5.py.Group object.'
+                raise ValueError, msg % group   
+                    
