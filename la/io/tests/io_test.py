@@ -9,6 +9,7 @@ nan = np.nan
 
 from la import larry
 from la import IO
+from la.io.io import (archive_directory)
 
 
 class Test_io(unittest.TestCase):
@@ -46,6 +47,18 @@ class Test_io(unittest.TestCase):
         sp2 = io.space()
         self.assert_(fs2 < fs1, 'repack did not reduce freespace')
         self.assert_(sp2 < sp1, 'repack did not reduce space')
+        
+    def test_io_3(self):
+        "io_keys"
+        io = IO(self.filename)                
+        io['1'] = larry([1,2,3])
+        io['2'] = larry([1,2,3])
+        io.f['3'] = [1,2,3]
+        io['1/2/3/4'] = larry([1,2,3])
+        keys = io.keys()
+        keys.sort()
+        theory = ['1', '1/2/3/4', '2']
+        self.assert_(keys == theory, 'keys do not match')
      
         
 def testsuite():

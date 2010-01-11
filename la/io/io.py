@@ -598,7 +598,7 @@ def _create_nested_groups(f, path):
         if group not in f:
             f.create_group(group)
         else:
-            if not isinstance(group, h5py.Group):
+            if not isinstance(f[group], h5py.Group):
                 msg = '%s already exists and is not a h5.py.Group object.'
                 raise ValueError, msg % group   
                     

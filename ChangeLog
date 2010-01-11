@@ -1,5 +1,9 @@
 2010-01-11 Keith
 
+    * io/io.py(_create_nested_groups), io/test/io_test.py(Test_io.test_io_3):
+      Bug fix: check if group was a h5py.Group object would always return
+      True. Added corresponding unit test.
+
     * io/io.py(repack): Bug fix: remove temp file when file input is a string.
 
     * util/misc.py(randstring), io/io.py(repack): New module for miscellaneous
