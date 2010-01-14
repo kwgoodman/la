@@ -1824,6 +1824,48 @@ class Test_getset(unittest.TestCase):
         label = [[0, 1]]
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         
+    def test_getitem_12(self):
+        "larry.__getitem___12"
+        t = np.array([[ 1.0, nan],
+                      [ 5.0, 6.0],
+                      [ 3.0, 4.0]]) 
+        p = self.l[[0,2,1]]
+        msg = printfail(t, p.x, 'x')   
+        t[np.isnan(t)] = self.nancode
+        p[np.isnan(p.x)] = self.nancode           
+        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        label = [[0, 2, 1], [0, 1]]
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))     
+
+    def test_getitem_13(self):
+        "larry.__getitem___13"
+        t = np.array([[ 1.0, nan],
+                      [ 5.0, 6.0],
+                      [ 3.0, 4.0]]) 
+        p = self.l[[0.99,2.6,1.78]]
+        msg = printfail(t, p.x, 'x')   
+        t[np.isnan(t)] = self.nancode
+        p[np.isnan(p.x)] = self.nancode           
+        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        label = [[0, 2, 1], [0, 1]]
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+
+    def test_getitem_14(self):
+        "larry.__getitem___14"
+        t = np.array([[ 3.0, 4.0],
+                      [ 1.0, nan]]) 
+        p = self.l[[True, False]]
+        msg = printfail(t, p.x, 'x')   
+        t[np.isnan(t)] = self.nancode
+        p[np.isnan(p.x)] = self.nancode           
+        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        label = [[1, 0], [0, 1]]
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+
+    def test_getitem_15(self):
+        "larry.__getitem___15"
+        self.failUnlessRaises(ValueError, self.l.__getitem__, [0,1,0])
+        
     def test_setitem_1(self):
         "larry.__setitem___1"
         t = np.array([[ 1.0, nan],

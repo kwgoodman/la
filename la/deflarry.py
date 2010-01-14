@@ -777,12 +777,13 @@ class larry(object):
     # Get and set ------------------------------------------------------------
     
     def __getitem__(self, index):
-        if type(index) in (int, np.int, np.int16, np.int32, np.int64):      
+        typidx = type(index)
+        if typidx in (int, np.int, np.int16, np.int32, np.int64):      
             if index >= self.shape[0]:
                 raise IndexError, 'index out of range'
             label = self.label[1:]
             x = self.x[index]                     
-        elif type(index) is tuple:
+        elif typidx is tuple:
             label = []
             for i in xrange(self.ndim):
                 if i < len(index):
@@ -818,10 +819,14 @@ class larry(object):
                 if lab:     
                     label.append(lab)              
             x = self.x[index]
-        elif type(index) is slice:
+        elif typidx is slice:
             label = list(self.label)
             label[0] = label[0][index]
-            x = self.x[index]                  
+            x = self.x[index]
+        elif typidx is list:
+            label = list(self.label)
+            label[0] = [label[0][int(i)] for i in index]
+            x = self.x[index]                              
         else:        
             msg = 'Only slice, integer, and seq (list, tuple, 1d array)'
             msg = msg + ' indexing supported'

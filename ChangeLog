@@ -1,5 +1,8 @@
 2010-01-14 Keith
 
+    * deflarry.py(__getitem__),  deflarry_test.py(Test_getset): Add ability
+      to index into larrys with a list. Four corresponding unit tests added.
+
     * tests/deflarry_nose_test.py. tests/afunc_arr_test.py. tests/test.py,
       tests/deflarry_test.py, tests/slicing_test.py: Clean up.
 
