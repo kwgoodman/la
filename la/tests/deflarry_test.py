@@ -574,6 +574,29 @@ class Test_binary(unittest.TestCase):
         p = self.l1
         self.failUnlessRaises(IndexError, p.__add__, self.l4)                                                 
 
+    def test___add___9(self):
+        "larry.__add___9"
+        
+        # larry + larry                                 
+        p = self.l1 + self.l1
+        
+        # label
+        label = [range(self.l1.shape[0]), range(self.l1.shape[1])]  
+        msg = printfail(label, p.label, 'label')    
+        self.assert_(label == p.label, msg)        
+        
+        # x
+        t = 2 * self.x1 
+        msg = printfail(t, p.x, 'x')
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode        
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        
+        # References
+        self.assert_(noreference(p, self.l1), 'Reference found')   
+        self.assert_(noreference(p, self.l2), 'Reference found')
+
+
     def test___sub___1(self):
         "larry.__sub___1"
 
@@ -691,6 +714,18 @@ class Test_binary(unittest.TestCase):
        
         # larry - larry                                 
         p = self.l2 - self.l2
+        
+        # label 
+        msg = printfail(self.l2.label, p.label, 'label')  
+        self.assert_(p.label == self.l2.label, msg)        
+        
+        # x
+        t = self.x2
+        t.fill(0.0)
+        msg = printfail(t, p.x, 'x')
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode        
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)        
         
         # References
         self.assert_(noreference(p, self.l2), 'Reference found')         
@@ -832,6 +867,17 @@ class Test_binary(unittest.TestCase):
        
         # larry * larry                                 
         p = self.l2 * self.l2
+        
+        # label 
+        msg = printfail(self.l2.label, p.label, 'label')  
+        self.assert_(p.label == self.l2.label, msg)        
+        
+        # x
+        t = self.x2 * self.x2
+        msg = printfail(t, p.x, 'x')
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode        
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)            
         
         # References
         self.assert_(noreference(p, self.l2), 'Reference found')         
@@ -977,6 +1023,17 @@ class Test_binary(unittest.TestCase):
        
         # larry / larry                                 
         p = self.l2 / self.l2
+        
+        # label 
+        msg = printfail(self.l2.label, p.label, 'label')  
+        self.assert_(p.label == self.l2.label, msg)        
+        
+        # x
+        t = self.x2 / self.x2
+        msg = printfail(t, p.x, 'x')
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode        
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)            
         
         # References
         self.assert_(noreference(p, self.l2), 'Reference found')              

@@ -281,10 +281,15 @@ class larry(object):
     __array_priority__ = 10                      
         
     def __add__(self, other):
-        if isinstance(other, larry):       
-            x, y, label = self.__align(other)
-            x += y
-            return type(self)(x, label)
+        if isinstance(other, larry):
+            if self.label == other.label:
+                y = self.copy()
+                y.x += other.x
+                return y                         
+            else:       
+                x, y, label = self.__align(other)
+                x += y
+                return type(self)(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             y = self.copy()
             y.x += other
@@ -295,9 +300,14 @@ class larry(object):
     
     def __sub__(self, other):
         if isinstance(other, larry):
-            x, y, label = self.__align(other)        
-            x -= y
-            return type(self)(x, label)
+            if self.label == other.label:
+                y = self.copy()
+                y.x -= other.x
+                return y                         
+            else:          
+                x, y, label = self.__align(other)        
+                x -= y
+                return type(self)(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             y = self.copy()
             y.x -= other
@@ -309,20 +319,25 @@ class larry(object):
 
     def __div__(self, other):
         if isinstance(other, larry):
-            x, y, label = self.__align(other)        
-            x /= y
-            return type(self)(x, label)
+            if self.label == other.label:
+                y = self.copy()
+                y.x /= other.x
+                return y                         
+            else:          
+                x, y, label = self.__align(other)        
+                x /= y
+                return type(self)(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             y = self.copy()
             y.x /= other
             return y           
         raise TypeError, 'Input must be scalar, array, or larry.'
         
-    def __rdiv__(self, other):                
+    def __rdiv__(self, other):               
         if isinstance(other, larry):
-            x, y, label = self.__align(other)        
-            x = x / y
-            return type(self)(x, label)
+            msg = 'I could not come up with a problem that used this code '
+            msg += 'so I removed it. Send me your example and I will fix.'
+            raise RuntimeError, msg                   
         if np.isscalar(other) or isinstance(other, np.ndarray):
             y = self.copy()
             y.x = other / y.x
@@ -331,9 +346,14 @@ class larry(object):
         
     def __mul__(self, other):    
         if isinstance(other, larry):
-            x, y, label = self.__align(other)
-            np.multiply(x, y, x)
-            return type(self)(x, label)
+            if self.label == other.label:
+                y = self.copy()
+                y.x *= other.x
+                return y                         
+            else:           
+                x, y, label = self.__align(other)
+                x *= y
+                return type(self)(x, label)
         if np.isscalar(other):
             y = self.copy()
             y.x *= other
@@ -348,9 +368,14 @@ class larry(object):
 
     def __and__(self, other):
        if isinstance(other, larry):
-           x, y, label = self.__align(other)
-           x &= y
-           return type(self)(x, label)
+            if self.label == other.label:
+                y = self.copy()
+                y.x &= other.x
+                return y                         
+            else:          
+               x, y, label = self.__align(other)
+               x &= y
+               return type(self)(x, label)
        if np.isscalar(other) or isinstance(other, np.ndarray):
            y = self.copy()
            y.x &= other
@@ -361,9 +386,14 @@ class larry(object):
 
     def __or__(self, other):
        if isinstance(other, larry):
-           x, y, label = self.__align(other)
-           x |= y
-           return type(self)(x, label)
+            if self.label == other.label:
+                y = self.copy()
+                y.x |= other.x
+                return y                         
+            else:          
+               x, y, label = self.__align(other)
+               x |= y
+               return type(self)(x, label)
        if np.isscalar(other) or isinstance(other, np.ndarray):
            y = self.copy()
            y.x |= other

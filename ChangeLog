@@ -1,3 +1,14 @@
+2010-01-14 Keith
+
+    * deflarry.py, deflarry_test.py: Short circuited the alignment function
+      on the binary methods (__add__, __mul__ etc) when the larrys are
+      already aligned. Big speed up for when larrys are already aligned.
+      Added corresponding unit tests.
+      
+    * deflarry.py(__rdiv__): I could not come up with an example that uses
+      rdiv when when other is a larry. So I removed the code and set a
+      runtimeError.      
+
 2010-01-11 Keith
 
     * io/io.py(_create_nested_groups), io/test/io_test.py(Test_io.test_io_3):
