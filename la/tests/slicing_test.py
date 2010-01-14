@@ -1,57 +1,64 @@
-"""Notes on slicing, converted to test
+"Slicing unit tests"
+
 
 """
+NOTES
 
-''' 
-indexing with nd boolean array fails
+
+Indexing with nd boolean array fails:
+
 >>> lar[lar>0]
 Traceback (most recent call last):
-  File "c:\josef\eclipsegworkspace\larry\trunk\la\deflarry.py", line 722, in __getitem__
+  File "la\deflarry.py", line 722, in __getitem__
     raise IndexError, msg
 IndexError: Only slice, integer, and seq (list, tuple, 1d array) indexing supported
 lar.x[lar.x>0]  # this works but creates 1d array, only useful for changes
 
 
-indexing with 1d boolean array fails
+Indexing with 1d boolean array fails:
+
 >>> la1_3d[lar.x[:,0,0]>0,:,:]
 Traceback (most recent call last):
-  File "c:\josef\eclipsegworkspace\larry\trunk\la\deflarry.py", line 725, in __getitem__
+  File "la\deflarry.py", line 725, in __getitem__
     return type(self)(x, label)
-  File "c:\josef\eclipsegworkspace\larry\trunk\la\deflarry.py", line 60, in __init__
+  File "la\deflarry.py", line 60, in __init__
     raise ValueError, msg2 % (i, value, key)
 ValueError: Elements of label not unique along dimension 0. There are 2 labels named `1`.
 >>> lar.x[lar.x[:,0,0]>0,:,:] # this works
 
 
-#list slicing fails
+List slicing fails:
+
 >>> lar.x[[0,1], [0,1], [0,1]]
 array([ 2.,  4.])
 >>> lar[[0,1], [0,1], [0,1]]
 Traceback (most recent call last):
-  File "c:\josef\eclipsegworkspace\larry\trunk\la\deflarry.py", line 725, in __getitem__
+  File "la\deflarry.py", line 725, in __getitem__
     return type(self)(x, label)
-  File "c:\josef\eclipsegworkspace\larry\trunk\la\deflarry.py", line 50, in __init__
+  File "la\deflarry.py", line 50, in __init__
     if x.shape[i] != nlabel:
 IndexError: tuple index out of range
 
 
-broadcasting of slices fails in larry
+Broadcasting of slices fails in larry:
+
 >>> lar.x[(np.array([0,1])[:,None], [0,1], [0,1])]
 array([[ 2.,  2.],
        [ 4.,  4.]])
 >>> lar[(np.array([0,1])[:,None], [0,1], [0,1])]
 Traceback (most recent call last):
-  File "c:\josef\eclipsegworkspace\larry\trunk\la\deflarry.py", line 725, in __getitem__
+  File "la\deflarry.py", line 725, in __getitem__
     return type(self)(x, label)
-  File "c:\josef\eclipsegworkspace\larry\trunk\la\deflarry.py", line 50, in __init__
+  File "la\deflarry.py", line 50, in __init__
     if x.shape[i] != nlabel:
 IndexError: tuple index out of range
-'''
+
+"""
+
 import numpy as np
 from numpy.testing import assert_
 import la
-#from deflarry_test import nocopy doesn't work for unequal shapes
-#helper function to check reference for slices ?
+
 nan = np.nan
 
 def getnplabel3d(idx, slices, reduced=False): #True):
@@ -86,12 +93,6 @@ def getnplabel3dm(idx, slices, reduced=True):
 x1 = np.array([[ 2.0, 2.0, 3.0, 1.0],
                [ 3.0, 2.0, 2.0, 1.0],
                [ 1.0, 1.0, 1.0, 1.0]])
-#The next array with nan fails because comparison in test does not
-#handle nans correctly, fixed in numpy 1.4 for array_equal, not ==
-#results for slicing are independent of nans, so skip nans
-x1nan = np.array([[ 2.0, 2.0, nan, 1.0],
-               [ 3.0, nan, 2.0, 1.0],
-               [ 1.0, 1.0, 1.0, 1.0]])
 
 # slice tests for 3d
 
@@ -116,13 +117,11 @@ def test_slicing():
                #([0,1], [0,1], [0,1]),  # fails in larry
                #(np.array([0,1])[:,None], [0,1], [0,1]), #broadcasting
                (0,0,0)
-               ]
+              ]
     
     for lar in larli:
         for slices in sliceli:
             ndim = lar.ndim
-            #print lar.shape
-            #print slices
             # create arrays corresponding to labels for slicing
             idxslice = [slice(0,nn) for nn in lar.shape]
             idx = np.mgrid[idxslice]
@@ -142,10 +141,6 @@ def test_slicing():
             yield assert_, lasliced_label == newlabels,\
                     'slicing\n%s\n%s' % (repr(lasliced_label),
                     repr(newlabels))
-    
-
-########## add morphing
-
 
 def test_morph():
     larli = [la1_3d, la1_2d0]
@@ -153,23 +148,20 @@ def test_morph():
                    ([0,2,1], 2),
                    ([1,0], 0),
                    ([0,2,1], 1)
-                   ]
+                  ]
 
-    #some of the things in the following loop are not necessary because
-    #morph doesn't reduce dimension
+    # Some of the things in the following loop are not necessary because
+    # morph doesn't reduce dimension
     for lar in larli: 
         for newlab, axis in slicesmorph:
             ndim = lar.ndim
             if axis > (ndim - 1):
-                #print 'infeasible dimension'
                 continue  # skip infeasible cases
             
             slices = [slice(None)]*ndim
             slices[axis] = newlab
-            #print lar.shape
-            #print slices
             
-            # create arrays corresponding to labels for slicing
+            # Create arrays corresponding to labels for slicing
             idxslice = [slice(0,nn) for nn in lar.shape]
             idx = np.mgrid[idxslice]
             slices = slices[:ndim]  # to run same loop on 2d and 3d
@@ -183,10 +175,7 @@ def test_morph():
             reduced = np.ndim(lar.x) > np.ndim(lasliced_x)
             
             newlabels = getnplabel3dm(idx, slices, reduced=reduced)
-#            print lasliced_x
-#            print lar.x[slices]
-#            print lasliced_label
-#            print newlabels
+
             yield assert_, np.all(lasliced_x == lar.x[slices]), \
                     'slicing\n%s\n%s' % (repr(lasliced_x), repr(lar.x[slices]))
             yield assert_, lasliced_label == newlabels,\

@@ -1,5 +1,13 @@
 2010-01-14 Keith
 
+    * tests/deflarry_nose_test.py. tests/afunc_arr_test.py. tests/test.py,
+      tests/deflarry_test.py, tests/slicing_test.py: Clean up.
+
+    * util/tests, util/tests/misc_test.py: New unit test module for util.
+      Currently contains one unit test for randstring.
+    
+    * util/__init__.py, la/Notes.txt: Add __init__, remove Notes.txt.
+    
     * deflarry.py, deflarry_test.py: Short circuited the alignment function
       on the binary methods (__add__, __mul__ etc) when the larrys are
       already aligned. Big speed up for when larrys are already aligned.

@@ -828,7 +828,7 @@ class Test_movingrank(unittest.TestCase):
 
 # Unit tests ----------------------------------------------------------------        
     
-def testsuite():
+def suite():
 
     unit = unittest.TestLoader().loadTestsFromTestCase
     s = []

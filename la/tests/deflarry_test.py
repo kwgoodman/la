@@ -7,29 +7,8 @@ import numpy as np
 nan = np.nan
 
 from la import larry
+from test import (printfail, noreference, nocopy)
 
-
-def noreference(larry1, larry2):
-    "Return True if there are no shared references"
-    assert isinstance(larry1, larry), 'Input must be a larry'
-    assert isinstance(larry2, larry), 'Input must be a larry'
-    assert larry1.ndim == larry2.ndim, 'larrys must have the same dimensions'
-    out = True
-    out = out & (larry1.x is not larry2.x)
-    for i in xrange(larry1.ndim):
-        out = out & (larry1.label[i] is not larry2.label[i])
-    return out    
-
-def nocopy(larry1, larry2):
-    "Return True if there are only references"
-    assert isinstance(larry1, larry), 'Input must be a larry'
-    assert isinstance(larry2, larry), 'Input must be a larry'
-    assert larry1.ndim == larry2.ndim, 'larrys must have the same dimensions'
-    out = True
-    out = out & (larry1.x is larry2.x)
-    for i in xrange(larry1.ndim):
-        out = out & (larry1.label[i] is larry2.label[i])
-    return out
 
 class Test_init(unittest.TestCase):
     "Test init of larry class"
@@ -3360,20 +3339,9 @@ class Test_vacuum(unittest.TestCase):
                [[0, 1], [0, 1, 2], ['A', 'C', 'D']])
         larv = self.la1_3d.vacuum(axis=(0,1))
         assert_almost_equal(larv.x, larr.x)
-        assert_(larv.label == larr.label)        
-        
-def printfail(theory, practice, header):
-    x = []
-    x.append('\n\n%s\n' % header)
-    x.append('\ntheory\n')
-    x.append(str(theory))
-    x.append('\n')
-    x.append('practice\n')
-    x.append(str(practice))
-    x.append('\n')    
-    return ''.join(x)
+        assert_(larv.label == larr.label)
            
-def testsuite():
+def suite():
     s = []
     u  =unittest.TestLoader().loadTestsFromTestCase
     s.append(u(Test_init))
