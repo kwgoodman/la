@@ -1866,6 +1866,30 @@ class Test_getset(unittest.TestCase):
         "larry.__getitem___15"
         self.failUnlessRaises(ValueError, self.l.__getitem__, [0,1,0])
         
+    def test_getitem_16(self):
+        "larry.__getitem___16"
+        t = np.array([[ 1.0, nan]]) 
+        p = self.l[np.array([True, False]),:]
+        msg = printfail(t, p.x, 'x')   
+        t[np.isnan(t)] = self.nancode
+        p[np.isnan(p.x)] = self.nancode           
+        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        label = [[0], [0, 1]]
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))        
+
+    def test_getitem_17(self):
+        "larry.__getitem___17"
+        t = np.array([[ 1.0],
+                      [ 3.0],
+                      [ 5.0]]) 
+        p = self.l[:, np.array([True, False])]
+        msg = printfail(t, p.x, 'x')   
+        t[np.isnan(t)] = self.nancode
+        p[np.isnan(p.x)] = self.nancode           
+        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        label = [[0, 1, 2], [0]]
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+                
     def test_setitem_1(self):
         "larry.__setitem___1"
         t = np.array([[ 1.0, nan],

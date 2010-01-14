@@ -14,6 +14,10 @@ Traceback (most recent call last):
 IndexError: Only slice, integer, and seq (list, tuple, 1d array) indexing supported
 lar.x[lar.x>0]  # this works but creates 1d array, only useful for changes
 
+Comment: Note that the numpy example (lar.x[lar.x>0]) creates a 1d array. If
+larry would allow this kind of indexing what would it do with the 2d labels
+when the output is 1d? Should each label element become a tuple?
+
 
 Indexing with 1d boolean array fails:
 
@@ -25,6 +29,9 @@ Traceback (most recent call last):
     raise ValueError, msg2 % (i, value, key)
 ValueError: Elements of label not unique along dimension 0. There are 2 labels named `1`.
 >>> lar.x[lar.x[:,0,0]>0,:,:] # this works
+
+Comment: Yes, you can't create a larry that doesn't have unique label elements
+along the axis. It works if the resulting labels are unique.
 
 
 List slicing fails:

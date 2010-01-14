@@ -1,6 +1,12 @@
 2010-01-14 Keith
 
-    * deflarry.py(__getitem__),  deflarry_test.py(Test_getset): Add ability
+    * deflarry.py(__getitem__), deflarry_test.py(Test_getset): Add ability
+      to index with bool larrys as poart of a slice object: lar[bool_arry,:]
+      and lar[:,bool_arry], for example. Add corresponding unit tests.
+
+    * tests/slicing_test.py: Added comments.
+
+    * deflarry.py(__getitem__), deflarry_test.py(Test_getset): Add ability
       to index into larrys with a list. Four corresponding unit tests added.
 
     * tests/deflarry_nose_test.py. tests/afunc_arr_test.py. tests/test.py,

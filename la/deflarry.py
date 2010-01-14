@@ -800,15 +800,17 @@ class larry(object):
                             raise IndexError, 'index out of range' 
                         lab = list(lab)                              
                     elif typ is np.ndarray:
-                        try:
-                            lab = [self.label[i][z] for z in idx]
-                        except IndexError:
-                            raise IndexError, 'index out of range' 
-                        lab = list(lab)                   
-                    elif typ is np.matrix:
-                        msg = 'matrix indexing not supported, '
-                        msg = msg + 'use 1d array instead'    
-                        raise IndexError, msg                           
+                        if idx.dtype.type == np.bool_:
+                            try:
+                                lab = [self.label[i][j] for j, z in enumerate(idx) if z]
+                            except IndexError:
+                                raise IndexError, 'index out of range'                            
+                        else:
+                            try:
+                                lab = [self.label[i][z] for z in idx]
+                            except IndexError:
+                                raise IndexError, 'index out of range' 
+                        lab = list(lab)                          
                     elif typ is slice:
                         lab = self.label[i][idx]
                     else:
