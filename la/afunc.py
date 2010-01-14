@@ -5,7 +5,7 @@ from scipy.stats import (nanmedian, rankdata)
 from scipy.special import ndtri
 
 
-# Sector functions ----------------------------------------------------------
+# Group functions ----------------------------------------------------------
 
 def group_ranking(x, groups, norm='-1,1', ties=True):
     """

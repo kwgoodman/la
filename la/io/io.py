@@ -182,8 +182,12 @@ class IO(object):
         return len(self.keys())
         
     def __getitem__(self, key):
-        if key in self: 
-            return lara(self.f[key])
+        if key in self.f:
+            if _is_archived_larry(self.f[key]): 
+                return lara(self.f[key])
+            else:
+                msg = "%s is in the archive but it is not a larry." 
+                raise KeyError, msg % key   
         else:
             raise KeyError, "A larry named %s is not in the archive." % key   
         
@@ -195,9 +199,9 @@ class IO(object):
         if not isinstance(value, larry):
             raise TypeError, 'value must be a larry.'
         
-        # Does a larry with given key already exist? If so delete.
-        # Note that self.f.keys() [all keys] is used instead of self.keys()
-        # [keys that are larrys].
+        # Does an item (larry or otherwise) with given key already exist? If
+        # so delete. Note that self.f.keys() [all keys] is used instead of
+        # self.keys() [keys that are larrys].
         if key in self.f.keys():
             self.__delitem__(key)              
         
@@ -206,10 +210,14 @@ class IO(object):
         
     def __delitem__(self, key):
         if key in self.f:
-            del self.f[key]        
+            if _is_archived_larry(self.f[key]): 
+                del self.f[key] 
+            else:
+                msg = "%s is in the archive but it is not a larry." 
+                raise KeyError, msg % key   
         else:
-            raise ValueError, 'key not found in archive.'            
-        self._repack_conditional()  
+            raise KeyError, "A larry named %s is not in the archive." % key        
+        self._repack_conditional()          
         
     def __repr__(self):
         table = [['larry', 'dtype', 'shape']]
