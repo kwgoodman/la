@@ -5,9 +5,10 @@ from numpy.testing import assert_  # could look for nose
 nan = np.nan
 
 from test import printfail
+from la.util.scipy import nanstd
 from la.afunc import (covMissing, fillforward_partially, geometric_mean,
                       lastrank, lastrank_decay, movingrank, movingsum,
-                      movingsum_forward, nans, nanstd, quantile, ranking,
+                      movingsum_forward, nans, quantile, ranking,
                       group_mean, group_median, group_ranking)
 
 # Functions to test

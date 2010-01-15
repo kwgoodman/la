@@ -52,8 +52,8 @@ MEET LARRY
 
 REQUIREMENTS
 
-    To run larry you need Python, Numpy, and Scipy. Python 2.6 and Numpy 1.4
-    are recommended. (There are many larry unit test failures with Numpy 1.3.)
+    To run larry you need Python and Numpy. Python 2.6 and Numpy 1.4 are
+    recommended. (There are many larry unit test failures with Numpy 1.3.)
     To save and load larrys in HDF5 format, you need h5py.
         
     Larry currently contains no extensions, just Python code, so there is

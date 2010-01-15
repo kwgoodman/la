@@ -1,3 +1,12 @@
+2010-01-15 Keith
+
+    * util/scipy.py: New module that contains all the SciPy functions needed
+      by la. Now la no longer depends on SciPy (well, except for gaussian
+      normalization in the ranking function.)
+
+    * deflarry.py, tests/more_test.py, afunc.py, README, util/scipy.py:
+      Remove SciPy dependency.
+
 2010-01-14 Keith
 
     * io/io.py(IO.__getitem__), io/io.py(IO.__delitem__): Made saves and

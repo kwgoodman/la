@@ -1,8 +1,8 @@
 "Functions that work with numpy arrays."
 
 import numpy as np
-from scipy.stats import (nanmedian, rankdata)
-from scipy.special import ndtri
+
+from la.util.scipy import nanmedian, rankdata
 
 
 # Group functions ----------------------------------------------------------
@@ -336,6 +336,10 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
         idx *= (1.0 * (x.shape[ax] - 1) / (countnotnan - 1))
         middle = (idx.shape[ax] + 1.0) / 2.0 - 1.0
     elif norm == 'gaussian':
+        try:
+            from scipy.special import ndtri
+        except ImportError:
+            raise ImportError, 'SciPy required for gaussian normalization.'   
         idx *= (1.0 * (x.shape[ax] - 1) / (countnotnan - 1))
         idx = ndtri((idx + 1.0) / (x.shape[ax] + 1.0))
         middle = 0.0
@@ -463,56 +467,3 @@ def nans(shape, dtype=float):
     a.fill(np.nan)
     return a
 
-# nanstd is from scipy.stats but I changed the default to bias=True
-def nanstd(x, axis=0, bias=True):
-    """Compute the standard deviation over the given axis ignoring nans
-
-    :Parameters:
-        x : ndarray
-            input array
-        axis : int
-            axis along which the standard deviation is computed.
-        bias : boolean
-            If true, the biased (normalized by N) definition is used. If false,
-            the unbiased is used (the default).
-
-    :Results:
-        s : float
-            the standard deviation."""
-    x, axis = _chk_asarray(x,axis)
-    x = x.copy()
-    Norig = x.shape[axis]
-
-    Nnan = np.sum(np.isnan(x),axis)*1.0
-    n = Norig - Nnan
-
-    x[np.isnan(x)] = 0.
-    m1 = np.sum(x,axis)/n
-
-    # Kludge to subtract m1 from the correct axis
-    if axis!=0:
-        shape = np.arange(x.ndim).tolist()
-        shape.remove(axis)
-        shape.insert(0,axis)
-        x = x.transpose(tuple(shape))
-        d = (x-m1)**2.0
-        shape = tuple(np.array(shape).argsort())
-        d = d.transpose(shape)
-    else:
-        d = (x-m1)**2.0
-    m2 = np.sum(d,axis)-(m1*m1)*Nnan
-    if bias:
-        m2c = m2 / n
-    else:
-        m2c = m2 / (n - 1.)
-    return np.sqrt(m2c)
-
-# Helper function for nanstd, also from scipy.stats
-def _chk_asarray(a, axis):
-    if axis is None:
-        a = np.ravel(a)
-        outaxis = 0
-    else:
-        a = np.asarray(a)
-        outaxis = axis
-    return a, outaxis 

@@ -4,12 +4,12 @@ import datetime
 from copy import deepcopy
 
 import numpy as np   
-from scipy.stats import (nanmean, nanmedian)
+from la.util.scipy import (nanmean, nanmedian, nanstd)
 
 from la.afunc import (group_ranking, group_mean, group_median, covMissing,
                       fillforward_partially, quantile, ranking, lastrank,
                       movingsum_forward, lastrank_decay, movingrank,
-                      movingsum, shuffle, nans, nanstd)
+                      movingsum, shuffle, nans)
 
 
 class larry(object):
