@@ -1,5 +1,9 @@
 2010-01-15 Keith
 
+    * io, io/io.py, io/tests, io/tests/io_test.py, io/__init__.py: Remove
+      io and io/tests. Move contents, io.py and io_test.py, to la and tests,
+      respectively.
+
     * util/scipy.py: New module that contains all the SciPy functions needed
       by la. Now la no longer depends on SciPy (well, except for gaussian
       normalization in the ranking function.)

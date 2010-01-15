@@ -8,8 +8,7 @@ import numpy as np
 nan = np.nan
 
 from la import larry
-from la import IO
-from la.io.io import (archive_directory)
+from la import (IO, archive_directory)
 
 
 class Test_io(unittest.TestCase):

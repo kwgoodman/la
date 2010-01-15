@@ -1,2 +1,0 @@
-"la.io init"
-
