@@ -1,5 +1,9 @@
 2010-01-15 Keith
 
+    * doc/source, doc/source/_static, doc/source/archive.rst, doc/Makefile,
+      doc/source/conf.py, doc/source/_templates, doc/source/index.rst:
+      The start of the (Sphinx-based) larry manual.
+
     * util/tests/scipy_test.py: New module made by copying the nine
       scipy.stats nan function unit tests.
 
