@@ -2,11 +2,12 @@
 The functions in this module were copied from SciPy to avoid making la
 depend on SciPy. See the la LICENSE file for the SciPy license.
 
-All of these SciPy functions are in scipy/stats/stats.py
+In the SciPy project, these functions can be found in scipy/stats/stats.py
 
 One change was made to the SciPy version of nanstd. The default for nanstd
 was changed from bias=False (N-1 normalization) to bias=False (N
 normalization). That makes it match the defaults for np.std and scipy.std.
+
 """
 
 import numpy as np

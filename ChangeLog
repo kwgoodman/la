@@ -1,5 +1,10 @@
 2010-01-15 Keith
 
+    * util/tests/scipy_test.py: New module made by copying the nine
+      scipy.stats nan function unit tests.
+
+    * util/scipy.py: Doc string tweak.
+
     * io, io/io.py, io/tests, io/tests/io_test.py, io/__init__.py: Remove
       io and io/tests. Move contents, io.py and io_test.py, to la and tests,
       respectively.
