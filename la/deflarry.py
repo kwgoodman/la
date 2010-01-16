@@ -1781,8 +1781,7 @@ class larry(object):
                 x.append(pad + str(self.label[i][-1]) + '\n')
             else:
                 for l in label:
-                    x.append(pad + str(l) + '\n')
-            x.append('\n')        
+                    x.append(pad + str(l) + '\n')       
         
         # x
         x.append('x\n')

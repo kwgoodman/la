@@ -3,7 +3,7 @@ The functions in this module were copied from SciPy to avoid making la
 depend on SciPy. See the la LICENSE file for the SciPy license.
 
 In the SciPy project, these functions can be found in
-scipy/stats/tests/test_stats.py
+scipy/stats/tests/test_stats.py and scipy/stats/tests/test_mstats_basic.py
 
 Some modifications were made.
 
@@ -12,7 +12,7 @@ Some modifications were made.
 import numpy as np
 from numpy.testing import *
 
-from la.util.scipy import (nanmean, nanmedian, nanstd)
+from la.util.scipy import (nanmean, nanmedian, nanstd, rankdata)
 
 
 X = np.array([1,2,3,4,5,6,7,8,9],float)
@@ -74,6 +74,17 @@ class TestNanFunc(TestCase):
         """Check nanmedian when all values are nan."""
         m = nanmedian(self.Xall)
         assert np.isnan(m)
+        
+class TestRanking(TestCase):
+
+    def __init__(self, *args, **kwargs):
+        TestCase.__init__(self, *args, **kwargs)
+
+    def test_ranking(self):
+        x = np.array([0,1,1,1,2,3,4,5,5,6,])
+        assert_almost_equal(rankdata(x),[1,3,3,3,5,6,7,8.5,8.5,10])
+        x = np.array([0,1,5,1,2,4,3,5,1,6,])
+        assert_almost_equal(rankdata(x),[1,3,8.5,3,5,7,6,8.5,3,10])       
 
 
 if __name__ == "__main__":

@@ -1,3 +1,15 @@
+2010-01-16 Keith
+
+    * doc/source/start.rst, doc/source/unary.rst: New sections of the manual.
+    
+    * doc/source/conf.py: Changed Sphinx theme.
+    
+    * doc/source/index.rst: Edited.
+    
+    * deflarry.py(larry.__repr__): Made more compact by removing empty lines.
+
+    * util/tests/scipy_test.py(TestRanking): Added unit tests for rankdata.
+
 2010-01-15 Keith
 
     * doc/source, doc/source/_static, doc/source/archive.rst, doc/Makefile,

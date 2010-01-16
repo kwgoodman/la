@@ -28,7 +28,7 @@ one-dimensional larry:
 In the statement above the list is converted to a Numpy array and the labels
 default to ``range(n)``, where *n* in this case is 3.
     
-larry has many builtin methods such as **movingsum, ranking, merge, shuffle,
+larry has many built-in methods such as **movingsum, ranking, merge, shuffle,
 zscore, demean, lag** as well as typical Numpy methods like **sum, max, std,
 sign, clip**. NaNs are treated as missing data.
     
@@ -51,16 +51,24 @@ larry, *y*, like this:
 ::    
                            y.x = myfunc(y.x)
     
-larry adds the convenience of labels, provides many builtin functions, and
-let's you use your exisiting array functions.       
+larry adds the convenience of labels, provides many built-in functions, and
+let's you use your existing array functions.       
 
-Requirements
+License
+=======
+
+larry is distributed under the NEW BSD license. Scipy, parts of which are
+included in larry to avoid a Scipy dependency, is distibued under a BSD-like
+license. See the LICENSE file, which is distributed with the larry source
+code, for details.
+
+Installation
 ============
 
 To run larry you need Python and Numpy. Python 2.6 and Numpy 1.4 are
 recommended. (There are many larry unit test failures with Numpy 1.3.)
 To save and load larrys in HDF5 format, you need
-`h5py <http://h5py.alfven.org>`_.
+`h5py <http://h5py.alfven.org>`_ with HDF5 1.8.
         
 larry currently contains no extensions, just Python code, so there is
 nothing to compile. Just save the la directory and make sure Python can
@@ -69,15 +77,18 @@ find it. Then run:
     >>> import la
     >>> la.test()
     <snip>
-    Ran 529 tests in 0.465s
+    Ran 539 tests in 0.465s
     OK
-    <nose.result.TextTestResult run=529 errors=0 failures=0>
+    <nose.result.TextTestResult run=539 errors=0 failures=0>
 
-Contents:
+Contents
+========
 
 .. toctree::
    :maxdepth: 2
    
+   start
+   unary
    archive
 
 Indices and tables
