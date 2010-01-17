@@ -3078,12 +3078,54 @@ class Test_alignment(unittest.TestCase):
         label = [[0, 1, 2], [1]]
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l), 'Reference found')
+        
+        
+class Test_random(unittest.TestCase):
+    "Test randomizing functions of the larry class"
 
+    def setUp(self):
+        self.lar = larry(np.random.randint(0, 1000000, (200, 200)))
+
+    def test_shuffle_1(self):
+        "larry.shuffle_1"
+        y = self.lar.copy()
+        y.shuffle(axis=None)
+        self.assert_(y.shape == self.lar.shape, 'shape changed')
+        self.assert_((y.x != self.lar.x).any(), 'No shuffling took place')
+        self.assert_(y.label == self.lar.label, 'labels changed')
+
+    def test_shuffle_2(self):
+        "larry.shuffle_2"
+        y = self.lar.copy()
+        y.shuffle()
+        self.assert_(y.shape == self.lar.shape, 'shape changed')
+        self.assert_((y.x != self.lar.x).any(), 'No shuffling took place')
+        self.assert_(y.label == self.lar.label, 'labels changed')
+
+    def test_shufflelabel_1(self):
+        "larry.shufflelabel_1"
+        y = self.lar.copy()
+        y.shufflelabel()
+        self.assert_(y.shape == self.lar.shape, 'shape changed')
+        self.assert_((y.x == self.lar.x).all(), 'Values shuffled')
+        self.assert_(y.label[1] == self.lar.label[1], 'labels shuffled')
+        self.assert_(y.label[0] != self.lar.label[0], 'No shuffling')      
+
+    def test_shufflelabel_2(self):
+        "larry.shufflelabel_2"
+        y = self.lar.copy()
+        y.shufflelabel(axis=None)
+        self.assert_(y.shape == self.lar.shape, 'shape changed')
+        self.assert_((y.x == self.lar.x).all(), 'Values shuffled')
+        self.assert_(y.label[1] != self.lar.label[1], 'labels shuffled')
+        self.assert_(y.label[0] != self.lar.label[0], 'No shuffling') 
+        
 
 class Test_properties_01(unittest.TestCase):
     "Test properties larry class"
 
     def setUp(self):
+        self.tol = 1e-8
         self.nancode = -9999
         self.x = np.array([[ 1.0, nan],
                            [ 1.0, 1.0],
@@ -3167,6 +3209,16 @@ class Test_properties_01(unittest.TestCase):
         t.x[np.isnan(t.x)] = self.nancode
         p.x[np.isnan(p.x)] = self.nancode
         self.assert_(t == p, msg)
+        
+    def test_11(self):
+        t = self.l.x
+        p = self.l.A
+        msg = printfail(t, p, 'x')
+        t[np.isnan(t)] = self.nancode
+        p[np.isnan(p)] = self.nancode                  
+        self.assert_((abs(t - p) < self.tol).all(), msg)     
+        self.assert_(t is p, 'no reference found')
+                
 
 from numpy.testing import assert_, assert_almost_equal, assert_raises
 

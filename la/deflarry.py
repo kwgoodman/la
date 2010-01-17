@@ -1716,40 +1716,92 @@ class larry(object):
         
         Parameters
         ----------
-        axis : int
-            The axis to shuffle the data along. Default is axis 0.
+        axis : {int, None}
+            The axis to shuffle the data along. Default is axis 0. If None,
+            then the data will be shuffled along all axes.
             
         Returns
         -------
         out : None
-            The data is shuffled inplace.        
+            The data are shuffled inplace.        
         
         """
-        shuffle(self.x, axis)
+        if axis is None:
+            for ax in range(self.ndim):
+               shuffle(self.x, ax) 
+        else:
+            shuffle(self.x, axis)
+        
+    def shufflelabel(self, axis=0):
+        """
+        Shuffle the label inplace along the specified axis.
+        
+        Parameters
+        ----------
+        axis : int
+            The axis to shuffle the data along. Default is axis 0. If None,
+            then the labels will be shuffled along all axes, where each
+            label axis will still contain the same set of labels (labels
+            from one axis will not be shuffle to another axis).
+            
+        Returns
+        -------
+        out : None
+            The labels are shuffled inplace.        
+        
+        """
+        if axis is None:
+            for ax in range(self.ndim):
+               np.random.shuffle(self.label[ax]) 
+        else:
+            np.random.shuffle(self.label[axis]) 
 
-    # Size -------------------------------------------------------------------
+    # Size and shape ---------------------------------------------------------
 
     @property
     def nx(self):
+        "Number of finite values in the larry."
         return np.isfinite(self.x).sum()
 
     @property
     def size(self):
+        "Number of elements in the larry."
         return self.x.size
 
     @property
     def shape(self):
+        "Shape of the larry as a tuple."
         return self.x.shape
         
     @property
     def ndim(self):
+        "Number of dimensions in the larry."
         return self.x.ndim
         
     @property
     def dtype(self):
+        "The dtype of the elements (not the labels) in the larry."
         return self.x.dtype
+        
+    @property
+    def T(self):
+        "Returns a transposed copy of the larry."
+        y = self.copy()
+        y.x = y.x.T
+        y.label = y.label[::-1]
+        return y
+        
+    @property
+    def A(self):
+        "Return a reference to the underlying Numpy array."
+        return self.x       
+        
+    def _2donly(self):
+        "Only works on 2d arrays"
+        if self.ndim != 2:
+            raise ValueError, 'This function only works on 2d larrys'                
                
-    # Misc -------------------------------------------------------------------        
+    # Copy -------------------------------------------------------------------        
           
     def copy(self):
         label = deepcopy(self.label)
@@ -1757,20 +1809,10 @@ class larry(object):
         return type(self)(x, label)
         
     def copylabel(self):
-        return deepcopy(self.label)        
-
-    @property
-    def T(self):
-        y = self.copy()
-        y.x = y.x.T
-        y.label = y.label[::-1]
-        return y
+        return deepcopy(self.label)
         
-    def _2donly(self):
-        "Only works on 2d arrays"
-        if self.ndim != 2:
-            raise ValueError, 'This function only works on 2d larrys'
-        
+    # Print ------------------------------------------------------------------                
+                
     def __repr__(self):
 
         x = []

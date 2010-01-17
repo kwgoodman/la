@@ -1,5 +1,19 @@
 2010-01-17 Keith
 
+    * deflarry.py(shufflelabel): New method.
+
+    * deflarry.py(shuffle): Added optional axis=None to shuffle along all
+      axes.
+      
+    * tests/deflarry_test.py(Test_random): Created unit tests for shuffle
+      and shufflelabel.
+      
+    * deflarry.py(A), tests/deflarry_test.py(Test_properties_01): New property
+      and unit test.    
+
+    * deflarry.py(nx), deflarry.py(size), deflarry.py(shape), deflarry.py(T),
+      deflarry.py(ndim), deflarry.py(dtype): Added doc strings.
+
     * deflarry.py(larry.isnan), deflarry.py(larry.isfinite),
       tests/deflarry_test.py(Test_unary): Moved isnan and isfinite to be
       with the other unary methods. Added doc strings. Added unit tests.
