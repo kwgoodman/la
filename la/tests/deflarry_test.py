@@ -55,6 +55,7 @@ class Test_init(unittest.TestCase):
         self.assert_((p.x == t).all(), msg) 
         self.assert_(self.label == p.label,
                      printfail(self.label, p.label, 'label'))
+
     
 class Test_unary(unittest.TestCase):
     "Test unary functions of larry class"
@@ -69,7 +70,8 @@ class Test_unary(unittest.TestCase):
         self.x2 = np.array([1.0, 1.0])  
         self.l2 = larry(self.x2)        
         self.x3 = np.random.rand(2,3,4)                
-        self.l3 = larry(self.x3)                                                       
+        self.l3 = larry(self.x3)
+        self.l4 = larry([ nan, 0.0, np.inf, -10.0, -np.inf])                                                       
 
     def test_log_1(self):
         "larry.log_1"
@@ -405,6 +407,37 @@ class Test_unary(unittest.TestCase):
         label = [[0,1,2], [0,1]]
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l), 'Reference found') 
+        
+    def test_isnan_1(self):
+        "larry.isnan_1"
+        t = np.array([True, False, False, False, False])
+        label = [[0, 1, 2, 3, 4]]
+        p = self.l4.isnan()
+        msg = printfail(t, p.x, 'x')      
+        self.assert_((t == p.x).all(), msg) 
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, self.l4), 'Reference found')                 
+        
+    def test_isfinite_1(self):
+        "larry.isfinite_1"
+        t = np.array([False, True, False, True, False])
+        label = [[0, 1, 2, 3, 4]]
+        p = self.l4.isfinite()
+        msg = printfail(t, p.x, 'x')      
+        self.assert_((t == p.x).all(), msg) 
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, self.l4), 'Reference found')         
+        
+    def test_isinf_1(self):
+        "larry.isinf_1"
+        t = np.array([False, False, True, False, True])
+        label = [[0, 1, 2, 3, 4]]
+        p = self.l4.isinf()
+        msg = printfail(t, p.x, 'x')      
+        self.assert_((t == p.x).all(), msg) 
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, self.l4), 'Reference found')          
+      
 
 class Test_binary(unittest.TestCase):
     "Test binary functions of Data class"
@@ -1027,6 +1060,7 @@ class Test_binary(unittest.TestCase):
         self.assert_(noreference(p, self.l2), 'Reference found')
         self.assert_(noreference(p, self.l3), 'Reference found')
 
+
 class Test_reduce(unittest.TestCase):
     "Test reducing functions of the larry class"
     
@@ -1373,6 +1407,7 @@ class Test_reduce(unittest.TestCase):
         msg = printfail(t.label, p.label, 'label')
         self.assert_(p.label == t.label, msg)
         self.assert_(noreference(p, t), 'Reference found')                        
+
         
 class Test_comparison(unittest.TestCase):
     "Test comparison functions of the larry class"
@@ -1625,6 +1660,7 @@ class Test_comparison(unittest.TestCase):
         "larry.__ge___4"
         x = [1, 2]
         self.failUnlessRaises(TypeError, self.l.__ge__, x)
+
         
 class Test_anyall(unittest.TestCase):
     "Test any and all of the larry class"
@@ -1712,6 +1748,7 @@ class Test_anyall(unittest.TestCase):
         p = self.d5.all()
         msg = printfail(t, p, 'Truth')       
         self.assert_(t == p, msg)
+
 
 class Test_getset(unittest.TestCase):
     "Test get and set functions of the larry class"
@@ -2025,6 +2062,7 @@ class Test_getset(unittest.TestCase):
         label = [[0, 1, 2], [0, 1]]
         self.assert_(label == p.label, printfail(label, p.label, 'label'))          
 
+
 class Test_label(unittest.TestCase):
     "Test label functions of the larry class"
     
@@ -2158,6 +2196,7 @@ class Test_label(unittest.TestCase):
         axis = 0
         p = self.l2.labelindex(3, axis)
         self.assert_(t == p, printfail(t, p, 'label'))
+
 
 class Test_calc(unittest.TestCase):
     "Test calc functions of larry class"
@@ -2907,6 +2946,7 @@ class Test_calc(unittest.TestCase):
         # same as
         # l8.demean(axis=1).cov().x - np.ma.cov(np.ma.fix_invalid(x8), bias=1).data               
 
+
 class Test_alignment(unittest.TestCase):
     "Test alignment functions of larry class"
     
@@ -3039,6 +3079,7 @@ class Test_alignment(unittest.TestCase):
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l), 'Reference found')
 
+
 class Test_properties_01(unittest.TestCase):
     "Test properties larry class"
 
@@ -3126,9 +3167,6 @@ class Test_properties_01(unittest.TestCase):
         t.x[np.isnan(t.x)] = self.nancode
         p.x[np.isnan(p.x)] = self.nancode
         self.assert_(t == p, msg)
-
-
-#new test functions, were semiautomatically generated
 
 from numpy.testing import assert_, assert_almost_equal, assert_raises
 
@@ -3258,6 +3296,7 @@ class Test_merge(unittest.TestCase):
         larm = lar1.merge(lar2, update=False)
         assert_almost_equal(larr.x, larm.x)
         assert_(larr.label == larm.label)
+
 
 class Test_vacuum(unittest.TestCase):
     "Test vacuum functions of the larry class"
@@ -3406,6 +3445,7 @@ class Test_vacuum(unittest.TestCase):
         larv = self.la1_3d.vacuum(axis=(0,1))
         assert_almost_equal(larv.x, larr.x)
         assert_(larv.label == larr.label)
+ 
            
 def suite():
     s = []

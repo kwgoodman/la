@@ -271,7 +271,25 @@ class larry(object):
         return y
         
     def __abs__(self):
-        return self.abs()        
+        return self.abs()
+        
+    def isnan(self):
+        "Returns a bool larry with NaNs replaced by True, non-NaNs False."
+        label = self.copylabel()
+        x = np.isnan(self.x)
+        return type(self)(x, label)                             
+
+    def isfinite(self):
+        "Returns a bool larry with NaNs and Inf replaced by True, others False."    
+        label = self.copylabel()
+        x = np.isfinite(self.x)
+        return type(self)(x, label)
+        
+    def isinf(self):
+        "Returns a bool larry with -Inf and Inf replaced by True, others False."     
+        label = self.copylabel()
+        x = np.isinf(self.x)
+        return type(self)(x, label)                        
         
     # Binary Functions ------------------------------------------------------- 
     
@@ -1752,16 +1770,6 @@ class larry(object):
         "Only works on 2d arrays"
         if self.ndim != 2:
             raise ValueError, 'This function only works on 2d larrys'
-            
-    def isnan(self):
-        label = self.copylabel()
-        x = np.isnan(self.x)
-        return type(self)(x, label)                             
-
-    def isfinite(self):
-        label = self.copylabel()
-        x = np.isfinite(self.x)
-        return type(self)(x, label)
         
     def __repr__(self):
 

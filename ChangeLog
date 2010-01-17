@@ -1,3 +1,12 @@
+2010-01-17 Keith
+
+    * deflarry.py(larry.isnan), deflarry.py(larry.isfinite),
+      tests/deflarry_test.py(Test_unary): Moved isnan and isfinite to be
+      with the other unary methods. Added doc strings. Added unit tests.
+      
+    * deflarry.py(larry.isinf), tests/deflarry_test.py(Test_unary): New
+      method and corresponding doc string.
+
 2010-01-16 Keith
 
     * doc/source/start.rst, doc/source/unary.rst: New sections of the manual.
