@@ -1,5 +1,16 @@
 2010-01-18 Keith
 
+    * doc/sphinxext, doc/sphinxext/docscrape.py,
+      doc/sphinxext/plot_directive.py, doc/sphinxext/numpydoc.py,
+      doc/sphinxext/MANIFEST.in, doc/sphinxext/phantom_import.py,
+      doc/sphinxext/PKG-INFO, doc/sphinxext/LICENSE.txt,
+      doc/sphinxext/compiler_unparse.py, doc/sphinxext/autosummary.py,
+      doc/sphinxext/comment_eater.py, doc/sphinxext/autosummary_generate.py,
+      doc/sphinxext/traitsdoc.py, doc/sphinxext/setup.py,
+      doc/sphinxext/docscrape_sphinx.py, doc/sphinxext/setup.cfg,
+      doc/sphinxext/README.txt, doc/sphinxext/__init__.py,
+      doc/sphinxext/only_directives.py: Added numpydoc extensions.
+
     * doc/source/conf.py: Add numpydoc extension.
 
     * deflarry.py: Added missing doc strings.
