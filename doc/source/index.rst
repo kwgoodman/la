@@ -88,8 +88,8 @@ Contents
    :maxdepth: 2
    
    start
-   unary
    archive
+   reference
 
 Indices and tables
 ==================

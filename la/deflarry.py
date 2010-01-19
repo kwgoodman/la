@@ -170,6 +170,20 @@ class larry(object):
         return y
         
     def __pow__(self, q):
+        """
+        Element by element x**q.
+                
+        Parameters
+        ----------
+        q : scalar
+            The power to raise to.
+        
+        Returns
+        -------
+        out : larry
+            Returns a copy with x values to the qth power.
+                
+        """
         return self.power(q)           
         
     def cumsum(self, axis): 
@@ -245,11 +259,13 @@ class larry(object):
         return y
         
     def __neg__(self):
+        "Return a copy with each element multiplied by minus 1."
         y = self.copy()
         y.x *= -1
         return y
     
     def __pos__(self):
+        "Return a copy with each element multiplied by 1."
         return self.copy()
         
     def abs(self):
@@ -271,6 +287,19 @@ class larry(object):
         return y
         
     def __abs__(self):
+        """
+        Absolute value of x.
+                        
+        Parameters
+        ----------
+        No input
+        
+        Returns
+        -------
+        out : larry
+            Returns a copy with the absolute values of the x data.
+       
+        """    
         return self.abs()
         
     def isnan(self):
@@ -299,6 +328,7 @@ class larry(object):
     __array_priority__ = 10                      
         
     def __add__(self, other):
+        "Sum a larry with another larry, Numpy array, or scalar."
         if isinstance(other, larry):
             if self.label == other.label:
                 y = self.copy()
@@ -317,6 +347,7 @@ class larry(object):
     __radd__ = __add__
     
     def __sub__(self, other):
+        "Subtract a larry from another larry, Numpy array, or scalar."    
         if isinstance(other, larry):
             if self.label == other.label:
                 y = self.copy()
@@ -333,9 +364,11 @@ class larry(object):
         raise TypeError, 'Input must be scalar, array, or larry.'
         
     def __rsub__(self, other):
+        "Right subtract a larry with a another larry, Numpy array, or scalar."
         return -self.__sub__(other)       
 
     def __div__(self, other):
+        "Divide a larry with a another larry, Numpy array, or scalar."    
         if isinstance(other, larry):
             if self.label == other.label:
                 y = self.copy()
@@ -351,7 +384,8 @@ class larry(object):
             return y           
         raise TypeError, 'Input must be scalar, array, or larry.'
         
-    def __rdiv__(self, other):               
+    def __rdiv__(self, other):
+        "Right divide a larry with a another larry, Numpy array, or scalar."                   
         if isinstance(other, larry):
             msg = 'I could not come up with a problem that used this code '
             msg += 'so I removed it. Send me your example and I will fix.'
@@ -362,7 +396,8 @@ class larry(object):
             return y           
         raise TypeError, 'Input must be scalar, array, or larry.'
         
-    def __mul__(self, other):    
+    def __mul__(self, other): 
+        "Multiply a larry with a another larry, Numpy array, or scalar."       
         if isinstance(other, larry):
             if self.label == other.label:
                 y = self.copy()
@@ -385,7 +420,8 @@ class larry(object):
     __rmul__ = __mul__
 
     def __and__(self, other):
-       if isinstance(other, larry):
+        "Logical and a larry with a another larry, Numpy array, or scalar."    
+        if isinstance(other, larry):
             if self.label == other.label:
                 y = self.copy()
                 y.x &= other.x
@@ -394,15 +430,16 @@ class larry(object):
                x, y, label = self.__align(other)
                x &= y
                return type(self)(x, label)
-       if np.isscalar(other) or isinstance(other, np.ndarray):
-           y = self.copy()
-           y.x &= other
-           return y
-       raise TypeError, 'Input must be scalar, array, or larry.'
+        if np.isscalar(other) or isinstance(other, np.ndarray):
+            y = self.copy()
+            y.x &= other
+            return y
+        raise TypeError, 'Input must be scalar, array, or larry.'
 
     __rand__ = __and__
 
     def __or__(self, other):
+       "Logical or a larry with a another larry, Numpy array, or scalar."     
        if isinstance(other, larry):
             if self.label == other.label:
                 y = self.copy()
@@ -421,6 +458,7 @@ class larry(object):
     __ror__ = __or__
 
     def __align(self, other):
+        "Align larrys for binary operations."
         if self.ndim != other.ndim:
             msg = 'Binary operation on two larrys with different dimension'
             raise IndexError, msg
@@ -689,26 +727,72 @@ class larry(object):
         label = self.copylabel()
         label[1] = [label[1][-1]]
         x = lastrank_decay(self.x, decay)
-        return type(self)(x, label)                                 
+        return type(self)(x, label)
+        
+    def any(self, axis=None):
+        """
+        Return true if any elements of x is true.
+        
+        Note: NaN is True since it is not equal to 0.
+        
+        Parameters
+        ----------
+        No input
+        
+        Returns
+        -------
+        out : {True, False}
+        
+        """
+        if axis is None:
+            return self.x.any()
+        else:
+            return self.__reduce(axis, np.any)
+        
+    def all(self, axis=None):
+        """
+        Return true if all elements of x are true.
+        
+        Note: NaN is True since it is not equal to 0.        
+        
+        Parameters
+        ----------
+        No input
+        
+        Returns
+        -------
+        out : {True, False}
+        
+        """
+        if axis is None:
+            return self.x.all()
+        else:
+            return self.__reduce(axis, np.all)                                         
         
     # Comparision ------------------------------------------------------------                                              
         
     def __eq__(self, other):
+        "Element by element equality (==) comparison."
         return self.__compare(other, '==')                   
 
     def __ne__(self, other):
+        "Element by element inequality (!=) comparison."
         return self.__compare(other, '!=')                       
 
     def __lt__(self, other):
+        "Element by element 'less than' (<) comparison."    
         return self.__compare(other, '<')  
 
     def __gt__(self, other):
+        "Element by element 'greater than' (>) comparison."    
         return self.__compare(other, '>') 
 
     def __le__(self, other):
+        "Element by element 'less than or equal to' (<=) comparison."    
         return self.__compare(other, '<=') 
 
     def __ge__(self, other):
+        "Element by element 'greater than or equal to' (>=) comparison."     
         return self.__compare(other, '>=') 
 
     def __compare(self, other, op):         
@@ -749,52 +833,10 @@ class larry(object):
         else:
             raise TypeError, 'Input must be scalar, numpy array, or larry.'
 
-    # Any, all ---------------------------------------------------------------           
-                
-    def any(self, axis=None):
-        """
-        Return true if any elements of x is true.
-        
-        Note: NaN is True since it is not equal to 0.
-        
-        Parameters
-        ----------
-        No input
-        
-        Returns
-        -------
-        out : {True, False}
-        
-        """
-        if axis is None:
-            return self.x.any()
-        else:
-            return self.__reduce(axis, np.any)
-
-        
-    def all(self, axis=None):
-        """
-        Return true if all elements of x are true.
-        
-        Note: NaN is True since it is not equal to 0.        
-        
-        Parameters
-        ----------
-        No input
-        
-        Returns
-        -------
-        out : {True, False}
-        
-        """
-        if axis is None:
-            return self.x.all()
-        else:
-            return self.__reduce(axis, np.all)
-
     # Get and set ------------------------------------------------------------
     
     def __getitem__(self, index):
+        "Index into a larry"
         typidx = type(index)
         if typidx in (int, np.int, np.int16, np.int32, np.int64):      
             if index >= self.shape[0]:
@@ -856,6 +898,7 @@ class larry(object):
         return larry(x, label)
         
     def __setitem__(self, index, value):
+        "Assign values to a subset of a larry using indexing to select subset."
         if isinstance(index, larry):
             if self.label == index.label:
                 self.x[index.x] = value
@@ -1705,7 +1748,7 @@ class larry(object):
         y.x = y.x[index]
         return y                         
 
-    # Random -----------------------------------------------------------------
+    # Shuffle ----------------------------------------------------------------
     
     def shuffle(self, axis=0):
         """
@@ -1716,7 +1759,7 @@ class larry(object):
         
         Parameters
         ----------
-        axis : {int, None}
+        axis : {int, None}, optional
             The axis to shuffle the data along. Default is axis 0. If None,
             then the data will be shuffled along all axes.
             
@@ -1738,7 +1781,7 @@ class larry(object):
         
         Parameters
         ----------
-        axis : int
+        axis : {int, None}, optional
             The axis to shuffle the data along. Default is axis 0. If None,
             then the labels will be shuffled along all axes, where each
             label axis will still contain the same set of labels (labels
@@ -1760,7 +1803,7 @@ class larry(object):
 
     @property
     def nx(self):
-        "Number of finite values in the larry."
+        "Number of finite values (not NaN, -Inf, or Inf) in the larry."
         return np.isfinite(self.x).sum()
 
     @property
@@ -1804,11 +1847,13 @@ class larry(object):
     # Copy -------------------------------------------------------------------        
           
     def copy(self):
+        "Return a copy of a larry."
         label = deepcopy(self.label)
         x = self.x.copy()
         return type(self)(x, label)
         
     def copylabel(self):
+        "Return a copy of a larry's label."
         return deepcopy(self.label)
         
     # Print ------------------------------------------------------------------                
