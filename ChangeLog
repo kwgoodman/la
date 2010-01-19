@@ -1,3 +1,8 @@
+2010-01-19 Keith
+
+    * doc/source/start.rst, doc/source/reference.rst, doc/source/archive.rst,
+      doc/source/index.rst: More work on the manual.
+
 2010-01-18 Keith
 
     * doc/sphinxext, doc/sphinxext/docscrape.py,

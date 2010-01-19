@@ -57,18 +57,15 @@ let's you use your existing array functions.
 License
 =======
 
-larry is distributed under the NEW BSD license. Scipy, parts of which are
-included in larry to avoid a Scipy dependency, is distibued under a BSD-like
-license. See the LICENSE file, which is distributed with the larry source
-code, for details.
+larry is distributed under a BSD license. Parts of Scipy and numpydoc, which
+both have a BSD license, are included in larry. See the LICENSE file, which
+is distributed with the larry source code, for details.
 
 Installation
 ============
 
-To run larry you need Python and Numpy. Python 2.6 and Numpy 1.4 are
-recommended. (There are many larry unit test failures with Numpy 1.3.)
-To save and load larrys in HDF5 format, you need
-`h5py <http://h5py.alfven.org>`_ with HDF5 1.8.
+To run larry you need Python and Numpy 1.4.  To save and load larrys in
+HDF5 format, you need `h5py <http://h5py.alfven.org>`_ with HDF5 1.8.
         
 larry currently contains no extensions, just Python code, so there is
 nothing to compile. Just save the la directory and make sure Python can
@@ -77,9 +74,9 @@ find it. Then run:
     >>> import la
     >>> la.test()
     <snip>
-    Ran 539 tests in 0.465s
+    Ran 547 tests in 0.492s
     OK
-    <nose.result.TextTestResult run=539 errors=0 failures=0>
+    <nose.result.TextTestResult run=547 errors=0 failures=0>
 
 Contents
 ========

@@ -1,23 +1,27 @@
+.. _reference:
 
-======================
-Larry method reference
-======================
+===================================
+Larry method reference and examples
+===================================
 
 The larry methods can be divided into the following broad categories:
 
-* __init__
-* Unary
-* Binary
-* Reduce
-* Comparison
-* Get, set
-* Label
-* Calculation
-* Group
-* Alignment
-* Shuffle
-* Size, shape
+* :ref:`init`
+* :ref:`Unary`
+* :ref:`Binary`
+* :ref:`Reduce`
+* :ref:`Comparison`
+* :ref:`Get`
+* :ref:`Label`
+* :ref:`Calculation`
+* :ref:`Group`
+* :ref:`Alignment`
+* :ref:`Shuffle`
+* :ref:`Size`
 
+Below you'll find the reference for each category along with an example.
+
+.. _init:
 
 __init__
 ---------
@@ -26,10 +30,10 @@ Here is an example of one way to initialize a larry, *y*:
 ::
     >>> import numpy as np
     >>> from la import larry
-    >>> 
+
     >>> x = np.array([[1, 2], [3, 4]])
     >>> label = [['a', 'b'], [8, 10]]
-    >>>
+
     >>> y = larry(x, label)
     >>> y
     label_0
@@ -46,6 +50,8 @@ Here is an example of one way to initialize a larry, *y*:
    :members: __init__
 
 
+.. _Unary:
+
 Unary
 -----
 
@@ -54,6 +60,7 @@ and do not change its shape or ordering. For example:
 ::
     >>> from la import larry
     >>> y = larry([-1,2,-3,4])
+    
     >>> y.sign()
     label_0
         0
@@ -67,6 +74,8 @@ and do not change its shape or ordering. For example:
    :members: log, ext, isfinite, sqrt, sign, power, cumsum, clip, nan_replace,
              abs, isnan, isfinite, isinf 
              
+
+.. _Binary:
              
 Binary
 ------
@@ -77,7 +86,7 @@ Numpy array, or another larry. For example:
     >>> from la import larry
     >>> y1 = larry([1,2], [['a', 'b']])
     >>> y2 = larry([1,2], [['b', 'c']])
-    >>>
+
     >>> y1 + y2
     label_0
         b
@@ -89,6 +98,8 @@ Numpy array, or another larry. For example:
              __rmul__, __and__, __rand__, __or__, __ror__
              
              
+.. _Reduce:
+
 Reduce
 ------
 
@@ -97,6 +108,7 @@ axes and thereby reduce the dimension of the larry. For example:
 ::
     >>> from la import larry
     >>> y = larry([1, 2, 3])
+    
     >>> y.sum()
     6
     
@@ -104,9 +116,11 @@ axes and thereby reduce the dimension of the larry. For example:
 .. autoclass:: la.larry
    :members: sum, mean, median, std, var, max, min, lastrank, lastrank_decay,
              any, all             
+
+
+.. _Comparison:            
              
-             
-Comparision
+Comparison
 -----------
 
 The comparison methods, such as ==, >, and !=, perform an element-by-element
@@ -115,7 +129,7 @@ comparison and return a bool larry. For example:
     >>> from la import larry
     >>> y1 = larry([1,2], [['a', 'b']])
     >>> y2 = larry([1,2], [['b', 'c']])
-    >>>
+
     >>> y1 == y2
     label_0
         b
@@ -125,6 +139,8 @@ comparison and return a bool larry. For example:
 .. autoclass:: la.larry
    :members: __eq__, __ne__, __lt__, __gt__, __le__, __ne__  
 
+
+.. _Get:
     
 Get and set
 -----------
@@ -138,7 +154,7 @@ a larry with a value less 3 to zero:
     >>> x = np.array([[1, 2], [3, 4]])
     >>> label = [['a', 'b'], [8, 10]]
     >>> y = larry(x, label)
-    >>> 
+
     >>> y[y < 3] = 0
     >>> y
     label_0
@@ -156,6 +172,8 @@ a larry with a value less 3 to zero:
    :members: __getitem__, __setitem__, set, get, getx, fill
    
 
+.. _Label:
+
 Label
 -----
 
@@ -164,12 +182,15 @@ number (starting from 0) of a 2d larry is labeled 'west':
 ::
     >>> from la import larry
     >>> y = larry([[1, 2], [3, 4]], [['north', 'south'], ['east', 'west']])
+    
     >>> y.labelindex('west', axis=1)
     1
 
 .. autoclass:: la.larry
    :members: maxlabel, minlabel, getlabel, labelindex
    
+
+.. _Calculation:
 
 Calculation
 ----------- 
@@ -179,6 +200,7 @@ calculate the zscore of a larry:
 ::
     >>> from la import larry
     >>> y = larry([1, 2, 3])
+    
     >>> y.zscore()
     label_0
         0
@@ -193,6 +215,8 @@ calculate the zscore of a larry:
              keep_x
              
 
+.. _Group:
+
 Group
 -----
 
@@ -203,7 +227,7 @@ where group 1 is ('e', 'a'), group 2 is ('d', 'c'), and group 3 is ('b'):
     >>> from la import larry
     >>> y  = larry([[1], [2], [3], [4], [5]], [['a', 'b', 'c', 'd', 'e'], [0]])
     >>> group = larry([1, 1, 2, 2, 3], [['e', 'a', 'd', 'c', 'b']])
-    >>>
+
     >>> y.group_mean(group)
     label_0
         a
@@ -225,26 +249,99 @@ where group 1 is ('e', 'a'), group 2 is ('d', 'c'), and group 3 is ('b'):
    :members: group_ranking, group_mean, group_median
    
   
+.. _Alignment:
+
 Alignment
 ---------
+
+There are several alignment methods. Here are two examples. The first example
+aligns *y1* to *y2*; the second example aligns *y2* to *y1*:
+::
+    >>> from la import larry
+    >>> y1 = larry([1, 2], [['a', 'b']])
+    >>> y2 = larry([3, 2, 1], [['c', 'b', 'a']])
+
+    >>> y1.morph_like(y2)
+    label_0
+        c
+        b
+        a
+    x
+    array([ NaN,   2.,   1.])
+
+    >>> y2.morph_like(y1)
+    label_0
+        a
+        b
+    x
+    array([ 1.,  2.])
 
 .. autoclass:: la.larry
    :members: morph, morph_like, merge, vacuum, squeeze, pull, lag, 
    
    
+.. _Shuffle:
+
 Shuffle
 -------
+
+The data and the labels of larrys can be randomly shuffled in-place:
+::
+    >>> from la import larry
+    >>> y = larry([[1, 2], [3,  4]], [['north', 'south'], ['east', 'west']])
+
+    >>> y.shuffle()
+    >>> y
+    label_0
+        north
+        south
+    label_1
+        east
+        west
+    x
+    array([[3, 4],
+           [1, 2]])
+
+    >>> y.shufflelabel()
+    >>> y
+    label_0
+        south
+        north
+    label_1
+        west
+        east
+    x
+    array([[3, 4],
+           [1, 2]])
 
 .. autoclass:: la.larry
    :members: shuffle, shufflelabel
    
+
+.. _Size:
    
-Size, shape
------------
+Size, shape, dtype
+------------------
+
+Here is an example of the shape and size methods:
+::
+    >>> from la import larry
+    >>> y = larry([[1, 2], [3, 4]])
+    
+    >>> y.shape
+    (2, 2)
+    >>> y.size
+    4
+    >>> y.ndim
+    2
+    >>> y.dtype
+    dtype('int64')
 
 .. autoclass:: la.larry
    :members: nx, size, shape, ndim, dtype, T, A           
 
+
+.. _Copy:
 
 Copy
 ----

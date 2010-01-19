@@ -39,6 +39,23 @@ To use our own labels we pass them in when we construct a larry:
 In the example above, the first row is labeled 'a' and the second row is
 labeled 'b'. The first and second columns are labeled 11 and 13, respectively.
 
+Here is a more formal way to create a larry:
+::
+    >>> import numpy as np
+    >>> x = np.array([[1, 2], [3, 4]])
+    >>> label = [['north', 'south'], ['east', 'west']]
+    
+    >>> larry(x, label)
+    label_0
+        north
+        south
+    label_1
+        east
+        west
+    x
+    array([[1, 2],
+           [3, 4]])
+
 In most cases, indexing into a larry is similar to indexing into a Numpy
 array:
 ::
@@ -73,12 +90,14 @@ And let's do some simple calculations:
 ::
     >>> y.mean()
     2.5
+    
     >>> y.mean(axis=1)
     label_0
         a
         b
     x
     array([ 1.5,  3.5])
+    
     >>> y.demean(axis=1)
     label_0
         a
@@ -88,7 +107,8 @@ And let's do some simple calculations:
         13
     x
     array([[-0.5,  0.5],
-           [-0.5,  0.5]])    
+           [-0.5,  0.5]])
+               
     >>> y.zscore(axis=1)
     label_0
         a
@@ -99,6 +119,7 @@ And let's do some simple calculations:
     x
     array([[-1.,  1.],
            [-1.,  1.]])
+           
     >>> y.T
     label_0
         11
@@ -162,9 +183,9 @@ In that case larry does the alignment for you:
         west
     x
     array([[5, 5],
-           [5, 5]])
+           [5, 5]])           
            
-More examples of what you can do with larrys are given throughout the manual.           
+More examples of what you can do with larrys are given in :ref:`reference`.           
     
     
 

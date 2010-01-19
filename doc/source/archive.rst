@@ -3,17 +3,25 @@
 I/O
 ===
 
-The la package provides two ways to archive larrys. There are **save** and
-**load** functions and there is a dictionary-like interface in the **IO**
-class. Both I/O methods store larrys in
-`HDF5 <http://www.hdfgroup.org/>`_ 1.8 format.
+The la package provides two ways to archive larrys: using archive functions
+such as **save** and **load** and using the dictionary-like interface of the
+**IO** class. Both I/O methods store larrys in
+`HDF5 <http://www.hdfgroup.org/>`_ 1.8 format and require
+`h5py <http://h5py.alfven.org>`_.
 
 
-Save and Load
-=============
+Archive functions
+=================
 
-The simplest way to archive larrys is with the **save** and **load**
-functions. To demonstrate, let's start by creating a larry:
+One method to archive larrys is to use the archive functions:
+
+* **save**
+* **load**
+* **delete**
+* **archive_directory**
+* **is_archived_larry**
+
+To demonstrate, let's start by creating a larry:
 ::
 
     >>> import la
@@ -21,7 +29,12 @@ functions. To demonstrate, let's start by creating a larry:
 
 Next let's save the larry, *y*, in an archive using the **save** function:
 ::
-    >>> la.save('/tmp/data.hdf5', y, 'y')   
+    >>> la.save('/tmp/data.hdf5', y, 'y')
+    
+The contents of the archive:
+::
+    >>> la.archive_directory('/tmp/data.hdf5')
+    ['y']      
     
 To load the larry we use the **load** function:
 ::
@@ -29,7 +42,7 @@ To load the larry we use the **load** function:
     
 The entire larry is loaded from the archive. The **load** function does not
 have an option to load parts of a larry, such as a slice. (To load parts of
-a larrys from the archive, use the IO class.)    
+a larrys from the archive, see :ref:`ioclass`.)    
 
 The name of the larry in **save** and **load** statements must be a string. 
 But the string may contain on or more forward slashes ('/'), which means that
@@ -44,14 +57,26 @@ pass a `h5py <http://h5py.alfven.org/>`_ File object:
     >>> import h5py
     >>> f = h5py.File('/tmp/data.hdf5')
     >>> z = la.load(f, 'y') 
+
+To check if a larry is in the archive:
+::
+    >>> la.is_archived_larry(f, 'y')    
+    True
     
+To delete a larry from the archive:
+
+    >>> la.delete(f, 'y')
+    >>> la.is_archived_larry(f, 'y')    
+    False        
+    
+.. _ioclass:
     
 IO class
 ========
 
 The IO class provides a dictionary-like interface to the archive.
 
-Let's start by creating two larrys, *y* and *z*:
+Let's start by creating two larrys, *a* and *b*:
 ::
     >>> import la
     >>> a = la.larry([1.0,2.0,3.0,4.0])
@@ -71,21 +96,37 @@ contents of the archive:
     larry  dtype    shape 
     ----------------------
     a      float64  (4,)  
-    b      int64    (2, 2)
-    y      int64    (3,)   
+    b      int64    (2, 2)  
 
 We can get a list of the keys (larrys) in the archive:
 ::
     >>> io.keys()
-        ['a', 'b', 'y']
+        ['a', 'b']
+        
+    >>> for key in io: print key
+    ... 
+    a
+    b
+    
+Are the larrys *a* and *c* in the archive?
+::
+    >>> 'a' in io
+    True 
+    >>> 'b' in io
+    False         
+        
+What filename is associated with the archive?
+::
+    >>> io.filename
+    '/tmp/data.hdf5'        
         
 When we load from the archive using an io object, we get a lara not a larry:
 ::
     >>> z = io['a']        
     >>> type(z)
-        <class 'la.io.io.lara'>
+        <class 'la.io.lara'>
         
-A lara loads the larry label from the archive but does not load the data The
+A lara loads the larry label from the archive but does not load the data. The
 reason a lara is returned and not                
 
 
