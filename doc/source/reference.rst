@@ -188,7 +188,7 @@ number (starting from 0) of a 2d larry is labeled 'west':
     1
 
 .. autoclass:: la.larry
-   :members: maxlabel, minlabel, getlabel, labelindex
+   :members: maxlabel, minlabel, getlabel, labelindex, maplabel
    
 
 .. _Calculation:

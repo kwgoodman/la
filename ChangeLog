@@ -1,5 +1,9 @@
 2010-01-20 Keith
 
+    * deflarry.py(maplabel), doc/source/reference.rst, doc/source/index.rst,
+      tests/deflarry_test.py: New larry method to apply given function to
+      each element of label along specified axis.
+
     * io.py(space), io.py(freespace), tests/io_test.py(Test_io): Make space
       and freespace properties instead of functions.
 

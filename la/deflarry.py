@@ -1147,7 +1147,69 @@ class larry(object):
                 if len(idx) == 0:
                     raise IndexError, 'name not in label along axis %d' % axis
                 index = max(idx)                        
-        return index            
+        return index
+        
+    def maplabel(self, func, axis=None, copy=True):
+        """
+        Apply given function to each element of label along specified axis.
+        
+        Parameters
+        ----------
+        func : function
+            Function to apply to each element of label.
+        axis : {int, None}, optional
+            Axis along which to apply the function.
+        copy : bool
+            Whether to return a copy (True, default) or to return a reference.
+            
+        Returns
+        -------
+        y : larry
+            A copy or a reference (dending on the value of `copy`) of the
+            larry with the given function applied to the specified labels.
+                    
+        Examples:
+        --------- 
+        Create a larry:
+        
+        >>> from la import larry
+        >>> import datetime
+        >>> d = datetime.date
+        >>> y = larry([1, 2], [[d(2010,1,1), d(2010,1,2)]])
+        
+        Now convert the datetime.date object in the label to integers:
+        
+        >>> y = y.maplabel(datetime.date.toordinal)
+        >>> y
+        label_0
+            733773
+            733774
+        x
+        array([1, 2])
+        
+        Next, let's add one to each label entry:
+        
+        >>> def func(x):
+        ...     return x + 1
+        ...         
+        >>> y.maplabel(func)
+        label_0
+            733774
+            733775
+        x
+        array([1, 2])
+                                  
+        """
+        if copy:
+            y = self.copy()
+        else:
+            y = self    
+        if axis is None:
+            for ax in range(y.ndim):
+                y.label[ax] = map(func, y.label[ax])
+        else:
+            y.label[axis] = map(func, y.label[axis])
+        return y                    
             
     # Calc -------------------------------------------------------------------                                            
 

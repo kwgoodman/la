@@ -2196,7 +2196,19 @@ class Test_label(unittest.TestCase):
         axis = 0
         p = self.l2.labelindex(3, axis)
         self.assert_(t == p, printfail(t, p, 'label'))
-
+        
+    def test_maplabel_1(self):
+        "label.maplabel_1"
+        d = datetime.date
+        y1 = larry([1, 2], [[d(2010,1,1), d(2010,1,2)]])
+        y2 = y1.maplabel(datetime.date.toordinal)
+        self.assert_(y2.label == [[733773, 733774]], 'Did not map correctly')
+        self.assert_((y2.x == np.array([1, 2])).all(), 'x values changed')
+        def func(x):
+            return x + 1       
+        y3 = y2.maplabel(func)
+        self.assert_(y3.label == [[733774, 733775]], 'Did not map correctly')
+        self.assert_((y2.x == np.array([1, 2])).all(), 'x values changed')
 
 class Test_calc(unittest.TestCase):
     "Test calc functions of larry class"
