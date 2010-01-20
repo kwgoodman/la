@@ -1,5 +1,8 @@
 2010-01-20 Keith
 
+    * deflarry.py, doc/source/reference.rst: Rearrange the grouping of the
+      larry methods.
+
     * io.py(delete), io.py(IO.__delitem__): New function (delete) to delete
       larrys from the archive. Use the new delete function in IO.__delitem__.  
     

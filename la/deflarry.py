@@ -238,25 +238,6 @@ class larry(object):
         y = self.copy()
         y.x.clip(lo, hi, y.x)
         return y
-
-    def nan_replace(self, replace_with=0):
-        """
-        Replace NaNs.
-        
-        Parameters
-        ----------
-        replace_with : scalar
-            Value to replace NaNs with.
-                        
-        Returns
-        -------
-        out : larry
-            Returns a copy with NaNs replaced.     
-                    
-        """
-        y = self.copy()
-        y.x[np.isnan(y.x)] = replace_with
-        return y
         
     def __neg__(self):
         "Return a copy with each element multiplied by minus 1."
@@ -675,59 +656,6 @@ class larry(object):
             return op(self.x, axis)
         else:
             raise ValueError, 'axis should be an integer or None'
-                        
-    def lastrank(self):
-        """
-        Rank of elements in last column, ignoring NaNs.
-        
-        Note: Only works on 2d larrys.
-            
-        Returns
-        -------
-        d : larry
-            A 2d larry is returned.
-            
-        Raises
-        ------
-        ValueError
-            If larry is not 2d.    
-                    
-        """
-        self._2donly()
-        label = self.copylabel()
-        label[1] = [label[1][-1]]
-        x = lastrank(self.x)
-        return type(self)(x, label)
-        
-    def lastrank_decay(self, decay):
-        """
-        Exponentially decayed rank of elements in last column, ignoring NaNs.
-        
-        Note: Only works on 2d larrys.        
-
-        Parameters
-        ----------
-        decay : scalar
-            Exponential decay strength. Should not be negative.
-            
-        Returns
-        -------
-        d : larry
-            A 2d larry is returned.
-            
-        Raises
-        ------
-        ValueError
-            If larry is not 2d. 
-        AssertionError
-            If decay is less than zero.            
-                    
-        """
-        self._2donly()
-        label = self.copylabel()
-        label[1] = [label[1][-1]]
-        x = lastrank_decay(self.x, decay)
-        return type(self)(x, label)
         
     def any(self, axis=None):
         """
@@ -992,6 +920,49 @@ class larry(object):
             return self.x.copy()
         else:
             return self.x
+            
+    def pull(self, name, axis):
+        """
+        Pull out the values for a given label name along a specified axis.
+        
+        A view is returned and the dimension is reduced by one.
+        
+        Parameters
+        ----------
+        name : scalar, string, etc.
+            Label name.
+        axis : integer
+            The axis the label name is in.
+            
+        Returns
+        -------
+        out : {view of larry, scalar}
+            A view of the larry with the dimension reduced by one is returned
+            unless the larry is alread 1d, then a scalar is returned.
+            
+        Raises
+        ------
+        ValueError
+            If the axis is None.
+            
+        Example
+        -------
+        Say you have a 3d larry called indicator with indicators along axis 0.
+        To get a 2d view of the indicator momentum:
+        
+                        mom = momentum.pull('indicator', 0)    
+                        
+        """
+        if axis is None:
+            raise ValueError, 'axis cannot be None'
+        label = [z for i, z in enumerate(self.label) if i != axis]    
+        idx = self.labelindex(name, axis)
+        index = [slice(None)] * self.ndim 
+        index[axis] = idx
+        x = self.x[index]
+        if x.shape == (1,):
+            return x[0]
+        return type(self)(x, label)            
         
     def fill(self, fill_value):
         """
@@ -1008,291 +979,6 @@ class larry(object):
                 
         """
         self.x.fill(fill_value)
-                    
-    # label operations -------------------------------------------------------
-        
-    def maxlabel(self, axis=None):
-        "Max label value"
-        if axis is None:
-            return max([max(z) for z in self.label])
-        else:
-            return max([z for z in self.label[axis]])
-
-    def minlabel(self, axis=None):
-        "Min label value"
-        if axis is None:
-            return min([min(z) for z in self.label])
-        else:
-            return min([z for z in self.label[axis]])
-        
-    def getlabel(self, axis, copy=True):
-        "Return label for specificed dimension." 
-        if axis >= self.ndim:
-            raise IndexError, 'axis out of range'
-        label = self.label[axis]    
-        if copy:
-            label =  list(label)
-        return label
-        
-    def labelindex(self, name, axis, exact=True):
-        """
-        Return index of given label element along specified axis.
-        
-        Parameters
-        ----------
-        name : str, datetime.date, int, etc.
-            Name of label element to index.
-        axis : int
-            Axis to index along. Cannot be None.
-        exact : bool, optional
-            If an exact match is specfied (default) then an IndexError is
-            raised if an exact match cannot be found. If exact match is False
-            and if a perfect match is not found then the index of the nearest
-            label is returned. Nearest is defined as the closest that is equal
-            or smaller.
-            
-        Returns
-        -------
-        idx : int
-            Index of given label element.
-                        
-        """
-        if axis >= self.ndim:
-            raise IndexError, 'axis out of range'
-        if axis is None:
-            raise ValueError, 'axis cannot be None'            
-        try:
-            index = self.label[axis].index(name)
-        except ValueError:
-            if exact:
-                raise IndexError, 'name not in label along axis %d' % axis
-            else:
-                idx = [i for i, z in enumerate(self.label[axis]) if z <= name]
-                if len(idx) == 0:
-                    raise IndexError, 'name not in label along axis %d' % axis
-                index = max(idx)                        
-        return index            
-            
-    # Calc -------------------------------------------------------------------                                            
-
-    def demean(self, axis=None):
-        "Demean values along specified axis."
-        # Adapted from pylab.demean
-        y = self.copy()        
-        if axis:
-            ind = [slice(None)] * y.ndim
-            ind[axis] = np.newaxis
-            y.x -= nanmean(y.x, axis)[ind]
-        else:
-            y.x -= nanmean(y.x, axis)   
-        return y
-
-    def demedian(self, axis=None):
-        "Demean values (using median) along specified axis."
-        # Adapted from pylab.demean
-        y = self.copy()
-        if axis:
-            ind = [slice(None)] * axis
-            ind.append(np.newaxis)
-            y.x -= nanmedian(y.x, axis)[ind]
-        else:
-            y.x -= nanmedian(y.x, axis)   
-        return y
-        
-    def zscore(self, axis=None):
-        "Zscore along specified axis."
-        y = self.demean(axis)
-        if axis:
-            ind = [slice(None)] * axis
-            ind.append(np.newaxis)
-            y.x /= nanstd(y.x, axis)[ind]
-        else:
-            y.x /= nanstd(y.x, axis)   
-        return y              
-        
-    def push(self, window):
-        """Fill missing values (NaNs) with most recent non-missing values if
-        recent, where recent is defined by the window. The filling proceeds
-        from left to right along each row.
-        """
-        self._2donly()
-        y = self.copy()
-        y.x = fillforward_partially(y.x, window)
-        return y
-            
-    def movingsum(self, window, axis=-1, norm=False):
-        """Moving sum, NaNs treated as 0, optionally normalized for NaNs."""
-        y = self.copy()
-        y.x = movingsum(y.x, window, axis, norm)
-        return y 
-        
-    def movingsum_forward(self, window, skip=0, axis=1, norm=False):    
-        """Movingsum in the forward direction skipping skip dates"""
-        self._2donly()        
-        y = self.copy()
-        y.x = movingsum_forward(y.x, window, skip, axis, norm)
-        return y
-                         
-    def ranking(self, axis=0, norm='-1,1', ties=True):
-        """
-        Rank elements treating NaN as missing and optionally break ties.
-
-        Parameters
-        ----------
-        axis : int, optional
-            Axis to rank over. Default axis is 0.
-        norm: str
-            A string that specifies the normalization:
-            '0,N-1'     Zero to N-1 ranking
-            '-1,1'      Scale zero to N-1 ranking to be between -1 and 1
-            'gaussian'  Rank data then scale to a Gaussian distribution
-        ties: bool
-            If two elements of `x` have the same value then they will be
-            ranked by their order in the array (False). If `ties` is set to
-            True (default), then the ranks are averaged.
-            
-        Returns
-        -------
-        y : larry
-            The ranked data. The dtype of the output is always np.float even
-            if the dtype of the input is int.
-            
-        Notes
-        -----
-        If there is only one non-NaN value along the given axis, then that
-        value is set to the midpoint of the specified normalization method.
-        For example, if the input is array([1.0, nan]), then 1.0 is set to
-        zero for the '-1,1' and 'gaussian' normalizations and is set to 0.5
-        (mean of 0 and 1) for the '0,N-1' normalization.
-        
-        For '0,N-1' normalization, note that N is x.shape[axis] even in there
-        are NaNs. That ensures that when ranking along the columns of a 2d
-        array, for example, the output will have the same min and max along
-        all columns.
-        
-        """
-        y = self.copy()
-        y.x = ranking(y.x, axis, norm, ties)
-        return y
-                            
-    def movingrank(self, window, axis=1):
-        """Moving rank (normalized to -1 and 1) of a given window along axis.
-
-        Normalized for missing (NaN) data.
-        A data point with NaN data is returned as NaN
-        If a window is all NaNs except last, this is returned as NaN
-        """
-        self._2donly()
-        y = self.copy()
-        y.x = movingrank(y.x, window, axis)
-        return y
-        
-    def quantile(self, q):
-        """Convert elements in each column to integers between 1 and q; then
-        normalize to to -1, 1
-        """
-        self._2donly()
-        y = self.copy()
-        y.x = quantile(y.x, q)       
-        return y
-
-    def cut_missing(self, fraction, axis=None):
-        """
-        Cut rows and columns that contain too many NaNs.
-        
-        Parameters
-        ----------
-        fraction : scalar
-            Usually a float that give the minimum allowable fraction of missing
-            data before the row or column is cut.
-        axis : {0, 1}
-            Look for missing data along this axis. So for axis=0, the missing
-            data along columns are checked and columns are cut. For axis=1, the
-            missing data along rows are checked and rows are cut.
-            
-        Returns
-        -------
-        out : larry
-            Returns a copy with rows or columns with lots of missing data cut.                
-        
-        Raises
-        ------
-        ValueError
-            If larry is not 2d.        
-        IndexError
-            If axis is not 0 or 1.
-            
-        """    
-        
-        y = self.copy()
-        ndim = y.ndim
-        
-        if axis is None:
-            axes = range(ndim)
-        elif not hasattr(axis, '__iter__'):
-            axes = [axis]
-        else:
-            axes = axis
-        # Change meaning of axes to axes not in original axes
-        axes = [a for a in range(ndim) if a not in axes]    
-        
-        threshold = (1.0 - fraction) * np.array(y.shape)
-        idxsl = []
-        labsnew = []
-        for ax in range(ndim):
-            sl = [None]*ndim
-            if ax not in axes:
-                labsnew.append(y.label[ax])
-                sl[ax] = slice(None)
-                idxsl.append(np.arange(y.shape[ax])[sl])
-                continue
-            
-            # Find all nans over all other axes
-            xtmp = np.rollaxis(np.isfinite(y.x), ax, 0)
-            count = np.ones(xtmp.shape)
-            for _ in range(ndim-1):
-                xtmp = xtmp.sum(-1)
-                count = count.sum(-1)
-    
-            xtmp = xtmp > (1.0 - fraction) * count
-            labsnew.append([y.label[ax][ii] for ii in np.nonzero(xtmp)[0]])
-            sl[ax] = slice(None)
-            idxsl.append(np.nonzero(xtmp)[0][sl])
-        
-        y.x = y.x[idxsl]
-        y.label = labsnew
-        
-        if y.x.size == 0: 
-            # Empty larry left over
-            return larry(np.array([]))
-        else:
-            return y
-     
-    def cov(self):
-        """
-        Covariance matrix adjusted for missing (NaN) values.
-        
-        Note: Only works on 2d larrys.
-        
-        The mean of each row is assumed to be zero. So rows are not demeaned
-        and therefore the covariance is normalized by the number of columns,
-        not by the number of columns minus 1.        
-        
-        Parameters
-        ----------
-        No input.
-        
-        Returns
-        -------
-        out : larry
-            Returns NxN covariance matrix where N is the number of rows.
-
-        """
-        self._2donly()       
-        y = self.copy()
-        y.label[1] = list(y.label[0])
-        y.x = covMissing(y.x)
-        return y         
         
     def keep_label(self, op, value, axis):
         """
@@ -1397,7 +1083,263 @@ class larry(object):
         y.x[~idx] = np.nan
         if vacuum:
             y = y.vacuum()
-        return y                                                                
+        return y         
+                    
+    # label operations -------------------------------------------------------
+        
+    def maxlabel(self, axis=None):
+        "Max label value"
+        if axis is None:
+            return max([max(z) for z in self.label])
+        else:
+            return max([z for z in self.label[axis]])
+
+    def minlabel(self, axis=None):
+        "Min label value"
+        if axis is None:
+            return min([min(z) for z in self.label])
+        else:
+            return min([z for z in self.label[axis]])
+        
+    def getlabel(self, axis, copy=True):
+        "Return label for specificed dimension." 
+        if axis >= self.ndim:
+            raise IndexError, 'axis out of range'
+        label = self.label[axis]    
+        if copy:
+            label =  list(label)
+        return label
+        
+    def labelindex(self, name, axis, exact=True):
+        """
+        Return index of given label element along specified axis.
+        
+        Parameters
+        ----------
+        name : str, datetime.date, int, etc.
+            Name of label element to index.
+        axis : int
+            Axis to index along. Cannot be None.
+        exact : bool, optional
+            If an exact match is specfied (default) then an IndexError is
+            raised if an exact match cannot be found. If exact match is False
+            and if a perfect match is not found then the index of the nearest
+            label is returned. Nearest is defined as the closest that is equal
+            or smaller.
+            
+        Returns
+        -------
+        idx : int
+            Index of given label element.
+                        
+        """
+        if axis >= self.ndim:
+            raise IndexError, 'axis out of range'
+        if axis is None:
+            raise ValueError, 'axis cannot be None'            
+        try:
+            index = self.label[axis].index(name)
+        except ValueError:
+            if exact:
+                raise IndexError, 'name not in label along axis %d' % axis
+            else:
+                idx = [i for i, z in enumerate(self.label[axis]) if z <= name]
+                if len(idx) == 0:
+                    raise IndexError, 'name not in label along axis %d' % axis
+                index = max(idx)                        
+        return index            
+            
+    # Calc -------------------------------------------------------------------                                            
+
+    def demean(self, axis=None):
+        "Demean values along specified axis."
+        # Adapted from pylab.demean
+        y = self.copy()        
+        if axis:
+            ind = [slice(None)] * y.ndim
+            ind[axis] = np.newaxis
+            y.x -= nanmean(y.x, axis)[ind]
+        else:
+            y.x -= nanmean(y.x, axis)   
+        return y
+
+    def demedian(self, axis=None):
+        "Demean values (using median) along specified axis."
+        # Adapted from pylab.demean
+        y = self.copy()
+        if axis:
+            ind = [slice(None)] * axis
+            ind.append(np.newaxis)
+            y.x -= nanmedian(y.x, axis)[ind]
+        else:
+            y.x -= nanmedian(y.x, axis)   
+        return y
+        
+    def zscore(self, axis=None):
+        "Zscore along specified axis."
+        y = self.demean(axis)
+        if axis:
+            ind = [slice(None)] * axis
+            ind.append(np.newaxis)
+            y.x /= nanstd(y.x, axis)[ind]
+        else:
+            y.x /= nanstd(y.x, axis)   
+        return y
+            
+    def movingsum(self, window, axis=-1, norm=False):
+        """Moving sum, NaNs treated as 0, optionally normalized for NaNs."""
+        y = self.copy()
+        y.x = movingsum(y.x, window, axis, norm)
+        return y 
+        
+    def movingsum_forward(self, window, skip=0, axis=1, norm=False):    
+        """Movingsum in the forward direction skipping skip dates"""
+        self._2donly()        
+        y = self.copy()
+        y.x = movingsum_forward(y.x, window, skip, axis, norm)
+        return y
+                         
+    def ranking(self, axis=0, norm='-1,1', ties=True):
+        """
+        Rank elements treating NaN as missing and optionally break ties.
+
+        Parameters
+        ----------
+        axis : int, optional
+            Axis to rank over. Default axis is 0.
+        norm: str
+            A string that specifies the normalization:
+            '0,N-1'     Zero to N-1 ranking
+            '-1,1'      Scale zero to N-1 ranking to be between -1 and 1
+            'gaussian'  Rank data then scale to a Gaussian distribution
+        ties: bool
+            If two elements of `x` have the same value then they will be
+            ranked by their order in the array (False). If `ties` is set to
+            True (default), then the ranks are averaged.
+            
+        Returns
+        -------
+        y : larry
+            The ranked data. The dtype of the output is always np.float even
+            if the dtype of the input is int.
+            
+        Notes
+        -----
+        If there is only one non-NaN value along the given axis, then that
+        value is set to the midpoint of the specified normalization method.
+        For example, if the input is array([1.0, nan]), then 1.0 is set to
+        zero for the '-1,1' and 'gaussian' normalizations and is set to 0.5
+        (mean of 0 and 1) for the '0,N-1' normalization.
+        
+        For '0,N-1' normalization, note that N is x.shape[axis] even in there
+        are NaNs. That ensures that when ranking along the columns of a 2d
+        array, for example, the output will have the same min and max along
+        all columns.
+        
+        """
+        y = self.copy()
+        y.x = ranking(y.x, axis, norm, ties)
+        return y
+                            
+    def movingrank(self, window, axis=1):
+        """Moving rank (normalized to -1 and 1) of a given window along axis.
+
+        Normalized for missing (NaN) data.
+        A data point with NaN data is returned as NaN
+        If a window is all NaNs except last, this is returned as NaN
+        """
+        self._2donly()
+        y = self.copy()
+        y.x = movingrank(y.x, window, axis)
+        return y
+        
+    def quantile(self, q):
+        """Convert elements in each column to integers between 1 and q; then
+        normalize to to -1, 1
+        """
+        self._2donly()
+        y = self.copy()
+        y.x = quantile(y.x, q)       
+        return y
+     
+    def cov(self):
+        """
+        Covariance matrix adjusted for missing (NaN) values.
+        
+        Note: Only works on 2d larrys.
+        
+        The mean of each row is assumed to be zero. So rows are not demeaned
+        and therefore the covariance is normalized by the number of columns,
+        not by the number of columns minus 1.        
+        
+        Parameters
+        ----------
+        No input.
+        
+        Returns
+        -------
+        out : larry
+            Returns NxN covariance matrix where N is the number of rows.
+
+        """
+        self._2donly()       
+        y = self.copy()
+        y.label[1] = list(y.label[0])
+        y.x = covMissing(y.x)
+        return y         
+        
+    def lastrank(self):
+        """
+        Rank of elements in last column, ignoring NaNs.
+        
+        Note: Only works on 2d larrys.
+            
+        Returns
+        -------
+        d : larry
+            A 2d larry is returned.
+            
+        Raises
+        ------
+        ValueError
+            If larry is not 2d.    
+                    
+        """
+        self._2donly()
+        label = self.copylabel()
+        label[1] = [label[1][-1]]
+        x = lastrank(self.x)
+        return type(self)(x, label)
+        
+    def lastrank_decay(self, decay):
+        """
+        Exponentially decayed rank of elements in last column, ignoring NaNs.
+        
+        Note: Only works on 2d larrys.        
+
+        Parameters
+        ----------
+        decay : scalar
+            Exponential decay strength. Should not be negative.
+            
+        Returns
+        -------
+        d : larry
+            A 2d larry is returned.
+            
+        Raises
+        ------
+        ValueError
+            If larry is not 2d. 
+        AssertionError
+            If decay is less than zero.            
+                    
+        """
+        self._2donly()
+        label = self.copylabel()
+        label[1] = [label[1][-1]]
+        x = lastrank_decay(self.x, decay)
+        return type(self)(x, label)                                                                       
         
     # Group calc -------------------------------------------------------------  
                  
@@ -1583,7 +1525,201 @@ class larry(object):
             lar1.x[mask] = lar2.x[mask]
      
         return lar1
-     
+        
+    def squeeze(self):
+        """
+        Eliminate all length-1 dimensions and corresponding labels.
+        
+        Note that a view (reference) is returned, not a copy.
+        
+        Parameters
+        ----------
+        No input
+        
+        Returns
+        -------
+        out : larry
+            Returns a view with all length-1 dimensions and corresponding
+            labels removed. 
+        
+        """
+        idx = [i for i, z in enumerate(self.shape) if z != 1]
+        label = []
+        for i in idx:
+            label.append(self.label[i])    
+        x = self.x.squeeze()
+        return type(self)(x, label)
+
+    def lag(self, nlag, axis=-1):
+        """
+        Lag the values along the specified axis.
+        
+        Parameters
+        ----------
+        nlag : int
+            Number of periods (rows, columns, etc) to lag.
+        axis : int
+            The axis to lag along. The default is -1.
+            
+        Returns
+        -------
+        out : larry
+            A lagged larry is returned.
+            
+        Raises
+        ------
+        ValueError
+            If nlag < 0.        
+        IndexError
+            If the axis is None.   
+                        
+        """
+        if axis is None:
+            raise IndexError, 'axis cannot be None.'
+        if nlag < 0:
+            raise ValueError, 'nlag cannot be negative'
+        y = self.copy()
+        y.label[axis] = y.label[axis][nlag:]
+        index = [slice(None)] * self.ndim
+        index[axis] = slice(0,-nlag)            
+        y.x = y.x[index]
+        return y
+
+    # Shuffle ----------------------------------------------------------------
+    
+    def shuffle(self, axis=0):
+        """
+        Shuffle the data inplace along the specified axis.
+        
+        Unlike numpy's shuffle, this shuffle takes an axis argument. The
+        ordering of the labels is not changed, only the data is shuffled.
+        
+        Parameters
+        ----------
+        axis : {int, None}, optional
+            The axis to shuffle the data along. Default is axis 0. If None,
+            then the data will be shuffled along all axes.
+            
+        Returns
+        -------
+        out : None
+            The data are shuffled inplace.        
+        
+        """
+        if axis is None:
+            for ax in range(self.ndim):
+               shuffle(self.x, ax) 
+        else:
+            shuffle(self.x, axis)
+        
+    def shufflelabel(self, axis=0):
+        """
+        Shuffle the label inplace along the specified axis.
+        
+        Parameters
+        ----------
+        axis : {int, None}, optional
+            The axis to shuffle the data along. Default is axis 0. If None,
+            then the labels will be shuffled along all axes, where each
+            label axis will still contain the same set of labels (labels
+            from one axis will not be shuffle to another axis).
+            
+        Returns
+        -------
+        out : None
+            The labels are shuffled inplace.        
+        
+        """
+        if axis is None:
+            for ax in range(self.ndim):
+               np.random.shuffle(self.label[ax]) 
+        else:
+            np.random.shuffle(self.label[axis])
+            
+    # Missing ----------------------------------------------------------------
+
+    def cut_missing(self, fraction, axis=None):
+        """
+        Cut rows and columns that contain too many NaNs.
+        
+        Parameters
+        ----------
+        fraction : scalar
+            Usually a float that give the minimum allowable fraction of missing
+            data before the row or column is cut.
+        axis : {0, 1}
+            Look for missing data along this axis. So for axis=0, the missing
+            data along columns are checked and columns are cut. For axis=1, the
+            missing data along rows are checked and rows are cut.
+            
+        Returns
+        -------
+        out : larry
+            Returns a copy with rows or columns with lots of missing data cut.                
+        
+        Raises
+        ------
+        ValueError
+            If larry is not 2d.        
+        IndexError
+            If axis is not 0 or 1.
+            
+        """    
+        
+        y = self.copy()
+        ndim = y.ndim
+        
+        if axis is None:
+            axes = range(ndim)
+        elif not hasattr(axis, '__iter__'):
+            axes = [axis]
+        else:
+            axes = axis
+        # Change meaning of axes to axes not in original axes
+        axes = [a for a in range(ndim) if a not in axes]    
+        
+        threshold = (1.0 - fraction) * np.array(y.shape)
+        idxsl = []
+        labsnew = []
+        for ax in range(ndim):
+            sl = [None]*ndim
+            if ax not in axes:
+                labsnew.append(y.label[ax])
+                sl[ax] = slice(None)
+                idxsl.append(np.arange(y.shape[ax])[sl])
+                continue
+            
+            # Find all nans over all other axes
+            xtmp = np.rollaxis(np.isfinite(y.x), ax, 0)
+            count = np.ones(xtmp.shape)
+            for _ in range(ndim-1):
+                xtmp = xtmp.sum(-1)
+                count = count.sum(-1)
+    
+            xtmp = xtmp > (1.0 - fraction) * count
+            labsnew.append([y.label[ax][ii] for ii in np.nonzero(xtmp)[0]])
+            sl[ax] = slice(None)
+            idxsl.append(np.nonzero(xtmp)[0][sl])
+        
+        y.x = y.x[idxsl]
+        y.label = labsnew
+        
+        if y.x.size == 0: 
+            # Empty larry left over
+            return larry(np.array([]))
+        else:
+            return y
+            
+    def push(self, window):
+        """Fill missing values (NaNs) with most recent non-missing values if
+        recent, where recent is defined by the window. The filling proceeds
+        from left to right along each row.
+        """
+        self._2donly()
+        y = self.copy()
+        y.x = fillforward_partially(y.x, window)
+        return y
+        
     def vacuum(self, axis=None):
         """
         Remove all rows and/or columns that contain all NaNs.
@@ -1644,160 +1780,26 @@ class larry(object):
         
         y.x = y.x[idxsl]
         y.label = labsnew
-        return y
+        return y        
         
-    def squeeze(self):
+    def nan_replace(self, replace_with=0):
         """
-        Eliminate all length-1 dimensions and corresponding labels.
-        
-        Note that a view (reference) is returned, not a copy.
+        Replace NaNs.
         
         Parameters
         ----------
-        No input
-        
+        replace_with : scalar
+            Value to replace NaNs with.
+                        
         Returns
         -------
         out : larry
-            Returns a view with all length-1 dimensions and corresponding
-            labels removed. 
-        
+            Returns a copy with NaNs replaced.     
+                    
         """
-        idx = [i for i, z in enumerate(self.shape) if z != 1]
-        label = []
-        for i in idx:
-            label.append(self.label[i])    
-        x = self.x.squeeze()
-        return type(self)(x, label)
-        
-    def pull(self, name, axis):
-        """
-        Pull out the values for a given label name along a specified axis.
-        
-        A view is returned and the dimension is reduced by one.
-        
-        Parameters
-        ----------
-        name : scalar, string, etc.
-            Label name.
-        axis : integer
-            The axis the label name is in.
-            
-        Returns
-        -------
-        out : {view of larry, scalar}
-            A view of the larry with the dimension reduced by one is returned
-            unless the larry is alread 1d, then a scalar is returned.
-            
-        Raises
-        ------
-        ValueError
-            If the axis is None.
-            
-        Example
-        -------
-        Say you have a 3d larry called indicator with indicators along axis 0.
-        To get a 2d view of the indicator momentum:
-        
-                        mom = momentum.pull('indicator', 0)    
-                        
-        """
-        if axis is None:
-            raise ValueError, 'axis cannot be None'
-        label = [z for i, z in enumerate(self.label) if i != axis]    
-        idx = self.labelindex(name, axis)
-        index = [slice(None)] * self.ndim 
-        index[axis] = idx
-        x = self.x[index]
-        if x.shape == (1,):
-            return x[0]
-        return type(self)(x, label)
-
-    def lag(self, nlag, axis=-1):
-        """
-        Lag the values along the specified axis.
-        
-        Parameters
-        ----------
-        nlag : int
-            Number of periods (rows, columns, etc) to lag.
-        axis : int
-            The axis to lag along. The default is -1.
-            
-        Returns
-        -------
-        out : larry
-            A lagged larry is returned.
-            
-        Raises
-        ------
-        ValueError
-            If nlag < 0.        
-        IndexError
-            If the axis is None.   
-                        
-        """
-        if axis is None:
-            raise IndexError, 'axis cannot be None.'
-        if nlag < 0:
-            raise ValueError, 'nlag cannot be negative'
         y = self.copy()
-        y.label[axis] = y.label[axis][nlag:]
-        index = [slice(None)] * self.ndim
-        index[axis] = slice(0,-nlag)            
-        y.x = y.x[index]
-        return y                         
-
-    # Shuffle ----------------------------------------------------------------
-    
-    def shuffle(self, axis=0):
-        """
-        Shuffle the data inplace along the specified axis.
-        
-        Unlike numpy's shuffle, this shuffle takes an axis argument. The
-        ordering of the labels is not changed, only the data is shuffled.
-        
-        Parameters
-        ----------
-        axis : {int, None}, optional
-            The axis to shuffle the data along. Default is axis 0. If None,
-            then the data will be shuffled along all axes.
-            
-        Returns
-        -------
-        out : None
-            The data are shuffled inplace.        
-        
-        """
-        if axis is None:
-            for ax in range(self.ndim):
-               shuffle(self.x, ax) 
-        else:
-            shuffle(self.x, axis)
-        
-    def shufflelabel(self, axis=0):
-        """
-        Shuffle the label inplace along the specified axis.
-        
-        Parameters
-        ----------
-        axis : {int, None}, optional
-            The axis to shuffle the data along. Default is axis 0. If None,
-            then the labels will be shuffled along all axes, where each
-            label axis will still contain the same set of labels (labels
-            from one axis will not be shuffle to another axis).
-            
-        Returns
-        -------
-        out : None
-            The labels are shuffled inplace.        
-        
-        """
-        if axis is None:
-            for ax in range(self.ndim):
-               np.random.shuffle(self.label[ax]) 
-        else:
-            np.random.shuffle(self.label[axis]) 
+        y.x[np.isnan(y.x)] = replace_with
+        return y                                     
 
     # Size and shape ---------------------------------------------------------
 

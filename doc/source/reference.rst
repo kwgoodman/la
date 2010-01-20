@@ -1,8 +1,8 @@
 .. _reference:
 
-===================================
-Larry method reference and examples
-===================================
+======================
+Larry method reference
+======================
 
 The larry methods can be divided into the following broad categories:
 
@@ -17,6 +17,7 @@ The larry methods can be divided into the following broad categories:
 * :ref:`Group`
 * :ref:`Alignment`
 * :ref:`Shuffle`
+* :ref:`Missing`
 * :ref:`Size`
 
 Below you'll find the reference for each category along with an example.
@@ -71,8 +72,8 @@ and do not change its shape or ordering. For example:
     array([-1,  1, -1,  1])
 
 .. autoclass:: la.larry
-   :members: log, ext, isfinite, sqrt, sign, power, cumsum, clip, nan_replace,
-             abs, isnan, isfinite, isinf 
+   :members: log, ext, isfinite, sqrt, sign, power, cumsum, clip, abs, isnan,
+             isfinite, isinf 
              
 
 .. _Binary:
@@ -114,8 +115,7 @@ axes and thereby reduce the dimension of the larry. For example:
     
 
 .. autoclass:: la.larry
-   :members: sum, mean, median, std, var, max, min, lastrank, lastrank_decay,
-             any, all             
+   :members: sum, mean, median, std, var, max, min, any, all             
 
 
 .. _Comparison:            
@@ -169,7 +169,8 @@ a larry with a value less 3 to zero:
 
 
 .. autoclass:: la.larry
-   :members: __getitem__, __setitem__, set, get, getx, fill
+   :members: __getitem__, __setitem__, set, get, getx, fill, pull, 
+             keep_label, keep_x
    
 
 .. _Label:
@@ -210,9 +211,8 @@ calculate the zscore of a larry:
     array([-1,  0,  1])  
     
 .. autoclass:: la.larry
-   :members: demean, demedian, zscore, push, movingsum, movingsum_forward,
-             ranking, movingrank, quantile, cut_missing, cov, keep_label,
-             keep_x
+   :members: demean, demedian, zscore, movingsum, movingsum_forward,
+             ranking, movingrank, quantile, cov, lastrank, lastrank_decay
              
 
 .. _Group:
@@ -277,7 +277,7 @@ aligns *y1* to *y2*; the second example aligns *y2* to *y1*:
     array([ 1.,  2.])
 
 .. autoclass:: la.larry
-   :members: morph, morph_like, merge, vacuum, squeeze, pull, lag, 
+   :members: morph, morph_like, merge, squeeze, lag 
    
    
 .. _Shuffle:
@@ -316,7 +316,24 @@ The data and the labels of larrys can be randomly shuffled in-place:
 
 .. autoclass:: la.larry
    :members: shuffle, shufflelabel
-   
+
+
+.. _Missing:
+
+Missing data
+------------
+
+NaNs are treated as missing data in larry:
+::
+    >>> from la import larry
+    >>> import numpy as np
+    >>> y = larry([1.0, np.nan])
+    >>> y.sum()
+    1   
+
+.. autoclass:: la.larry
+   :members: cut_missing, push, vacuum, nan_replace 
+      
 
 .. _Size:
    
