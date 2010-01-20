@@ -38,12 +38,12 @@ class Test_io(unittest.TestCase):
         "io_repack"
         io = IO(self.filename)                
         io['larry'] = larry(np.random.rand(100,100))
-        fs1 = io.freespace()
-        sp1 = io.space()
+        fs1 = io.freespace
+        sp1 = io.space
         del io['larry']
         io.repack()
-        fs2 = io.freespace()
-        sp2 = io.space()
+        fs2 = io.freespace
+        sp2 = io.space
         self.assert_(fs2 < fs1, 'repack did not reduce freespace')
         self.assert_(sp2 < sp1, 'repack did not reduce space')
         

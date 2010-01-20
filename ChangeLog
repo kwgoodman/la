@@ -1,5 +1,8 @@
 2010-01-20 Keith
 
+    * io.py(space), io.py(freespace), tests/io_test.py(Test_io): Make space
+      and freespace properties instead of functions.
+
     * deflarry.py, doc/source/reference.rst: Rearrange the grouping of the
       larry methods.
 
