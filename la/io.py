@@ -209,14 +209,7 @@ class IO(object):
         save(self.f, value, key)
         
     def __delitem__(self, key):
-        if key in self.f:
-            if _is_archived_larry(self.f[key]): 
-                del self.f[key] 
-            else:
-                msg = "%s is in the archive but it is not a larry." 
-                raise KeyError, msg % key   
-        else:
-            raise KeyError, "A larry named %s is not in the archive." % key        
+        delete(self.f, key)        
         self._repack_conditional()          
         
     def __repr__(self):
@@ -230,12 +223,14 @@ class IO(object):
             dtype = str(self.f[key]['x'].dtype)    
             table.append([key, dtype, shape])         
         return indent(table, hasHeader=True, delim='  ')  
-        
+    
+    @property    
     def space(self):
         "How many bytes does the archive use?"
         self.f.flush()
         return self.f.fid.get_filesize()
-         
+
+    @property         
     def freespace(self):
         "How many bytes of freespace are in the archive?"
         self.f.flush()
@@ -246,7 +241,7 @@ class IO(object):
             if isinstance(value, h5py.Dataset):
                 size += value.id.get_storage_size()
         self.f.visititems(sizefinder)
-        return self.space() - size
+        return self.space - size
         
     def repack(self):
         self.f = repack(self.f)
@@ -263,7 +258,7 @@ class IO(object):
                               
 class lara(object):
     """
-    Meet lara, a larry-like archive object.
+    Meet lara, she's a larry-like archive object.
     
     larry stores its data in a numpy array and a list (labels). lara stores
     its data in a h5py Dataset object and a list (labels).
@@ -336,7 +331,7 @@ class lara(object):
     def size(self):
         return np.prod(self.shape, dtype=int)
         
-# save and load -------------------------------------------------------------        
+# Archive functions ---------------------------------------------------------       
 
 def save(file, lar, key):
     """
@@ -418,11 +413,6 @@ def load(file, key):
     dataset called 'x' (the price) and two datasets called '0' and '1'
     (the labels).
     
-    Before saving, the labels are converted to Numpy arrays, one array for
-    each dimension. Therefore, to save a larry in HDF5 format, the
-    elements of a label along any one dimension must be of the same type
-    and that type must be supported by HDF5.
-    
     Parameters
     ----------
     file : str or h5py.File
@@ -461,9 +451,9 @@ def load(file, key):
         raise TypeError, 'key must be a string.'    
     f, opened = _openfile(file)
     if key not in f:
-        raise ValueError, "A larry named '%s' is not in archive." % key
+        raise KeyError, "A larry named '%s' is not in archive." % key
     if not _is_archived_larry(f[key]):
-        raise ValueError, 'key (%s) is not a larry.' % key
+        raise KeyError, 'key (%s) is not a larry.' % key
         
     # Load larry    
     group = f[key]
@@ -476,7 +466,59 @@ def load(file, key):
         
     return larry(x, label)
     
-# Utility functions ---------------------------------------------------------    
+def delete(file, key):
+    """
+    Delete a larry from a HDF5 archive.
+    
+    Parameters
+    ----------
+    file : str or h5py.File
+        Filename or h5py.File object of the archive.
+    key : str
+        Name of larry.
+        
+    Returns
+    ------- 
+    out : None
+        Nothing is returned, just None.   
+        
+    See Also
+    --------
+    save : Save larrys without a dictionary-like interface.
+    load : Load larrys without a dictionary-like interface.
+    IO : A dictionary-like interface to the archive.  
+        
+    Examples
+    --------
+    Create a larry:
+    
+    >>> la.save(x, 'x')
+
+    Save the larry:
+
+    >>> la.save('/tmp/x.hdf5', x, 'x')
+    
+    Now delete it:
+    
+    >>> y = la.delete('/tmp/x.hdf5', 'x')            
+ 
+    """
+    
+    # Check input
+    if type(key) != str:
+        raise TypeError, 'key must be a string.'    
+    f, opened = _openfile(file)
+    if key not in f:
+        raise KeyError, "A larry named '%s' is not in archive." % key
+    if not _is_archived_larry(f[key]):
+        raise KeyError, 'key (%s) is not a larry.' % key    
+    
+    # Delete
+    del f[key]               
+                     
+    # Close if file is a filename   
+    if opened:
+        f.close()        
     
 def repack(file):
     """

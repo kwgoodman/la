@@ -13,17 +13,18 @@ such as **save** and **load** and using the dictionary-like interface of the
 Archive functions
 =================
 
-One method to archive larrys is to use the archive functions:
+One method to archive larrys is to use the archive functions (see
+:ref:`ioclass` for a second, more powerful method):
 
 * **save**
 * **load**
 * **delete**
 * **archive_directory**
 * **is_archived_larry**
+* **repack**
 
 To demonstrate, let's start by creating a larry:
 ::
-
     >>> import la
     >>> y = la.larry([1,2,3])
 
@@ -44,14 +45,15 @@ The entire larry is loaded from the archive. The **load** function does not
 have an option to load parts of a larry, such as a slice. (To load parts of
 a larrys from the archive, see :ref:`ioclass`.)    
 
-The name of the larry in **save** and **load** statements must be a string. 
-But the string may contain on or more forward slashes ('/'), which means that
-larrys can be archived in a hierarchical structure:
+The name of the larry in **save** and **load** statements (and in all the
+other archive functions) must be a string. But the string may contain one or
+more forward slashes ('/'), which is to say that larrys can be archived in a
+hierarchical structure:
 ::
     >>> la.save('/tmp/data/hdf5', y, '/experiment/2/y')
     >>> z = la.load('/tmp/data/hdf5', '/experiment/2/y')
     
-Instead of passing a filename to **save** and **load** you can optionally
+Instead of passing a filename to the archive functions you can optionally
 pass a `h5py <http://h5py.alfven.org/>`_ File object:
 ::
     >>> import h5py
@@ -67,26 +69,36 @@ To delete a larry from the archive:
 
     >>> la.delete(f, 'y')
     >>> la.is_archived_larry(f, 'y')    
-    False        
+    False
+
+HDF5 does not keep track of the freespace in an archive across opening and
+closing of the archive. After repeatedly opening, closing and deleting larrys
+from the archive, the unused space in the archive may grow. The only way to
+reclaim the freespace is to repack the archive:
+::
+    >>> la.repack(f)
     
+To see how much space the archive takes on disk and to see how much freespace
+is in the archive see :ref:`ioclass`.  
+     
 .. _ioclass:
     
 IO class
 ========
 
-The IO class provides a dictionary-like interface to the archive.
+The **IO** class provides a dictionary-like interface to the archive.
 
-Let's start by creating two larrys, *a* and *b*:
+To demonstrate, let's start by creating two larrys, *a* and *b*:
 ::
     >>> import la
     >>> a = la.larry([1.0,2.0,3.0,4.0])
     >>> b = la.larry([[1,2],[3,4]])
 
-Here's how to create an IO object:
+To work with an archive you need to create an **IO** object:
 ::
     >>> io = la.IO('/tmp/data.hdf5')
     
-Next, let's add the two larrys, *a* and *b*, to the archive and list the
+Let's add (save) the two larrys, *a* and *b*, to the archive and then list the
 contents of the archive:
 ::
     >>> io['a'] = a
@@ -106,28 +118,113 @@ We can get a list of the keys (larrys) in the archive:
     >>> for key in io: print key
     ... 
     a
-    b
+    b 
     
-Are the larrys *a* and *c* in the archive?
+    >>> len(io)
+    2  
+    
+Are the larrys *a* (yes) and *c* (no) in the archive?
 ::
     >>> 'a' in io
     True 
-    >>> 'b' in io
-    False         
+    >>> 'c' in io
+    False 
         
-What filename is associated with the archive?
-::
-    >>> io.filename
-    '/tmp/data.hdf5'        
+    >>> list(set(io) & set(['a', 'c']))
+    ['a']                   
         
-When we load from the archive using an io object, we get a lara not a larry:
+When we load data from the archive using an **IO** object, we get a lara not
+a larry:
 ::
     >>> z = io['a']        
     >>> type(z)
         <class 'la.io.lara'>
         
-A lara loads the larry label from the archive but does not load the data. The
-reason a lara is returned and not                
+Whereas a larry stores its data in a numpy array and a list (labels), lara
+stores its data in a h5py Dataset object and a list (labels). The reason that
+an **IO** object returns a lara instead of a larry is that you may want to
+extract only part of a larry, such as a slice, from the archive.
+
+To convert a lara object into a larry, just index into the lara:
+::
+    >>> z = io['a'][:2]
+    >>> type(z)
+    <class 'la.deflarry.larry'>
+
+    >>> z
+    label_0
+        0
+        1
+    x
+    array([ 1.,  2.])
+
+In the example above, only the first two items in the array were loaded from
+the archive---a feature that comes in handy when you only need a small part
+of a large larry.
+
+Although the data from a larry is not loaded until you index into the lara,
+the entire label is always loaded. That allows you to use the labels right
+away:
+::
+    >>> z = io['a']
+    >>> type(z)
+    <class 'la.io.lara'>
+
+    >>> idx = z.labelindex(1, axis=0)
+    >>> type(z[:idx])
+    <class 'la.deflarry.larry'>
+
+HDF5 does not keep track of the freespace in an archive across opening and
+closing of the archive. After repeatedly opening, closing and deleting larrys
+from the archive, the unused space in the archive may grow. The only way to
+reclaim the freespace is to repack the archive:
+::
+    >>> io.repack()
+    
+Before looking at the size of the archive, let's add some bigger larrys:
+::
+    >>> import numpy as np
+    >>> io['rand'] = la.larry(np.random.rand(1000, 1000))
+    >>> io['randn'] = la.larry(np.random.rand(1000, 1000))
+    >>> io    
+    larry  dtype    shape       
+    ----------------------------
+    a      float64  (4,)        
+    b      int64    (2, 2)      
+    rand   float64  (1000, 1000)
+    randn  float64  (1000, 1000)
+    
+How many MB does that archive occupy on disk?
+::
+    >>> io.space / 1e6    
+    16.041224  # MB
+    
+How much freespace is there?
+::
+    >>> io.freespace / 1e6 
+    0.0090959999999999999  # MB
+
+Let's delete randn from the archive and look at the space and freespace:
+::
+    >>> del io['randn']
+    >>> io.space / 1e6
+    16.038632  # MB
+    >>> io.freespace / 1e6
+    8.0226319999999998  # MB
+    
+So deleting a larry from the the archive does not reduce the size of the
+archive unless you repack:
+::
+    >>> io.repack()
+    >>> io.space / 1e6
+    8.0201919999999998  # MB
+    >>> io.freespace / 1e6
+    0.0041920000000000004  # MB
+          
+What filename is associated with the archive?
+::
+    >>> io.filename
+    '/tmp/data.hdf5'               
 
 
 Limitations
