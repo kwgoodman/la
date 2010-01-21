@@ -1920,6 +1920,10 @@ class larry(object):
         "Return a copy of a larry's label."
         return deepcopy(self.label)
         
+    def copyx(self):
+        "Return a copy of a larry's data as a Numpy array."
+        return self.x.copy()    
+        
     # Print ------------------------------------------------------------------                
                 
     def __repr__(self):

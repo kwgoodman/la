@@ -1,3 +1,7 @@
+2010-01-21 Keith
+
+    * deflarry.py(larry.copyx), doc/source/reference.rst: New larry method.
+    
 2010-01-20 Keith
 
     * deflarry.py(maplabel), doc/source/reference.rst, doc/source/index.rst,

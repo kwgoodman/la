@@ -363,8 +363,21 @@ Here is an example of the shape and size methods:
 Copy
 ----
 
+A larry, or just its label or data, can be copied:
+::
+    >>> from la import larry
+    >>> y = larry([1, 2], [['a', 'b']])
+    
+    >>> z = y.copy()
+    >>> z
+    label_0
+        a
+        b
+    x
+    array([1, 2])
+
 .. autoclass:: la.larry
-   :members: copy, copylabel
+   :members: copy, copylabel, copyx
   
  
 
