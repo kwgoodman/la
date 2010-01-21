@@ -1,5 +1,7 @@
 2010-01-21 Keith
 
+    * doc/source/archive.rst: First draft done.
+
     * deflarry.py(larry.copyx), doc/source/reference.rst: New larry method.
     
 2010-01-20 Keith

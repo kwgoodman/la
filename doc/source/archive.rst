@@ -10,6 +10,8 @@ such as **save** and **load** and using the dictionary-like interface of the
 `h5py <http://h5py.alfven.org>`_.
 
 
+.. _iofunction:
+
 Archive functions
 =================
 
@@ -98,7 +100,9 @@ To work with an archive you need to create an **IO** object:
 ::
     >>> io = la.IO('/tmp/data.hdf5')
     
-Let's add (save) the two larrys, *a* and *b*, to the archive and then list the
+where ``/tmp/data.hdf5`` is the path to the archive used in this example.   
+    
+Let's add (save) two larrys, *a* and *b*, to the archive and then list the
 contents of the archive:
 ::
     >>> io['a'] = a
@@ -140,12 +144,13 @@ a larry:
     >>> type(z)
         <class 'la.io.lara'>
         
-Whereas a larry stores its data in a numpy array and a list (labels), lara
-stores its data in a h5py Dataset object and a list (labels). The reason that
+Whereas larry stores his data in a numpy array and a list (labels), lara
+stores her data in a h5py Dataset object and a list (labels). The reason that
 an **IO** object returns a lara instead of a larry is that you may want to
 extract only part of a larry, such as a slice, from the archive.
 
-To convert a lara object into a larry, just index into the lara:
+To convert a lara object into a larry, just index into the lara (the indexing
+below is the slice ``[:2]``):
 ::
     >>> z = io['a'][:2]
     >>> type(z)
@@ -173,6 +178,10 @@ away:
     >>> idx = z.labelindex(1, axis=0)
     >>> type(z[:idx])
     <class 'la.deflarry.larry'>
+    
+To delete the larry *b* from the archive:
+::
+    >>> del io['b']   
 
 HDF5 does not keep track of the freespace in an archive across opening and
 closing of the archive. After repeatedly opening, closing and deleting larrys
@@ -180,6 +189,9 @@ from the archive, the unused space in the archive may grow. The only way to
 reclaim the freespace is to repack the archive:
 ::
     >>> io.repack()
+    
+Repack means to transfer all the larrys to a new archive (with the same name)
+and delete the old archive.
     
 Before looking at the size of the archive, let's add some bigger larrys:
 ::
@@ -189,37 +201,63 @@ Before looking at the size of the archive, let's add some bigger larrys:
     >>> io    
     larry  dtype    shape       
     ----------------------------
-    a      float64  (4,)        
-    b      int64    (2, 2)      
+    a      float64  (4,)     
     rand   float64  (1000, 1000)
     randn  float64  (1000, 1000)
     
 How many MB does that archive occupy on disk?
 ::
     >>> io.space / 1e6    
-    16.041224  # MB
+    16.038903999999999  # MB
     
 How much freespace is there?
 ::
     >>> io.freespace / 1e6 
-    0.0090959999999999999  # MB
+    0.0068399999999999997  # MB
 
-Let's delete randn from the archive and look at the space and freespace:
+Let's delete *randn* from the archive and look at the space and freespace:
 ::
     >>> del io['randn']
     >>> io.space / 1e6
-    16.038632  # MB
+    16.038903999999999  # MB
     >>> io.freespace / 1e6
-    8.0226319999999998  # MB
+    8.0228400000000004  # MB
     
 So deleting a larry from the the archive does not reduce the size of the
 archive unless you repack:
 ::
     >>> io.repack()
     >>> io.space / 1e6
-    8.0201919999999998  # MB
+    8.02224  # MB
     >>> io.freespace / 1e6
-    0.0041920000000000004  # MB
+    0.0061760000000000001  # MB
+    
+(Sometimes freespace will get reused when saving new larrys to the archive.
+If any HDF5 users are reading this, could you tell me when freespace is
+reused and when it is not?)
+
+The *IO* class takes an optional argument that can be used to automatically
+repack the archive when the freespace after deleting a larry exceeds a
+specified amount. The following **IO** object will repack the archive
+everytime a delete causes the freespace in the archive to exceed 100 MB:
+::
+    >>> io = la.IO('/tmp/data.hdf5', max_freespace=100e6)  
+    
+You can iterate through the keys or the values or the (key, value) pairs of
+an **IO** object:
+::
+    >>> for key, value in io.iteritems():
+    ...     print key, value.shape
+    ... 
+    a (4,)
+    rand (1000, 1000)
+    
+The keys (larrys) in an **IO** object (archive) must be strings. But the
+string may contain one or more forward slashes ('/'), which is to say that
+larrys can be archived in a hierarchical structure:
+::
+    >>> io['/experiment/2/y'] = la.larry([1,2,3])
+    >>> z = io['/experiment/2/y']
           
 What filename is associated with the archive?
 ::
@@ -246,9 +284,8 @@ from the archive, the unused space in the archive may grow. The only way to
 reclaim the freespace is to repack the archive.
 
 You can use the utility provided by HDF5 to repack the archive or you can use
-the repack method or function in the la package:
-::
-    >>> 
+the repack method (see :ref:`ioclass`) or function (see :ref:`iofunction`) in
+the la package.
     
 **Data types**  
 
@@ -258,19 +295,49 @@ converted to Numpy arrays and the elements of a Numpy array must be of the
 same type. Therefore, to archive a larry the labels along any one dimension
 must be of the same type and that type must be one that is recognized by
 h5py and HDF5: strings and scalars. So, for example, if your labels are
-datetime.date objects, then you must convert them (perhaps to integers using
-the datetime.date.toordinal function) before archiving.
+datetime.date objects, then you must convert them before archiving. To
+demonstrate, let's create a larry with dates (datetime.date objects) as
+labels:
+::
+    >>> import datetime
+    >>> d = datetime.date
+    >>> y = la.larry([1, 2], [[d(2010,1,22), d(2010,1,23)]])
+    >>> y
+    label_0
+        2010-01-22
+        2010-01-23
+    x
+    array([1, 2])    
+
+To archive a larry with dates as labels you could convert the dates to
+integers:
+::
+    >>> y.maplabel(datetime.date.toordinal, axis=0)
+    label_0
+        733794
+        733795
+    x
+    array([1, 2])
+    
+or you could convert the dates to strings:
+::
+    >>> y.maplabel(str, axis=0)
+    label_0
+        2010-01-22
+        2010-01-23
+    x
+    array([1, 2])
 
 
 Archive format
 ==============
 
-An HDF5 archive is contructed from two types of objects: Groups and Datasets.
+An archive is contructed from two types of HDF5 objects: Groups and Datasets.
 Groups can contain Datasets and more Groups. Datasets can contain arrays.
 
-larrys are stored in a HDF5 Group. The name of the group is the name of the
-larry. The group is given an attribute called 'larry' and assigned the value
-True. Inside the group are several HDF5 Datasets. For a 2d larry, for example,
-there are three datasets: one to hold the data (named 'x') and two to hold the
-labels (named '0' and '1'). In general, for a nd larry there are n+1
-datasets.
+larrys are stored in a HDF5 Group. The name of the group, often referred to
+in this manual as the key, is the name of the larry. The group is given an
+attribute called 'larry' and assigned the value True. Inside the group are
+several HDF5 Datasets. For a 2d larry, for example, there are three datasets:
+one to hold the data (named 'x') and two to hold the labels (named '0' and
+'1'). In general, for a nd larry there are n+1 datasets.
