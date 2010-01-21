@@ -277,7 +277,7 @@ aligns *y1* to *y2*; the second example aligns *y2* to *y1*:
     array([ 1.,  2.])
 
 .. autoclass:: la.larry
-   :members: morph, morph_like, merge, squeeze, lag 
+   :members: morph, morph_like, merge, squeeze, lag, flatten 
    
    
 .. _Shuffle:

@@ -3,9 +3,10 @@
 import datetime
 from copy import deepcopy
 
-import numpy as np   
+import numpy as np
+   
 from la.util.scipy import (nanmean, nanmedian, nanstd)
-
+from la.util.misc import flattenlabel
 from la.afunc import (group_ranking, group_mean, group_median, covMissing,
                       fillforward_partially, quantile, ranking, lastrank,
                       movingsum_forward, lastrank_decay, movingrank,
@@ -945,8 +946,8 @@ class larry(object):
         ValueError
             If the axis is None.
             
-        Example
-        -------
+        Examples
+        --------
         Say you have a 3d larry called indicator with indicators along axis 0.
         To get a 2d view of the indicator momentum:
         
@@ -1168,34 +1169,30 @@ class larry(object):
             A copy or a reference (dending on the value of `copy`) of the
             larry with the given function applied to the specified labels.
                     
-        Examples:
-        --------- 
-        Create a larry:
+        Examples
+        -------- 
+        Create a larry with dates in the label:        
         
         >>> from la import larry
         >>> import datetime
         >>> d = datetime.date
         >>> y = larry([1, 2], [[d(2010,1,1), d(2010,1,2)]])
         
-        Now convert the datetime.date object in the label to integers:
+        Convert the dates in the label to integers:
         
-        >>> y = y.maplabel(datetime.date.toordinal)
-        >>> y
+        >>> y.maplabel(datetime.date.toordinal)
         label_0
             733773
             733774
         x
         array([1, 2])
         
-        Next, let's add one to each label entry:
-        
-        >>> def func(x):
-        ...     return x + 1
-        ...         
-        >>> y.maplabel(func)
+        Convert the dates in the label to strings:
+               
+        >>> y.maplabel(str)
         label_0
-            733774
-            733775
+            2010-01-01
+            2010-01-02
         x
         array([1, 2])
                                   
@@ -1646,6 +1643,53 @@ class larry(object):
         index[axis] = slice(0,-nlag)            
         y.x = y.x[index]
         return y
+        
+    def flatten(self, order='C'):
+        """Return a copy of the larry collapsed into one dimension.
+        
+        The elements of the label become tuples.
+        
+        Parameters
+        ----------
+        order : {'C', 'F'}, optional
+            Whether to flatten in row-major order ('C', default) or
+            column-major order ('F').
+
+        Returns
+        -------
+        y : larry
+            A copy of the input larry, collapsed to one dimension where the
+            labels are tuples.
+            
+        Examples
+        --------
+        >>> from la import larry
+        >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+        >>> y
+        label_0
+            a
+            b
+        label_1
+            c
+            d
+        x
+        array([[1, 2],
+               [3, 4]])
+               
+        >>> y.flatten()
+        label_0
+            ('a', 'c')
+            ('a', 'd')
+            ('b', 'c')
+            ('b', 'd')
+        x
+        array([1, 2, 3, 4])
+   
+        """
+        y = self.copy()
+        y.x = y.x.flatten(order)
+        y.label = flattenlabel(y.label, order)
+        return y    
 
     # Shuffle ----------------------------------------------------------------
     

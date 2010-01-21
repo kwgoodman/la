@@ -1,4 +1,9 @@
 2010-01-21 Keith
+    
+    * deflarry.py(flatten), tests/deflarry_test.py, doc/source/reference.rst,
+      doc/source/intro.rst: New method to flatten larrys.
+    
+    * util/misc.py(flattenlabel): New utility function to flatten labels.
 
     * doc/source/index.rst, doc/source/intro.rst: Split index into two pages:
       one for table of contents, one for intro.
