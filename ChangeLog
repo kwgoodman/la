@@ -1,5 +1,8 @@
 2010-01-21 Keith
 
+    * doc/source/index.rst, doc/source/intro.rst: Split index into two pages:
+      one for table of contents, one for intro.
+     
     * doc/source/archive.rst: First draft done.
 
     * deflarry.py(larry.copyx), doc/source/reference.rst: New larry method.
