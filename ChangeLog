@@ -1,5 +1,19 @@
 2010-01-22 Keith
 
+    * deflarry.py, doc/source/reference.rst: Doc work.
+
+    * deflarry.py(larry.demean), deflarry.py(larry.demedian),
+      tests/deflarry_test.py(Test_calc): Bug fix: remove in place operations.
+      The problem is if the input is int then the in place operation doesn't
+      convert to float. Add unit tests.
+
+    * tests/deflarry_test.py(Test_calc): Bug fix: remove in place operations
+      in unit tests of zscore. What was I thinking? The problem is if the
+      input is int then the in place operation doesn't convert to float.
+
+    * util/scipy.py(nanmedian): Bug fix: return np.float64 instead of python
+      float when output is a scalar.
+
     * deflarry.py, doc/source/reference.rst: More doc string work.
 
     * deflarry.py(log), deflarry.py(exp), deflarry.py(sqrt),

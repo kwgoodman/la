@@ -126,11 +126,11 @@ def nanmedian(x, axis=0):
             the median."""           
     x, axis = _chk_asarray(x,axis)
     if x.ndim == 0:
-        return float(x.item())
+        return np.float(x)
     x = x.copy()
     x = np.apply_along_axis(_nanmedian,axis,x)
     if x.ndim == 0:
-        x = float(x.item())
+        x = np.float(x)
     return x
 
 def rankdata(a):

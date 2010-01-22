@@ -2284,6 +2284,15 @@ class Test_calc(unittest.TestCase):
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l3), 'Reference found')
 
+    def test_demean_4(self):
+        "larry.demean_4"
+        t = np.array([-0.5, 0.5])
+        label = [[0, 1]]
+        p = larry([1, 2]).demean(0)
+        msg = printfail(t, p.x, 'x')            
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+
     def test_demedian_1(self):
         "larry.demedian_1"
         t = np.array([[ 0.5, 0.5, nan, 0.0],
@@ -2322,11 +2331,20 @@ class Test_calc(unittest.TestCase):
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l3), 'Reference found')
 
+    def test_demedian_4(self):
+        "larry.demedian_4"
+        t = np.array([-0.5, 0.5])
+        label = [[0, 1]]
+        p = larry([1, 2]).demedian(0)
+        msg = printfail(t, p.x, 'x')            
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+
     def test_zscore_1(self):
         "larry.zscore_1"
         t = self.x1.copy()
-        t -= t.mean(0)
-        t /= t.std(0)                                          
+        t = t - t.mean(0)
+        t = t / t.std(0)                                          
         label = [[0, 1, 2], [0, 1, 2, 3]]
         p = self.l1.zscore(0)
         msg = printfail(t, p.x, 'x') 
@@ -2339,8 +2357,8 @@ class Test_calc(unittest.TestCase):
     def test_zscore_2(self):
         "larry.zscore_2"
         t = self.x1.copy()
-        t -= t.mean(1).reshape(-1,1)
-        t /= t.std(1).reshape(-1,1)                                         
+        t = t - t.mean(1).reshape(-1,1)
+        t = t / t.std(1).reshape(-1,1)                                         
         label = [[0, 1, 2], [0, 1, 2, 3]]
         p = self.l1.zscore(1)
         msg = printfail(t, p.x, 'x')
@@ -2353,8 +2371,8 @@ class Test_calc(unittest.TestCase):
     def test_zscore_3(self):
         "larry.zscore_3"
         t = self.x3.copy()
-        t -= t.mean()
-        t /= t.std()                                          
+        t = t - t.mean()
+        t = t / t.std()                                          
         label = [[0, 1, 2, 3, 4]]
         p = self.l3.zscore()
         msg = printfail(t, p.x, 'x') 

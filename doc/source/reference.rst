@@ -207,69 +207,119 @@ Get and set
 -----------
 
 The get methods return subsets of a larry through indexing and the set methods
-assign values to a subset of a larry. For example, let's set all elements of
-a larry with a value less 3 to zero:
-::
-    >>> from la import larry
-    >>> import numpy as np
-    >>> x = np.array([[1, 2], [3, 4]])
-    >>> label = [['a', 'b'], [8, 10]]
-    >>> y = larry(x, label)
+assign values to a subset of a larry.
 
-    >>> y[y < 3] = 0
-    >>> y
-    label_0
-        a
-        b
-    label_1
-        8
-        10
-    x
-    array([[0, 0],
-           [3, 4]])
+------------
 
+.. automethod:: la.larry.__getitem__
 
-.. autoclass:: la.larry
-   :members: __getitem__, __setitem__, set, get, getx, fill, pull, 
-             keep_label, keep_x
-   
+------------
+
+.. automethod:: la.larry.__setitem__
+
+------------
+
+.. automethod:: la.larry.get
+
+------------
+
+.. automethod:: la.larry.set
+
+------------
+
+.. automethod:: la.larry.getx
+
+------------
+
+.. automethod:: la.larry.getlabel
+------------
+
+.. automethod:: la.larry.fill
+
+------------
+
+.. automethod:: la.larry.pull
+
+------------
+
+.. automethod:: la.larry.keep_label
+
+------------
+
+.. automethod:: la.larry.keep_x
+
 
 Label
 -----
 
-The label methods work with the labels of a larry. For example, what column
-number (starting from 0) of a 2d larry is labeled 'west':
-::
-    >>> from la import larry
-    >>> y = larry([[1, 2], [3, 4]], [['north', 'south'], ['east', 'west']])
-    
-    >>> y.labelindex('west', axis=1)
-    1
+The label methods allow you to get information (and change) the labels of a
+larry.
 
-.. autoclass:: la.larry
-   :members: maxlabel, minlabel, getlabel, labelindex, maplabel
+------------
+
+.. automethod:: la.larry.maxlabel
+
+------------
+
+.. automethod:: la.larry.minlabel
+
+------------
+
+.. automethod:: la.larry.labelindex
+
+------------
+
+.. automethod:: la.larry.maplabel
 
 
 Calculation
 ----------- 
 
-The calculation methods transform the larry. For example, here's how to
-calculate the zscore of a larry:
-::
-    >>> from la import larry
-    >>> y = larry([1, 2, 3])
-    
-    >>> y.zscore()
-    label_0
-        0
-        1
-        2
-    x
-    array([-1,  0,  1])  
-    
-.. autoclass:: la.larry
-   :members: demean, demedian, zscore, movingsum, movingsum_forward,
-             ranking, movingrank, quantile, cov, lastrank, lastrank_decay
+The calculation methods transform the larry.
+
+------------
+
+.. automethod:: la.larry.demean
+
+------------
+
+.. automethod:: la.larry.demedian
+
+------------
+
+.. automethod:: la.larry.zscore
+
+------------
+
+.. automethod:: la.larry.movingsum
+
+------------
+
+.. automethod:: la.larry.movingsum_forward
+
+------------
+
+.. automethod:: la.larry.ranking
+
+------------
+
+.. automethod:: la.larry.movingrank
+
+------------
+
+.. automethod:: la.larry.quantile
+
+------------
+
+.. automethod:: la.larry.cov
+
+------------
+
+.. automethod:: la.larry.lastrank
+
+------------
+
+.. automethod:: la.larry.lastrank_decay
 
 
 Group

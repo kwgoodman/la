@@ -1186,7 +1186,30 @@ class larry(object):
     # Get and set ------------------------------------------------------------
     
     def __getitem__(self, index):
-        "Index into a larry"
+        """Index into a larry.
+        
+        Examples
+        --------
+        >>> y = larry([[1, 2], [3,  4]])
+        >>> y[0,0]
+        1
+        >>> y[0,:]
+        label_0
+            0
+            1
+        x
+        array([1, 2])
+        >>> y[:,1:]
+        label_0
+            0
+            1
+        label_1
+            1
+        x
+        array([[2],
+               [4]])
+        
+        """
         typidx = type(index)
         if typidx in (int, np.int, np.int16, np.int32, np.int64):      
             if index >= self.shape[0]:
@@ -1248,7 +1271,30 @@ class larry(object):
         return larry(x, label)
         
     def __setitem__(self, index, value):
-        "Assign values to a subset of a larry using indexing to select subset."
+        """
+        Assign values to a subset of a larry using indexing to select subset.
+        
+        Examples
+        --------
+        Let's set all elements of a larry with values less then 3 to zero:
+                
+        >>> import numpy as np
+        >>> x = np.array([[1, 2], [3, 4]])
+        >>> label = [['a', 'b'], [8, 10]]
+        >>> y = larry(x, label)
+        >>> y[y < 3] = 0
+        >>> y
+        label_0
+            a
+            b
+        label_1
+            8
+            10
+        x
+        array([[0, 0],
+               [3, 4]])
+        
+        """
         if isinstance(index, larry):
             if self.label == index.label:
                 self.x[index.x] = value
@@ -1270,7 +1316,7 @@ class larry(object):
         ----------
         label : {list, tuple}
             List or tuple of one label name for each dimension. For example,
-            for stock ID and date: (411, datetime.date(2004, 1, 15)).
+            for row label 'a' and column label 7: ('a', 7).
         value : Float, string, etc.
             Value to place in the single cell specified by label.
             
@@ -1283,6 +1329,21 @@ class larry(object):
         ValueError
             If the length of label is not equal to the number of dimensions of
             larry.        
+        
+        Examples
+        --------
+        >>> y = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
+        >>> y.set(['r0', 'c1'], 99)
+        >>> y
+        label_0
+            r0
+            r1
+        label_1
+            c0
+            c1
+        x
+        array([[ 1, 99],
+               [ 3,  4]])
         
         """
         if len(label) != self.ndim:
@@ -1302,11 +1363,11 @@ class larry(object):
         ----------
         label : {list, tuple}
             List or tuple of one label name for each dimension. For example,
-            for stock ID and date: (411, datetime.date(2004, 1, 15)).
+            for row label 'a' and column label 7: ('a', 7).
             
         Returns
         -------
-        out : Float, string, etc.
+        out : scalar, string, etc.
             Value of the single cell specified by label.
         
         Raises
@@ -1314,6 +1375,12 @@ class larry(object):
         ValueError
             If the length of label is not equal to the number of dimensions of
             larry.        
+
+        Examples
+        --------
+        >>> y = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
+        >>> y.get(['r0', 'c1'])
+        2
         
         """    
         if len(label) != self.ndim:
@@ -1329,19 +1396,78 @@ class larry(object):
         
         Parameters
         ----------
-        copy : {True, False}
-            Return a copy (True) of the x values or a reference (False) to x.
+        copy : {True, False}, optional
+            Return a copy (True, default) of the x values or a reference
+            (False) to it.
             
         Returns
         -------
         out : array
             Copy or reference of x array.
-                
+
+        Examples
+        --------
+        >>> y = larry([0, 1, 2])
+        >>> x = y.getx()
+        >>> (x == y.x).all()
+        True
+        >>> x is y.x
+        False
+        >>> x = y.getx(copy=False)
+        >>> x is y.x
+        True
+               
         """
         if copy:
             return self.x.copy()
         else:
             return self.x
+                    
+    def getlabel(self, axis, copy=True):
+        """
+        Return a copy of the label or a reference to it.
+        
+        Parameters
+        ----------
+        axis : int
+            The `axis` identifies the label you wish to get.         
+        copy : {True, False}, optional
+            Return a copy (True, default) of the label or a reference (False)
+            to it.
+            
+        Returns
+        -------
+        out : list
+            Copy or reference of the label.
+
+        Examples
+        --------
+        Get a copy of the label:
+        
+        >>> y = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
+        >>> y.getlabel(axis=0)
+        ['r0', 'r1']
+        >>> y.getlabel(axis=1)
+        ['c0', 'c1']
+        
+        The difference between a copy and a reference to the label:
+        
+        >>> label = y.getlabel(0)
+        >>> label == y.label[0]
+        True
+        >>> label is y.label[0]
+        False
+        >>> label = y.getlabel(0, copy=False)
+        >>> label is y.label[0]
+        True        
+               
+        """
+        if axis >= self.ndim:
+            raise IndexError, 'axis out of range'
+        label = self.label[axis]    
+        if copy:
+            label =  list(label)
+        return label            
             
     def pull(self, name, axis):
         """
@@ -1369,10 +1495,28 @@ class larry(object):
             
         Examples
         --------
-        Say you have a 3d larry called indicator with indicators along axis 0.
-        To get a 2d view of the indicator momentum:
-        
-                        mom = momentum.pull('indicator', 0)    
+        >>> y = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
+        >>> y.pull('r0', axis=0)
+        label_0
+            c0
+            c1
+        x
+        array([1, 2])
+
+        >>> import numpy as np
+        >>> x = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
+        >>> label = [['experiment1', 'experient2'], ['r0', 'r1'], ['c0', 'c1']]
+        >>> y = larry(x, label)
+        >>> y.pull('experiment1', axis=0)
+        label_0
+            r0
+            r1
+        label_1
+            c0
+            c1
+        x
+        array([[1, 2],
+               [3, 4]])
                         
         """
         if axis is None:
@@ -1398,6 +1542,17 @@ class larry(object):
         Returns
         -------
         out : None
+        
+        Examples
+        --------
+        >>> y = larry([0, 1])
+        >>> y.fill(9)
+        >>> y
+        label_0
+            0
+            1
+        x
+        array([9, 9])        
                 
         """
         self.x.fill(fill_value)
@@ -1408,15 +1563,15 @@ class larry(object):
         
         Keep labels that satify:
         
-                            label[axis] op value,
+                            label[`axis`] `op` `value`,
                        
-        where op can be '==', '>', '<', '>=', '<=', '!=', 'in', 'not in'.               
+        where `op` can be '==', '>', '<', '>=', '<=', '!=', 'in', 'not in'.               
         
         Parameters
         ----------
         op : string
-            Operation to perform. op can be '==', '>', '<', '>=', '<=', '!=',
-            'in', 'not in'.
+            Operation to perform. `op` can be '==', '>', '<', '>=', '<=',
+            '!=', 'in', 'not in'.
         value : anything that can be compared to labels
             Usually the same type as the labels. So if the labels are integers
             then value is an integer.
@@ -1432,9 +1587,19 @@ class larry(object):
         Raises
         ------
         ValueError
-            If op is unknown or if axis is None.
+            If `op` is unknown or if `axis` is None.
         IndexError
-            If axis is out of range.        
+            If `axis` is out of range.
+            
+        Examples
+        --------
+        >>> y = larry([1, 2, 3, 4], [['a', 'b', 'c', 'd']])
+        >>> y.keep_label('<', 'c', axis=0)
+        label_0
+            a
+            b
+        x
+        array([1, 2])                    
 
         """
         ops = ('==', '>', '<', '>=', '<=', '!=', 'in', 'not in')
@@ -1510,27 +1675,64 @@ class larry(object):
     # label operations -------------------------------------------------------
         
     def maxlabel(self, axis=None):
-        "Max label value"
+        """
+        Maximum label value along the specified axis.
+        
+        Parameters
+        ----------
+        axis : {int, None}, optional
+            The axis over which to find the maximum label. By default (None)
+            the search for the maximum label element is performed along all
+            axes.
+            
+        Returns
+        -------
+        out : scalar, string, etc.
+            The maximum label element along the specified axis.
+            
+        Examples
+        --------
+        What is the maximum label value in the following larry?
+        
+        >>> y = larry([1, 2, 3], [['a', 'z', 'w']])
+        >>> y.maxlabel()
+        'z'               
+        
+        """
         if axis is None:
             return max([max(z) for z in self.label])
         else:
             return max([z for z in self.label[axis]])
 
     def minlabel(self, axis=None):
-        "Min label value"
+        """
+        Minimum label value along the specified axis.
+        
+        Parameters
+        ----------
+        axis : {int, None}, optional
+            The axis over which to find the minimum label. By default (None)
+            the search for the minimum label element is performed along all
+            axes.
+            
+        Returns
+        -------
+        out : scalar, string, etc.
+            The minimum label element along the specified axis.
+            
+        Examples
+        --------
+        What is the minimum label value in the following larry?
+        
+        >>> y = larry([1, 2, 3], [['a', 'z', 'w']])
+        >>> y.minlabel()
+        'a'               
+        
+        """
         if axis is None:
             return min([min(z) for z in self.label])
         else:
             return min([z for z in self.label[axis]])
-        
-    def getlabel(self, axis, copy=True):
-        "Return label for specificed dimension." 
-        if axis >= self.ndim:
-            raise IndexError, 'axis out of range'
-        label = self.label[axis]    
-        if copy:
-            label =  list(label)
-        return label
         
     def labelindex(self, name, axis, exact=True):
         """
@@ -1553,6 +1755,16 @@ class larry(object):
         -------
         idx : int
             Index of given label element.
+
+        Examples
+        --------
+        What column number (starting from 0) of the following 2d larry is
+        labeled 'west'?
+        
+        >>> from la import larry
+        >>> y = larry([[1, 2], [3, 4]], [['north', 'south'], ['east', 'west']])        
+        >>> y.labelindex('west', axis=1)
+        1        
                         
         """
         if axis >= self.ndim:
@@ -1631,31 +1843,91 @@ class larry(object):
     # Calc -------------------------------------------------------------------                                            
 
     def demean(self, axis=None):
-        "Demean values along specified axis."
+        """
+        Subtract the mean along the the specified axis.
+        
+        Parameters
+        ----------
+        axis : {int, None}, optional
+            The axis along which to remove the mean. The default (None) is
+            to subtract the mean of the flattened larry.
+        
+        Examples
+        --------
+        >>> y = larry([1, 2, 3, 4])
+        >>> y.demean()
+        label_0
+            0
+            1
+            2
+            3
+        x
+        array([-1.5, -0.5,  0.5,  1.5])
+            
+        """
         # Adapted from pylab.demean
-        y = self.copy()        
-        if axis:
-            ind = [slice(None)] * y.ndim
-            ind[axis] = np.newaxis
-            y.x -= nanmean(y.x, axis)[ind]
-        else:
-            y.x -= nanmean(y.x, axis)   
-        return y
-
-    def demedian(self, axis=None):
-        "Demean values (using median) along specified axis."
-        # Adapted from pylab.demean
-        y = self.copy()
         if axis:
             ind = [slice(None)] * axis
             ind.append(np.newaxis)
-            y.x -= nanmedian(y.x, axis)[ind]
+            x = self.x - nanmean(self.x, axis)[ind]
         else:
-            y.x -= nanmedian(y.x, axis)   
-        return y
+            x = self.x - nanmean(self.x, axis)   
+        return larry(x, self.copylabel())
+
+    def demedian(self, axis=None):
+        """
+        Subtract the median along the the specified axis.
+        
+        Parameters
+        ----------
+        axis : {int, None}, optional
+            The axis along which to remove the median. The default (None) is
+            to subtract the median of the flattened larry.
+        
+        Examples
+        --------
+        >>> y = larry([1, 2, 3, 4])
+        >>> y.demedian()
+        label_0
+            0
+            1
+            2
+            3
+        x
+        array([-1.5, -0.5,  0.5,  1.5])
+            
+        """
+        # Adapted from pylab.demean
+        if axis:
+            ind = [slice(None)] * axis
+            ind.append(np.newaxis)
+            x = self.x - nanmedian(self.x, axis)[ind]
+        else:
+            x = self.x - nanmedian(self.x, axis)   
+        return larry(x, self.copylabel())
         
     def zscore(self, axis=None):
-        "Zscore along specified axis."
+        """
+        Z-score along the specified axis.
+        
+        Parameters
+        ----------
+        axis : {int, None}, optional
+            The axis along which to take the z-score. The default (None) is
+            to find the z-score of the flattened larry.
+        
+        Examples
+        --------
+        >>> y = larry([1, 2, 3])
+        >>> y.zscore()
+        label_0
+            0
+            1
+            2
+        x
+        array([-1.22474487,  0.        ,  1.22474487])
+            
+        """
         y = self.demean(axis)
         if axis:
             ind = [slice(None)] * axis
