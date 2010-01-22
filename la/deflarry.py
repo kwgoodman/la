@@ -766,9 +766,16 @@ class larry(object):
             
         Examples
         --------
-        >>> y = larry([la.nan, 1, 2])
+        >>> import la
+        >>> y = larry([[la.nan, 2], [3,  4]])
         >>> y.sum()
-        3.0           
+        9.0
+        >>> y.sum(axis=0)
+        label_0
+            0
+            1
+        x
+        array([ 3.,  6.])
                     
         """
         return self.__reduce(axis, np.nansum)    
@@ -796,9 +803,16 @@ class larry(object):
 
         Examples
         --------
-        >>> y = larry([la.nan, 1, 2])
+        >>> import la
+        >>> y = larry([[la.nan, 2], [3,  4]])
         >>> y.mean()
-        1.4999999999999998         
+        3.0
+        >>> y.mean(axis=0)
+        label_0
+            0
+            1
+        x
+        array([ 3.,  3.])       
                     
         """
         return self.__reduce(axis, nanmean) 
@@ -826,7 +840,16 @@ class larry(object):
 
         Examples
         --------
-         
+        >>> import la
+        >>> y = larry([[la.nan, 2], [3,  4]])
+        >>> y.median()
+        3.0
+        >>> y.median(axis=0)
+        label_0
+            0
+            1
+        x
+        array([ 3.,  3.])
                     
         """
         return self.__reduce(axis, nanmedian) 
@@ -854,7 +877,17 @@ class larry(object):
 
         Examples
         -------- 
-                    
+        >>> import la
+        >>> y = larry([[la.nan, 2], [3,  4]])
+        >>> y.std()
+        0.81649658092772603
+        >>> y.std(axis=0)
+        label_0
+            0
+            1
+        x
+        array([ 0.,  1.])  
+                         
         """
         return self.__reduce(axis, nanstd)  
         
@@ -881,6 +914,16 @@ class larry(object):
 
         Examples
         -------- 
+        >>> import la
+        >>> y = larry([[la.nan, 2], [3,  4]])
+        >>> y.var()
+        0.66666666666666663
+        >>> y.var(axis=0)
+        label_0
+            0
+            1
+        x
+        array([ 0.,  1.])
                     
         """
         y = self.__reduce(axis, nanstd)
@@ -913,6 +956,16 @@ class larry(object):
 
         Examples
         -------- 
+        >>> import la
+        >>> y = larry([[la.nan, 2], [3,  4]])
+        >>> y.max()
+        4.0
+        >>> y.max(axis=0)
+        label_0
+            0
+            1
+        x
+        array([ 3.,  4.])
                     
         """            
         return self.__reduce(axis, np.nanmax)             
@@ -940,6 +993,16 @@ class larry(object):
 
         Examples
         -------- 
+        >>> import la
+        >>> y = larry([[la.nan, 2], [3,  4]])
+        >>> y.min()
+        2.0
+        >>> y.min(axis=0)
+        label_0
+            0
+            1
+        x
+        array([ 3.,  2.])
                     
         """
         return self.__reduce(axis, np.nanmin)  
@@ -960,20 +1023,46 @@ class larry(object):
         
     def any(self, axis=None):
         """
-        Return true if any elements of x is true.
-        
-        Note: NaN is True since it is not equal to 0.
-        
+        True if any element along specified axis is True; False otherwise.
+
         Parameters
         ----------
-        No input
+        axis : {int, None}, optional
+            The axis over which to reduce the truth. By default (axis=None)
+            the larry is flattened before the truth is found. 
         
         Returns
         -------
-        out : {True, False}
+        out : {larry, True, False}
+            If `axis` is None then returns True if any data element of the
+            larry (not including the label) is True; False otherwise. If
+            `axis` is an integer then a bool larry is returned.
+            
+        Notes
+        -----
+        As in Numpy, NaN is True since it is not equal to 0.    
 
         Examples
         -------- 
+        >>> y = larry([[1, 2], [3,  4]]) < 2
+        >>> y
+        label_0
+            0
+            1
+        label_1
+            0
+            1
+        x
+        array([[ True, False],
+               [False, False]], dtype=bool)
+        >>> y.any()
+        True
+        >>> y.any(axis=1)
+        label_0
+            0
+            1
+        x
+        array([ True, False], dtype=bool)
         
         """
         if axis is None:
@@ -983,20 +1072,46 @@ class larry(object):
         
     def all(self, axis=None):
         """
-        Return true if all elements of x are true.
-        
-        Note: NaN is True since it is not equal to 0.        
+        True if all elements along specified axis are True; False otherwise.
         
         Parameters
         ----------
-        No input
+        axis : {int, None}, optional
+            The axis over which to reduce the truth. By default (axis=None)
+            the larry is flattened before the truth is found.      
         
         Returns
         -------
-        out : {True, False}
+        out : {larry, True, False}
+            If `axis` is None then returns True if all data elements of the
+            larry (not including the label) are True; False otherwise. If
+            `axis` is an integer then a bool larry is returned.
+            
+        Notes
+        -----
+        As in Numpy, NaN is True since it is not equal to 0.                    
 
         Examples
         -------- 
+        >>> y = larry([[1, 2], [3,  4]]) > 1
+        >>> y
+        label_0
+            0
+            1
+        label_1
+            0
+            1
+        x
+        array([[False,  True],
+               [ True,  True]], dtype=bool)
+        >>> y.all()
+        False
+        >>> y.all(axis=0)
+        label_0
+            0
+            1
+        x
+        array([False,  True], dtype=bool)
         
         """
         if axis is None:

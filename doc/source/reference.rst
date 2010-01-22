@@ -111,17 +111,43 @@ Reduce
 ------
 
 The reduce methods (such as **sum** and **std**) aggregate along an axis or
-axes thereby reducing the dimension of the larry. For example:
-::
-    >>> from la import larry
-    >>> y = larry([1, 2, 3])
-    
-    >>> y.sum()
-    6
-    
+axes thereby reducing the dimension of the larry.
 
-.. autoclass:: la.larry
-   :members: sum, mean, median, std, var, max, min, any, all             
+------------
+             
+.. automethod:: la.larry.sum
+             
+------------
+
+.. automethod:: la.larry.mean
+             
+------------
+
+.. automethod:: la.larry.median
+             
+------------
+
+.. automethod:: la.larry.std
+
+------------
+
+.. automethod:: la.larry.var
+             
+------------
+
+.. automethod:: la.larry.max
+
+------------
+
+.. automethod:: la.larry.min
+
+------------
+
+.. automethod:: la.larry.any
+
+------------
+
+.. automethod:: la.larry.all                      
            
              
 Comparison
@@ -130,18 +156,51 @@ Comparison
 The comparison methods, such as ==, >, and !=, perform an element-by-element
 comparison and return a bool larry. For example:
 ::
-    >>> from la import larry
-    >>> y1 = larry([1,2], [['a', 'b']])
-    >>> y2 = larry([1,2], [['b', 'c']])
+    >>> y1 = larry([1, 2, 3, 4])
+    >>> y2 = larry([1, 9, 3, 9])
+    >>> y1 == y2
+    label_0
+        0
+        1
+        2
+        3
+    x
+    array([ True, False,  True, False], dtype=bool)
 
+and
+::
+    >>> from la import larry
+    >>> y1 = larry([1, 2], [['a', 'b']])
+    >>> y2 = larry([1, 2], [['b', 'c']])
     >>> y1 == y2
     label_0
         b
     x
     array([False], dtype=bool)
 
-.. autoclass:: la.larry
-   :members: __eq__, __ne__, __lt__, __gt__, __le__, __ne__  
+------------
+
+.. automethod:: la.larry.__eq__
+
+------------
+
+.. automethod:: la.larry.__ne__
+
+------------
+
+.. automethod:: la.larry.__lt__
+
+------------
+
+.. automethod:: la.larry.__gt__
+
+------------
+
+.. automethod:: la.larry.__le__
+
+------------
+
+.. automethod:: la.larry.__ne__ 
 
     
 Get and set

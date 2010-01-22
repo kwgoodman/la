@@ -1,5 +1,7 @@
 2010-01-22 Keith
 
+    * deflarry.py, doc/source/reference.rst: More doc string work.
+
     * deflarry.py(log), deflarry.py(exp), deflarry.py(sqrt),
       deflarry.py(sign): Bug fix: int input should give float output (except
       for sign, I changed that to keep it the same as the others.)
