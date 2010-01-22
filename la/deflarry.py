@@ -35,10 +35,35 @@ class larry(object):
         Raises
         ------
         ValueError
-            If x cannot be converted to a numpy array, or if number of
+            If x cannot be converted to a numpy array, or if the number of
             elements in label does not match the dimensions of x, or if the
             elements in label are not unique along each dimension, or if the
-            elements of label are not lists. 
+            elements of label are not lists.
+            
+        Examples
+        --------
+        The labels default to range(n):
+        
+        >>> larry([6, 7, 8])
+        label_0
+            0
+            1
+            2
+        x
+        array([6, 7, 8])
+
+        A more formal way to make a larry:
+
+        >>> import numpy as np
+        >>> x = np.array([1,2,3])
+        >>> label = [['one', 'two', 'three']]
+        >>> larry(x, label)
+        label_0
+            one
+            two
+            three
+        x
+        array([1, 2, 3])    
 
         """
         if type(x) is not np.ndarray:
@@ -81,75 +106,105 @@ class larry(object):
         """
         Element by element base e logarithm.
         
-        Parameters
-        ----------
-        No input
-        
         Returns
         -------
         out : larry
             Returns a copy with log of x values.
         
+        Examples
+        --------
+        >>> y = larry([1, 2, 3])
+        >>> y.log()
+        label_0
+            0
+            1
+            2
+        x
+        array([ 0.        ,  0.69314718,  1.09861229])
+        >>>
+        
         """
-        y = self.copy()
-        np.log(y.x, y.x)
-        return y  
+        x = np.log(self.x)
+        label = self.copylabel()
+        return larry(x, label) 
 
     def exp(self):
         """
         Element by element exponential.
-                
-        Parameters
-        ----------
-        No input
         
         Returns
         -------
         out : larry
             Returns a copy with exp of x values.
+
+        Examples
+        --------            
+        >>> y = larry([1, 2, 3])
+        >>> y.exp()
+        label_0
+            0
+            1
+            2
+        x
+        array([  2.71828183,   7.3890561 ,  20.08553692])            
                 
         """
-        y = self.copy()
-        np.exp(y.x, y.x)
-        return y
+        x = np.exp(self.x)
+        label = self.copylabel()
+        return larry(x, label)
         
     def sqrt(self):
         """
         Element by element square root.
-                
-        Parameters
-        ----------
-        No input
         
         Returns
         -------
         out : larry
             Returns a copy with square root of x values.
+
+        Examples
+        --------            
+        >>> y = larry([1, 4, 9])
+        >>> y.sqrt()
+        label_0
+            0
+            1
+            2
+        x
+        array([ 1.,  2.,  3.])
                 
         """
-        y = self.copy()        
-        np.sqrt(y.x, y.x)
-        return y
+        x = np.sqrt(self.x)
+        label = self.copylabel()
+        return larry(x, label)
 
     def sign(self):
         """
         Element by element sign of the element.
         
         Returns -1 if x < 0; 0 if x == 0, and 1 if x > 0.
-                
-        Parameters
-        ----------
-        No input
         
         Returns
         -------
         out : larry
             Returns a copy with the sign of the values.
+            
+        Examples
+        --------
+        >>> y = larry([-1, 2, -3, 4])
+        >>> y.sign()
+        label_0
+            0
+            1
+            2
+            3
+        x
+        array([-1,  1, -1,  1])
                 
         """
-        y = self.copy()        
-        np.sign(y.x, y.x)
-        return y
+        x = np.sign(self.x)
+        label = self.copylabel()
+        return larry(x, label)
         
     def power(self, q):               
         """
@@ -164,11 +219,22 @@ class larry(object):
         -------
         out : larry
             Returns a copy with x values to the qth power.
+
+        Examples
+        --------
+        >>> y = larry([1, 2, 3])
+        >>> y.power(2)
+        label_0
+            0
+            1
+            2
+        x
+        array([1, 4, 9])
                 
         """
-        y = self.copy()
-        np.power(y.x, q, y.x)
-        return y
+        x = np.power(self.x, q)
+        label = self.copylabel()
+        return larry(x, label)
         
     def __pow__(self, q):
         """
@@ -204,8 +270,19 @@ class larry(object):
         Raises
         ------
         AssertionError
-            If axis is None.    
-                
+            If axis is None.
+            
+        Examples
+        --------
+        >>> y = larry([1, 2, 3])
+        >>> y.cumsum(axis=0)
+        label_0
+            0
+            1
+            2
+        x
+        array([1, 3, 6])                        
+                        
         """
         assert axis is not None, 'axis cannot be None'
         y = self.copy()
@@ -233,6 +310,18 @@ class larry(object):
         ------
         AssertionError
             If `lo` is greater than `hi`.
+            
+        Examples
+        --------
+        >>> y = larry([1, 2, 3, 4])
+        >>> y.clip(2, 3)
+        label_0
+            0
+            1
+            2
+            3
+        x
+        array([2, 2, 3, 3])                    
         
         """
         assert lo <= hi, 'lo should be less than or equal to hi'
@@ -253,15 +342,23 @@ class larry(object):
     def abs(self):
         """
         Absolute value of x.
-                        
-        Parameters
-        ----------
-        No input
         
         Returns
         -------
         out : larry
             Returns a copy with the absolute values of the x data.
+
+        Examples
+        --------
+        >>> y = larry([-1, 2, -3, 4])
+        >>> y.abs()
+        label_0
+            0
+            1
+            2
+            3
+        x
+        array([1, 2, 3, 4])
        
         """
         y = self.copy()
@@ -271,10 +368,6 @@ class larry(object):
     def __abs__(self):
         """
         Absolute value of x.
-                        
-        Parameters
-        ----------
-        No input
         
         Returns
         -------
@@ -285,19 +378,81 @@ class larry(object):
         return self.abs()
         
     def isnan(self):
-        "Returns a bool larry with NaNs replaced by True, non-NaNs False."
+        """
+        Returns a bool larry with NaNs replaced by True, non-NaNs False.
+
+        Returns
+        -------
+        out : larry
+            Returns a copy with NaNs replaced by True, non-NaNs False.
+        
+        Examples
+        --------
+        >>> import la
+        >>> y = larry([-la.inf, 1.0, la.nan, la.inf])
+        >>> y.isnan()
+        label_0
+            0
+            1
+            2
+            3
+        x
+        array([False, False,  True, False], dtype=bool)
+
+        """
         label = self.copylabel()
         x = np.isnan(self.x)
         return type(self)(x, label)                             
 
     def isfinite(self):
-        "Returns a bool larry with NaNs and Inf replaced by True, others False."    
+        """
+        Returns a bool larry with NaNs and Inf replaced by True, others False.
+
+        Returns
+        -------
+        out : larry
+            Returns a copy with NaNs and Inf replaced by True, others False.
+
+        Examples
+        --------        
+        >>> import la
+        >>> y = larry([-la.inf, 1.0, la.nan, la.inf])
+        >>> y.isfinite()
+        label_0
+            0
+            1
+            2
+            3
+        x
+        array([False,  True, False, False], dtype=bool)
+        
+        """    
         label = self.copylabel()
         x = np.isfinite(self.x)
         return type(self)(x, label)
         
     def isinf(self):
-        "Returns a bool larry with -Inf and Inf replaced by True, others False."     
+        """Returns a bool larry with -Inf and Inf replaced by True, others False.
+
+        Returns
+        -------
+        out : larry
+            Returns a copy with -Inf and Inf replaced by True, others False.
+        
+        Examples
+        --------
+        >>> import la
+        >>> y = larry([-la.inf, 1.0, la.nan, la.inf])
+        >>> y.isinf()
+        label_0
+            0
+            1
+            2
+            3
+        x
+        array([ True, False, False,  True], dtype=bool)
+        
+        """    
         label = self.copylabel()
         x = np.isinf(self.x)
         return type(self)(x, label)                        
@@ -310,7 +465,26 @@ class larry(object):
     __array_priority__ = 10                      
         
     def __add__(self, other):
-        "Sum a larry with another larry, Numpy array, or scalar."
+        """Sum a larry with another larry, Numpy array, or scalar.
+        
+        Examples
+        --------
+        >>> larry([1.0, 2.0]) + larry([2.0, 3.0])
+        label_0
+            0
+            1
+        x
+        array([ 3.,  5.])        
+        
+        >>> y1 = larry([1,2], [['a', 'b']])
+        >>> y2 = larry([1,2], [['b', 'c']])
+        >>> y1 + y2
+        label_0
+            b
+        x
+        array([3])        
+        
+        """
         if isinstance(other, larry):
             if self.label == other.label:
                 y = self.copy()
@@ -329,7 +503,26 @@ class larry(object):
     __radd__ = __add__
     
     def __sub__(self, other):
-        "Subtract a larry from another larry, Numpy array, or scalar."    
+        """
+        Subtract a larry from another larry, Numpy array, or scalar.
+        
+        Examples
+        --------
+        >>> larry([1.0, 2.0]) - larry([2.0, 3.0])
+        label_0
+            0
+            1
+        x
+        array([-1., -1.])        
+        
+        >>> y1 = larry([1,2], [['a', 'b']])
+        >>> y2 = larry([1,2], [['b', 'c']])
+        >>> y1 - y2
+        label_0
+            b
+        x
+        array([1])        
+        """   
         if isinstance(other, larry):
             if self.label == other.label:
                 y = self.copy()
@@ -350,7 +543,27 @@ class larry(object):
         return -self.__sub__(other)       
 
     def __div__(self, other):
-        "Divide a larry with a another larry, Numpy array, or scalar."    
+        """Divide a larry with a another larry, Numpy array, or scalar.
+        
+        Examples
+        -------- 
+        
+        >>> larry([1.0, 2.0]) / larry([2.0, 3.0])
+        label_0
+            0
+            1
+        x
+        array([ 0.5       ,  0.66666667])        
+        
+        >>> y1 = larry([1,2], [['a', 'b']])
+        >>> y2 = larry([1,2], [['b', 'c']])
+        >>> y1 / y2
+        label_0
+            b
+        x
+        array([2])        
+               
+        """    
         if isinstance(other, larry):
             if self.label == other.label:
                 y = self.copy()
@@ -379,7 +592,27 @@ class larry(object):
         raise TypeError, 'Input must be scalar, array, or larry.'
         
     def __mul__(self, other): 
-        "Multiply a larry with a another larry, Numpy array, or scalar."       
+        """
+        Multiply a larry with a another larry, Numpy array, or scalar.
+        
+        Examples
+        --------
+        >>> larry([1.0, 2.0]) * larry([2.0, 3.0])
+        label_0
+            0
+            1
+        x
+        array([ 2.,  6.])        
+         
+        >>> y1 = larry([1,2], [['a', 'b']])
+        >>> y2 = larry([1,2], [['b', 'c']])
+        >>> y1 * y2
+        label_0
+            b
+        x
+        array([2])        
+                
+        """      
         if isinstance(other, larry):
             if self.label == other.label:
                 y = self.copy()
@@ -402,7 +635,26 @@ class larry(object):
     __rmul__ = __mul__
 
     def __and__(self, other):
-        "Logical and a larry with a another larry, Numpy array, or scalar."    
+        """Logical and a larry with a another larry, Numpy array, or scalar.
+        
+        Examples
+        --------
+        >>> (larry([1.0, 2.0]) > 1) & (larry([2.0, 3.0]) > 1)
+        label_0
+            0
+            1
+        x
+        array([False,  True], dtype=bool)        
+        
+        >>> y1 = larry([1,2], [['a', 'b']])
+        >>> y2 = larry([1,2], [['b', 'c']])
+        >>> (y1 > 0) & (y2 > 0)
+        label_0
+            b
+        x
+        array([ True], dtype=bool)                 
+        
+        """    
         if isinstance(other, larry):
             if self.label == other.label:
                 y = self.copy()
@@ -421,21 +673,41 @@ class larry(object):
     __rand__ = __and__
 
     def __or__(self, other):
-       "Logical or a larry with a another larry, Numpy array, or scalar."     
-       if isinstance(other, larry):
+        """
+        Logical or a larry with a another larry, Numpy array, or scalar.
+
+        Examples
+        --------
+        >>> (larry([1.0, 2.0]) > 1) | (larry([2.0, 3.0]) > 1)
+        label_0
+            0
+            1
+        x
+        array([ True,  True], dtype=bool)        
+        
+        >>> y1 = larry([1,2], [['a', 'b']])
+        >>> y2 = larry([1,2], [['b', 'c']])
+        >>> (y1 > 0) | (y2 > 0)
+        label_0
+            b
+        x
+        array([ True], dtype=bool)
+                        
+        """     
+        if isinstance(other, larry):
             if self.label == other.label:
                 y = self.copy()
                 y.x |= other.x
                 return y                         
             else:          
-               x, y, label = self.__align(other)
-               x |= y
-               return type(self)(x, label)
-       if np.isscalar(other) or isinstance(other, np.ndarray):
-           y = self.copy()
-           y.x |= other
-           return y
-       raise TypeError, 'Input must be scalar, array, or larry.'
+                x, y, label = self.__align(other)
+                x |= y
+                return type(self)(x, label)
+        if np.isscalar(other) or isinstance(other, np.ndarray):
+            y = self.copy()
+            y.x |= other
+            return y
+        raise TypeError, 'Input must be scalar, array, or larry.'
 
     __ror__ = __or__
 
@@ -491,6 +763,12 @@ class larry(object):
         ------
         ValueError
             If axis is not an integer or None.
+            
+        Examples
+        --------
+        >>> y = larry([la.nan, 1, 2])
+        >>> y.sum()
+        3.0           
                     
         """
         return self.__reduce(axis, np.nansum)    
@@ -515,6 +793,12 @@ class larry(object):
         ------
         ValueError
             If axis is not an integer or None.
+
+        Examples
+        --------
+        >>> y = larry([la.nan, 1, 2])
+        >>> y.mean()
+        1.4999999999999998         
                     
         """
         return self.__reduce(axis, nanmean) 
@@ -539,6 +823,10 @@ class larry(object):
         ------
         ValueError
             If axis is not an integer or None.
+
+        Examples
+        --------
+         
                     
         """
         return self.__reduce(axis, nanmedian) 
@@ -563,6 +851,9 @@ class larry(object):
         ------
         ValueError
             If axis is not an integer or None.
+
+        Examples
+        -------- 
                     
         """
         return self.__reduce(axis, nanstd)  
@@ -587,6 +878,9 @@ class larry(object):
         ------
         ValueError
             If axis is not an integer or None.
+
+        Examples
+        -------- 
                     
         """
         y = self.__reduce(axis, nanstd)
@@ -616,6 +910,9 @@ class larry(object):
         ------
         ValueError
             If axis is not an integer or None.
+
+        Examples
+        -------- 
                     
         """            
         return self.__reduce(axis, np.nanmax)             
@@ -640,6 +937,9 @@ class larry(object):
         ------
         ValueError
             If axis is not an integer or None.
+
+        Examples
+        -------- 
                     
         """
         return self.__reduce(axis, np.nanmin)  
@@ -671,6 +971,9 @@ class larry(object):
         Returns
         -------
         out : {True, False}
+
+        Examples
+        -------- 
         
         """
         if axis is None:
@@ -691,6 +994,9 @@ class larry(object):
         Returns
         -------
         out : {True, False}
+
+        Examples
+        -------- 
         
         """
         if axis is None:
@@ -1173,7 +1479,6 @@ class larry(object):
         -------- 
         Create a larry with dates in the label:        
         
-        >>> from la import larry
         >>> import datetime
         >>> d = datetime.date
         >>> y = larry([1, 2], [[d(2010,1,1), d(2010,1,2)]])
@@ -1663,7 +1968,6 @@ class larry(object):
             
         Examples
         --------
-        >>> from la import larry
         >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
         >>> y
         label_0

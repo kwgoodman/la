@@ -8,6 +8,8 @@ One change was made to the SciPy version of nanstd. The default for nanstd
 was changed from bias=False (N-1 normalization) to bias=False (N
 normalization). That makes it match the defaults for np.std and scipy.std.
 
+nanmedian has been modifed. See http://projects.scipy.org/scipy/ticket/1098
+
 """
 
 import numpy as np
@@ -105,8 +107,13 @@ def _nanmedian(arr1d):  # This only works on 1d arrays
         return np.nan
     return np.median(x)
 
+# A change was made from the scipy version to handle scalar input an to 
+# return a scalar when a 1d array is passed in or when axis is None.
 def nanmedian(x, axis=0):
     """ Compute the median along the given axis ignoring nan values
+    
+    Note: This function has been modified from the original scipy function.
+    See http://projects.scipy.org/scipy/ticket/1098    
 
     :Parameters:
         x : ndarray
@@ -116,10 +123,15 @@ def nanmedian(x, axis=0):
 
     :Results:
         m : float
-            the median."""
+            the median."""           
     x, axis = _chk_asarray(x,axis)
+    if x.ndim == 0:
+        return float(x.item())
     x = x.copy()
-    return np.apply_along_axis(_nanmedian,axis,x)
+    x = np.apply_along_axis(_nanmedian,axis,x)
+    if x.ndim == 0:
+        x = float(x.item())
+    return x
 
 def rankdata(a):
     """Ranks the data in a, dealing with ties appropriately.

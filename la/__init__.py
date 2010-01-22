@@ -10,6 +10,8 @@ try:
 except ImportError:
     print "Cannot import h5py; no archiving available."        
 
+from numpy import nan, inf
+
 try:
     from numpy.testing import Tester
     test = Tester().test

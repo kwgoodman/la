@@ -1,3 +1,17 @@
+2010-01-22 Keith
+
+    * deflarry.py(log), deflarry.py(exp), deflarry.py(sqrt),
+      deflarry.py(sign): Bug fix: int input should give float output (except
+      for sign, I changed that to keep it the same as the others.)
+
+    * util/scipy.py(nanmedian): Bug fix in scipy.stats.nanmedian.
+
+    * la/__init__.py: import np.nan and np.inf to top level so that we can do
+      la.nan and la.inf.
+      
+    * deflarry.py, doc/source/reference.rst: Added exampled to doc string in
+      deflarry. Reworked reference.rst.
+
 2010-01-21 Keith
     
     * deflarry.py(flatten), tests/deflarry_test.py, doc/source/reference.rst,
