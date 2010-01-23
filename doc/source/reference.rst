@@ -419,16 +419,17 @@ The data and the labels of larrys can be randomly shuffled in-place:
    :members: shuffle, shufflelabel
 
 
+.. _missing:
+
 Missing data
 ------------
 
 NaNs are treated as missing data in larry:
 ::
-    >>> from la import larry
-    >>> import numpy as np
-    >>> y = larry([1.0, np.nan])
+    >>> import la
+    >>> y = larry([1.0, la.nan])
     >>> y.sum()
-    1   
+    1.0   
 
 .. autoclass:: la.larry
    :members: cut_missing, push, vacuum, nan_replace 

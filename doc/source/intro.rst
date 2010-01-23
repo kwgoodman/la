@@ -10,14 +10,14 @@ installation.
 Who's larry?
 ============
 
-Here's a larry, *y*, in schematic form:
+Here's a larry in schematic form:
 ::    
                          date1    date2    date3
                 'AAPL'   209.19   207.87   210.11
             y = 'IBM'    129.03   130.39   130.55
                 'DELL'    14.82    15.11    14.94
                 
-larry stores its data as a `Numpy <http://www.numpy.org>`_ array and a list
+larry stores its data in a `Numpy <http://www.numpy.org>`_ array and a list
 of lists:
 ::    
         y.label = [['AAPL', 'IBM', 'DELL'], [date1, date2, date3]]
