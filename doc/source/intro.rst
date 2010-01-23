@@ -7,18 +7,18 @@ larry is a labeled Numpy array. In this part of the manual I'll try to give
 you a sense of what larry can do and then talk about the license and
 installation. 
 
-Meet larry
-==========
+Who's larry?
+============
 
-Here's a two-dimensional larry, *y*, in schematic form:
+Here's a larry, *y*, in schematic form:
 ::    
-                                 date1    date2    date3
-                        'AAPL'   209.19   207.87   210.11
-                    y = 'IBM'    129.03   130.39   130.55
-                        'DELL'    14.82    15.11    14.94
+                         date1    date2    date3
+                'AAPL'   209.19   207.87   210.11
+            y = 'IBM'    129.03   130.39   130.55
+                'DELL'    14.82    15.11    14.94
                 
-larry stores the data as a `Numpy <http://www.numpy.org>`_ array and the
-labels as a list of lists (one list for each dimension):
+larry stores its data as a `Numpy <http://www.numpy.org>`_ array and a list
+of lists:
 ::    
         y.label = [['AAPL', 'IBM', 'DELL'], [date1, date2, date3]]
         y.x = np.array([[209.19, 207.87, 210.11],
@@ -34,7 +34,7 @@ one-dimensional larry:
 In the statement above the list is converted to a Numpy array and the labels
 default to ``range(n)``, where *n* in this case is 3.
     
-larry has many built-in methods such as **movingsum, ranking, merge, shuffle,
+larry has built-in methods such as **movingsum, ranking, merge, shuffle,
 zscore, demean, lag** as well as typical Numpy methods like **sum, max, std,
 sign, clip**. NaNs are treated as missing data.
     
@@ -57,7 +57,7 @@ larry, *y*, like this:
 ::    
                            y.x = myfunc(y.x)
     
-larry adds the convenience of labels, provides many built-in functions, and
+larry adds the convenience of labels, provides many built-in methods, and
 let's you use your existing array functions.       
 
 License
@@ -80,7 +80,7 @@ find it. Then run:
     >>> import la
     >>> la.test()
     <snip>
-    Ran 552 tests in 0.492s
+    Ran 554 tests in 0.492s
     OK
-    <nose.result.TextTestResult run=552 errors=0 failures=0>
+    <nose.result.TextTestResult run=554 errors=0 failures=0>
 

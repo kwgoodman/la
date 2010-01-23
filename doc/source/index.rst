@@ -1,5 +1,6 @@
-larry manual
-============
+=================
+larry, the manual
+=================
 
 Meet larry, he's a labeled array.
 
@@ -7,7 +8,7 @@ Meet larry, he's a labeled array.
    :maxdepth: 2
    
    intro
-   start
+   work
    archive
    reference
 

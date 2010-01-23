@@ -1,15 +1,23 @@
 
-===========
-Quick start
-===========
+==================
+Working with larry
+==================
 
-Sometimes the best way to learn how to use a new package is to look at a few
-examples. A line of code is worth a thousand words (or is that a thousand
-bugs?).
+This section describes how to work with larrys.
+
+.. contents::
+
+All of the examples below assume that you have already imported larry:
+::
+    >>> from la import larry
+    
+More examples of what you can do with larrys are given in :ref:`reference`.    
+
+Creating a larry
+----------------
 
 Let's begin by creating a larry (Labeled ARRaY):
 ::
-    >>> from la import larry
     >>> y = larry([1, 2, 3])
     >>> y
     label_0
@@ -24,7 +32,7 @@ default to ``range(n)``, where *n* in this case is 3.
 
 To use our own labels we pass them in when we construct a larry:
 ::
-    >>> y = larry([[1.0,2.0],[3.0,4.0]], [['a', 'b'], [11, 13]])
+    >>> y = larry([[1.0, 2.0],[3.0, 4.0]], [['a', 'b'], [11, 13]])
     >>> y
     label_0
         a
@@ -56,9 +64,51 @@ Here is a more formal way to create a larry:
     array([[1, 2],
            [3, 4]])
 
+The labels, along any one axis, must be unique. Let's try to create a larry
+with labels that are not unique:
+::
+    >>> larry([1, 2], [['a', 'a']])
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "la/la/deflarry.py", line 97, in __init__
+        raise ValueError, msg % (i, value, key)
+    ValueError: Elements of label not unique along axis 0. There are 2 labels named `a`.
+
+The shape of the data array must agree with the shape of the label. Let's try
+to create larry where the shape of the data does not agree with the shape of
+the label:
+::
+    >>> larry([[1, 2], [3, 4]], [['a', 'b'], ['c']])
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "la/la/deflarry.py", line 86, in __init__
+        raise ValueError, msg % i
+    ValueError: Length mismatch in label and x along axis 1
+
+Properties
+----------
+
+Some basic properties of larrys:
+::
+    >>> y = larry([[1.0, 2.0],[3.0, 4.0]], [['r0', 'r2'], ['c0', 'c1']])
+    >>> y.shape
+    (2, 2)
+    >>> y.size
+    4
+    >>> y.ndim
+    2
+    >>> y.dtype
+    dtype('float64')
+    >>> y.dtype.type
+    <type 'numpy.float64'>    
+
+Indexing
+--------
+
 In most cases, indexing into a larry is similar to indexing into a Numpy
 array:
 ::
+    >>> y = larry([[1.0, 2.0],[3.0, 4.0]], [['a', 'b'], [11, 13]])
     >>> y[:,0]
     label_0
         a
@@ -77,15 +127,9 @@ Indexing by label name is only supported indirectly:
     x
     array([ 1.,  2.])
 
-Next let's look at some properties of the larry, *y*:
-::
-    >>> y.shape
-    (2, 2)
-    >>> y.dtype
-    dtype('float64')
-    >>> y.size
-    4
-    
+Alignment
+---------
+
 And let's do some simple calculations:
 ::
     >>> y.mean()
@@ -183,11 +227,21 @@ In that case larry does the alignment for you:
         west
     x
     array([[5, 5],
-           [5, 5]])           
-           
-More examples of what you can do with larrys are given in :ref:`reference`.           
-    
-    
+           [5, 5]])
+
+Archiving
+---------
+
+The archiving of larrys is described in :ref:`archive`.
+
+Performance
+-----------
+
+
+Known issues
+------------
+
+
 
 
     

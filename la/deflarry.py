@@ -82,7 +82,7 @@ class larry(object):
         for i, l in enumerate(label):
             nlabel = len(l)
             if x.shape[i] != nlabel:
-                msg = 'Length mismatch in label and x along dimension %d'
+                msg = 'Length mismatch in label and x along axis %d'
                 raise ValueError, msg % i
             if len(frozenset(l)) != nlabel:
                 # We have duplicates in the label, give an example
@@ -92,7 +92,7 @@ class larry(object):
                 for key, value in count.iteritems():
                     if value > 1:
                         break 
-                msg = "Elements of label not unique along dimension %d. "
+                msg = "Elements of label not unique along axis %d. "
                 msg += "There are %d labels named `%s`."          
                 raise ValueError, msg % (i, value, key)
             if type(l) is not list:
