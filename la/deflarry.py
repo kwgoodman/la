@@ -255,11 +255,11 @@ class larry(object):
         
     def cumsum(self, axis): 
         """
-        Cumsum, treating NaNs as zero.
+        Cumulative sum, ignoring NaNs.
         
         Parameters
         ----------
-        axis : integer, optional
+        axis : int
             axis to cumsum along, no default. None is not allowed.
             
         Returns
@@ -289,6 +289,44 @@ class larry(object):
         y[np.isnan(y.x)] = 0
         y.x.cumsum(axis, out=y.x)
         return y        
+
+    def cumprod(self, axis): 
+        """
+        Cumulative product, ignoring NaNs.
+        
+        Parameters
+        ----------
+        axis : int
+            axis to find the cumulative product along, no default. None is
+            not allowed.
+            
+        Returns
+        -------
+        out : larry
+            Returns a copy with cumprod along axis.  
+            
+        Raises
+        ------
+        AssertionError
+            If axis is None.
+            
+        Examples
+        --------
+        >>> y = larry([1, 2, 3])
+        >>> y.cumprod(axis=0)
+        label_0
+            0
+            1
+            2
+        x
+        array([1, 2, 6])                       
+                        
+        """
+        assert axis is not None, 'axis cannot be None'
+        y = self.copy()
+        y[np.isnan(y.x)] = 1
+        y.x.cumprod(axis, out=y.x)
+        return y
 
     def clip(self, lo, hi):
         """
@@ -766,8 +804,8 @@ class larry(object):
             
         Examples
         --------
-        >>> import la
-        >>> y = larry([[la.nan, 2], [3,  4]])
+        >>> from la import nan 
+        >>> y = larry([[nan, 2], [3,  4]])
         >>> y.sum()
         9.0
         >>> y.sum(axis=0)
@@ -779,6 +817,44 @@ class larry(object):
                     
         """
         return self.__reduce(axis, np.nansum)    
+
+    def prod(self, axis=None):
+        """
+        Product of values along axis, ignoring NaNs.
+
+        Parameters
+        ----------
+        axis : {None, integer}, optional
+            Axis to find the product along or find the product over a
+            all axes (None, default).
+            
+        Returns
+        -------
+        d : {larry, scalar}
+            When axis is an integer a larry is returned. When axis is None
+            (default) a scalar is returned (assuming larry contains scalars).
+            
+        Raises
+        ------
+        ValueError
+            If axis is not an integer or None.
+            
+        Examples
+        --------
+        >>> from la import nan        
+        >>> y = larry([[nan, 2], [3,  4]])
+        >>> y.prod()
+        24.0
+        >>> y.prod(axis=0)
+        label_0
+            0
+            1
+        x
+        array([ 3.,  8.])
+             
+        """
+        y = self.nan_replace(1)
+        return y.__reduce(axis, np.prod) 
 
     def mean(self, axis=None):
         """
@@ -803,8 +879,8 @@ class larry(object):
 
         Examples
         --------
-        >>> import la
-        >>> y = larry([[la.nan, 2], [3,  4]])
+        >>> from la import nan
+        >>> y = larry([[nan, 2], [3,  4]])
         >>> y.mean()
         3.0
         >>> y.mean(axis=0)
@@ -840,8 +916,8 @@ class larry(object):
 
         Examples
         --------
-        >>> import la
-        >>> y = larry([[la.nan, 2], [3,  4]])
+        >>> from la import nan
+        >>> y = larry([[nan, 2], [3,  4]])
         >>> y.median()
         3.0
         >>> y.median(axis=0)
@@ -877,8 +953,8 @@ class larry(object):
 
         Examples
         -------- 
-        >>> import la
-        >>> y = larry([[la.nan, 2], [3,  4]])
+        >>> from la import nan 
+        >>> y = larry([[nan, 2], [3,  4]])
         >>> y.std()
         0.81649658092772603
         >>> y.std(axis=0)
@@ -914,8 +990,8 @@ class larry(object):
 
         Examples
         -------- 
-        >>> import la
-        >>> y = larry([[la.nan, 2], [3,  4]])
+        >>> from la import nan
+        >>> y = larry([[nan, 2], [3,  4]])
         >>> y.var()
         0.66666666666666663
         >>> y.var(axis=0)
@@ -956,8 +1032,8 @@ class larry(object):
 
         Examples
         -------- 
-        >>> import la
-        >>> y = larry([[la.nan, 2], [3,  4]])
+        >>> from la import nan
+        >>> y = larry([[nan, 2], [3,  4]])
         >>> y.max()
         4.0
         >>> y.max(axis=0)
@@ -993,8 +1069,8 @@ class larry(object):
 
         Examples
         -------- 
-        >>> import la
-        >>> y = larry([[la.nan, 2], [3,  4]])
+        >>> from la import nan
+        >>> y = larry([[nan, 2], [3,  4]])
         >>> y.min()
         2.0
         >>> y.min(axis=0)

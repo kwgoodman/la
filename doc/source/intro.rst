@@ -38,8 +38,8 @@ larry has built-in methods such as **movingsum, ranking, merge, shuffle,
 zscore, demean, lag** as well as typical Numpy methods like **sum, max, std,
 sign, clip**. NaNs are treated as missing data.
     
-Alignment is automatic when you add (or subtract, multiply, divide) two
-larrys.
+Alignment by label is automatic when you add (or subtract, multiply, divide)
+two larrys.
     
 You can archive larrys in HDF5 format using **save** and **load** or using a
 dictionary-like interface:
@@ -80,7 +80,7 @@ find it. Then run:
     >>> import la
     >>> la.test()
     <snip>
-    Ran 554 tests in 0.492s
+    Ran 563 tests in 0.516s
     OK
-    <nose.result.TextTestResult run=554 errors=0 failures=0>
+    <nose.result.TextTestResult run=563 errors=0 failures=0>
 

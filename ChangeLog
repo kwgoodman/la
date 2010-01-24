@@ -1,5 +1,13 @@
 2010-01-23 Keith
 
+    * deflarry.py(larry.prod), deflarry.py(larry.cumprod), deflarry_test.py,
+      doc/source/reference.rst: Two new larry methods: prod and cumprod plus
+      corresponding unit tests.
+      
+    * doc/source/intro.rst, doc/source/work.rst: Work on manual.
+
+2010-01-23 Keith
+
     * doc/source/work.rst, doc/source/intro.rst, doc/source/reference.rst:
       Work on manual.  
 

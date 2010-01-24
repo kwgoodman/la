@@ -57,6 +57,9 @@ and do not change its shape or ordering.
 
 ------------
 
+.. automethod:: la.larry.cumprod
+------------
+
 .. automethod:: la.larry.clip
 
 ------------
@@ -117,6 +120,10 @@ axes thereby reducing the dimension of the larry.
              
 .. automethod:: la.larry.sum
              
+------------
+
+.. automethod:: la.larry.prod
+
 ------------
 
 .. automethod:: la.larry.mean

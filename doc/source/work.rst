@@ -17,7 +17,7 @@ More examples of what you can do with larrys are given in :ref:`reference`.
 Creating a larry
 ----------------
 
-Let's begin by creating a larry (Labeled ARRaY):
+Let's create a larry (Labeled ARRaY):
 ::
     >>> y = larry([1, 2, 3])
     >>> y
@@ -27,11 +27,13 @@ Let's begin by creating a larry (Labeled ARRaY):
         2
     x
     array([1, 2, 3])
-    
-In the statement above the list is converted to a Numpy array and the labels
-default to ``range(n)``, where *n* in this case is 3.
 
-To use our own labels we pass them in when we construct a larry:
+A larry consists of a data array and a label. In the statement above, larry
+creates the data array by converting the list ``[1, 2, 3]`` to a Numpy array.
+The label, since none was specified, defaults to ``range(n)``, where *n* in
+this case is 3.
+
+To use your own labels pass them in when you construct a larry:
 ::
     >>> y = larry([[1.0, 2.0], [3.0, 4.0]], [['a', 'b'], [11, 13]])
     >>> y
@@ -86,13 +88,13 @@ to create a larry whose data shape does not agree with the label shape:
     ValueError: Length mismatch in label and x along axis 1
 
 
-Properties
-----------
+Shape, size, type
+-----------------
 
 The shape, size, and type of a larry are the same as the underlying Numpy
 array:
 ::
-    >>> y = larry([[1.0, 2.0], [3.0, 4.0]], [['r0', 'r2'], ['c0', 'c1']])
+    >>> y = larry([[1.0, 2.0], [3.0, 4.0]], [['r0', 'r1'], ['c0', 'c1']])
     >>> y.shape
     (2, 2)
     >>> y.size
@@ -101,6 +103,27 @@ array:
     2
     >>> y.dtype
     dtype('float64') 
+    
+larry does not have a reshape method. A reshape would scramble all the labels.
+But larry does have a **flatten** method:
+::
+    >>> y = larry([[1.0, 2.0], [3.0, 4.0]], [['r0', 'r1'], ['c0', 'c1']])
+    >>> y.flatten()
+    label_0
+        ('r0', 'c0')
+        ('r0', 'c1')
+        ('r1', 'c0')
+        ('r1', 'c1')
+    x
+    array([ 1.,  2.,  3.,  4.])
+    >>> y.flatten(order='F')
+    label_0
+        ('r0', 'c0')
+        ('r1', 'c0')
+        ('r0', 'c1')
+        ('r1', 'c1')
+    x
+    array([ 1.,  3.,  2.,  4.])   
   
     
 Missing values
@@ -118,8 +141,19 @@ Note that ``la.nan`` is the same as Numpy's NaN:
     >>> import numpy as np
     >>> la.nan is np.nan
     True
-
-There are several larry methods that deal with missing values. See
+    
+Missing values can be replaced:
+::
+    >>> from la import nan
+    >>> y = larry([1.0, nan])
+    >>> y.nan_replace(0.0) 
+    label_0
+        0
+        1
+    x
+    array([ 1.,  0.])
+    
+There are more larry methods that deal with missing values. See
 :ref:`missing` in :ref:`reference`.      
 
 Indexing
@@ -181,7 +215,7 @@ Let's look at a more complicated example:
     IndexError: A dimension has no matching labels
     
 Why did we get an index error when we tried to sum *z1* and *z2*? We got an
-error because *z1* and *z2* have no overlap: there are no elements 'a' and 'b'
+error because *z1* and *z2* have no overlap: there are no labels 'a' and 'b'
 in *z2* to add to those in *z1*.
 
 Let's make a third larry that can be added to *z1*:
@@ -207,8 +241,8 @@ Although we cannot sum *z1* and *z2*, we can merge them:
     x
     array([ 1.,  2.,  3.,  4.])
        
-It is often convenient to pre-align larrys. To align two larrys we use the
-``morph`` method:
+It is often convenient to pre-align larrys. To align two larrys we use
+**morph_like**:
 ::
     >>> y1 = larry([1, 2, 3], [['a', 'b', 'c']])
     >>> y2 = larry([6, 4, 5], [['c', 'a', 'b']])
@@ -243,8 +277,7 @@ the following example):
         d
         e
     x
-    array([  1.,   2.,   3.,  NaN,  NaN])   
-
+    array([  1.,   2.,   3.,  NaN,  NaN])
 
 Archiving
 ---------

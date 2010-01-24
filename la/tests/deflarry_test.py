@@ -233,6 +233,63 @@ class Test_unary(unittest.TestCase):
         label = [[0,1]]
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l2), 'Reference found')                      
+ 
+# ----------------------------------------------------------------------
+
+    def test_cumprod_1(self):
+        "larry.cumprod_1"       
+        t = np.array([[ 1.0, 1.0],
+                      [ 1.0, 1.0],
+                      [ 1.0, 1.0]])               
+        p = self.l.cumprod(0)
+        msg = printfail(t, p.x, 'x')
+        t[np.isnan(t)] = self.nancode
+        p[np.isnan(p.x)] = self.nancode        
+        self.assert_((abs(t - p) < self.tol).all(), msg) 
+        label = [[0,1,2], [0,1]]
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, self.l), 'Reference found')   
+
+    def test_cumprod_2(self):
+        "larry.cumprod_2"       
+        t = np.array([[ 1.0, 1.0],
+                      [ 1.0, 1.0],
+                      [ 1.0, 1.0]])               
+        p = self.l.cumprod(1)
+        msg = printfail(t, p.x, 'x')
+        t[np.isnan(t)] = self.nancode
+        p[np.isnan(p.x)] = self.nancode        
+        self.assert_((abs(t - p) < self.tol).all(), msg) 
+        label = [[0,1,2], [0,1]]
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, self.l), 'Reference found')
+        
+    def test_cumprod_3(self):
+        "larry.cumprod_3"
+        t = np.cumprod(self.x3, 0)
+        t = larry(t)
+        p = self.l3.cumprod(0)
+        msg = printfail(t, p, 'larry')
+        t[np.isnan(t.x)] = self.nancode
+        p[np.isnan(p.x)] = self.nancode        
+        self.assert_((abs(t - p) < self.tol).all(), msg) 
+        self.assert_(noreference(p, self.l3), 'Reference found')
+        self.assert_(noreference(p, t), 'Reference found') 
+        
+    def test_cumprod_4(self):
+        "larry.cumprod_4"       
+        t = np.array([ 1.0, 1.0])               
+        p = self.l2.cumprod(0)
+        msg = printfail(t, p.x, 'x')
+        t[np.isnan(t)] = self.nancode
+        p[np.isnan(p.x)] = self.nancode        
+        self.assert_((abs(t - p) < self.tol).all(), msg) 
+        label = [[0,1]]
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, self.l2), 'Reference found') 
+
+# ------------------------------------------------------------------------ 
+ 
         
     def test_clip_1(self):
         "larry.clip_1"        
@@ -1119,6 +1176,48 @@ class Test_reduce(unittest.TestCase):
         p = self.l2.sum()
         msg = printfail(t, p, '')
         self.assert_(p == t, msg)                         
+
+    def test_prod_1(self):
+        "larry.prod_1"
+        t = 1.0
+        p = self.l.prod()
+        msg = printfail(t, p, '')
+        self.assert_(p == t, msg)
+        
+    def test_prod_2(self):
+        "larry.prod_2"
+        x = self.x.copy()
+        label = [range(x.shape[1])]
+        x[np.isnan(x)] = 1
+        x = x.prod(0)
+        t = larry(x, label)
+        p = self.l.prod(0)
+        msg = printfail(t, p, '')
+        self.assert_((p == t).all(), msg)
+        self.assert_(noreference(p, t), 'Reference found')        
+
+    def test_prod_3(self):
+        "larry.prod_3"
+        x = self.x.copy()
+        label = [range(x.shape[0])]        
+        x[np.isnan(x)] = 1
+        x = x.prod(1)
+        t = larry(x, label)
+        p = self.l.prod(1)
+        msg = printfail(t, p, '')
+        self.assert_((p == t).all(), msg)
+        self.assert_(noreference(p, t), 'Reference found')
+        
+    def test_prod_4(self):
+        "larry.prod_4"
+        self.failUnlessRaises(ValueError, self.l.prod, 3)
+        
+    def test_prod_5(self):
+        "larry.prod_5"
+        t = 6.0
+        p = self.l2.prod()
+        msg = printfail(t, p, '')
+        self.assert_(p == t, msg)
 
     def test_mean_1(self):
         "larry.mean_1"
