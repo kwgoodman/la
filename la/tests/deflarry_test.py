@@ -2025,6 +2025,24 @@ class Test_getset(unittest.TestCase):
         self.assert_((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2], [0]]
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        
+    def test_getitem_18(self):
+        "larry.__getitem___18"
+        t = np.array([[3.0, 4.0]])
+        p = self.l[1.9]
+        msg = printfail(t, p.x, 'x')
+        t[np.isnan(t)] = self.nancode
+        p[np.isnan(p.x)] = self.nancode        
+        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        label = [[0, 1]]
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        
+    def test_getitem_19(self):
+        "larry.__getitem___19"
+        t = 4.0
+        p = self.l[1.1,1.1]
+        msg = printfail(t, p, 'x')      
+        self.assert_((abs(t - p) < self.tol).all(), msg)                
                 
     def test_setitem_1(self):
         "larry.__setitem___1"

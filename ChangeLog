@@ -1,4 +1,17 @@
+2010-01-25 Keith
+
+    * util/misc.py(isint), util/misc.py(isfloat), util/misc.py(isscalar), 
+      util/tests/misc_test.py, doc/source/intro.rst: Three new functions, plus
+      unit tests, to determine if the input is an int, float, scalar.
+
+    * deflarry.py(__getitem__), tests/deflarry_test.py: Bug fix: Allow
+      indexing of larrys with floats by using the the new isscalar function.
+      Add unit tests.
+
 2010-01-23 Keith
+
+    * deflarry.py(larry.__getitem__), deflarry_test.py, doc/source/intro.rst:
+      Bug fix: add ability to index with floats. Added unit tests. 
 
     * deflarry.py(larry.prod), deflarry.py(larry.cumprod), deflarry_test.py,
       doc/source/reference.rst: Two new larry methods: prod and cumprod plus

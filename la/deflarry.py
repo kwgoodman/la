@@ -6,7 +6,7 @@ from copy import deepcopy
 import numpy as np
    
 from la.util.scipy import (nanmean, nanmedian, nanstd)
-from la.util.misc import flattenlabel
+from la.util.misc import flattenlabel, isscalar
 from la.afunc import (group_ranking, group_mean, group_median, covMissing,
                       fillforward_partially, quantile, ranking, lastrank,
                       movingsum_forward, lastrank_decay, movingrank,
@@ -1287,7 +1287,8 @@ class larry(object):
         
         """
         typidx = type(index)
-        if typidx in (int, np.int, np.int16, np.int32, np.int64):      
+        if isscalar(index):
+            index = int(index)                
             if index >= self.shape[0]:
                 raise IndexError, 'index out of range'
             label = self.label[1:]
@@ -1298,7 +1299,7 @@ class larry(object):
                 if i < len(index):
                     idx = index[i]
                     typ = type(idx)
-                    if typ is int:
+                    if isscalar(idx):
                         if idx >= self.shape[i]:
                             raise IndexError, 'index out of range'
                         lab = None
