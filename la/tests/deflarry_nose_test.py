@@ -76,6 +76,7 @@ las = [(la1,'la1'), (la2,'la2'), (la1_3d, 'la1_3d'), (la3,'la3')]
 lasnonan = [(la1,'la1'), (la1_3d, 'la1_3d')]
 
 def test_methods_unary():
+    "larry unary nose test"
     # Simple unary elementwise operations
     for la, laname in las:
         for opname in meth_unary1:
@@ -87,6 +88,7 @@ def test_methods_unary():
             yield assert_, noreference(p, la), opname + ' - noreference'
             
 def test_methods_reduce():
+    "larry reduce nose test"
     # Simple unary elementwise operations
     for la, laname in las:
         for opname in meth_reduce1:
@@ -104,6 +106,7 @@ def test_methods_reduce():
                 yield assert_larry, opname, p, t, tlab, laname+' axis='+str(axis)
 
 def test_methods_nonan():
+    "larry nonan nose test"
     # Simple unary elementwise operations
     for la, laname in lasnonan:
         for opname in meth_nonan:

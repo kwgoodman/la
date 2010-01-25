@@ -80,7 +80,7 @@ find it. Then run:
     >>> import la
     >>> la.test()
     <snip>
-    Ran 566 tests in 0.516s
+    Ran 589 tests in 0.516s
     OK
-    <nose.result.TextTestResult run=566 errors=0 failures=0>
+    <nose.result.TextTestResult run=589 errors=0 failures=0>
 

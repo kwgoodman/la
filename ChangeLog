@@ -1,5 +1,17 @@
 2010-01-25 Keith
 
+    * util/tests/misc_test.py(test_isa), doc/source/intro.rst: Not all tests
+      were being run. Fixed. Also, if one tests fails, the remaining tests are
+      not run. So switched to a nose test. Now each test is run separately.
+
+    * doc/source/work.rst: Additions.
+    
+    * tests/deflarry_nose_test.py, tests/slicing_test.py: Added doc strings
+      so that something nice is be printed when the unit tests are run in
+      verbose mode.
+      
+    * tests/deflarry_test.py: Minor cleaning.  
+
     * util/misc.py(isint), util/misc.py(isfloat), util/misc.py(isscalar), 
       util/tests/misc_test.py, doc/source/intro.rst: Three new functions, plus
       unit tests, to determine if the input is an int, float, scalar.

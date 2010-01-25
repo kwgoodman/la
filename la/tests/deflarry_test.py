@@ -233,8 +233,6 @@ class Test_unary(unittest.TestCase):
         label = [[0,1]]
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l2), 'Reference found')                      
- 
-# ----------------------------------------------------------------------
 
     def test_cumprod_1(self):
         "larry.cumprod_1"       
@@ -287,9 +285,6 @@ class Test_unary(unittest.TestCase):
         label = [[0,1]]
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l2), 'Reference found') 
-
-# ------------------------------------------------------------------------ 
- 
         
     def test_clip_1(self):
         "larry.clip_1"        

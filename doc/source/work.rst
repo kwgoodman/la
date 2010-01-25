@@ -170,6 +170,21 @@ array:
     x
     array([ 1.,  3.])
     
+    >>> z = larry([1, 2, 3, 4, 5, 6, 7, 8, 9])
+    >>> z[1:7:2]
+    label_0
+        1
+        3
+        5
+    x
+    array([2, 4, 6])
+    
+The following types of indexing are not currently supported by larry (but they
+are supported when doing an assignment by indexing, see :ref:`assignment`):
+
+* Fancy indexing
+* Indexing with Ellipsis    
+    
 Indexing by label name is only supported indirectly:
 ::
     >>> idx = y.labelindex('a', axis=0)
@@ -178,7 +193,15 @@ Indexing by label name is only supported indirectly:
         11
         13
     x
-    array([ 1.,  2.])
+    array([ 1.,  2.])  
+
+
+.. _assignment:
+
+Assignment by indexing
+----------------------
+
+Um...
 
 
 Alignment
@@ -278,6 +301,12 @@ the following example):
         e
     x
     array([  1.,   2.,   3.,  NaN,  NaN])
+    
+    
+Merging
+-------    
+
+Um...
 
 Archiving
 ---------
@@ -288,9 +317,12 @@ The archiving of larrys is described in :ref:`archive`.
 Performance
 -----------
 
+Um...
 
 Known issues
 ------------
+
+Complex numbers.
 
 
 

@@ -112,6 +112,7 @@ idx = np.mgrid[0:n0,0:n1,0:n2]
           
         
 def test_slicing():
+    "larry slicing nose tests"
     slices = (slice(None), slice(None), slice(None,2))
     larli = [la1_3d, la1_2d0]
     sliceli = [(slice(None), slice(None), slice(None,2)),
@@ -150,6 +151,7 @@ def test_slicing():
                     repr(newlabels))
 
 def test_morph():
+    "larry.morph nose tests"
     larli = [la1_3d, la1_2d0]
     slicesmorph = [([0,2,1,3], -1),
                    ([0,2,1], 2),
