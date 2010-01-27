@@ -87,6 +87,8 @@ find it. Then run:
 URLs
 ====
 
-code: https://launchpad.net/larry
-manual: http://larry.sourceforge.net    
+=======   ==============================
+code       https://launchpad.net/larry
+manual     http://larry.sourceforge.net 
+=======   ==============================
 

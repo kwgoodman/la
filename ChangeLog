@@ -1,5 +1,10 @@
 2010-01-27 Keith
 
+	* svn_export.py: Deleted. No longer needed after the switch from svn to
+	  bzr.
+
+	* doc/source/intro.rst: Format URLs in table.
+
 	* doc/launchpad.txt, doc/source/intro.rst: Doc work.
 	
 	* doc/source/conf.py: Changed copyright holder to Archipel.
