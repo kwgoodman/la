@@ -1,3 +1,12 @@
+2010-01-27 Keith
+
+	* LICENSE: Added a license file. larry is now open source!
+
+	* doc/launchpad.txt: Added a launchpad summary based on
+	  doc/source/into.py.
+	  
+	* examples: Removed examples directory. Examples are in the manual.  
+
 2010-01-25 Keith
 
     * util/tests/misc_test.py(test_isa), doc/source/intro.rst: Not all tests
@@ -396,7 +405,7 @@
       faster. Added optional import norm and ties to group_rank.
 
     * deflarry.py(sign), tests/deflarry_nose_test.py,
-      tests/deflarry_test.py: New methos and corresponding unit tests.
+      tests/deflarry_test.py: New methods and corresponding unit tests.
 
     * deflarry.py(__len__): Removed new method. It results in a lot of test
       failures of the binary functions. Odd.
@@ -424,7 +433,7 @@
     * tests/deflarry_test.py: Add doc string.    
 
     * afunc.py(ranking_1N), afunc.py(ranking_norm): Removed these functions
-      since they are special cases fo the new ranking function.
+      since they are special cases for the new ranking function.
       
     * tests/afunc_arr_test.py: Converted all ranking_norm and ranking_1N
       tests to ranking tests.         
