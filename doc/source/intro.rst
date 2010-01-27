@@ -83,4 +83,10 @@ find it. Then run:
     Ran 589 tests in 0.516s
     OK
     <nose.result.TextTestResult run=589 errors=0 failures=0>
+    
+URLs
+====
+
+code: https://launchpad.net/larry
+manual: http://larry.sourceforge.net    
 

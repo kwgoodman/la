@@ -1,5 +1,9 @@
 2010-01-27 Keith
 
+	* doc/launchpad.txt, doc/source/intro.rst: Doc work.
+	
+	* doc/source/conf.py: Changed copyright holder to Archipel.
+
 	* LICENSE: Added a license file. larry is now open source!
 
 	* doc/launchpad.txt: Added a launchpad summary based on
