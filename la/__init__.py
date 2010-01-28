@@ -2,6 +2,7 @@
 
 # Classes
 from la.deflarry import larry
+del deflarry  # Remove deflarry from namespace
 
 try:
     from la.io import (IO, save, load, repack, is_archived_larry,

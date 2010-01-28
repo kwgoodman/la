@@ -1,5 +1,8 @@
 2010-01-28 Keith
 
+	* __init__.py: Add back (removed a few minutes ago) "del deflarry" to
+	  __init__.
+
 	* deflarry.py, tests/deflarry_nose_test.py, doc/source/intro.rst:
 	  Bug #513545 fixed. Inplace operations used in the binary functions did
 	  not promote dtype properly. Regression tests added.
