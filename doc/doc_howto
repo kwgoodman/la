@@ -1,0 +1,14 @@
+
+Upload Sphinx docs to web server
+================================
+
+To upload Shinx docs to http://larry.sourceforge.net:
+
+In la/doc:
+
+$ make clean
+$ make html
+
+Then in la/doc/build/html (it will ask for the password):
+
+$ rsync -avPr -e ssh * kwgoodman,larry@web.sourceforge.net:htdocs/

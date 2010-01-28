@@ -10,7 +10,7 @@ installation.
 Who's larry?
 ============
 
-Here's a larry in schematic form:
+Here's larry in schematic form:
 ::    
                          date1    date2    date3
                 'AAPL'   209.19   207.87   210.11
@@ -80,17 +80,16 @@ find it. Then run:
     >>> import la
     >>> la.test()
     <snip>
-    Ran 589 tests in 0.516s
+    Ran 610 tests in 0.516s
     OK
-    <nose.result.TextTestResult run=589 errors=0 failures=0>
+    <nose.result.TextTestResult run=610 errors=0 failures=0>
     
 URLs
 ====
 
-=============   ===========================================
+=============   =============================================
 code             https://launchpad.net/larry
 manual           http://larry.sourceforge.net
-mailing list     larry-discuss@lists.launchpad.net
-list archive     http://lists.launchpad.net/larry-discuss
-=============   ===========================================
+mailing list     http://groups.google.ca/group/pystatsmodels
+=============   =============================================
 

@@ -525,17 +525,17 @@ class larry(object):
         """
         if isinstance(other, larry):
             if self.label == other.label:
-                y = self.copy()
-                y.x += other.x
-                return y                         
+            	x = self.x + other.x
+                label = self.copylabel()
+                return larry(x, label)                        
             else:       
                 x, y, label = self.__align(other)
-                x += y
+                x = x + y
                 return type(self)(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):
-            y = self.copy()
-            y.x += other
-            return y                    
+            x = self.x + other
+            label = self.copylabel()
+            return larry(x, label)                 
         raise TypeError, 'Input must be scalar, array, or larry.' 
     
     __radd__ = __add__
@@ -563,17 +563,17 @@ class larry(object):
         """   
         if isinstance(other, larry):
             if self.label == other.label:
-                y = self.copy()
-                y.x -= other.x
-                return y                         
+            	x = self.x - other.x
+                label = self.copylabel()
+                return larry(x, label)                          
             else:          
                 x, y, label = self.__align(other)        
-                x -= y
+                x = x - y
                 return type(self)(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):
-            y = self.copy()
-            y.x -= other
-            return y          
+            x = self.x - other
+            label = self.copylabel()
+            return larry(x, label)       
         raise TypeError, 'Input must be scalar, array, or larry.'
         
     def __rsub__(self, other):
@@ -604,17 +604,17 @@ class larry(object):
         """    
         if isinstance(other, larry):
             if self.label == other.label:
-                y = self.copy()
-                y.x /= other.x
-                return y                         
+            	x = self.x / other.x
+                label = self.copylabel()
+                return larry(x, label)                          
             else:          
                 x, y, label = self.__align(other)        
-                x /= y
+                x = x / y
                 return type(self)(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):
-            y = self.copy()
-            y.x /= other
-            return y           
+            x = self.x / other
+            label = self.copylabel()
+            return larry(x, label)        
         raise TypeError, 'Input must be scalar, array, or larry.'
         
     def __rdiv__(self, other):
@@ -653,27 +653,28 @@ class larry(object):
         """      
         if isinstance(other, larry):
             if self.label == other.label:
-                y = self.copy()
-                y.x *= other.x
-                return y                         
+            	x = self.x * other.x
+                label = self.copylabel()
+                return larry(x, label)                          
             else:           
                 x, y, label = self.__align(other)
-                x *= y
+                x = x * y
                 return type(self)(x, label)
-        if np.isscalar(other):
-            y = self.copy()
-            y.x *= other
-            return y
-        if isinstance(other, np.ndarray):
-            y = self.copy()
-            y.x *= other
-            return y 
+        if np.isscalar(other) or isinstance(other, np.ndarray):
+            x = self.x * other
+            label = self.copylabel()
+            return larry(x, label)   
         raise TypeError, 'Input must be scalar, array, or larry.'
 
     __rmul__ = __mul__
 
     def __and__(self, other):
         """Logical and a larry with a another larry, Numpy array, or scalar.
+        
+        Notes
+        -----
+        Numpy defines & as bitwise_and; here & is defined as
+        numpy.logical_and.
         
         Examples
         --------
@@ -695,17 +696,17 @@ class larry(object):
         """    
         if isinstance(other, larry):
             if self.label == other.label:
-                y = self.copy()
-                y.x &= other.x
-                return y                         
+            	x = np.logical_and(self.x, other.x)
+                label = self.copylabel()
+                return larry(x, label)                      
             else:          
                x, y, label = self.__align(other)
-               x &= y
+               x = np.logical_and(x, y)
                return type(self)(x, label)
-        if np.isscalar(other) or isinstance(other, np.ndarray):
-            y = self.copy()
-            y.x &= other
-            return y
+        if np.isscalar(other) or isinstance(other, np.ndarray):            
+            x = np.logical_and(self.x, other)
+            label = self.copylabel()
+            return larry(x, label)
         raise TypeError, 'Input must be scalar, array, or larry.'
 
     __rand__ = __and__
@@ -713,6 +714,11 @@ class larry(object):
     def __or__(self, other):
         """
         Logical or a larry with a another larry, Numpy array, or scalar.
+        
+        Notes
+        -----
+        Numpy defines | as bitwise_or; here & is defined as
+        numpy.logical_or.
 
         Examples
         --------
@@ -734,17 +740,17 @@ class larry(object):
         """     
         if isinstance(other, larry):
             if self.label == other.label:
-                y = self.copy()
-                y.x |= other.x
-                return y                         
+            	x = np.logical_or(self.x, other.x)
+                label = self.copylabel()
+                return larry(x, label)                      
             else:          
-                x, y, label = self.__align(other)
-                x |= y
-                return type(self)(x, label)
-        if np.isscalar(other) or isinstance(other, np.ndarray):
-            y = self.copy()
-            y.x |= other
-            return y
+               x, y, label = self.__align(other)
+               x = np.logical_or(x, y)
+               return type(self)(x, label)
+        if np.isscalar(other) or isinstance(other, np.ndarray):            
+            x = np.logical_or(self.x, other)
+            label = self.copylabel()
+            return larry(x, label)
         raise TypeError, 'Input must be scalar, array, or larry.'
 
     __ror__ = __or__

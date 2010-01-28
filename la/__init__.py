@@ -2,7 +2,6 @@
 
 # Classes
 from la.deflarry import larry
-del deflarry  # Remove deflarry from namespace
 
 try:
     from la.io import (IO, save, load, repack, is_archived_larry,
@@ -16,5 +15,5 @@ try:
     from numpy.testing import Tester
     test = Tester().test
     del Tester
-except ImportError:
+except (ImportError, ValueError):
     print "No la unit testing available."

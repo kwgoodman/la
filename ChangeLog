@@ -1,3 +1,15 @@
+2010-01-28 Keith
+
+	* deflarry.py, tests/deflarry_nose_test.py, doc/source/intro.rst:
+	  Bug #513545 fixed. Inplace operations used in the binary functions did
+	  not promote dtype properly. Regression tests added.
+
+	* __init__.py: Bug fix. importing la on windows(?) fails. Report and fix
+	  by Josef.
+
+	* doc/doc_howto: New document. Gives command to upload Sphinx doc to
+	  soureforge web server.
+
 2010-01-27 Keith
 
 	* doc/source/intro.rst: Add mailing list.

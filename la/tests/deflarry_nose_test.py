@@ -454,4 +454,73 @@ class Test_group_moving(est_groups_moving):
                                [ nan,  10.,   9.,   8.,   4.,  nan]])
         self.tmovingsum3 = np.dstack([self.tmovingsum1, 
                                       self.tmovingsum1])
-             
+
+# --------------------------------------------------------------------------
+
+# Binary operations where the first larry is a bool larry and the second
+# larry is not (a scalar larry, for example) incorrectly returned a bool
+# larry due to an inplace operation. These are regression tests for that bug:
+
+def test_binary_regression():
+	"Binary op regression test"
+	
+	# Aligned larrys
+	x = larry([True, False])
+	y = larry([1.0, 2.0])
+	z = x + y
+	yield assert_equal, z.dtype, y.dtype, '(aligned) bool + float'
+	z = x - y	
+	yield assert_equal, z.dtype, y.dtype, '(aligned) bool - float' 
+	z = x * y	
+	yield assert_equal, z.dtype, y.dtype, '(aligned) bool * float' 
+	z = x / y	
+	yield assert_equal, z.dtype, y.dtype, '(aligned) bool / float'
+	z = x & y	
+	yield assert_equal, z.dtype, x.dtype, '(aligned) bool & float'
+	z = x | y	
+	yield assert_equal, z.dtype, x.dtype, '(aligned) bool | float'
+			
+	# Unaligned larrys
+	x = larry([True, False])
+	y = larry([1.0, 2.0], [[1, 0]])
+	z = x + y
+	yield assert_equal, z.dtype, y.dtype, '(unaligned) bool + float'
+	z = x - y	
+	yield assert_equal, z.dtype, y.dtype, '(unaligned) bool - float' 
+	z = x * y	
+	yield assert_equal, z.dtype, y.dtype, '(unaligned) bool * float' 
+	z = x / y	
+	yield assert_equal, z.dtype, y.dtype, '(unaligned) bool / float'
+	z = x & y	
+	yield assert_equal, z.dtype, x.dtype, '(unaligned) bool & float'	
+
+	# Numpy array on right
+	x = larry([True, False])
+	y = larry([1.0, 2.0]).x
+	z = x + y
+	yield assert_equal, z.dtype, y.dtype, 'bool + (numpy array) float'
+	z = x - y	
+	yield assert_equal, z.dtype, y.dtype, 'bool - (numpy array) float' 
+	z = x * y	
+	yield assert_equal, z.dtype, y.dtype, 'bool * (numpy array) float' 
+	z = x / y	
+	yield assert_equal, z.dtype, y.dtype, 'bool / (numpy array) float'
+	z = x & y	
+	yield assert_equal, z.dtype, x.dtype, 'bool & (numpy array) float'	
+
+	# Float on right
+	x = larry([True, False])
+	y = 1.0
+	floatdtype = np.array(1.0).dtype
+	z = x + y
+	yield assert_equal, z.dtype, floatdtype, 'bool + (plain) float'
+	z = x - y	
+	yield assert_equal, z.dtype, floatdtype, 'bool - (plain) float' 
+	z = x * y	
+	yield assert_equal, z.dtype, floatdtype, 'bool * (plain) float' 
+	z = x / y	
+	yield assert_equal, z.dtype, floatdtype, 'bool / (plain) float'
+	z = x & y	
+	yield assert_equal, z.dtype, x.dtype, 'bool & (plain) float'	
+	
+# --------------------------------------------------------------------------             
