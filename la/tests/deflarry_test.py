@@ -3255,6 +3255,41 @@ class Test_alignment(unittest.TestCase):
         label = [[(0,0), (1,0), (0,1), (1,1)]]
         self.assert_(f.label == label, 'labels are wrong')
         self.assert_((f.x == y.x.flatten(order)).all(), 'data are wrong')
+
+    def test_unflatten_1(self):
+        "larry.unflatten_1"
+        y = larry([1, 2, 3])
+        order = 'C'
+        f = y.flatten(order).unflatten()
+        label = y.label     
+        self.assert_(f.label == label, 'labels are wrong')
+        self.assert_((f.x == y.x).all(), 'data are wrong')  
+
+    def test_unflatten_2(self):
+        "larry.unflatten_2"
+        y = larry([1, 2, 3])
+        order = 'F'
+        f = y.flatten(order).unflatten()
+        label = y.label        
+        self.assert_(f.label == label, 'labels are wrong')
+        self.assert_((f.x == y.x).all(), 'data are wrong') 
+
+    def test_unflatten_3(self):
+        "larry.unflatten_3"
+        y = larry([[1, 2], [3, 4]])
+        f = y.flatten().unflatten()
+        label = y.label 
+        self.assert_(f.label == label, 'labels are wrong')
+        self.assert_((f.x == y.x).all(), 'data are wrong')
+
+    def test_unflatten_4(self):
+        "larry.unflatten_4"
+        y = larry([[1, 2], [3, 4]])
+        order = 'F'
+        f = y.flatten(order).unflatten()
+        label = y.label 
+        self.assert_(f.label == label, 'labels are wrong')
+        self.assert_((f.x == y.x).all(), 'data are wrong')
         
 class Test_random(unittest.TestCase):
     "Test randomizing functions of the larry class"

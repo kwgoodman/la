@@ -1,5 +1,14 @@
 2010-01-28 Keith
 
+    * deflarry.py(unflatten), deflarry_test.py: Added a new larry method:
+      unflatten. Plus unit tests.
+    
+    * util/misc.py(list2index): Added a new utility function that is currently
+      used by the larry unflatten method.
+
+    * doc/source/intro.rst, doc/source/reference.rst, doc/source/work.rst:
+      Doc work.
+
 	* doc/launchpad.txt: Add URLs for code, docs, and mail.
 
 	* __init__.py: Add back (removed a few minutes ago) "del deflarry" to

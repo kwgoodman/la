@@ -80,16 +80,16 @@ find it. Then run:
     >>> import la
     >>> la.test()
     <snip>
-    Ran 610 tests in 0.516s
+    Ran 614 tests in 0.516s
     OK
-    <nose.result.TextTestResult run=610 errors=0 failures=0>
+    <nose.result.TextTestResult run=614 errors=0 failures=0>
     
 URLs
 ====
 
-=============   =============================================
-code             https://launchpad.net/larry
-manual           http://larry.sourceforge.net
-mailing list     http://groups.google.ca/group/pystatsmodels
-=============   =============================================
+=======    =============================================
+ code       https://launchpad.net/larry
+ docs       http://larry.sourceforge.net
+ list       http://groups.google.ca/group/pystatsmodels
+=======    =============================================
 

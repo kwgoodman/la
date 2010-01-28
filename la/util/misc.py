@@ -174,4 +174,10 @@ def isscalar(x):
     False 
                 
     """
-    return isfloat(x) or isint(x)                 
+    return isfloat(x) or isint(x)  
+    
+def list2index(L):
+    "Convert a list to a unique list and the corresponding indices."
+    uL = sorted(set(L))
+    idx = dict((y,x) for x,y in enumerate(uL))
+    return [idx[x] for x in L], uL                   

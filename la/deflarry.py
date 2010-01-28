@@ -6,7 +6,7 @@ from copy import deepcopy
 import numpy as np
    
 from la.util.scipy import (nanmean, nanmedian, nanstd)
-from la.util.misc import flattenlabel, isscalar
+from la.util.misc import flattenlabel, isscalar, list2index
 from la.afunc import (group_ranking, group_mean, group_median, covMissing,
                       fillforward_partially, quantile, ranking, lastrank,
                       movingsum_forward, lastrank_decay, movingrank,
@@ -2420,7 +2420,8 @@ class larry(object):
         return y
         
     def flatten(self, order='C'):
-        """Return a copy of the larry collapsed into one dimension.
+        """
+        Return a copy of the larry collapsed into one dimension.
         
         The elements of the label become tuples.
         
@@ -2463,7 +2464,80 @@ class larry(object):
         y = self.copy()
         y.x = y.x.flatten(order)
         y.label = flattenlabel(y.label, order)
-        return y    
+        return y
+        
+    def unflatten(self):
+        """
+        Return an unflattened copy of the larry.
+        
+        The larry to be unflattened must be in flattened form: 1d and label
+        elements must be tuples containing the label elements of the
+        corresponding data array element. Refer to the example below to see
+        what a flattened array looks like.
+        
+        Returns
+        -------
+        y : larry
+                    
+        See also
+        --------
+        flatten : Return a copy of the larry collapsed into one dimension.
+        
+        
+        Examples
+        --------
+        First create a flattened larry:
+        
+        >>> y = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
+        >>> yf = y.flatten()
+        >>> yf
+        label_0
+            ('r0', 'c0')
+            ('r0', 'c1')
+            ('r1', 'c0')
+            ('r1', 'c1')
+        x
+        array([1, 2, 3, 4])
+        
+        Then unflatten it:
+        
+        >>> yf.unflatten()
+        label_0
+            r0
+            r1
+        label_1
+            c0
+            c1
+        x
+        array([[ 1.,  2.],
+               [ 3.,  4.]])
+        
+        """
+        
+        # Check input
+        if self.ndim != 1:
+            raise ValueError, 'Only 1d larrys can be unflattened.'
+        if not isscalar(self.x.flat[0]):
+            msg = 'Only scalar dtype is currently supported.'
+            raise NotImplementedError, msg 
+	    
+	    # Determine labels, shape, and index into array	
+        labels = zip(*self.label[0])
+        shape = []
+        index = []
+        label = []
+        for i, lab in enumerate(labels):
+            labelidx, label_unique = list2index(lab)
+            shape.append(len(label_unique))
+            index.append(labelidx)
+            label.append(label_unique)
+	
+	    # Create array
+        x = np.empty(shape)
+        x.fill(np.nan)
+        x[index] = self.x 
+    
+        return larry(x, label)            
 
     # Shuffle ----------------------------------------------------------------
     

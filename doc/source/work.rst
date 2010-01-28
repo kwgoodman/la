@@ -123,7 +123,21 @@ But larry does have a **flatten** method:
         ('r0', 'c1')
         ('r1', 'c1')
     x
-    array([ 1.,  3.,  2.,  4.])   
+    array([ 1.,  3.,  2.,  4.]) 
+    
+Flattened larrys can be unflattened:
+::
+    >>> yflat = y.flatten()
+    >>> yflat.unflatten()
+    label_0
+        r0
+        r1
+    label_1
+        c0
+        c1
+    x
+    array([[ 1.,  2.],
+           [ 3.,  4.]])      
   
     
 Missing values
