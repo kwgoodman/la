@@ -18,3 +18,7 @@ you have direct access to the Numpy array that holds your data.
     
 larry adds the convenience of labels, provides many built-in methods, and
 let's you use many of your existing NumPy array functions.
+
+docs  http://larry.sourceforge.net
+code  https://code.launchpad.net/~kwgoodman/larry/trunk
+mail  http://groups.google.ca/group/pystatsmodels

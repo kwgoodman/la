@@ -1,5 +1,7 @@
 2010-01-28 Keith
 
+	* doc/launchpad.txt: Add URLs for code, docs, and mail.
+
 	* __init__.py: Add back (removed a few minutes ago) "del deflarry" to
 	  __init__.
 
