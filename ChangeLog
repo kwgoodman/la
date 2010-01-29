@@ -1,5 +1,11 @@
 2010-01-28 Keith
 
+    * func.py(list2larry), doc/source/work.rst: A new function that converts
+      a list of tuples to a larry.
+  
+    * __init__.py: import union, intersection, and list2larry into top level
+      namespace.
+
     * deflarry.py(unflatten), deflarry_test.py: Added a new larry method:
       unflatten. Plus unit tests.
     

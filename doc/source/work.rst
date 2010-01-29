@@ -86,6 +86,20 @@ to create a larry whose data shape does not agree with the label shape:
       File "la/la/deflarry.py", line 86, in __init__
         raise ValueError, msg % i
     ValueError: Length mismatch in label and x along axis 1
+    
+You can also create a larry from a list of tuples:
+::
+    >>> data = [('r0', 'c0', 1), ('r0', 'c1', 2), ('r1', 'c0', 3), ('r1', 'c1', 4)]
+    >>> la.list2larry(data)
+    label_0
+        r0
+        r1
+    label_1
+        c0
+        c1
+    x
+    array([[ 1.,  2.],
+           [ 3.,  4.]])    
 
 
 Shape, size, type
