@@ -87,19 +87,55 @@ to create a larry whose data shape does not agree with the label shape:
         raise ValueError, msg % i
     ValueError: Length mismatch in label and x along axis 1
     
-You can also create a larry from a list of tuples:
+You can also create a larry from lists using either the **fromlist** or
+**fromtuples** functions. Which one you use depends on the format of your
+data.
+
+Use **fromlist** if your data with *N* dimensions and *M* data points has
+the following format:
 ::
-    >>> data = [('r0', 'c0', 1), ('r0', 'c1', 2), ('r1', 'c0', 3), ('r1', 'c1', 4)]
+    [(value_1,  value_2,  ..., value_M),
+     (label0_1, label0_1, ..., label0_M),
+     (label1_1, label1_1, ..., label0_M),
+     ...
+     (labelN_1, labelN_1, ..., labelN_M)] 
+
+For example:
+::
+    >>> data = [(1, 2, 3, 4), ('a', 'a', 'b', 'b'), ('a', 'b', 'a', 'b')]
     >>> la.fromlist(data)
     label_0
-        r0
-        r1
+        a
+        b
     label_1
-        c0
-        c1
+        a
+        b
     x
     array([[ 1.,  2.],
-           [ 3.,  4.]])    
+           [ 3.,  4.]]) 
+
+And use **fromtuples** if your data has the following format:
+::
+    [(label0_1, label1_1, ..., labelN_1, value_1),
+     (label0_2, label1_2, ..., labelN_2, value_2),
+     ...
+     (label0_M, label1_M, ..., labelN_M, value_M)]
+     
+For example:
+::
+    >>> data = [('a', 'a', 1), ('a', 'b', 2), ('b', 'a', 3), ('b', 'b', 4)]
+    >>> la.fromtuples(data)
+    label_0
+        a
+        b
+    label_1
+        a
+        b
+    x
+    array([[ 1.,  2.],
+           [ 3.,  4.]]) 
+
+**fromlist** is faster than **fromtuples**. 
 
 
 Shape, size, type

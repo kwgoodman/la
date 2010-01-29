@@ -1,5 +1,9 @@
 2010-01-29 Keith
 
+    * func.py(fromtuples), doc/source/work.rst, __init__.py: New function.
+
+    * doc/source/index.rst: Doc tweak.
+
     * deflarry.py(unflatten), func.py(list2larry), func.py(fromlist), 
       util/misc.py(fromlists), doc/source/work.rst, __init__.py :
       Rename list2larry to fromlist. Refactor code for speed and for

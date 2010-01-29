@@ -6,9 +6,17 @@ from la.deflarry import larry
 from la.util.misc import list2index, fromlists
 
    
-def fromlist(data, check_input=True):
+def fromtuples(data, check_input=True):
     """
     Convert a list of tuples to a larry.
+    
+    The input data, if there are N dimensions and M data points, should have
+    this form:
+    
+    [(label0_1, label1_1, ..., labelN_1, value_1),
+     (label0_2, label1_2, ..., labelN_2, value_2),
+     ...
+     (label0_M, label1_M, ..., labelN_M, value_M)]
     
     Parameters
     ----------
@@ -26,10 +34,16 @@ def fromlist(data, check_input=True):
     y : larry
         A larry constructed from `data` is returned.
         
-    See also
+    See Also
     --------
-    flatten : Return an unflattened copy of the larry.
-    unflatten : Return a copy of the larry collapsed into one dimension.
+    fromlist : Convert a list of tuples to a larry.
+    larry.flatten : Return an unflattened copy of the larry.
+    larry.unflatten : Return a copy of the larry collapsed into one dimension.
+    
+    Notes
+    -----
+    fromlist is faster than fromtuples since fromtuples must do one extra
+    step: unzip the labels and data values.
 
     Examples
     --------
@@ -82,7 +96,80 @@ def fromlist(data, check_input=True):
     # Determine labels, shape, and index into array	
     x, label = fromlists(xs, labels)  
     
-    return larry(x, label)         
+    return larry(x, label) 
+    
+def fromlist(data, check_input=True):
+    """
+    Convert a list of tuples to a larry.
+    
+    The input data, if there are N dimensions and M data points, should have
+    this form:
+    
+    [(value_1,  value_2,  ..., value_M),
+     (label0_1, label0_1, ..., label0_M),
+     (label1_1, label1_1, ..., label0_M),
+     ...
+     (labelN_1, labelN_1, ..., labelN_M)]    
+    
+    Parameters
+    ----------
+    data : list of tuples
+        The input must be a list of tuples where the first tuple are the data
+        array values and the remaining tuples, one for each dimension, are the
+        labels for each axis. See the exmaple below.
+    check_input : {True, False}
+        It takes time to check that the input is a list of all tuples and
+        that each tuple has the same length. The default (True) is to check
+        the input. If you already know your input is good, you can save time
+        by skipping the check (by setting `check_input` to False).    
+        
+    Returns
+    -------
+    y : larry
+        A larry constructed from `data` is returned.
+        
+    See Also
+    --------
+    fromtuples : Convert a list of tuples to a larry.
+    larry.flatten : Return an unflattened copy of the larry.
+    larry.unflatten : Return a copy of the larry collapsed into one dimension.
+    
+    Notes
+    -----
+    fromlist is faster than fromtuples since fromtuples must do one extra
+    step: unzip the labels and data values.    
+
+    Examples
+    --------
+    >>> data = [(1, 2, 3, 4), ('a', 'a', 'b', 'b'), ('a', 'b', 'a', 'b')]
+    >>> la.fromlist(data)
+    label_0
+        a
+        b
+    label_1
+        a
+        b
+    x
+    array([[ 1.,  2.],
+           [ 3.,  4.]])
+           
+    """
+
+    # Check input
+    if check_input:
+        if type(data) != list:
+            raise TypeError, 'data must be a list'
+        if not all([type(t) == tuple for t in data]):
+            raise TypeError, 'data must be a list of tuples'
+        ndim = len(data[0])
+        if not all([len(t) == ndim for t in data]):
+            msg = 'All of the tuples in data must have the same length.'       
+            raise ValueError, msg  
+    
+    # Determine labels, shape, and index into array	
+    x, label = fromlists(data[0], data[1:])  
+    
+    return larry(x, label)             
     
 def union(axis, *args):
     "Union of labels along specified axis."
