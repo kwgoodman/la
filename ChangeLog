@@ -1,5 +1,8 @@
 2010-01-28 Keith
 
+    * doc/image/, doc/image/icon.png, doc/image/icon14.png,
+      doc/image/icon.xcf: created an icon for launchpad site.
+
     * func.py(list2larry), doc/source/work.rst: A new function that converts
       a list of tuples to a larry.
   
