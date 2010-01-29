@@ -249,7 +249,8 @@ are supported when doing an assignment by indexing, see :ref:`assignment`):
 * Fancy indexing
 * Indexing with Ellipsis    
     
-Indexing by label name is only supported indirectly:
+There are several ways to index by label name. For example, let's pull row
+'a' (the first row) from the larry *y*. We can use **labelindex**:
 ::
     >>> idx = y.labelindex('a', axis=0)
     >>> y[idx,:]
@@ -257,7 +258,55 @@ Indexing by label name is only supported indirectly:
         11
         13
     x
-    array([ 1.,  2.])  
+    array([ 1.,  2.])
+
+or **morph**:
+::
+    >>> y.morph(['a'], axis=0)
+    label_0
+        a
+    label_1
+        11
+        13
+    x
+    array([[ 1.,  2.]])
+
+or **pull**:    
+::
+    >>> y.pull('a', axis=0)
+    label_0
+        11
+        13
+    x
+    array([ 1.,  2.])
+    
+As another example of indexing with labels, let's index into the rows using
+the labels ['b', 'a']:
+::
+    >>> y.morph(['b', 'a'], axis=0)
+    label_0
+        b
+        a
+    label_1
+        11
+        13
+    x
+    array([[ 3.,  4.],
+           [ 1.,  2.]]) 
+           
+or, resorting to hackery:
+::                   
+    >>> idx = map(y.labelindex, ['b', 'a'], [0]*2)
+    >>> y[idx]
+    label_0
+        b
+        a
+    label_1
+        11
+        13
+    x
+    array([[ 3.,  4.],
+           [ 1.,  2.]])
 
 
 .. _assignment:

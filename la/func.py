@@ -50,7 +50,7 @@ def fromtuples(data, check_input=True):
     Convert a list of label, value pairs to a larry:
     
     >>> data = [('r0', 'c0', 1), ('r0', 'c1', 2), ('r1', 'c0', 3), ('r1', 'c1', 4)]
-    >>> la.fromlist(data)
+    >>> la.fromtuples(data)
     label_0
         r0
         r1
@@ -65,7 +65,7 @@ def fromtuples(data, check_input=True):
     becomes NaN:       
             
     >>> data = data[:-1]
-    >>> la.fromlist(data)
+    >>> la.fromtuples(data)
     label_0
         r0
         r1

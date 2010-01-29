@@ -1,5 +1,7 @@
 2010-01-29 Keith
 
+    * func.py(fromtuples), doc/source/work.rst: Doc work.
+
     * func.py(fromtuples), doc/source/work.rst, __init__.py: New function.
 
     * doc/source/index.rst: Doc tweak.
