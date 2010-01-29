@@ -6,7 +6,7 @@ from copy import deepcopy
 import numpy as np
    
 from la.util.scipy import (nanmean, nanmedian, nanstd)
-from la.util.misc import flattenlabel, isscalar, list2index
+from la.util.misc import flattenlabel, isscalar, fromlists, list2index
 from la.afunc import (group_ranking, group_mean, group_median, covMissing,
                       fillforward_partially, quantile, ranking, lastrank,
                       movingsum_forward, lastrank_decay, movingrank,
@@ -2523,19 +2523,7 @@ class larry(object):
 	    
 	    # Determine labels, shape, and index into array	
         labels = zip(*self.label[0])
-        shape = []
-        index = []
-        label = []
-        for i, lab in enumerate(labels):
-            labelidx, label_unique = list2index(lab)
-            shape.append(len(label_unique))
-            index.append(labelidx)
-            label.append(label_unique)
-	
-	    # Create array
-        x = np.empty(shape)
-        x.fill(np.nan)
-        x[index] = self.x 
+        x, label = fromlists(self.x, labels) 
     
         return larry(x, label)            
 

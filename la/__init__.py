@@ -12,7 +12,7 @@ except ImportError:
 
 from numpy import nan, inf
 
-from la.func import list2larry, union, intersection
+from la.func import fromlist, union, intersection
 
 try:
     from numpy.testing import Tester

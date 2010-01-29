@@ -1,3 +1,13 @@
+2010-01-29 Keith
+
+    * deflarry.py(unflatten), func.py(list2larry), func.py(fromlist), 
+      util/misc.py(fromlists), doc/source/work.rst, __init__.py :
+      Rename list2larry to fromlist. Refactor code for speed and for
+      maintainability by pulling out common (with larry.unflatten)
+      functionality and placing it in a function (fromlists). 
+
+    * doc/source/index.rst: Add larry icon to manual.
+
 2010-01-28 Keith
 
     * doc/image/, doc/image/icon.png, doc/image/icon14.png,

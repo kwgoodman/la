@@ -2,7 +2,12 @@
 larry, the manual
 =================
 
-Meet larry, he's a labeled array.
+.. figure:: ../image/icon.png
+   :scale: 100
+   :alt: larry icon
+   :align: left
+
+   Meet larry, he's a labeled array.
 
 .. toctree::
    :maxdepth: 2

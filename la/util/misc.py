@@ -180,4 +180,54 @@ def list2index(L):
     "Convert a list to a unique list and the corresponding indices."
     uL = sorted(set(L))
     idx = dict((y,x) for x,y in enumerate(uL))
-    return [idx[x] for x in L], uL                   
+    return [idx[x] for x in L], uL  
+
+def fromlists(xs, labels):
+    """
+    Convert list of values and list of label tuples to larry label and x.
+    
+    Parameters
+    ----------
+    xs : {tuple, list}
+        A tuple or list of values that will be converted to a Numpy array in
+        an ordering that is determined by `labels`.
+    labels : list of tuples
+        A list of tuples, one tuple per dimension of the output array, that
+        give the label (coordinates) of the corresponding elements in `xs`.
+        
+    Returns
+    -------
+    x : Numpy ndarray
+        A Numpy array with order and shape given by `labels`.
+    label : list
+        The label that corresponds to `x`.
+        
+    Examples
+    --------
+    >>> from la.util.misc import fromlists
+    >>> xs = [1, 2, 3, 4]
+    >>> labels = [('a', 'a', 'b', 'b'), ('a', 'b', 'a', 'b')]
+    >>> x, label = fromlists(xs, labels)
+    >>> x
+    array([[ 1.,  2.],
+           [ 3.,  4.]])
+    >>> label
+    [['a', 'b'], ['a', 'b']]
+    >>> x
+    array([[ 1.,  2.],
+           [ 3.,  4.]])                    
+    
+    """
+    shape = []
+    index = []
+    label = []
+    for i, lab in enumerate(labels):
+        labelidx, label_unique = list2index(lab)
+        shape.append(len(label_unique))
+        index.append(labelidx)
+        label.append(label_unique)
+    x = np.empty(shape)
+    x.fill(np.nan)
+    x[index] = xs 
+    return x, label 
+                        
