@@ -421,6 +421,13 @@ Merging
 
 Um...
 
+
+Groups
+------
+
+Um...
+
+
 Archiving
 ---------
 
@@ -435,7 +442,13 @@ Um...
 Known issues
 ------------
 
-Complex numbers.
+
+**Complex numbers**
+
+The are currently no unit tests for complex numbers in larry. Therefore, the
+extent of the support for complex numbers is unknown. Be aware that even if
+a function or method runs with complex numbers as input, the output might be
+wrong.
 
 
 
