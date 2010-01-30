@@ -172,7 +172,36 @@ def fromlist(data, check_input=True):
     return larry(x, label)             
     
 def union(axis, *args):
-    "Union of labels along specified axis."
+    """
+    Union of labels along specified axis.
+    
+    Parameters
+    ----------
+    axis : int
+        The axis along which to take the union of the labels.
+    args : larrys
+        The larrys (separated by commas) over which the union is taken.
+        
+    Returns
+    -------
+    out : list
+        A list containing the union of the labels.
+        
+    See Also
+    --------
+    intersection : Intersection of labels along specified axis.
+    
+    Examples
+    --------            
+    >>> import la
+    >>> y1 = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+    >>> y2 = larry([[1, 2], [3, 4]], [['e', 'b'], ['f', 'd']])
+    >>> la.union(0, y1, y2)
+    ['a', 'b', 'e']
+    >>> la.union(1, y1, y2)
+    ['c', 'd', 'f']
+    
+    """
     rc = frozenset([])
     for arg in args:
         if isinstance(arg, larry):
@@ -184,7 +213,36 @@ def union(axis, *args):
     return rc
 
 def intersection(axis, *args):
-    "Intersection of labels along specified axis."
+    """
+    Intersection of labels along specified axis.
+    
+    Parameters
+    ----------
+    axis : int
+        The axis along which to take the intersection of the labels.
+    args : larrys
+        The larrys (separated by commas) over which the intersection is taken.
+        
+    Returns
+    -------
+    out : list
+        A list containing the intersection of the labels.
+        
+    See Also
+    --------
+    union : Union of labels along specified axis.
+    
+    Examples
+    --------            
+    >>> import la
+    >>> y1 = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+    >>> y2 = larry([[1, 2], [3, 4]], [['e', 'b'], ['f', 'd']])
+    >>> la.intersection(0, y1, y2)
+    ['b']
+    >>> la.intersection(1, y1, y2)
+    ['d']
+    
+    """
     rc = frozenset(args[0].label[axis])
     for i in xrange(1, len(args)):
         arg = args[i]

@@ -22,3 +22,7 @@ let's you use many of your existing NumPy array functions.
 docs  http://larry.sourceforge.net
 code  https://code.launchpad.net/~kwgoodman/larry/trunk
 mail  http://groups.google.ca/group/pystatsmodels
+
+Development mailing list:
+mail: larry-discuss@lists.launchpad.net
+archive: http://lists.launchpad.net/larry-discuss

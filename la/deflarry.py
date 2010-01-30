@@ -1505,6 +1505,22 @@ class larry(object):
             return self.x.copy()
         else:
             return self.x
+            
+    @property
+    def A(self):
+        """
+        Return a reference to the underlying Numpy array.
+        
+        Examples
+        --------
+        >>> y = larry([1, 2, 3])
+        >>> y.A
+        array([1, 2, 3])
+        >>> type(y.A)
+        <type 'numpy.ndarray'>        
+        
+        """
+        return self.x            
                     
     def getlabel(self, axis, copy=True):
         """
@@ -2417,115 +2433,7 @@ class larry(object):
         index = [slice(None)] * self.ndim
         index[axis] = slice(0,-nlag)            
         y.x = y.x[index]
-        return y
-        
-    def flatten(self, order='C'):
-        """
-        Return a copy of the larry collapsed into one dimension.
-        
-        The elements of the label become tuples.
-        
-        Parameters
-        ----------
-        order : {'C', 'F'}, optional
-            Whether to flatten in row-major order ('C', default) or
-            column-major order ('F').
-
-        Returns
-        -------
-        y : larry
-            A copy of the input larry, collapsed to one dimension where the
-            labels are tuples.
-            
-        Examples
-        --------
-        >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
-        >>> y
-        label_0
-            a
-            b
-        label_1
-            c
-            d
-        x
-        array([[1, 2],
-               [3, 4]])
-               
-        >>> y.flatten()
-        label_0
-            ('a', 'c')
-            ('a', 'd')
-            ('b', 'c')
-            ('b', 'd')
-        x
-        array([1, 2, 3, 4])
-   
-        """
-        y = self.copy()
-        y.x = y.x.flatten(order)
-        y.label = flattenlabel(y.label, order)
-        return y
-        
-    def unflatten(self):
-        """
-        Return an unflattened copy of the larry.
-        
-        The larry to be unflattened must be in flattened form: 1d and label
-        elements must be tuples containing the label elements of the
-        corresponding data array element. Refer to the example below to see
-        what a flattened array looks like.
-        
-        Returns
-        -------
-        y : larry
-                    
-        See also
-        --------
-        flatten : Return a copy of the larry collapsed into one dimension.
-        
-        
-        Examples
-        --------
-        First create a flattened larry:
-        
-        >>> y = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
-        >>> yf = y.flatten()
-        >>> yf
-        label_0
-            ('r0', 'c0')
-            ('r0', 'c1')
-            ('r1', 'c0')
-            ('r1', 'c1')
-        x
-        array([1, 2, 3, 4])
-        
-        Then unflatten it:
-        
-        >>> yf.unflatten()
-        label_0
-            r0
-            r1
-        label_1
-            c0
-            c1
-        x
-        array([[ 1.,  2.],
-               [ 3.,  4.]])
-        
-        """
-        
-        # Check input
-        if self.ndim != 1:
-            raise ValueError, 'Only 1d larrys can be unflattened.'
-        if not isscalar(self.x.flat[0]):
-            msg = 'Only scalar dtype is currently supported.'
-            raise NotImplementedError, msg 
-	    
-	    # Determine labels, shape, and index into array	
-        labels = zip(*self.label[0])
-        x, label = fromlists(self.x, labels) 
-    
-        return larry(x, label)            
+        return y           
 
     # Shuffle ----------------------------------------------------------------
     
@@ -2747,61 +2655,273 @@ class larry(object):
 
     @property
     def nx(self):
-        "Number of finite values (not NaN, -Inf, or Inf) in the larry."
+        """
+        Number of finite values (not NaN, -Inf, or Inf) in the larry.
+        
+        Examples
+        --------        
+        >>> from la import nan
+        >>> y = larry([1, 2, nan])
+        >>> y.nx
+        2
+        
+        """
         return np.isfinite(self.x).sum()
 
     @property
     def size(self):
-        "Number of elements in the larry."
+        """
+        Number of elements in the larry.
+        
+        Examples
+        --------   
+        >>> from la import nan
+        >>> y = larry([1, 2, nan])
+        >>> y.size
+        3
+        
+        """
         return self.x.size
 
     @property
     def shape(self):
-        "Shape of the larry as a tuple."
+        """
+        Shape of the larry as a tuple.
+        
+        Examples
+        --------   
+        >>> from la import nan
+        >>> y = larry([1, 2, nan])
+        >>> y.shape
+        (3,)       
+        """
         return self.x.shape
         
     @property
     def ndim(self):
-        "Number of dimensions in the larry."
+        """Number of dimensions in the larry.
+        
+        Examples
+        --------   
+        >>> from la import nan
+        >>> y = larry([1, 2, nan])
+        >>> y.ndim
+        1          
+        """
         return self.x.ndim
         
     @property
     def dtype(self):
-        "The dtype of the elements (not the labels) in the larry."
+        """The dtype of the elements (not the labels) in the larry.
+        
+        Examples
+        --------   
+        >>> from la import nan
+        >>> y = larry([1, 2, nan])
+        >>> y.dtype
+        dtype('float64')         
+        """
         return self.x.dtype
         
     @property
     def T(self):
-        "Returns a transposed copy of the larry."
+        """
+        Returns a transposed copy of the larry.
+
+        Examples
+        --------        
+        >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+        >>> y
+        label_0
+            a
+            b
+        label_1
+            c
+            d
+        x
+        array([[1, 2],
+               [3, 4]])
+        >>> y.T
+        label_0
+            c
+            d
+        label_1
+            a
+            b
+        x
+        array([[1, 3],
+               [2, 4]])
+               
+        """
         y = self.copy()
         y.x = y.x.T
         y.label = y.label[::-1]
-        return y
-        
-    @property
-    def A(self):
-        "Return a reference to the underlying Numpy array."
-        return self.x       
+        return y     
         
     def _2donly(self):
         "Only works on 2d arrays"
         if self.ndim != 2:
-            raise ValueError, 'This function only works on 2d larrys'                
+            raise ValueError, 'This function only works on 2d larrys'
+            
+    def flatten(self, order='C'):
+        """
+        Return a copy of the larry collapsed into one dimension.
+        
+        The elements of the label become tuples.
+        
+        Parameters
+        ----------
+        order : {'C', 'F'}, optional
+            Whether to flatten in row-major order ('C', default) or
+            column-major order ('F').
+
+        Returns
+        -------
+        y : larry
+            A copy of the input larry, collapsed to one dimension where the
+            labels are tuples.
+            
+        See also
+        --------
+        unflatten : Return an unflattened copy of larry.            
+            
+        Examples
+        --------
+        >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+        >>> y
+        label_0
+            a
+            b
+        label_1
+            c
+            d
+        x
+        array([[1, 2],
+               [3, 4]])
+               
+        >>> y.flatten()
+        label_0
+            ('a', 'c')
+            ('a', 'd')
+            ('b', 'c')
+            ('b', 'd')
+        x
+        array([1, 2, 3, 4])
+   
+        """
+        y = self.copy()
+        y.x = y.x.flatten(order)
+        y.label = flattenlabel(y.label, order)
+        return y
+        
+    def unflatten(self):
+        """
+        Return an unflattened copy of larry.
+        
+        The larry to be unflattened must be in flattened form: 1d and label
+        elements must be tuples containing the label elements of the
+        corresponding data array element. Refer to the example below to see
+        what a flattened array looks like.
+        
+        Returns
+        -------
+        y : larry
+                    
+        See also
+        --------
+        flatten : Return a copy of the larry collapsed into one dimension.
+        
+        
+        Examples
+        --------
+        First create a flattened larry:
+        
+        >>> y = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
+        >>> yf = y.flatten()
+        >>> yf
+        label_0
+            ('r0', 'c0')
+            ('r0', 'c1')
+            ('r1', 'c0')
+            ('r1', 'c1')
+        x
+        array([1, 2, 3, 4])
+        
+        Then unflatten it:
+        
+        >>> yf.unflatten()
+        label_0
+            r0
+            r1
+        label_1
+            c0
+            c1
+        x
+        array([[ 1.,  2.],
+               [ 3.,  4.]])
+        
+        """
+        
+        # Check input
+        if self.ndim != 1:
+            raise ValueError, 'Only 1d larrys can be unflattened.'
+        if not isscalar(self.x.flat[0]):
+            msg = 'Only scalar dtype is currently supported.'
+            raise NotImplementedError, msg 
+	    
+	    # Determine labels, shape, and index into array	
+        labels = zip(*self.label[0])
+        x, label = fromlists(self.x, labels) 
+    
+        return larry(x, label)                            
                
     # Copy -------------------------------------------------------------------        
           
     def copy(self):
-        "Return a copy of a larry."
+        """
+        Return a copy of a larry.
+
+        Examples
+        --------
+        >>> y = larry([1, 2], [['a', 'b']])        
+        >>> z = y.copy()
+        >>> z
+        label_0
+            a
+            b
+        x
+        array([1, 2])
+            
+        """
         label = deepcopy(self.label)
         x = self.x.copy()
         return type(self)(x, label)
         
     def copylabel(self):
-        "Return a copy of a larry's label."
+        """
+        Return a copy of a larry's label.
+        
+        Examples
+        --------        
+        >>> y = larry([1, 2], [['a', 'b']])        
+        >>> label = y.copylabel()
+        >>> label
+        [['a', 'b']]
+        
+        """
         return deepcopy(self.label)
         
     def copyx(self):
-        "Return a copy of a larry's data as a Numpy array."
+        """Return a copy of a larry's data as a Numpy array.
+
+        Examples
+        --------        
+        >>> y = larry([1, 2], [['a', 'b']])  
+        >>> x = y.copyx()
+        >>> x
+        array([1, 2])
+        
+        """
         return self.x.copy()    
         
     # Print ------------------------------------------------------------------                

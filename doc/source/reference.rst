@@ -13,6 +13,9 @@ of the examples assume that you have already imported larry:
 ::
     >>> from la import larry
     
+The reference guide for the larry functions, as opposed to methods, can be
+found in :ref:`functions`.     
+    
 
 __init__
 ---------
@@ -238,6 +241,10 @@ assign values to a subset of a larry.
 
 ------------
 
+.. automethod:: la.larry.A
+
+------------
+
 .. automethod:: la.larry.getlabel
 ------------
 
@@ -387,7 +394,7 @@ aligns *y1* to *y2*; the second example aligns *y2* to *y1*:
     array([ 1.,  2.])
 
 .. autoclass:: la.larry
-   :members: morph, morph_like, merge, squeeze, lag, flatten, unflatten 
+   :members: morph, morph_like, merge, squeeze, lag
 
 
 Shuffle
@@ -445,42 +452,56 @@ NaNs are treated as missing data in larry:
 Size, shape, dtype
 ------------------
 
-Here is an example of the shape and size methods:
-::
-    >>> from la import larry
-    >>> y = larry([[1, 2], [3, 4]])
+Here are the methods that tell you about the size, shape, and dtype of larry.
+Some of the methods (**T, flatten, unflatten**) change the shape of the larry.
     
-    >>> y.shape
-    (2, 2)
-    >>> y.size
-    4
-    >>> y.ndim
-    2
-    >>> y.dtype
-    dtype('int64')
+------------
 
-.. autoclass:: la.larry
-   :members: nx, size, shape, ndim, dtype, T, A           
+.. automethod:: la.larry.nx
+    
+------------
+
+.. automethod:: la.larry.size
+    
+------------
+
+.. automethod:: la.larry.shape
+    
+------------
+
+.. automethod:: la.larry.ndim
+    
+------------
+
+.. automethod:: la.larry.dtype
+    
+------------
+
+.. automethod:: la.larry.T
+    
+------------
+
+.. automethod:: la.larry.flatten
+    
+------------
+
+.. automethod:: la.larry.unflatten          
 
 
 Copy
 ----
 
-A larry, or just its label or data, can be copied:
-::
-    >>> from la import larry
-    >>> y = larry([1, 2], [['a', 'b']])
-    
-    >>> z = y.copy()
-    >>> z
-    label_0
-        a
-        b
-    x
-    array([1, 2])
-
-.. autoclass:: la.larry
-   :members: copy, copylabel, copyx
-  
+Here are the methods that copy a larry or its components.  
  
+------------
+
+.. automethod:: la.larry.copy
+
+------------
+
+.. automethod:: la.larry.copylabel
+
+------------
+
+.. automethod:: la.larry.copyx
 

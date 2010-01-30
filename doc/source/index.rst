@@ -16,6 +16,7 @@ Meet larry, he's a labeled array:
    work
    archive
    reference
+   functions
 
 Indices and tables
 ==================
