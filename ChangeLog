@@ -1,5 +1,7 @@
 2010-01-31 Keith
 
+    * doc/source/conf.py: Doc tweak.
+
     * func.py(fromdict): Removed requirement that input must be a dictionary.
       All it needs is are values and keys methods that output the values and
       keys in the same order.
