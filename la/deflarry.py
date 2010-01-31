@@ -2885,6 +2885,7 @@ class larry(object):
         --------
         la.fromtuples : Convert a list of tuples to a larry.
         tolist : Convert to a flattened list.
+        todict : Convert to a dictionary.
         
         Examples
         --------
@@ -2906,6 +2907,7 @@ class larry(object):
         --------
         la.fromlist : Convert a flattened list to a larry.
         totuples : Convert to a flattened list of tuples.
+        todict : Convert to a dictionary.
         
         Examples
         --------
@@ -2916,6 +2918,25 @@ class larry(object):
         """
         yf = self.flatten()
         return [yf.x.tolist(), yf.label[0]]                                   
+
+    def todict(self):
+        """
+        Convert to a dictionary.
+        
+        See Also
+        --------
+        totuples : Convert to a flattened list of tuples.
+        tolist : Convert to a flattened list.
+        
+        Examples
+        --------
+        >>> y = larry([[1.0, 2.0], [3.0, 4.0]], [['a', 'b'], ['c', 'd']])
+        >>> y.todict()
+        {('b', 'c'): 3.0, ('a', 'd'): 2.0, ('a', 'c'): 1.0, ('b', 'd'): 4.0}     
+        
+        """
+        ylist = self.tolist()
+        return dict(zip(ylist[1], ylist[0]))
                
     # Copy -------------------------------------------------------------------        
           

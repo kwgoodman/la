@@ -5,8 +5,10 @@ import numpy as np
 from la.deflarry import larry
 from la.util.misc import list2index, fromlists
 
+
+# Creation ------------------------------------------------------------------
    
-def fromtuples(data, check_input=True):
+def fromtuples(data):
     """
     Convert a list of tuples to a larry.
     
@@ -22,12 +24,7 @@ def fromtuples(data, check_input=True):
     ----------
     data : list of tuples
         The input must be a list of tuples where each tuple represents one
-        data point in the larry: (label0, label1, ..., labelN, value)
-    check_input : {True, False}
-        It takes time to check that the input is a list of all tuples and
-        that each tuple has the same length. The default (True) is to check
-        the input. If you already know your input is good, you can save time
-        by skipping the check (by setting `check_input` to False).    
+        data point in the larry: (label0, label1, ..., labelN, value)   
         
     Returns
     -------
@@ -36,9 +33,10 @@ def fromtuples(data, check_input=True):
         
     See Also
     --------
+    larry.totuples : Convert to a flattened list of tuples.
     fromlist : Convert a list of tuples to a larry.
-    larry.flatten : Return an unflattened copy of the larry.
-    larry.unflatten : Return a copy of the larry collapsed into one dimension.
+    fromdict : Convert a dictionary to a larry.
+
     
     Notes
     -----
@@ -77,17 +75,6 @@ def fromtuples(data, check_input=True):
            [  3.,  NaN]])
             
     """
-
-    # Check input
-    if check_input:
-        if type(data) != list:
-            raise TypeError, 'data must be a list'
-        if not all([type(t) == tuple for t in data]):
-            raise TypeError, 'data must be a list of tuples'
-        ndim = len(data[0])
-        if not all([len(t) == ndim for t in data]):
-            msg = 'All of the tuples in data must have the same length.'       
-            raise ValueError, msg
         
     # Split data into label and x
     labels = zip(*data)
@@ -98,7 +85,7 @@ def fromtuples(data, check_input=True):
     
     return larry(x, label) 
     
-def fromlist(data, check_input=True):
+def fromlist(data):
     """
     Convert a flattened list to a larry.
     
@@ -115,11 +102,7 @@ def fromlist(data, check_input=True):
     ----------
     data : list
         The input must be a list such as that returned by larry.tolist. See
-        the example below.
-    check_input : {True, False}
-        It takes time to check that the input. The default (True) is to check
-        the input. If you already know your input is good, you can save time
-        by skipping the check (by setting `check_input` to False).    
+        the example below.  
         
     Returns
     -------
@@ -130,8 +113,7 @@ def fromlist(data, check_input=True):
     --------
     larry.tolist : Convert to a flattened list.
     fromtuples : Convert a list of tuples to a larry.
-    larry.flatten : Return an unflattened copy of the larry.
-    larry.unflatten : Return a copy of the larry collapsed into one dimension.  
+    fromdict : Convert a dictionary to a larry.  
 
     Examples
     --------
@@ -148,22 +130,55 @@ def fromlist(data, check_input=True):
            [ 3.,  4.]])
            
     """
-
-    # Check input
-    if check_input:
-        if type(data) != list:
-            raise TypeError, 'data must be a list'
-        if not all([type(t) == list for t in data]):
-            raise TypeError, 'data must be a list of tuples'
-        ndim = len(data[0])
-        if not all([len(t) == ndim for t in data]):
-            msg = 'All of the tuples in data must have the same length.'       
-            raise ValueError, msg  
-    
-    # Determine labels, shape, and index into array	
-    x, label = fromlists(data[0], zip(*data[1]))  
-    
+    x, label = fromlists(data[0], zip(*data[1]))      
     return larry(x, label)             
+
+def fromdict(data):
+    """
+    Convert a dictionary to a larry.
+    
+    The input data, if there are N dimensions and M data points, should have
+    this form:
+    
+    {(label0_1, label1_1, ..., labelN_1): value_1,
+     (label0_2, label1_2, ..., labelN_2): value_2,
+     ...
+     (label0_M, label1_M, ..., labelN_M): value_M}   
+    
+    Parameters
+    ----------
+    data : dict
+        The input must be a dictionary such as that returned by larry.todict
+        See the example below. 
+        
+    Returns
+    -------
+    y : larry
+        A larry constructed from `data` is returned.
+        
+    See Also
+    --------
+    larry.todict : Convert to a dictionary. 
+    fromtuples : Convert a list of tuples to a larry.
+    fromlist : Convert a list of tuples to a larry.
+
+    Examples
+    --------
+    >>> data = {('b', 'c'): 3.0, ('a', 'd'): 2.0, ('a', 'c'): 1.0, ('b', 'd'): 4.0}
+    >>> la.fromdict(data)
+    label_0
+        a
+        b
+    label_1
+        c
+        d
+           
+    """
+    if type(data) != dict:
+        raise TypeError, 'data must be a dict'    
+    return fromlist([data.values(), data.keys()])  
+
+# Labels --------------------------------------------------------------------
     
 def union(axis, *args):
     """
@@ -247,6 +262,8 @@ def intersection(axis, *args):
     rc = list(rc)
     rc.sort()
     return rc
+
+# Concatenating -------------------------------------------------------------
     
 def stack(mode, **kwargs):
     """Stack 2d larrys to make a 3d larry.

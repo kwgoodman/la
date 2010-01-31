@@ -21,7 +21,7 @@ found in :ref:`reference`.
 Creation
 --------
 
-The functions **fromtuples** and **fromlist** create larrys.
+These functions in this section create larrys.
 
 ------------
              
@@ -30,6 +30,10 @@ The functions **fromtuples** and **fromlist** create larrys.
 ------------
 
 .. autofunction:: la.fromlist
+
+------------
+
+.. autofunction:: la.fromdict
 
 
 Labels

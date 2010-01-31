@@ -17,7 +17,7 @@ More examples of what you can do with larrys are given in :ref:`reference`.
 Creating a larry
 ----------------
 
-Let's create a larry (Labeled ARRaY):
+Let's create a larry (LAbeled aRRaY):
 ::
     >>> y = larry([1, 2, 3])
     >>> y
@@ -87,9 +87,13 @@ to create a larry whose data shape does not agree with the label shape:
         raise ValueError, msg % i
     ValueError: Length mismatch in label and x along axis 1
     
-You can also create a larry from with either the **fromlist** or
-**fromtuples** functions. Which one you use depends on the format of your
-data.
+The following functions can also be used to create larrys:
+
+* **fromtuples**
+* **fromlist**
+* **fromdict**
+
+Which function you use to create a larry depends on the format of your data.
 
 Use **fromlist** if your data with *N* dimensions and *M* data points has
 the following format:
@@ -149,10 +153,24 @@ For example:
         b
     x
     array([[ 1.,  2.],
-           [ 3.,  4.]]) 
+           [ 3.,  4.]])
+           
+And **fromdict** can be used like this:
+::
+    >>> data = {('b', 'c'): 3.0, ('a', 'd'): 2.0, ('a', 'c'): 1.0, ('b', 'd'): 4.0}
+    >>> la.fromdict(data)
+    label_0
+        a
+        b
+    label_1
+        c
+        d
+    x
+    array([[ 1.,  2.],
+           [ 3.,  4.]])          
 
 See :ref:`conversion` for a discussion of the corresponding methods,
-**tolist** and **totuples**. 
+**tolist, totuples, todict**. 
 
 
 Shape, size, type
