@@ -33,9 +33,9 @@ def fromtuples(data):
         
     See Also
     --------
-    larry.totuples : Convert to a flattened list of tuples.
-    fromlist : Convert a list of tuples to a larry.
-    fromdict : Convert a dictionary to a larry.
+    la.larry.totuples : Convert to a flattened list of tuples.
+    la.fromlist : Convert a list of tuples to a larry.
+    la.fromdict : Convert a dictionary to a larry.
 
     
     Notes
@@ -111,9 +111,9 @@ def fromlist(data):
         
     See Also
     --------
-    larry.tolist : Convert to a flattened list.
-    fromtuples : Convert a list of tuples to a larry.
-    fromdict : Convert a dictionary to a larry.  
+    la.larry.tolist : Convert to a flattened list.
+    la.fromtuples : Convert a list of tuples to a larry.
+    la.fromdict : Convert a dictionary to a larry.  
 
     Examples
     --------
@@ -158,9 +158,9 @@ def fromdict(data):
         
     See Also
     --------
-    larry.todict : Convert to a dictionary. 
-    fromtuples : Convert a list of tuples to a larry.
-    fromlist : Convert a list of tuples to a larry.
+    la.larry.todict : Convert to a dictionary. 
+    la.fromtuples : Convert a list of tuples to a larry.
+    la.fromlist : Convert a list of tuples to a larry.
 
     Examples
     --------
@@ -198,7 +198,7 @@ def union(axis, *args):
         
     See Also
     --------
-    intersection : Intersection of labels along specified axis.
+    la.intersection : Intersection of labels along specified axis.
     
     Examples
     --------            
@@ -239,7 +239,7 @@ def intersection(axis, *args):
         
     See Also
     --------
-    union : Union of labels along specified axis.
+    la.union : Union of labels along specified axis.
     
     Examples
     --------            

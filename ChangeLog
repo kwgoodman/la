@@ -1,5 +1,7 @@
 2010-01-31 Keith
 
+    * deflarry.py, func.py: Doc work.
+
     * deflarry.py(todict), func.py(fromdict), __init__.py, 
       doc/source/functions.rst, doc/source/reference.rst, doc/source/work.rst:
       Added a new method, todict,  and a new function, fromdict. 

@@ -2783,7 +2783,7 @@ class larry(object):
             
         See also
         --------
-        unflatten : Return an unflattened copy of larry.            
+        la.larry.unflatten : Return an unflattened copy of larry.            
             
         Examples
         --------
@@ -2829,7 +2829,7 @@ class larry(object):
                     
         See also
         --------
-        flatten : Return a copy of the larry collapsed into one dimension.
+        la.larry.flatten : Return a copy of the larry collapsed into one dimension.
         
         
         Examples
@@ -2884,8 +2884,8 @@ class larry(object):
         See Also
         --------
         la.fromtuples : Convert a list of tuples to a larry.
-        tolist : Convert to a flattened list.
-        todict : Convert to a dictionary.
+        la.larry.tolist : Convert to a flattened list.
+        la.larry.todict : Convert to a dictionary.
         
         Examples
         --------
@@ -2906,8 +2906,8 @@ class larry(object):
         See Also
         --------
         la.fromlist : Convert a flattened list to a larry.
-        totuples : Convert to a flattened list of tuples.
-        todict : Convert to a dictionary.
+        la.larry.totuples : Convert to a flattened list of tuples.
+        la.larry.todict : Convert to a dictionary.
         
         Examples
         --------
@@ -2925,8 +2925,8 @@ class larry(object):
         
         See Also
         --------
-        totuples : Convert to a flattened list of tuples.
-        tolist : Convert to a flattened list.
+        la.larry.totuples : Convert to a flattened list of tuples.
+        la.larry.tolist : Convert to a flattened list.
         
         Examples
         --------
