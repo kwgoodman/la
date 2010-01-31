@@ -1,5 +1,7 @@
 2010-01-31 Keith
 
+    * doc/image/icon.png, doc/image/icon.xcf, doc/image/icon14.png: Doc tweak.
+
     * doc/source/conf.py: Doc tweak.
 
     * func.py(fromdict): Removed requirement that input must be a dictionary.
