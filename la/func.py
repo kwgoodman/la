@@ -100,26 +100,24 @@ def fromtuples(data, check_input=True):
     
 def fromlist(data, check_input=True):
     """
-    Convert a list of tuples to a larry.
+    Convert a flattened list to a larry.
     
     The input data, if there are N dimensions and M data points, should have
     this form:
     
-    [(value_1,  value_2,  ..., value_M),
-     (label0_1, label0_1, ..., label0_M),
-     (label1_1, label1_1, ..., label0_M),
-     ...
-     (labelN_1, labelN_1, ..., labelN_M)]    
+    [[value_1,  value_2,  ..., value_M],
+     [(label0_1, label1_1, ..., labelN_1),
+      (label0_2, label1_2, ..., labelN_2),
+      ...
+      (label0_M, label1_M, ..., labelN_M)]]    
     
     Parameters
     ----------
-    data : list of tuples
-        The input must be a list of tuples where the first tuple are the data
-        array values and the remaining tuples, one for each dimension, are the
-        labels for each axis. See the exmaple below.
+    data : list
+        The input must be a list such as that returned by larry.tolist. See
+        the example below.
     check_input : {True, False}
-        It takes time to check that the input is a list of all tuples and
-        that each tuple has the same length. The default (True) is to check
+        It takes time to check that the input. The default (True) is to check
         the input. If you already know your input is good, you can save time
         by skipping the check (by setting `check_input` to False).    
         
@@ -130,25 +128,21 @@ def fromlist(data, check_input=True):
         
     See Also
     --------
+    larry.tolist : Convert to a flattened list.
     fromtuples : Convert a list of tuples to a larry.
     larry.flatten : Return an unflattened copy of the larry.
-    larry.unflatten : Return a copy of the larry collapsed into one dimension.
-    
-    Notes
-    -----
-    fromlist is faster than fromtuples since fromtuples must do one extra
-    step: unzip the labels and data values.    
+    larry.unflatten : Return a copy of the larry collapsed into one dimension.  
 
     Examples
     --------
-    >>> data = [(1, 2, 3, 4), ('a', 'a', 'b', 'b'), ('a', 'b', 'a', 'b')]
+    >>> data = [[1, 2, 3, 4], [('a', 'c'), ('a', 'd'), ('b', 'c'), ('b', 'd')]]
     >>> la.fromlist(data)
     label_0
         a
         b
     label_1
-        a
-        b
+        c
+        d
     x
     array([[ 1.,  2.],
            [ 3.,  4.]])
@@ -159,7 +153,7 @@ def fromlist(data, check_input=True):
     if check_input:
         if type(data) != list:
             raise TypeError, 'data must be a list'
-        if not all([type(t) == tuple for t in data]):
+        if not all([type(t) == list for t in data]):
             raise TypeError, 'data must be a list of tuples'
         ndim = len(data[0])
         if not all([len(t) == ndim for t in data]):
@@ -167,7 +161,7 @@ def fromlist(data, check_input=True):
             raise ValueError, msg  
     
     # Determine labels, shape, and index into array	
-    x, label = fromlists(data[0], data[1:])  
+    x, label = fromlists(data[0], zip(*data[1]))  
     
     return larry(x, label)             
     

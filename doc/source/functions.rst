@@ -21,7 +21,7 @@ found in :ref:`reference`.
 Creation
 --------
 
-The functions **fromtuples** and **fromlist** can used to create larrys.
+The functions **fromtuples** and **fromlist** create larrys.
 
 ------------
              

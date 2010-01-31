@@ -1,7 +1,18 @@
+2010-01-31 Keith
+
+    * deflarry.py(totuples), deflarry.py(tolist): Two new methods.
+  
+    * func.py(fromlist): Redefined from list format.
+  
+    * doc/source/reference.rst, doc/source/work.rst, doc/source/functions.rst:
+      Doc work on tolist, fromlist, totuples. fromtuples.
+      
 2010-01-30 Keith
 
+    * doc/source/functions.rst: New section of the manual.
+
     * doc/launchpad.txt, doc/source/index.rst, doc/source/reference.rst,
-    flarry.py, func.py, doc/source/functions.rst: Doc work.
+      flarry.py, func.py: Doc work.
 
 2010-01-29 Keith
 

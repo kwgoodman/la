@@ -485,7 +485,21 @@ Some of the methods (**T, flatten, unflatten**) change the shape of the larry.
     
 ------------
 
-.. automethod:: la.larry.unflatten          
+.. automethod:: la.larry.unflatten 
+
+
+Conversion
+----------
+
+Methods to convert larrys to lists.
+
+------------
+
+.. automethod:: la.larry.totuples
+    
+------------
+
+.. automethod:: la.larry.tolist         
 
 
 Copy

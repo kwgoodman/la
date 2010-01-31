@@ -87,33 +87,49 @@ to create a larry whose data shape does not agree with the label shape:
         raise ValueError, msg % i
     ValueError: Length mismatch in label and x along axis 1
     
-You can also create a larry from lists using either the **fromlist** or
+You can also create a larry from with either the **fromlist** or
 **fromtuples** functions. Which one you use depends on the format of your
 data.
 
 Use **fromlist** if your data with *N* dimensions and *M* data points has
 the following format:
 ::
-    [(value_1,  value_2,  ..., value_M),
-     (label0_1, label0_1, ..., label0_M),
-     (label1_1, label1_1, ..., label0_M),
-     ...
-     (labelN_1, labelN_1, ..., labelN_M)] 
+    [[value_1,  value_2,  ..., value_M],
+     [(label0_1, label1_1, ..., labelN_1),
+      (label0_2, label1_2, ..., labelN_2),
+      ...
+      (label0_M, label1_M, ..., labelN_M)]]     
 
 For example:
 ::
-    >>> data = [(1, 2, 3, 4), ('a', 'a', 'b', 'b'), ('a', 'b', 'a', 'b')]
+    >>> data = [[1, 2, 3, 4], [('a', 'c'), ('a', 'd'), ('b', 'c'), ('b', 'd')]]
     >>> la.fromlist(data)
     label_0
         a
         b
     label_1
-        a
-        b
+        c
+        d
     x
     array([[ 1.,  2.],
-           [ 3.,  4.]]) 
-
+           [ 3.,  4.]])
+           
+Note that **fromlist** changed the data type from integer to float. That
+allows for the possibility of missing data. Let's throw out the last data
+point in the example above (note the NaN):
+::
+    >>> data = [[1, 2, 3], [('a', 'c'), ('a', 'd'), ('b', 'c')]]
+    >>> la.fromlist(data)
+    label_0
+        a
+        b
+    label_1
+        c
+        d
+    x
+    array([[  1.,   2.],
+           [  3.,  NaN]])
+            
 And use **fromtuples** if your data has the following format:
 ::
     [(label0_1, label1_1, ..., labelN_1, value_1),
@@ -135,7 +151,8 @@ For example:
     array([[ 1.,  2.],
            [ 3.,  4.]]) 
 
-**fromlist** is faster than **fromtuples**. 
+See :ref:`conversion` for a discussion of the corresponding methods,
+**tolist** and **totuples**. 
 
 
 Shape, size, type
@@ -424,6 +441,20 @@ Um...
 
 Groups
 ------
+
+Um...
+
+
+Copying
+-------
+
+Um...
+
+
+.. _conversion:
+
+Conversion
+----------
 
 Um...
 

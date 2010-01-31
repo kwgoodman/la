@@ -2873,7 +2873,49 @@ class larry(object):
         labels = zip(*self.label[0])
         x, label = fromlists(self.x, labels) 
     
-        return larry(x, label)                            
+        return larry(x, label)
+        
+    # Conversion -------------------------------------------------------------         
+
+    def totuples(self):
+        """
+        Convert to a flattened list of tuples.
+        
+        See Also
+        --------
+        la.fromtuples : Convert a list of tuples to a larry.
+        tolist : Convert to a flattened list.
+        
+        Examples
+        --------
+        >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+        >>> y.totuples()
+        [('a', 'c', 1), ('a', 'd', 2), ('b', 'c', 3), ('b', 'd', 4)]       
+        
+        """
+        yf = self.flatten()
+        z = zip(*yf.label[0])
+        z.append(yf.x.tolist())
+        return zip(*z)
+        
+    def tolist(self):
+        """
+        Convert to a flattened list.
+        
+        See Also
+        --------
+        la.fromlist : Convert a flattened list to a larry.
+        totuples : Convert to a flattened list of tuples.
+        
+        Examples
+        --------
+        >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+        >>> y.tolist()
+        [[1, 2, 3, 4], [('a', 'c'), ('a', 'd'), ('b', 'c'), ('b', 'd')]]       
+        
+        """
+        yf = self.flatten()
+        return [yf.x.tolist(), yf.label[0]]                                   
                
     # Copy -------------------------------------------------------------------        
           
