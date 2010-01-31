@@ -9,6 +9,6 @@ In la/doc:
 $ make clean
 $ make html
 
-Then in la/doc/build/html (it will ask for the password):
+Then to upload (it will ask for the password):
 
-$ rsync -avPr -e ssh * kwgoodman,larry@web.sourceforge.net:htdocs/
+rsync -avPr -e ssh build/html/* kwgoodman,larry@web.sourceforge.net:htdocs/

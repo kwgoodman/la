@@ -87,9 +87,11 @@ find it. Then run:
 URLs
 ====
 
-=======    =============================================
- code       https://launchpad.net/larry
- docs       http://larry.sourceforge.net
- list       http://groups.google.ca/group/pystatsmodels
-=======    =============================================
+===============   ========================================================
+ code              https://launchpad.net/larry
+ docs              http://larry.sourceforge.net
+ list              http://groups.google.ca/group/pystatsmodels
+ devel list        https://launchpad.net/~larry-discuss
+ devel archive     https://lists.launchpad.net/larry-discuss/threads.html
+===============   ========================================================
 

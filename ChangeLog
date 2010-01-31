@@ -1,5 +1,12 @@
 2010-01-31 Keith
 
+    * func.py(fromdict): Removed requirement that input must be a dictionary.
+      All it needs is are values and keys methods that output the values and
+      keys in the same order.
+
+    * doc/doc_howto, doc/source/conf.py, doc/source/index.rst, 
+      doc/source/intro.rst: Doc work.
+
     * deflarry.py, func.py: Doc work.
 
     * deflarry.py(todict), func.py(fromdict), __init__.py, 

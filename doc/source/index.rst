@@ -4,11 +4,6 @@ larry, the manual
 
 Meet larry, he's a labeled array:
 
-.. figure:: ../image/icon.png
-   :scale: 100
-   :alt: larry icon
-   :align: left
-
 .. toctree::
    :maxdepth: 2
    

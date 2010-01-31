@@ -173,9 +173,7 @@ def fromdict(data):
         c
         d
            
-    """
-    if type(data) != dict:
-        raise TypeError, 'data must be a dict'    
+    """  
     return fromlist([data.values(), data.keys()])  
 
 # Labels --------------------------------------------------------------------
