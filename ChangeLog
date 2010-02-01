@@ -1,5 +1,9 @@
 2010-02-01 Keith
 
+    * deflarry.py, func.py, __init__.py, doc/source/functions.rst,
+      doc/source/reference.rst: Converted fromtuples, fromlist, and fromdict
+      to larry methods. They were previously la functions.
+
     * deflarry.py(__setitem__), deflarry_test.py, doc/source/intro.rst:
       Fix for Bug #515611 and unit tests. You can now do lar1[idx] = lar2 if
       lar1[idx] and lar2 are already aligned.

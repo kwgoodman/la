@@ -15,25 +15,7 @@ of the examples assume that you have already imported larry:
     >>> from la import larry
     
 The reference guide for the larry methods, as opposed to functions, can be
-found in :ref:`reference`. 
-    
-
-Creation
---------
-
-These functions in this section create larrys.
-
-------------
-             
-.. autofunction:: la.fromtuples
-
-------------
-
-.. autofunction:: la.fromlist
-
-------------
-
-.. autofunction:: la.fromdict
+found in :ref:`reference`.
 
 
 Labels

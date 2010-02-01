@@ -17,14 +17,26 @@ The reference guide for the larry functions, as opposed to methods, can be
 found in :ref:`functions`.     
     
 
-__init__
----------
+Creation
+--------
 
-The __init__ method is used to create a larry.
+The creation methods allow you to create larrys.
 
 ------------
 
 .. automethod:: la.larry.__init__
+
+------------
+
+.. automethod:: la.larry.fromtuples
+
+------------
+
+.. automethod:: la.larry.fromlist
+
+------------
+
+.. automethod:: la.larry.fromdict
 
 
 Unary
