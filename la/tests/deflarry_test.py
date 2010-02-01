@@ -2106,6 +2106,50 @@ class Test_getset(unittest.TestCase):
         self.assert_((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2, 3]]
         self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        
+    def test_setitem_6(self):
+        "larry.__setitem___6"
+        t = np.array([0, 1, 2, 3]) 
+        p = self.l2
+        p[:] = [0, 1, 2, 3]
+        msg = printfail(t, p.x, 'x')        
+        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        label = [[0, 1, 2, 3]]
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))         
+        
+    def test_setitem_7(self):
+        "larry.__setitem___7"
+        t = np.array([0, 9, 8, 7]) 
+        p = self.l2
+        p[1:] = [9, 8, 7]
+        msg = printfail(t, p.x, 'x')        
+        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        label = [[0, 1, 2, 3]]
+        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+
+    def test_setitem_8(self):
+        "larry.__setitem___8"
+        t = np.array([9, 8, 7, 3]) 
+        p = self.l2
+        p[:-1] = larry([9, 8, 7])
+        msg = printfail(t, p.x, 'x')        
+        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        label = [[0, 1, 2, 3]]
+        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+
+    def test_setitem_9(self):
+        "larry.__setitem___9"
+        t = np.array([[ 9.0, 8.0],
+                      [ 7.0, 6.0],
+                      [ 5.0, 6.0]]) 
+        p = self.l
+        p[:2,:2] = larry([[9.0, 8.0], [7.0, 6.0]])
+        msg = printfail(t, p.x, 'x')
+        t[np.isnan(t)] = self.nancode
+        p[np.isnan(p.x)] = self.nancode        
+        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        label = [[0, 1, 2], [0, 1]]
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
 
     def test_set_1(self):
         "larry.set_1"

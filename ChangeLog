@@ -1,7 +1,11 @@
 2010-02-01 Keith
 
+    * deflarry.py(__setitem__), deflarry_test.py, doc/source/intro.rst:
+      Fix for Bug #515611 and unit tests. You can now do lar1[idx] = lar2 if
+      lar1[idx] and lar2 are already aligned.
+
     * afunc.py(group_mean), afunc.py(group_median), afunc.py(group_ranking):
-      Removed conversion to object dtype. Updated doc strings.
+      Removed conversion to object dtype. Updated code comments.
 
     * deflarry.py, func.py, doc/source/reference.rst, doc/source/work.rst:
       Doc work.

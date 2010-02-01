@@ -1387,7 +1387,16 @@ class larry(object):
                 msg = 'Indexing with a larry that is not aligned'
                 raise IndexError, msg    
         else:
-            self.x[index] = value
+            if isinstance(value, larry):
+                # TODO The line below (self[index].label) is slow. Need a
+                # function that indexes into labels without indexing into x.
+                # Then use that function in getitem
+                if self[index].label == value.label:
+                    self.x[index] = value.x
+                else:    
+                    raise IndexError, 'larrys are not aligned.'    
+            else:
+                self.x[index] = value
             
     def set(self, label, value):
         """
