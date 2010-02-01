@@ -343,7 +343,7 @@ or, resorting to hackery:
 Assignment by indexing
 ----------------------
 
-Assignment by indexing is the same ways as with a Numpy array:
+Assignment by indexing is the same as with Numpy arrays:
 ::
     >>> y = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
     

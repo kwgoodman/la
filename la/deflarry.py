@@ -2453,7 +2453,27 @@ class larry(object):
         Returns
         -------
         out : None
-            The data are shuffled inplace.        
+            The data are shuffled inplace.
+            
+        See Also
+        --------
+        la.larry.shufflelabel : Shuffle the label inplace along the specified
+                                axis.             
+            
+        Examples
+        --------
+        >>> y = larry([[1, 2], [3,  4]], [['north', 'south'], ['east', 'west']])
+        >>> y.shuffle()
+        >>> y
+        label_0
+            north
+            south
+        label_1
+            east
+            west
+        x
+        array([[3, 4],
+               [1, 2]])
         
         """
         if axis is None:
@@ -2477,7 +2497,26 @@ class larry(object):
         Returns
         -------
         out : None
-            The labels are shuffled inplace.        
+            The labels are shuffled inplace.
+            
+        See Also
+        --------
+        la.larry.shuffle : Shuffle the data inplace along the specified axis.    
+            
+        Examples
+        --------
+        >>> y = larry([[1, 2], [3,  4]], [['north', 'south'], ['east', 'west']])
+        >>> y.shufflelabel()
+        >>> y
+        label_0
+            south
+            north
+        label_1
+            west
+            east
+        x
+        array([[3, 4],
+               [1, 2]])                    
         
         """
         if axis is None:

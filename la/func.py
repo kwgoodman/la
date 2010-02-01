@@ -93,10 +93,10 @@ def fromlist(data):
     this form:
     
     [[value_1,  value_2,  ..., value_M],
-     [(label0_1, label1_1, ..., labelN_1),
-      (label0_2, label1_2, ..., labelN_2),
-      ...
-      (label0_M, label1_M, ..., labelN_M)]]    
+    [(label0_1, label1_1, ..., labelN_1),
+    (label0_2, label1_2, ..., labelN_2),
+    ...
+    (label0_M, label1_M, ..., labelN_M)]]    
     
     Parameters
     ----------
@@ -141,9 +141,9 @@ def fromdict(data):
     this form:
     
     {(label0_1, label1_1, ..., labelN_1): value_1,
-     (label0_2, label1_2, ..., labelN_2): value_2,
-     ...
-     (label0_M, label1_M, ..., labelN_M): value_M}   
+    (label0_2, label1_2, ..., labelN_2): value_2,
+    ...
+    (label0_M, label1_M, ..., labelN_M): value_M}   
     
     Parameters
     ----------
@@ -276,7 +276,7 @@ def stack(mode, **kwargs):
         rows and all the columns?
     kwargs : name=larry
         Variable length input listing the z axis name and larry. For example,
-        stack('union', momentum=x, volume=y, ep=z)
+        stack('union', distance=x, temperature=y, pressure=z)
         
     Returns
     -------

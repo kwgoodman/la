@@ -362,10 +362,18 @@ where group 1 is ('e', 'a'), group 2 is ('d', 'c'), and group 3 is ('b'):
            [ 3.5],
            [ 3.5],
            [ 3. ]])
+   
+------------
 
+.. automethod:: la.larry.group_ranking
 
-.. autoclass:: la.larry
-   :members: group_ranking, group_mean, group_median
+------------
+
+.. automethod:: la.larry.group_mean
+
+------------
+
+.. automethod:: la.larry.group_median   
 
 
 Alignment
@@ -392,45 +400,40 @@ aligns *y1* to *y2*; the second example aligns *y2* to *y1*:
         b
     x
     array([ 1.,  2.])
+    
+------------
 
-.. autoclass:: la.larry
-   :members: morph, morph_like, merge, squeeze, lag
+.. automethod:: la.larry.morph
+
+------------
+
+.. automethod:: la.larry.morph_like
+
+------------
+
+.. automethod:: la.larry.merge
+
+------------
+
+.. automethod:: la.larry.squeeze
+
+------------
+
+.. automethod:: la.larry.lag
 
 
 Shuffle
 -------
 
-The data and the labels of larrys can be randomly shuffled in-place:
-::
-    >>> from la import larry
-    >>> y = larry([[1, 2], [3,  4]], [['north', 'south'], ['east', 'west']])
+The data and the labels of larrys can be randomly shuffled in-place.
 
-    >>> y.shuffle()
-    >>> y
-    label_0
-        north
-        south
-    label_1
-        east
-        west
-    x
-    array([[3, 4],
-           [1, 2]])
+------------
 
-    >>> y.shufflelabel()
-    >>> y
-    label_0
-        south
-        north
-    label_1
-        west
-        east
-    x
-    array([[3, 4],
-           [1, 2]])
+.. automethod:: la.larry.shuffle
 
-.. autoclass:: la.larry
-   :members: shuffle, shufflelabel
+------------
+
+.. automethod:: la.larry.shufflelabel
 
 
 .. _missing:
@@ -443,10 +446,24 @@ NaNs are treated as missing data in larry:
     >>> import la
     >>> y = larry([1.0, la.nan])
     >>> y.sum()
-    1.0   
+    1.0 
+    
+------------
 
-.. autoclass:: la.larry
-   :members: cut_missing, push, vacuum, nan_replace 
+.. automethod:: la.larry.cut_missing
+
+------------
+
+.. automethod:: la.larry.push
+
+------------
+
+.. automethod:: la.larry.vacuum
+
+------------
+
+.. automethod:: la.larry.nan_replace       
+
 
    
 Size, shape, dtype

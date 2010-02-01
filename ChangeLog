@@ -1,3 +1,11 @@
+2010-02-01 Keith
+
+    * afunc.py(group_mean), afunc.py(group_median), afunc.py(group_ranking):
+      Removed conversion to object dtype. Updated doc strings.
+
+    * deflarry.py, func.py, doc/source/reference.rst, doc/source/work.rst:
+      Doc work.
+
 2010-01-31 Keith
 
     * doc/launchpad.txt, doc/source/work.rst, func.py: Doc work.

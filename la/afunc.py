@@ -43,13 +43,13 @@ def group_ranking(x, groups, norm='-1,1', ties=True):
     
     """
   
-    # Find set of unique sectors
+    # Find set of unique groups
     ugroups = unique_group(groups)
     
-    # Convert sectors to a numpy array
-    groups = np.asarray(groups, dtype=object)
+    # Convert groups to a numpy array
+    groups = np.asarray(groups)
   
-    # Loop through unique sectors and normalize
+    # Loop through unique groups and normalize
     xnorm = np.nan * np.zeros(x.shape)
     for group in ugroups:
         idx = groups == group
@@ -75,13 +75,13 @@ def group_mean(x, groups):
 
     """
 
-    # Find set of unique sectors
+    # Find set of unique groups
     ugroups = unique_group(groups)
     
-    # Convert sectors to a numpy array
-    groups = np.asarray(groups, dtype=object)    
+    # Convert groups to a numpy array
+    groups = np.asarray(groups)    
   
-    # Loop through unique sectors and normalize
+    # Loop through unique groups and normalize
     xmean = np.nan * np.zeros(x.shape)
     for group in ugroups:
         idx = groups == group
@@ -109,13 +109,13 @@ def group_median(x, groups):
 
     """
 
-    # Find set of unique sectors
+    # Find set of unique groups
     ugroups = unique_group(groups)
     
-    # Convert sectors to a numpy array
-    groups = np.asarray(groups, dtype=object)    
+    # Convert groups to a numpy array
+    groups = np.asarray(groups)    
   
-    # Loop through unique sectors and normalize
+    # Loop through unique groups and normalize
     xmedian = np.nan * np.zeros(x.shape)
     for group in ugroups:
         idx = groups == group
