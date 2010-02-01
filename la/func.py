@@ -164,7 +164,7 @@ def fromdict(data):
 
     Examples
     --------
-    >>> data = {('b', 'c'): 3.0, ('a', 'd'): 2.0, ('a', 'c'): 1.0, ('b', 'd'): 4.0}
+    >>> data = {('a', 'c'): 1, ('a', 'd'): 2, ('b', 'c'): 3, ('b', 'd'): 4}
     >>> la.fromdict(data)
     label_0
         a
@@ -172,6 +172,9 @@ def fromdict(data):
     label_1
         c
         d
+    x
+    array([[ 1.,  2.],
+           [ 3.,  4.]])
            
     """  
     return fromlist([data.values(), data.keys()])  

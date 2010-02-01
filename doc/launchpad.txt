@@ -1,7 +1,8 @@
 Meet larry, he's a labeled array.
 
-A two-dimensional larry, for example, contains a 2d NumPy array with labels
-on each row and column. A larry can have any dimension.
+A larry is a data array that let's you label each row and column. A
+two-dimensional larry, for example, contains a NumPy array to hold the data
+and a list of row labels and column labels. A larry can have any dimension.
 
 Alignment by label is automatic when you add (or subtract, multiply, divide)
 two larrys.
@@ -12,9 +13,6 @@ sign, clip. NaNs are treated as missing data.
  
 You can archive larrys in HDF5 format using save and load or using a
 dictionary-like interface.
-       
-For the most part larry acts like a Numpy array. And, whenever you want,
-you have direct access to the Numpy array that holds your data.
     
 larry adds the convenience of labels, provides many built-in methods, and
 let's you use many of your existing NumPy array functions.

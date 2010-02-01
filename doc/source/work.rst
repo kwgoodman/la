@@ -89,22 +89,11 @@ to create a larry whose data shape does not agree with the label shape:
     
 The following functions can also be used to create larrys:
 
-* **fromtuples**
 * **fromlist**
+* **fromtuples**
 * **fromdict**
 
-Which function you use to create a larry depends on the format of your data.
-
-Use **fromlist** if your data with *N* dimensions and *M* data points has
-the following format:
-::
-    [[value_1,  value_2,  ..., value_M],
-     [(label0_1, label1_1, ..., labelN_1),
-      (label0_2, label1_2, ..., labelN_2),
-      ...
-      (label0_M, label1_M, ..., labelN_M)]]     
-
-For example:
+Here's how to create a larry using **fromlist**:
 ::
     >>> data = [[1, 2, 3, 4], [('a', 'c'), ('a', 'd'), ('b', 'c'), ('b', 'd')]]
     >>> la.fromlist(data)
@@ -134,14 +123,7 @@ point in the example above (note the NaN):
     array([[  1.,   2.],
            [  3.,  NaN]])
             
-And use **fromtuples** if your data has the following format:
-::
-    [(label0_1, label1_1, ..., labelN_1, value_1),
-     (label0_2, label1_2, ..., labelN_2, value_2),
-     ...
-     (label0_M, label1_M, ..., labelN_M, value_M)]
-     
-For example:
+Here are examples of **fromtuples** and **fromdict**:
 ::
     >>> data = [('a', 'a', 1), ('a', 'b', 2), ('b', 'a', 3), ('b', 'b', 4)]
     >>> la.fromtuples(data)
@@ -154,10 +136,8 @@ For example:
     x
     array([[ 1.,  2.],
            [ 3.,  4.]])
-           
-And **fromdict** can be used like this:
-::
-    >>> data = {('b', 'c'): 3.0, ('a', 'd'): 2.0, ('a', 'c'): 1.0, ('b', 'd'): 4.0}
+
+    >>> data = {('a', 'c'): 1, ('a', 'd'): 2, ('b', 'c'): 3, ('b', 'd'): 4}
     >>> la.fromdict(data)
     label_0
         a
@@ -167,7 +147,7 @@ And **fromdict** can be used like this:
         d
     x
     array([[ 1.,  2.],
-           [ 3.,  4.]])          
+           [ 3.,  4.]])         
 
 See :ref:`conversion` for a discussion of the corresponding methods,
 **tolist, totuples, todict**. 
@@ -222,7 +202,21 @@ Flattened larrys can be unflattened:
         c1
     x
     array([[ 1.,  2.],
-           [ 3.,  4.]])      
+           [ 3.,  4.]])
+           
+The transpose of a larry:
+::
+    >>> y.T
+    label_0
+        c0
+        c1
+    label_1
+        r0
+        r1
+    x
+    array([[ 1.,  3.],
+           [ 2.,  4.]])
+                
   
     
 Missing values
@@ -349,7 +343,57 @@ or, resorting to hackery:
 Assignment by indexing
 ----------------------
 
-Um...
+Assignment by indexing is the same ways as with a Numpy array:
+::
+    >>> y = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
+    
+    >>> y[0,0] = 99
+    >>> y
+    label_0
+        r0
+        r1
+    label_1
+        c0
+        c1
+    x
+    array([[99,  2],
+           [ 3,  4]])
+           
+    >>> y[:,0] = 99
+    >>> y
+    label_0
+        r0
+        r1
+    label_1
+        c0
+        c1
+    x
+    array([[99,  2],
+           [99,  4]])
+           
+    >>> y[y > 10] = 0
+    >>> y
+    label_0
+        r0
+        r1
+    label_1
+        c0
+        c1
+    x
+    array([[0, 2],
+           [0, 4]])
+           
+    >>> y[y==0] = [22, 33]
+    >>> y
+    label_0
+        r0
+        r1
+    label_1
+        c0
+        c1
+    x
+    array([[22,  2],
+           [33,  4]])           
 
 
 Alignment
