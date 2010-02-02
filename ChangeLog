@@ -1,3 +1,10 @@
+2010-02-02 Keith
+
+    * setup.py, RELEASE, version.py: New files added in preparation for the
+      first release, la 0.1.
+  
+    * __init__.py: Added version info.
+
 2010-02-01 Keith
 
     * doc/source/work.rst: Doc work.

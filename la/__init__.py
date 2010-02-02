@@ -13,6 +13,7 @@ except ImportError:
 from numpy import nan, inf
 
 from la.func import union, intersection
+from la.version import __version__
 
 try:
     from numpy.testing import Tester
