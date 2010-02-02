@@ -73,16 +73,29 @@ Installation
 To use larry you need Python and Numpy 1.4 or newer.  To save and load larrys
 in HDF5 format, you need `h5py <http://h5py.alfven.org>`_ with HDF5 1.8.
         
-larry currently contains no extensions, just Python code, so there is
-nothing to compile. Just save the la package and make sure Python can
-find it. Then run:
+The ``la`` package currently contains no extensions, just Python code, so
+there is nothing to compile. You can just save the ``la`` package and make
+sure Python can find it.
+    
+Atlernatively, you can install the traditional way:
+::
+    $ python setup.py build
+    $ sudo python setup.py install
+    
+Or, if you wish to specify where ``la`` is installed, for example inside
+``/usr/local``:
+::        
+    $ python setup.py build
+    $ sudo python setup.py install --prefix=/usr/local
+    
+After you have installed ``la``, run the suite of unit tests:
 ::    
     >>> import la
     >>> la.test()
     <snip>
     Ran 618 tests in 0.516s
     OK
-    <nose.result.TextTestResult run=618 errors=0 failures=0>
+    <nose.result.TextTestResult run=618 errors=0 failures=0>       
     
 URLs
 ====

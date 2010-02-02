@@ -50,18 +50,28 @@ MEET LARRY
     Larry adds the convenience of labels, provides many builtin functions, and
     let's you use your exisiting array functions.       
 
-REQUIREMENTS
+INSTALLATION
 
-    To run larry you need Python and Numpy. Python 2.6 and Numpy 1.4 are
-    recommended. (There are many larry unit test failures with Numpy 1.3.)
-    To save and load larrys in HDF5 format, you need h5py.
+    To use larry you need Python and Numpy 1.4 or newer.  To save and load larrys
+    in HDF5 format, you need h5py with HDF5 1.8.
+            
+    The la package currently contains no extensions, just Python code, so
+    there is nothing to compile. You can just save the la package and make
+    sure Python can find it.
         
-    Larry currently contains no extensions, just Python code, so there is
-    nothing to compile. Just save the la directory and make sure Python can
-    find it. Then run:
+    Atlernatively, you can install the traditional way:
+
+        $ python setup.py build
+        $ sudo python setup.py install
+        
+    Or, if you wish to specify where la is installed, for example inside
+    /usr/local:
+        
+        $ python setup.py build
+        $ sudo python setup.py install --prefix=/usr/local
+        
+    After you have installed la, run the suite of unit tests:
     
-    >>> import la
-    >>> la.test()
-    
-    
-    
+        >>> import la
+        >>> la.test()
+
