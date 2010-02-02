@@ -14,6 +14,8 @@ All of the examples below assume that you have already imported larry:
 More examples of what you can do with larrys are given in :ref:`reference`.    
 
 
+.. _creation:
+
 Creating a larry
 ----------------
 
@@ -395,6 +397,8 @@ Assignment by indexing is the same as with Numpy arrays:
     array([[22,  2],
            [33,  4]])           
 
+You can also assign values by updating them with the **merge** method. See
+:ref:`merge` for details.
 
 Alignment
 ---------
@@ -455,6 +459,8 @@ Although we cannot sum *z1* and *z2*, we can merge them:
         d
     x
     array([ 1.,  2.,  3.,  4.])
+    
+(See :ref:`merge` for more details.)    
        
 It is often convenient to pre-align larrys. To align two larrys we use
 **morph_like**:
@@ -494,23 +500,119 @@ the following example):
     x
     array([  1.,   2.,   3.,  NaN,  NaN])
     
+
+.. _merge:
     
 Merging
 -------    
 
-Um...
+Two larrys can be merged to form a single larry:
+::
+    >>> y1 = larry([1, 2], [['a', 'b']])
+    >>> y2 = larry([3, 4], [['c', 'd']])
+
+    >>> y1.merge(y2)
+    label_0
+        a
+        b
+        c
+        d
+    x
+    array([ 1.,  2.,  3.,  4.])
+
+In the example above there is no overlap between *y1* and *y2*: there are
+no data in *y1* with labels 'c' or 'd' and there are no data in *y2* with
+labels 'a' or 'b'.
+
+Let's try to merge two larrys that have an overlap (label 'b' along axis 0):
+::
+    >>> y1 = larry([1, 2], [['a', 'b']])
+    >>> y2 = larry([3, 4], [['b', 'c']])
+
+    >>> y1.merge(y2)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "la/deflarry.py", line 2381, in merge
+        raise ValueError('overlapping values')
+    ValueError: overlapping values
+    
+To merge larrys with overlaps you must set ``update`` to True:
+::
+    >>> y1.merge(y2, update=True)
+    label_0
+        a
+        b
+        c
+    x
+    array([ 1.,  3.,  4.])
+    
+When ``update`` is set to True, the data in *y1* that overlap with the data
+in *y2* are updated with the data in *y2*. In the example above, the element
+in *y1* with label 'b' is updated to 3 from 2.    
 
 
 Groups
 ------
 
-Um...
+larry has several methods for calculating group statistics:
+
+* **group_mean**
+* **group_median**
+* **group_ranking**
+
+Let's start with an example where group1 contains labels 'a' and 'c' and
+group2 contains labels 'b' and 'd':
+::
+    >>> y = larry([1, 2, 3, 4], [['a', 'b', 'c', 'd']])
+    >>> group = larry(['group1', 'group2', 'group1', 'group2'], [['a', 'b', 'c', 'd']])
+
+    >>> y.group_mean(group)
+    label_0
+        a
+        b
+        c
+        d
+    x
+    array([ 2.,  3.,  2.,  3.])
+
+The group statistics always work along axis 0 and ``group`` must be 1d. Let
+find the group mean of a larry, *y*:
+::
+    >>> y = larry([[1, 2], [5, 6], [8, 9]])
+    >>> group = larry(['g1', 'g2', 'g1'])
+
+    >>> y.group_mean(group)
+    label_0
+        0
+        1
+        2
+    label_1
+        0
+        1
+    x
+    array([[ 4.5,  5.5],
+           [ 5. ,  6. ],
+           [ 4.5,  5.5]]) 
 
 
 Copying
 -------
 
-Um...
+A larry consists of two parts: a data array and a label list. larry provides
+methods that allow you to make a copy of the data array, a copy of the label
+list, or a copy of the entire larry. Some examples:
+::
+    >>> y = larry([1, 2], [['a', 9]])
+    >>> y.copyx()
+    array([1, 2])
+    >>> y.copylabel()
+    [['a', 9]]
+    >>> y.copy()
+    label_0
+        a
+        9
+    x
+    array([1, 2])
 
 
 .. _conversion:
@@ -518,8 +620,28 @@ Um...
 Conversion
 ----------
 
-Um...
+A larry can be converted to various other formats using the following
+conversion methods:
 
+* **totuples**
+* **tolist**
+* **todict**
+
+Some examples:
+::
+    >>> y = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
+
+    >>> y.totuples()
+    [('r0', 'c0', 1), ('r0', 'c1', 2), ('r1', 'c0', 3), ('r1', 'c1', 4)]
+
+    >>> y.tolist()
+    [[1, 2, 3, 4], [('r0', 'c0'), ('r0', 'c1'), ('r1', 'c0'), ('r1', 'c1')]]
+
+    >>> y.todict()
+    {('r0', 'c1'): 2, ('r1', 'c1'): 4, ('r0', 'c0'): 1, ('r1', 'c0'): 3}
+
+The corresponding methods **fromtuples, fromlist, and fromdict** are discused
+in :ref:`creation`.
 
 Archiving
 ---------
@@ -530,18 +652,16 @@ The archiving of larrys is described in :ref:`archive`.
 Performance
 -----------
 
-Um...
+Um..
 
 Known issues
 ------------
 
-
 **Complex numbers**
 
 The are currently no unit tests for complex numbers in larry. Therefore, the
-extent of the support for complex numbers is unknown. Be aware that even if
-a function or method runs with complex numbers as input, the output might be
-wrong.
+extent of support for complex numbers is unknown. Be aware that even if a
+function or method runs with complex input, the output might be wrong.
 
 
 
