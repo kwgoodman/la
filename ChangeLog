@@ -1,5 +1,7 @@
 2010-02-02 Keith
 
+    * __init__.py, setup.py: Bug fixes of install code.
+
     * setup.py, RELEASE, version.py: New files added in preparation for the
       first release, la 0.1.
   

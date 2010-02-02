@@ -7,7 +7,7 @@ del deflarry  # Remove deflarry from namespace
 try:
     from la.io import (IO, save, load, repack, is_archived_larry,
                        archive_directory)
-except ImportError:
+except (ImportError, ValueError):
     print "Cannot import h5py; no archiving available."        
 
 from numpy import nan, inf
