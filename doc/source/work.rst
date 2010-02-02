@@ -649,11 +649,6 @@ Archiving
 The archiving of larrys is described in :ref:`archive`.
 
 
-Performance
------------
-
-Um..
-
 Known issues
 ------------
 

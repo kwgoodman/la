@@ -2,6 +2,8 @@
 
     * doc/source/work.rst: Doc work.
 
+    * doc/source/work.rst: Doc work.
+
     * deflarry.py, func.py, __init__.py, doc/source/functions.rst,
       doc/source/reference.rst: Converted fromtuples, fromlist, and fromdict
       to larry methods. They were previously la functions.
