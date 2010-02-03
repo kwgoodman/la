@@ -51,6 +51,7 @@ MICRO               = VER[2]
 ISRELEASED          = False
 VERSION             = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 PACKAGES            = ["la", "la/tests", "la/util", "la/util/tests"]
+PACKAGE_DATA        = {'la': ['LICENSE']}
 REQUIRES            = ["numpy"]
 
 
@@ -68,6 +69,7 @@ setup(name=NAME,
       platforms=PLATFORMS,
       version=VERSION,
       packages=PACKAGES,
+      package_data=PACKAGE_DATA,
       requires=REQUIRES
      )
 
