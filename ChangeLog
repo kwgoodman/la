@@ -1,5 +1,7 @@
 2010-02-03 Keith
 
+    * MANIFEST.in, setup.py: Installation tweaks.
+
     * la/LICENSE, setup.py: Added a copy of the license inside the la
       directory so that the license will be in the installed package.
 

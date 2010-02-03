@@ -70,6 +70,7 @@ setup(name=NAME,
       version=VERSION,
       packages=PACKAGES,
       package_data=PACKAGE_DATA,
-      requires=REQUIRES
+      requires=REQUIRES,
+      zip_safe=False
      )
 
