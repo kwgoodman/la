@@ -1,5 +1,7 @@
 2010-02-03 Keith
 
+    * doc/make.bat: Added in case a windows user want to compile the docs.
+
     * MANIFEST.in, setup.py: Installation tweaks.
 
     * la/LICENSE, setup.py: Added a copy of the license inside the la
