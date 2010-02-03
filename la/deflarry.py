@@ -2361,6 +2361,11 @@ class larry(object):
         -------
         lar1 : larry
             The merged larry.
+            
+        Notes
+        -----
+        If either larry has dtype of object or np.string_ then both larrys
+        must have the same dtype, otherwise a TypeError is raised.   
      
         """
 
@@ -2376,12 +2381,32 @@ class larry(object):
                 lar1 = lar1.morph(mergelabel, ax)
                 lar2 = lar2.morph(mergelabel, ax)
      
-        # Check for overlap if requested
-        if (not update) and (np.isfinite(lar1.x)*np.isfinite(lar2.x)).any():
-            raise ValueError('overlapping values')
+        # Mask       
+        dtype1 = self.dtype       
+        if dtype1 == object:
+            mask1 = lar1.x != [None]
+        elif self.dtype.type == np.string_:
+            mask1 = lar1.x != ''  
         else:
-            mask = np.isfinite(lar2.x)
-            lar1.x[mask] = lar2.x[mask]
+            mask1 = np.isfinite(lar1.x)
+        dtype2 = other.dtype       
+        if dtype2 == object:
+            mask2 = lar2.x != [None]
+        elif self.dtype.type == np.string_:
+            mask2 = lar2.x != ''  
+        else:
+            mask2 = np.isfinite(lar2.x)
+            
+        # Trap cases that merge cannot handle
+        if dtype1 in (np.string_, object) or dtype2 in (np.string_, object):
+            if dtype1 != dtype2:
+                raise TypeError, 'Incompatible dtypes'             
+
+        # Check for overlap if requested             
+        if (not update) and np.logical_and(mask1, mask2).any():
+            raise ValueError('Overlapping values')
+        else:
+            lar1.x[mask2] = lar2.x[mask2]
      
         return lar1
         

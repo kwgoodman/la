@@ -5,6 +5,8 @@ import unittest
 
 import numpy as np
 nan = np.nan
+from numpy.testing import (assert_, assert_almost_equal, assert_raises,
+                           assert_equal)
 
 from la import larry
 from test import (printfail, noreference, nocopy)
@@ -3473,9 +3475,6 @@ class Test_properties_01(unittest.TestCase):
         p[np.isnan(p)] = self.nancode                  
         self.assert_((abs(t - p) < self.tol).all(), msg)     
         self.assert_(t is p, 'no reference found')
-                
-
-from numpy.testing import assert_, assert_almost_equal, assert_raises
 
 
 class Test_merge(unittest.TestCase):
@@ -3604,7 +3603,32 @@ class Test_merge(unittest.TestCase):
         assert_almost_equal(larr.x, larm.x)
         assert_(larr.label == larm.label)
 
+    def test_merge7(self):
+        "larry.merge_7"
+        lar1 = larry(['a', 'b'], [[0, 1]])
+        lar2 = larry(['a', 'z'], [[0, 1]])
+        larr = larry(['a', 'z'], [[0, 1]])
+        larm = lar1.merge(lar2, update=True)
+        assert_equal(larr.x, larm.x)
+        assert_(larr.label == larm.label)
 
+    def test_merge8(self):
+        "larry.merge_8"
+        d = datetime.date
+        lar1 = larry([d(2010,2,3), d(2010,2,4)], [[0, 1]])
+        lar2 = larry([d(2010,2,3), d(2010,2,5)], [[0, 1]])
+        larr = larry([d(2010,2,3), d(2010,2,5)], [[0, 1]])
+        larm = lar1.merge(lar2, update=True)
+        assert_equal(larr.x, larm.x)
+        assert_(larr.label == larm.label)
+
+    def test_merge9(self):
+        "larry.merge_9"
+        lar1 = larry(np.array(['a'], dtype=object))
+        larm = lar1.merge(lar1, update=True)
+        assert_equal(larr.x, larm.x)
+        assert_(larr.label == larm.label)
+        
 class Test_vacuum(unittest.TestCase):
     "Test vacuum functions of the larry class"
 

@@ -1,3 +1,8 @@
+2010-02-03 Keith
+
+    * deflarry.py(merge), tests/deflarry_test.py, doc/source/intro.rst:
+      Bug #516609. Added ability to merge larrys with string and object dtype.
+
 2010-02-02 Keith
 
     * MANIFEST.in: New file.

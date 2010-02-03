@@ -17,8 +17,8 @@ Here's larry in schematic form:
             y = 'IBM'    129.03   130.39   130.55
                 'DELL'    14.82    15.11    14.94
                 
-larry stores its data in a `Numpy <http://www.numpy.org>`_ array and a list
-of lists:
+A larry consists of a data array and a label list. The data array is stored as
+a `Numpy <http://www.numpy.org>`_ array and the label list as a list of lists:
 ::    
         y.label = [['AAPL', 'IBM', 'DELL'], [date1, date2, date3]]
         y.x = np.array([[209.19, 207.87, 210.11],
@@ -93,9 +93,9 @@ After you have installed ``la``, run the suite of unit tests:
     >>> import la
     >>> la.test()
     <snip>
-    Ran 618 tests in 0.516s
+    Ran 621 tests in 0.516s
     OK
-    <nose.result.TextTestResult run=618 errors=0 failures=0>       
+    <nose.result.TextTestResult run=621 errors=0 failures=0>       
     
 URLs
 ====
