@@ -52,7 +52,7 @@ ISRELEASED          = False
 VERSION             = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 PACKAGES            = ["la", "la/tests", "la/util", "la/util/tests"]
 PACKAGE_DATA        = {'la': ['../ChangeLog', '../LICENSE', '../README', '../RELEASE', '../setup.py']}
-REQUIRES            = ["numpy (>= 1.4)"]
+REQUIRES            = ["numpy"]
 
 
 setup(name=NAME,

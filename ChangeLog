@@ -1,5 +1,8 @@
 2010-02-03 Keith
 
+    * setup.py, README, doc/source/intro.rst: Removed >= 1.4 Numpy requirement
+      in setup.py.
+  
     * deflarry.py(merge), tests/deflarry_test.py, doc/source/intro.rst:
       Bug #516609. Added ability to merge larrys with string and object dtype.
 

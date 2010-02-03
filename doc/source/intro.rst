@@ -70,8 +70,12 @@ is distributed with the la package, for details.
 Installation
 ============
 
-To use larry you need Python and Numpy 1.4 or newer.  To save and load larrys
-in HDF5 format, you need `h5py <http://h5py.alfven.org>`_ with HDF5 1.8.
+The ``la`` package requires Python and Numpy. Numpy 1.4 or newer is
+recommended for its improved NaN handling. Also some of the unit tests in the
+``la`` package require Numpy 1.4 or newer.
+
+To save and load larrys in HDF5 format, you need
+`h5py <http://h5py.alfven.org>`_ with HDF5 1.8.
         
 The ``la`` package currently contains no extensions, just Python code, so
 there is nothing to compile. You can just save the ``la`` package and make
