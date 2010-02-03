@@ -1,5 +1,7 @@
 2010-02-03 Keith
 
+    * RELEASE: Add release date for la 0.1: TODAY!
+
     * doc/make.bat: Added in case a windows user want to compile the docs.
 
     * MANIFEST.in, setup.py: Installation tweaks.
