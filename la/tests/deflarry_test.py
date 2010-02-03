@@ -3625,9 +3625,9 @@ class Test_merge(unittest.TestCase):
     def test_merge9(self):
         "larry.merge_9"
         lar1 = larry(np.array(['a'], dtype=object))
-        larm = lar1.merge(lar1, update=True)
-        assert_equal(larr.x, larm.x)
-        assert_(larr.label == larm.label)
+        larr = lar1.merge(lar1, update=True)
+        assert_equal(larr.x, lar1.x)
+        assert_(larr.label == lar1.label)
         
 class Test_vacuum(unittest.TestCase):
     "Test vacuum functions of the larry class"

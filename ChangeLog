@@ -1,5 +1,9 @@
 2010-02-03 Keith
 
+    * setup.py: Removed package_data.
+
+    * tests/deflarry_test.py: Fixed typo in unit test.
+
     * setup.py, README, doc/source/intro.rst: Removed >= 1.4 Numpy requirement
       in setup.py.
   
