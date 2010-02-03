@@ -1,0 +1,3 @@
+include ChangeLog LICENSE README RELEASE
+recursive-include doc *
+recursive-exclude doc/build *

@@ -1,5 +1,7 @@
 2010-02-02 Keith
 
+    * MANIFEST.in: New file.
+
     * README, doc/source/intro.rst: Update docs for new installation method:
       setup.py.
 
