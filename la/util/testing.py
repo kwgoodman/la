@@ -206,12 +206,16 @@ def assert_noreference(larry1, larry2):
         raise TypeError, 'Input must be a larry'
     if larry1.ndim != larry2.ndim:
         raise ValueError, 'larrys must have the same dimensions'
-    out = True
-    out = out & (larry1.x is not larry2.x)
+    msg = []    
+    if larry1.x is larry2.x:
+        msg.append('The data arrays share a reference.')
     for i in xrange(larry1.ndim):
-        out = out & (larry1.label[i] is not larry2.label[i])
-    if not out:
-        raise AssertionError, 'The larrys share a reference.'    
+        if larry1.label[i] is larry2.label[i]:
+            msg.append('The label along axis %d share a reference' % i)
+    if len(msg) > 0:
+        msg.insert(0, '\n')
+        msg = '\n'.join(msg)
+        raise AssertionError, msg   
 
 def assert_nocopy(larry1, larry2):
     "Return True if there are only references"
@@ -221,10 +225,14 @@ def assert_nocopy(larry1, larry2):
         raise TypeError, 'Input must be a larry'
     if larry1.ndim != larry2.ndim:
         raise ValueError, 'larrys must have the same dimensions'
-    out = True
-    out = out & (larry1.x is larry2.x)
+    msg = []    
+    if larry1.x is not larry2.x:
+        msg.append('The data arrays do not share a reference.')
     for i in xrange(larry1.ndim):
-        out = out & (larry1.label[i] is larry2.label[i])
-    if not out:
-        raise AssertionError, 'Parts of the larrys are not references.'   
+        if larry1.label[i] is not larry2.label[i]:
+            msg.append('The label along axis %d does not share a reference' % i)
+    if len(msg) > 0:
+        msg.insert(0, '\n')
+        msg = '\n'.join(msg)
+        raise AssertionError, msg  
                 
