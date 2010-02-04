@@ -134,7 +134,7 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
         if original is None:
             raise ValueError, 'original must be a larry to run noreference check.'
         try:
-            assert_(assert_noreference(actual, original))
+            assert_noreference(actual, original)
         except AssertionError, err:
             fail.append(heading('REFERENCE FOUND') + str(err))               
     
@@ -143,7 +143,7 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
         if original is None:
             raise ValueError, 'original must be a larry to run nocopy check.' 
         try:       
-            assert_(assert_nocopy(actual, original))
+            assert_nocopy(actual, original)
         except AssertionError, err:
             fail.append(heading('COPY INSTEAD OF REFERENCE FOUND') + str(err))              
     
