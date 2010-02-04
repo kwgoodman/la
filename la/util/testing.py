@@ -1,35 +1,135 @@
 "LA unit test utility functions."
 
+import numpy as np
+
 from numpy.testing import assert_, assert_equal, assert_almost_equal
 
 from la import larry
 
+
 def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
-                       noreference=True, nocopy=False, verbose=True):
-    """Assert equality of attributes of two larries."""
+                       noreference=True, nocopy=False):
+    """
+    Assert equality of two larries.
     
+    If both `actual` and `desired` have a dtype that is inexact, such as
+    float, then almost-equal is asserted; otherwise, equally is asserted.
+    
+    Parameters
+    ----------
+    actual : larry
+        If you are testing a larry method, for example, then this is the larry
+        returned by the method.    
+    desired : larry
+        This larry represents the expected result. If `actual` is not equal
+        to `desired`, then an AssertionError will be raised.
+    msg : str
+        If `actual` is not equal to `desired`, then this message `msg` will
+        be added to the top of the AssertionError message.
+    dtype : {True, False}, optional
+        The default (True) is to assert that the dtype of `actual` is the
+        same as `desired`.
+    original : {None, larry}, optional
+        If no `reference` or `nocopy` are True, then `original` must be a
+        larry. Continuing the example discussed in `actual`, `original` would
+        be the larry that was passed into the method.
+    noreference : {True, False}, optional
+        Check that `actual` and `desired` share no references.
+    nocopy : {True, False}, optional
+        Check that `actual` and `desired` share are views of eachother.
+            
+    Returns
+    -------
+    None
+    
+    Raises
+    ------
+    AssertionError
+        If the two larrys are not equal.       
+        
+    Examples
+    --------    
+    >>> from la.util.testing import assert_larry_equal
+    >>> x = larry([1])
+    >>> y = larry([1.1], [['a']])
+    >>> assert_larry_equal(x, y, noreference=False, msg='Cumsum test')
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "la/util/testing.py", line 94, in assert_larry_equal
+        def heading(text):
+    AssertionError: 
+
+    -----------------
+    TEST: Cumsum test
+    -----------------
+
+    	
+    	-----
+    	LABEL
+    	-----
+    	
+    	Items are not equal:
+    	item=0
+    	item=0
+    	
+    	 ACTUAL: 0
+    	 DESIRED: 'a'
+    	
+    	------------
+    	X DATA ARRAY
+    	------------
+    	
+    	Arrays are not equal
+    	
+    	(mismatch 100.0%)
+    	 x: array([1])
+    	 y: array([ 1.1])
+    	
+    	-----
+    	DTYPE
+    	-----
+    	
+    	Items are not equal:
+    	 ACTUAL: dtype('int64')
+    	 DESIRED: dtype('float64')
+    	 
+    """
+    
+    # Initialize
     fail = []
+    
+    # Function to made section headings
+    def heading(text):
+        line = '-' * len(text)
+        return '\n\n' + line + '\n' + text + '\n' + line + '\n'
     
     # label
     try:         
         assert_equal(actual.label, desired.label)
     except AssertionError, err:
-        fail.append(heading('LABEL') + str(err))      
+        fail.append(heading('LABEL') + str(err))       
 
     # Data array
-    try:  
-        assert_equal(actual.x, desired.x)
+    try:
+        # Do both larrys have inexact dtype?
+        if (issubclass(actual.x.dtype.type, np.inexact) and
+            issubclass(desired.x.dtype.type, np.inexact)): 
+            # Yes, so check for equality
+            assert_almost_equal(actual.x, desired.x, decimal=13)
+        else:
+            # No, so check for almost equal
+           assert_equal(actual.x, desired.x)     
     except AssertionError, err:
         fail.append(heading('X DATA ARRAY') + str(err))
      
     # dtype
     if dtype: 
         try: 
-            assert_equal(actual.x.dtype, desired.x.dtype)
+            assert_equal(actual.dtype, desired.dtype)
         except AssertionError, err:
             fail.append(heading('DTYPE') + str(err))            
     
-    # Check for references or copies
+    # Check that the larrys do no share references
     if noreference:
         if original is None:
             raise ValueError, 'original must be a larry to run noreference check.'
@@ -37,25 +137,26 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
             assert_(assert_noreference(actual, original))
         except AssertionError, err:
             fail.append(heading('REFERENCE FOUND') + str(err))               
-    elif nocopy:
+    
+    # Check that the larrys are references and have not made a copy
+    if nocopy:
         if original is None:
             raise ValueError, 'original must be a larry to run nocopy check.' 
         try:       
             assert_(assert_nocopy(actual, original))
         except AssertionError, err:
             fail.append(heading('COPY INSTEAD OF REFERENCE FOUND') + str(err))              
-    else:   #FIXME check view for different dimensional larries
-        pass
     
     # Did the test pass?    
     if len(fail) > 0:
         # No
-        msg = ''.join(fail)
-        raise AssertionError, msg
+        err_msg = ''.join(fail)
+        err_msg = err_msg.replace('\n', '\n\t')
+        if len(msg):
+            err_msg = heading("TEST: " + msg) + err_msg
+        raise AssertionError, err_msg
 
-def heading(text):
-    line = '-' * len(text)
-    return '\n\n' + line + '\n' + text + '\n' + line + '\n'
+# Utility functions ---------------------------------------------------------        
     
 def printfail(theory, practice, header=None):
     x = []
