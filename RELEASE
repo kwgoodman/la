@@ -3,6 +3,17 @@
 la Release History
 ==================
 
+la 0.2
+======
+
+*Release date: Not yet released, in development*
+
+Changes
+-------
+
+- Simplified unit testing with a new larry specific assert function,
+  assert_larry_equal.
+
 
 la 0.1
 ======
@@ -12,4 +23,4 @@ la 0.1
 Changes
 -------
 
-This is the first relase of the la package.
+This is the first release of the la package.

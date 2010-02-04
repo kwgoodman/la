@@ -5,7 +5,7 @@ import unittest
 import numpy as np
 nan = np.nan
 
-from test import printfail
+from la.util.testing import printfail
 from la.afunc import group_ranking, group_mean, group_median
 from la.afunc import (movingsum, movingrank, movingsum_forward, ranking, 
                       geometric_mean, unique_group)

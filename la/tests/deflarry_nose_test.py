@@ -7,7 +7,7 @@ nan = np.nan
 from numpy.testing import assert_, assert_equal
 
 from la import larry
-from test import (printfail, noreference, nocopy)
+from la.util.testing import (printfail, noreference, nocopy)
 
 
 def dup23(x):
