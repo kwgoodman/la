@@ -11,7 +11,8 @@ la 0.2
 Changes
 -------
 
-- Simplified unit testing by...
+- Simplified unit testing with a new larry specific assert function,
+  assert_larry_equal.
 
 
 la 0.1

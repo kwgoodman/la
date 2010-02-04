@@ -1,5 +1,10 @@
 2010-02-04 Keith
 
+    * util.testing.py(assert_larry_equal), util.testing.py(heading):
+      New function to assert equality of two larrys.
+      
+    * RELEASE: Added assert_larry_equal.     
+
     * util.testing.py(assert_noreference), util.testing.py(assert_nocopy):
       New functions.
       
