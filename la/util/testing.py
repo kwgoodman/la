@@ -211,7 +211,7 @@ def assert_noreference(larry1, larry2):
         msg.append('The data arrays share a reference.')
     for i in xrange(larry1.ndim):
         if larry1.label[i] is larry2.label[i]:
-            msg.append('The label along axis %d share a reference' % i)
+            msg.append('The labels along axis %d share a reference.' % i)
     if len(msg) > 0:
         msg.insert(0, '\n')
         msg = '\n'.join(msg)
@@ -230,7 +230,8 @@ def assert_nocopy(larry1, larry2):
         msg.append('The data arrays do not share a reference.')
     for i in xrange(larry1.ndim):
         if larry1.label[i] is not larry2.label[i]:
-            msg.append('The label along axis %d does not share a reference' % i)
+            text = 'The labels along axis %d does not share a reference.'
+            msg.append(text % i)
     if len(msg) > 0:
         msg.insert(0, '\n')
         msg = '\n'.join(msg)

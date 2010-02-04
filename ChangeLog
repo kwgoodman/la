@@ -1,6 +1,9 @@
 2010-02-04 Keith
 
     * util/testing.py(assert_noreference), util/testing.py(assert_nocopy):
+      Tweak.
+
+    * util/testing.py(assert_noreference), util/testing.py(assert_nocopy):
       Refactored and specify where the reference or copt is found (label,
       axis, array).
 
