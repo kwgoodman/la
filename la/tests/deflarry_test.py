@@ -9,7 +9,7 @@ from numpy.testing import (assert_, assert_almost_equal, assert_raises,
                            assert_equal)
 
 from la import larry
-from test import (printfail, noreference, nocopy)
+from la.util.testing import (printfail, noreference, nocopy)
 
 
 class Test_init(unittest.TestCase):

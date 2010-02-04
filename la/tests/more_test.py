@@ -4,7 +4,7 @@ import numpy as np
 from numpy.testing import assert_  # could look for nose
 nan = np.nan
 
-from test import printfail
+from la.util.testing import printfail
 from la.util.scipy import nanstd
 from la.afunc import (covMissing, fillforward_partially, geometric_mean,
                       lastrank, lastrank_decay, movingrank, movingsum,

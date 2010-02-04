@@ -1,3 +1,11 @@
+2010-02-04 Keith
+
+    * tests/test.py, util/testing.py, __init__.py, tests/afunc_arr_test.py,
+      tests/deflarry_nose_test.py, tests/deflarry_test.py, tests/more_test.py:
+      Renamed test.py to testing.py and moved it.
+
+    * RELEASE: Added a section to keep track of the changes for la 0.2.
+
 2010-02-03 Keith
 
     * RELEASE: Add release date for la 0.1: TODAY!
