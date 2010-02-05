@@ -12,8 +12,8 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
     """
     Assert equality of two larries.
     
-    If both `actual` and `desired` have a dtype that is inexact, such as
-    float, then almost-equal is asserted; otherwise, equally is asserted.
+    If either `actual` or `desired` has a dtype that is inexact, such as
+    float, then almost-equal is asserted; otherwise, equal is asserted.
     
     Parameters
     ----------
@@ -112,7 +112,7 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
     # Data array, x
     try:
         # Do both larrys have inexact dtype?
-        if (issubclass(actual.x.dtype.type, np.inexact) and
+        if (issubclass(actual.x.dtype.type, np.inexact) or
             issubclass(desired.x.dtype.type, np.inexact)): 
             # Yes, so check for almost equal
             assert_almost_equal(actual.x, desired.x, decimal=13)

@@ -1,5 +1,8 @@
 2010-02-04 Keith
 
+    * util/testing.py(assert_larry_equal): Test for almost equal if either
+      import is inexact instead of requiring both inputs to be inexact.
+
     * test/deflarry_test.py: Converted one unit test to use the new function,
       assert_larry_equal.
 
