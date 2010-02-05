@@ -1,5 +1,7 @@
 2010-02-05 Keith
 
+    * doc/launchpad.txt: Update.
+
     * util/testing.py(assert_larry_equal): Changed signature of function.
     
     * util/testing.py(assert_noreference), util/testing.py(assert_nocopy),
