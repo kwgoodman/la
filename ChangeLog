@@ -1,5 +1,8 @@
 2010-02-04 Josef
 
+    * util/tests/misc_test.py, testing_test.py(Test_Testing_Assert_Larry): 
+      move test for assert to it's own module
+      
     * util/tests/misc_test.py(Test_Testing_Assert_Larry): add first version 
       of tests for new assert_larry_equal
 
