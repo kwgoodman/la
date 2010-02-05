@@ -218,7 +218,19 @@ The transpose of a larry:
     x
     array([[ 1.,  3.],
            [ 2.,  4.]])
-                
+           
+You can also swap any two axes of a larry:
+::           
+    >>> y.swapaxes(1, 0)
+    label_0
+        c0
+        c1
+    label_1
+        r0
+        r1
+    x
+    array([[ 1.,  3.],
+           [ 2.,  4.]])                
   
     
 Missing values

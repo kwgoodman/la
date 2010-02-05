@@ -1,5 +1,11 @@
 2010-02-05 Keith
 
+    * func.py(panel), deflarry.py(swapaxes), doc/source/functions.rst, 
+      doc/source/reference.rst, doc/source/work.rst: Added a new function
+      called panel and a new method called swapaxes.
+
+    * doc/source/conf.py: Chaged docs to la 0.2.
+
     * doc/launchpad.txt: Update.
 
     * util/testing.py(assert_larry_equal): Changed signature of function.

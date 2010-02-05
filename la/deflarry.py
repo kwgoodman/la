@@ -2829,7 +2829,61 @@ class larry(object):
         y = self.copy()
         y.x = y.x.T
         y.label = y.label[::-1]
-        return y     
+        return y 
+        
+    def swapaxes(self, axis1, axis2):
+        """
+        Swap the two specified axes.
+        
+        Parameters
+        ----------
+        axis1 : int
+            First axis. This axis will become the `axis2`.
+        axis2 : int    
+            Second axis. This axis will become the `axis1`.
+            
+        Returns
+        -------
+        y : larry
+            A larry with the specified axes swapped.
+            
+        Examples
+        --------
+        First create a (3,2) larry:
+        
+        >>> y = larry([[0, 1], [2, 3], [4, 5]])
+        >>> y
+        label_0
+            0
+            1
+            2
+        label_1
+            0
+            1
+        x
+        array([[0, 1],
+               [2, 3],
+               [4, 5]])
+        
+        Then swap axes 0 and 1 (i.e., take the transpose):
+        
+        >>> y.swapaxes(1,0)
+        label_0
+            0
+            1
+        label_1
+            0
+            1
+            2
+        x
+        array([[0, 2, 4],
+               [1, 3, 5]])
+                        
+        """
+        y = self.copy()
+        y.label[axis1], y.label[axis2] =  y.label[axis2], y.label[axis1]
+        y.x = np.swapaxes(y.x, axis1, axis2)
+        return y  
         
     def _2donly(self):
         "Only works on 2d arrays"
@@ -2838,7 +2892,7 @@ class larry(object):
             
     def flatten(self, order='C'):
         """
-        Return a copy of the larry collapsed into one dimension.
+        Return a copy of the larry after collapsing into one dimension.
         
         The elements of the label become tuples.
         
