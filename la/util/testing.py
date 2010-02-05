@@ -8,7 +8,7 @@ from la import larry
 
 
 def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
-                       noreference=True, nocopy=False):
+                       iscopy=True):                      
     """
     Assert equality of two larries.
     
@@ -33,10 +33,12 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
         If no `reference` or `nocopy` are True, then `original` must be a
         larry. Continuing the example discussed in `actual`, `original` would
         be the larry that was passed to the method.
-    noreference : {True, False}, optional
-        Check that `actual` and `desired` share no references.
-    nocopy : {True, False}, optional
-        Check that `actual` and `desired` are views of each other.
+    iscopy : {True, False}, optional
+        Note: `iscopy` is ignored if `original` is None. If True (default) and
+        if `original` is not None, then check that `actual` and `desired`
+        share no references (i.e., are copies). If False and if `original` is
+        not None, then check that `actual` and `desired` are views of each
+        other (not copies).
             
     Returns
     -------
@@ -45,8 +47,13 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
     Raises
     ------
     AssertionError
-        If the two larrys are not equal.       
+        If the two larrys are not equal.
         
+    Notes
+    -----           
+    If either `actual` or `desired` has a dtype that is inexact, such as
+    float, then almost-equal is asserted; otherwise, equal is asserted.
+            
     Examples
     --------    
     >>> from la.util.testing import assert_larry_equal
@@ -128,24 +135,22 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
             assert_equal(actual.dtype, desired.dtype)
         except AssertionError, err:
             fail.append(heading('DTYPE') + str(err))            
-    
-    # Check that the larrys do no share references
-    if noreference:
-        if original is None:
-            raise ValueError, 'original must be a larry to run noreference check.'
-        try:
-            assert_noreference(actual, original)
-        except AssertionError, err:
-            fail.append(heading('REFERENCE FOUND') + str(err))               
-    
-    # Check that the larrys are references, not copies
-    if nocopy:
-        if original is None:
-            raise ValueError, 'original must be a larry to run nocopy check.' 
-        try:       
-            assert_nocopy(actual, original)
-        except AssertionError, err:
-            fail.append(heading('COPY INSTEAD OF REFERENCE FOUND') + str(err))              
+
+    # If original is not None, assert copies or views
+    if not original is None:   
+        if iscopy:
+            # Check that the larrys are copies
+            try:
+                assert_iscopy(actual, original)
+            except AssertionError, err:
+                fail.append(heading('NOT A COPY') + str(err))               
+        else:
+            # Check that the larrys are views
+            try:       
+                assert_isview(actual, original)
+            except AssertionError, err:
+                text = heading('IS A COPY') + str(err)
+                fail.append(text)              
     
     # Did the test pass?    
     if len(fail) > 0:
@@ -198,7 +203,7 @@ def nocopy(larry1, larry2):
         out = out & (larry1.label[i] is larry2.label[i])
     return out       
     
-def assert_noreference(larry1, larry2):
+def assert_iscopy(larry1, larry2):
     "Return True if there are no shared references"
     if not isinstance(larry1, larry):
         raise TypeError, 'Input must be a larry'
@@ -217,7 +222,7 @@ def assert_noreference(larry1, larry2):
         msg = '\n'.join(msg)
         raise AssertionError, msg   
 
-def assert_nocopy(larry1, larry2):
+def assert_isview(larry1, larry2):
     "Return True if there are only references"
     if not isinstance(larry1, larry):
         raise TypeError, 'Input must be a larry'

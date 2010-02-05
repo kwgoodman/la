@@ -1,3 +1,14 @@
+2010-02-05 Keith
+
+    * doc/launchpad.txt: Update.
+
+    * util/testing.py(assert_larry_equal): Changed signature of function.
+    
+    * util/testing.py(assert_noreference), util/testing.py(assert_nocopy),
+      util/testing.py(assert_iscopy), util/testing.py(assert_isview):
+      Change the name of assert_noreference to assert_iscopy; changed the
+      name of assert_nocopy to assert_isview.   
+
 2010-02-04 Josef
 
     * util/tests/testing_test.py(Test_Testing_Assert_Larry): 
@@ -9,11 +20,10 @@
     * util/tests/misc_test.py(Test_Testing_Assert_Larry): add first version 
       of tests for new assert_larry_equal
 
-
 2010-02-04 Keith
 
     * util/testing.py(assert_larry_equal): Test for almost equal if either
-      import is inexact instead of requiring both inputs to be inexact.
+      input is inexact instead of requiring both inputs to be inexact.
 
     * test/deflarry_test.py: Converted one unit test to use the new function,
       assert_larry_equal.
