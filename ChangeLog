@@ -1,15 +1,36 @@
 2010-02-04 Keith
 
-    * util.testing.py(assert_larry_equal), util.testing.py(heading):
+    * util/testing.py(assert_larry_equal): Test for almost equal if either
+      import is inexact instead of requiring both inputs to be inexact.
+
+    * test/deflarry_test.py: Converted one unit test to use the new function,
+      assert_larry_equal.
+
+    * util/testing.py(assert_larry_equal): Tweaks.
+
+    * util/testing.py(assert_larry_equal): Bug fix.
+
+    * util/testing.py(assert_noreference), util/testing.py(assert_nocopy):
+      Tweak.
+
+    * util/testing.py(assert_noreference), util/testing.py(assert_nocopy):
+      Refactored and specify where the reference or copt is found (label,
+      axis, array).
+
+    * util/testing.py(assert_larry_equal), util/testing.py(heading):
+      New features, clean up, doc string. Moved heading function into
+      assert_larry_equal.
+
+    * util/testing.py(assert_larry_equal), util/testing.py(heading):
       New function to assert equality of two larrys.
       
     * RELEASE: Added assert_larry_equal.     
 
-    * util.testing.py(assert_noreference), util.testing.py(assert_nocopy):
+    * util/testing.py(assert_noreference), util/testing.py(assert_nocopy):
       New functions.
       
-    * util.testing.py(assert_noreference), util.testing.py(assert_nocopy), 
-      util.testing.py(noreference), util.testing.py(nocopy): Convert imput
+    * util/testing.py(assert_noreference), util/testing.py(assert_nocopy), 
+      util/testing.py(noreference), util.testing.py(nocopy): Convert imput
       check asserts to if statements.    
 
     * tests/test.py, util/testing.py, __init__.py, tests/afunc_arr_test.py,
