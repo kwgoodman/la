@@ -9,7 +9,8 @@ from numpy.testing import (assert_, assert_almost_equal, assert_raises,
                            assert_equal)
 
 from la import larry
-from la.util.testing import (printfail, noreference, nocopy)
+from la.util.testing import (printfail, noreference, nocopy,
+                             assert_larry_equal)
 
 
 class Test_init(unittest.TestCase):
@@ -77,17 +78,10 @@ class Test_unary(unittest.TestCase):
 
     def test_log_1(self):
         "larry.log_1"
-        t = np.array([[ 0.0, 0.0],
-                      [ 0.0, 0.0],
-                      [ 0.0, 0.0]])
-        p = self.l.log()
-        msg = printfail(t, p.x, 'x')
-        t[np.isnan(t)] = self.nancode
-        p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p) < self.tol).all(), msg) 
-        label = [[0,1,2], [0,1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l), 'Reference found')
+        d = larry([[ 0.0, 0.0],
+                   [ 0.0, 0.0],
+                   [ 0.0, 0.0]])
+        assert_larry_equal(self.l.log(), d, 'log_1', original=self.l)
 
     def test_log_2(self):
         "larry.log_2"

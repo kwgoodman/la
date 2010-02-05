@@ -24,19 +24,19 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
         This larry represents the expected result. If `actual` is not equal
         to `desired`, then an AssertionError will be raised.
     msg : str
-        If `actual` is not equal to `desired`, then this message `msg` will
+        If `actual` is not equal to `desired`, then the string `msg` will
         be added to the top of the AssertionError message.
     dtype : {True, False}, optional
         The default (True) is to assert that the dtype of `actual` is the
-        same as `desired`.
+        same as `desired`. If set to False, the dtype check is skipped.
     original : {None, larry}, optional
         If no `reference` or `nocopy` are True, then `original` must be a
         larry. Continuing the example discussed in `actual`, `original` would
-        be the larry that was passed into the method.
+        be the larry that was passed to the method.
     noreference : {True, False}, optional
         Check that `actual` and `desired` share no references.
     nocopy : {True, False}, optional
-        Check that `actual` and `desired` share are views of eachother.
+        Check that `actual` and `desired` are views of each other.
             
     Returns
     -------
@@ -98,7 +98,7 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
     # Initialize
     fail = []
     
-    # Function to made section headings
+    # Function to make section headings
     def heading(text):
         line = '-' * len(text)
         return '\n\n' + line + '\n' + text + '\n' + line + '\n'
@@ -109,15 +109,15 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
     except AssertionError, err:
         fail.append(heading('LABEL') + str(err))       
 
-    # Data array
+    # Data array, x
     try:
         # Do both larrys have inexact dtype?
         if (issubclass(actual.x.dtype.type, np.inexact) and
             issubclass(desired.x.dtype.type, np.inexact)): 
-            # Yes, so check for equality
+            # Yes, so check for almost equal
             assert_almost_equal(actual.x, desired.x, decimal=13)
         else:
-            # No, so check for almost equal
+            # No, so check for exactly equal
            assert_equal(actual.x, desired.x)     
     except AssertionError, err:
         fail.append(heading('X DATA ARRAY') + str(err))
@@ -138,7 +138,7 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
         except AssertionError, err:
             fail.append(heading('REFERENCE FOUND') + str(err))               
     
-    # Check that the larrys are references and have not made a copy
+    # Check that the larrys are references, not copies
     if nocopy:
         if original is None:
             raise ValueError, 'original must be a larry to run nocopy check.' 

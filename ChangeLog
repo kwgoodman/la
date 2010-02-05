@@ -1,5 +1,10 @@
 2010-02-04 Keith
 
+    * test/deflarry_test.py: Converted one unit test to use the new function,
+      assert_larry_equal.
+
+    * util/testing.py(assert_larry_equal): Tweaks.
+
     * util/testing.py(assert_larry_equal): Bug fix.
 
     * util/testing.py(assert_noreference), util/testing.py(assert_nocopy):
