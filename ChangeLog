@@ -1,5 +1,8 @@
 2010-02-04 Josef
 
+    * util/tests/testing_test.py(Test_Testing_Assert_Larry): 
+      refactor test and add to it, most cases covered
+
     * util/tests/misc_test.py, testing_test.py(Test_Testing_Assert_Larry): 
       move test for assert to it's own module
       
