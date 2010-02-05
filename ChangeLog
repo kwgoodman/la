@@ -1,5 +1,7 @@
 2010-02-05 Keith
 
+    * RELEASE: Update after adding swapaxes and panel.
+
     * func.py(panel), deflarry.py(swapaxes), doc/source/functions.rst, 
       doc/source/reference.rst, doc/source/work.rst: Added a new function
       called panel and a new method called swapaxes.

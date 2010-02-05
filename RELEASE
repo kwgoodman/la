@@ -11,8 +11,8 @@ la 0.2
 Changes
 -------
 
-- Simplified unit testing with a new larry specific assert function,
-  assert_larry_equal.
+- New sawpaxes method and new function, panel, to create panel data.
+- New assert_larry_equal function makes unit testing simplier.
 
 
 la 0.1
