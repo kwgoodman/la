@@ -1,5 +1,8 @@
 2010-02-06 Keith
 
+    * deflarry.py(unflatten), RELEASE: Bug #518215. unflatten crashed on an
+      empty larry.
+
     * deflarry.py(sum), deflarry.py(std), deflarry.py(var), RELEASE:
       Bug #518210. sum, std, var returned NaN for empty larrys; now return
       0.0.

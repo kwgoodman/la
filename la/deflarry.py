@@ -3012,15 +3012,17 @@ class larry(object):
         # Check input
         if self.ndim != 1:
             raise ValueError, 'Only 1d larrys can be unflattened.'
-        if not isscalar(self.x.flat[0]):
-            msg = 'Only scalar dtype is currently supported.'
-            raise NotImplementedError, msg 
-	    
-	    # Determine labels, shape, and index into array	
-        labels = zip(*self.label[0])
-        x, label = fromlists(self.x, labels) 
-    
-        return larry(x, label)
+            
+        if self.shape == (0,):            
+            return larry([])
+        else:	    
+    	    # Determine labels, shape, and index into array	
+    	    if not isscalar(self.x.flat[0]):
+                msg = 'Only scalar dtype is currently supported.'
+                raise NotImplementedError, msg 
+            labels = zip(*self.label[0])
+            x, label = fromlists(self.x, labels)     
+            return larry(x, label)
         
     # Conversion -------------------------------------------------------------         
 
