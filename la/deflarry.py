@@ -757,33 +757,40 @@ class larry(object):
 
     def __align(self, other):
         "Align larrys for binary operations."
-        if self.ndim != other.ndim:
-            msg = 'Binary operation on two larrys with different dimension'
-            raise IndexError, msg
-        idxs = []
-        idxo = []
-        label = []
-        shape = []
-        for ls, lo in zip(self.copylabel(), other.label):
-            if ls == lo:
-                lab = ls
-                ids = range(len(lab))
-                ido = ids
-            else:
-                lab = list(frozenset(ls) & frozenset(lo))
-                if len(lab) == 0:
-                    raise IndexError, 'A dimension has no matching labels'
-                lab.sort()
-                ids = map(ls.index, lab)
-                ido = map(lo.index, lab)
-            label.append(lab)
-            idxs.append(ids)
-            idxo.append(ido)
-            shape.append(len(lab))
-        shape = tuple(shape)
-        x = np.zeros(shape, dtype=self.x.dtype)
-        x += self.x[np.ix_(*idxs)]
-        y = other.x[np.ix_(*idxo)]
+        if self.label == other.label:
+            # Labels are already aligned
+            x = self.copyx()
+            y = other.x
+            label = self.copylabel()
+        else:  
+            # Labels are not aligned.  
+            if self.ndim != other.ndim:
+                msg = 'Binary operation on two larrys with different dimension'
+                raise IndexError, msg
+            idxs = []
+            idxo = []
+            label = []
+            shape = []
+            for ls, lo in zip(self.copylabel(), other.label):
+                if ls == lo:
+                    lab = ls
+                    ids = range(len(lab))
+                    ido = ids
+                else:
+                    lab = list(frozenset(ls) & frozenset(lo))
+                    if len(lab) == 0:
+                        raise IndexError, 'A dimension has no matching labels'
+                    lab.sort()
+                    ids = map(ls.index, lab)
+                    ido = map(lo.index, lab)
+                label.append(lab)
+                idxs.append(ids)
+                idxo.append(ido)
+                shape.append(len(lab))
+            shape = tuple(shape)
+            x = np.zeros(shape, dtype=self.x.dtype)
+            x += self.x[np.ix_(*idxs)]
+            y = other.x[np.ix_(*idxo)]
         return x, y, label
                   
     # Reduce functions -------------------------------------------------------   
@@ -3230,7 +3237,7 @@ class larry(object):
         array([[ 1.,  2.],
                [ 3.,  4.]])
                
-        """  
+        """ 
         return fromlist([data.values(), data.keys()])          
                
     # Copy -------------------------------------------------------------------        
