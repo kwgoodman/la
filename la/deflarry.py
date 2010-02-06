@@ -3095,16 +3095,16 @@ class larry(object):
         array([[  1.,   2.],
                [  3.,  NaN]])
                 
-        """
-            
-        # Split data into label and x
-        labels = zip(*data)
-        xs = labels.pop(-1)   
-        
-        # Determine labels, shape, and index into array	
-        x, label = fromlists(xs, labels)  
-        
-        return larry(x, label) 
+        """        
+        if len(data) == 0:        
+            return larry([])                   
+        else:            
+            # Split data into label and x
+            labels = zip(*data)
+            xs = labels.pop(-1)               
+            # Determine labels, shape, and index into array	
+            x, label = fromlists(xs, labels)          
+            return larry(x, label) 
         
     def tolist(self):
         """
@@ -3172,8 +3172,11 @@ class larry(object):
                [ 3.,  4.]])
                
         """
-        x, label = fromlists(data[0], zip(*data[1]))      
-        return larry(x, label)             
+        if len(data) == 0:            
+            return larry([])           
+        else:    
+            x, label = fromlists(data[0], zip(*data[1]))      
+            return larry(x, label)             
 
     def todict(self):
         """

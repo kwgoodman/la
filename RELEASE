@@ -31,6 +31,7 @@ Bug fixes
 - #517912: larry([]) == larry([]) raised IndexError
 - #518096: larry.fromdict failed due to missing import
 - #518106: la.larry.fromdict({}) failed
+- #518114. fromlist([]) and fromtuples([]) failed
 
 
 la 0.1 (first release)
