@@ -28,8 +28,9 @@ Unit testing
 Bug fixes
 ---------
 
-- #517912: larry([]) == larry([]) raises IndexError
+- #517912: larry([]) == larry([]) raised IndexError
 - #518096: larry.fromdict failed due to missing import
+- #518106: la.larry.fromdict({}) failed
 
 
 la 0.1 (first release)

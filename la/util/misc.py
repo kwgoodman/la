@@ -218,16 +218,20 @@ def fromlists(xs, labels):
            [ 3.,  4.]])                    
     
     """
-    shape = []
-    index = []
-    label = []
-    for i, lab in enumerate(labels):
-        labelidx, label_unique = list2index(lab)
-        shape.append(len(label_unique))
-        index.append(labelidx)
-        label.append(label_unique)
-    x = np.empty(shape)
-    x.fill(np.nan)
-    x[index] = xs 
+    if (len(xs) == 0) and (len(labels) == 0):
+        x = np.array([])
+        label = None
+    else:
+        shape = []
+        index = []
+        label = []
+        for i, lab in enumerate(labels):
+            labelidx, label_unique = list2index(lab)
+            shape.append(len(label_unique))
+            index.append(labelidx)
+            label.append(label_unique)
+        x = np.empty(shape)
+        x.fill(np.nan)
+        x[index] = xs 
     return x, label 
                         
