@@ -1,7 +1,9 @@
 2010-02-06 Keith
 
-    * util/misc.py(fromlists), RELEASE: Bug #518114. fromlist([]) and
-      fromtuples([]) fail.
+    * ChangeLog: Updated. Hmm, I can't push to the mirror with modified files.
+
+    * deflarry.py(fromtuples), deflarry.py(fromlist), RELEASE: Bug #518114.
+      fromlist([]) and fromtuples([]) fail.
 
     * util/misc.py(fromlists), RELEASE: Bug #518106. la.larry.fromdict({})
       fails.
