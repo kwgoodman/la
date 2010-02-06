@@ -830,7 +830,10 @@ class larry(object):
         array([ 3.,  6.])
                     
         """
-        return self.__reduce(axis, np.nansum)    
+        if self.shape == (0,):
+            return np.array([]).sum()
+        else:    
+            return self.__reduce(axis, np.nansum)    
 
     def prod(self, axis=None):
         """
@@ -979,7 +982,10 @@ class larry(object):
         array([ 0.,  1.])  
                          
         """
-        return self.__reduce(axis, nanstd)  
+        if self.shape == (0,):
+            return np.array([]).std()
+        else:         
+            return self.__reduce(axis, nanstd)  
         
     def var(self, axis=None):
         """
@@ -1016,12 +1022,15 @@ class larry(object):
         array([ 0.,  1.])
                     
         """
-        y = self.__reduce(axis, nanstd)
-        if np.isscalar(y):
-            y *= y 
-        else:       
-            np.multiply(y.x, y.x, y.x)
-        return y                 
+        if self.shape == (0,):
+            return np.array([]).var() 
+        else:           
+            y = self.__reduce(axis, nanstd)
+            if np.isscalar(y):
+                y *= y 
+            else:       
+                np.multiply(y.x, y.x, y.x)
+            return y                 
                             
     def max(self, axis=None):
         """

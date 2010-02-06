@@ -1,5 +1,9 @@
 2010-02-06 Keith
 
+    * deflarry.py(sum), deflarry.py(std), deflarry.py(var), RELEASE:
+      Bug #518210. sum, std, var returned NaN for empty larrys; now return
+      0.0.
+
     * deflarry.py(keep_label), RELEASE: Bug #518135. keep_label crashes when
       there is nothing to keep.
 
