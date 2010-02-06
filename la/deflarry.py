@@ -6,7 +6,8 @@ from copy import deepcopy
 import numpy as np
    
 from la.util.scipy import (nanmean, nanmedian, nanstd)
-from la.util.misc import flattenlabel, isscalar, fromlists, list2index
+from la.util.misc import (flattenlabel, isscalar, fromlists, list2index,
+                          fromlists)
 from la.afunc import (group_ranking, group_mean, group_median, covMissing,
                       fillforward_partially, quantile, ranking, lastrank,
                       movingsum_forward, lastrank_decay, movingrank,
@@ -3238,7 +3239,7 @@ class larry(object):
                [ 3.,  4.]])
                
         """ 
-        return fromlist([data.values(), data.keys()])          
+        return larry.fromlist([data.values(), data.keys()])          
                
     # Copy -------------------------------------------------------------------        
           

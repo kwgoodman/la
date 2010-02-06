@@ -1,5 +1,7 @@
 2010-02-06 Keith
 
+    * deflarry.py: Bug #518096. larry.fromdict fails due to missing import.
+
     * deflarry.py(__align): Bug #517912. Comparison operators (==. >, etc)
       crashed when comparing empty larrys.
 
