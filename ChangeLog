@@ -1,5 +1,7 @@
 2010-02-06 Keith
 
+    * RELEASE: Begin using as a place to plan changes for la 0.2 (avocado).
+
     * deflarry.py: Bug #518096. larry.fromdict fails due to missing import.
 
     * deflarry.py(__align): Bug #517912. Comparison operators (==. >, etc)

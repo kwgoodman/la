@@ -3,20 +3,37 @@
 la Release History
 ==================
 
-la 0.2
-======
+la 0.2 (avocado)
+================
 
 *Release date: Not yet released, in development*
 
-Changes
--------
+New features
+------------
 
-- New sawpaxes method and new function, panel, to create panel data.
-- New assert_larry_equal function makes unit testing simplier.
+- New ability to index by label
+- Added nd ability to the larry methods that could only handle 2d input
+- swapaxes method
+- A function, panel, to make panel data
+- Extend group methods to allow axis argument and 2d groups
+
+Unit testing
+------------
+
+- Simplify unit testing with new assert_larry_equal function
+- Unit test all larry methods for ability to handle empty larrys
+- dtype unit test of all methods
+- Added unit tests for larry methods that don't have any
+
+Bug fixes
+---------
+
+- #517912: larry([]) == larry([]) raises IndexError
+- #518096: larry.fromdict failed due to missing import
 
 
-la 0.1
-======
+la 0.1 (first release)
+======================
 
 *Release date: 2010-02-03*
 
