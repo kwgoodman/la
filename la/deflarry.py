@@ -1724,17 +1724,20 @@ class larry(object):
         if axis is None:
             raise ValueError, 'axis cannot be None'    
         if axis >= self.ndim:
-            raise IndexError, 'axis is out of range'   
-        y = self.copy()
+            raise IndexError, 'axis is out of range' 
+        y = self.copy()      
         cmd = '[(idx, z) for idx, z in enumerate(y.label[axis]) if z '
         cmd = cmd + op + ' value]'  
         idxlabel = eval(cmd)
-        idx, label = zip(*idxlabel)
-        y.label[axis] = list(label)
-        index = [slice(None,None,None)] * self.ndim
-        index[axis] = list(idx)
-        y.x = y.x[index]
-        return y
+        if len(idxlabel) == 0:
+            return larry([])
+        else:
+            idx, label = zip(*idxlabel)
+            y.label[axis] = list(label)
+            index = [slice(None,None,None)] * self.ndim
+            index[axis] = list(idx)
+            y.x = y.x[index]
+            return y
         
     def keep_x(self, op, value, vacuum=True):
         """

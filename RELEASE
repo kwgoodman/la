@@ -32,6 +32,7 @@ Bug fixes
 - #518096: larry.fromdict failed due to missing import
 - #518106: la.larry.fromdict({}) failed
 - #518114. fromlist([]) and fromtuples([]) failed
+- #518135. keep_label crashed when there was nothing to keep 
 
 
 la 0.1 (first release)

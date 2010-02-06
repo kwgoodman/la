@@ -1,5 +1,8 @@
 2010-02-06 Keith
 
+    * deflarry.py(keep_label), RELEASE: Bug #518135. keep_label crashes when
+      there is nothing to keep.
+
     * ChangeLog: Updated. Hmm, I can't push to the mirror with modified files.
 
     * deflarry.py(fromtuples), deflarry.py(fromlist), RELEASE: Bug #518114.
