@@ -1,5 +1,8 @@
 2010-02-06 Keith
 
+    * tests/empty_larry_test.py, doc/source/intro.rst: A new unit test module
+      to test all larry methods for the proper handling of empty larrys.
+
     * deflarry.py(unflatten), RELEASE: Bug #518215. unflatten crashed on an
       empty larry.
 
