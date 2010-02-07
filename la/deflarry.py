@@ -7,7 +7,7 @@ import numpy as np
    
 from la.util.scipy import (nanmean, nanmedian, nanstd)
 from la.util.misc import (flattenlabel, isscalar, fromlists, list2index,
-                          fromlists)
+                          fromlists, isstring, str2labelindex)
 from la.afunc import (group_ranking, group_mean, group_median, covMissing,
                       fillforward_partially, quantile, ranking, lastrank,
                       movingsum_forward, lastrank_decay, movingrank,
@@ -1315,46 +1315,86 @@ class larry(object):
             if index >= self.shape[0]:
                 raise IndexError, 'index out of range'
             label = self.label[1:]
-            x = self.x[index]                     
+            x = self.x[index]
+        elif isstring(index):
+            idx = str2labelindex(index, self.label[0])
+            label = self.label[1:]
+            x = self.x[idx]                                         
         elif typidx is tuple:
             label = []
-            for i in xrange(self.ndim):
-                if i < len(index):
-                    idx = index[i]
+            for ax in xrange(self.ndim):
+                if ax < len(index):
+                    idx = index[ax]
                     typ = type(idx)
                     if isscalar(idx):
-                        if idx >= self.shape[i]:
+                        if idx >= self.shape[ax]:
                             raise IndexError, 'index out of range'
                         lab = None
                     elif typ is list or typ is tuple:
                         try:
-                            lab = [self.label[i][z] for z in idx]
+                            lab = [self.label[ax][z] for z in idx]
                         except IndexError:
                             raise IndexError, 'index out of range' 
                         lab = list(lab)                              
                     elif typ is np.ndarray:
                         if idx.dtype.type == np.bool_:
                             try:
-                                lab = [self.label[i][j] for j, z in enumerate(idx) if z]
+                                lab = [self.label[ax][j] for j, z in enumerate(idx) if z]
                             except IndexError:
                                 raise IndexError, 'index out of range'                            
                         else:
                             try:
-                                lab = [self.label[i][z] for z in idx]
+                                lab = [self.label[ax][z] for z in idx]
                             except IndexError:
                                 raise IndexError, 'index out of range' 
                         lab = list(lab)                          
-                    elif typ is slice:
-                        lab = self.label[i][idx]
+                    elif typ is slice:                    
+                        # -- string indexing (start) ------------------------
+                        idx_change = False
+                        if isstring(idx.start):                        
+                            ix_start = str2labelindex(idx.start, self.label[ax])
+                            idx = slice(ix_start, idx.stop, idx.step)
+                            idx_change = True
+                        if isstring(idx.stop):                        
+                            ix_stop = str2labelindex(idx.stop, self.label[ax])
+                            idx = slice(idx.start, ix_stop, idx.step)
+                            idx_change = True                            
+                        if isstring(idx.step):
+                            msg=  'Step size of a slice cannot be a string.'
+                            raise IndexError, msg
+                        if idx_change:
+                            index = list(index)
+                            index[ax] = idx
+                            index = tuple(index)                               
+                        # -- string indexing (end) --------------------------                                 
+                        lab = self.label[ax][idx]  
+                    elif isstring(idx):                   
+                        ix = str2labelindex(idx, self.label[ax])
+                        lab = None
+                        index = list(index)
+                        index[ax] = ix  
+                        index = tuple(index)   
                     else:
                         msg = 'I do not recognize the way you are indexing'
                         raise IndexError, msg                       
                 else:
-                    lab = self.label[i]
+                    lab = self.label[ax]
                 if lab:     
                     label.append(lab)              
             x = self.x[index]
         elif typidx is slice:
+            # -- string indexing (start) ------------------------------
+            ax = 0       
+            if isstring(index.start):                        
+                ix_start = str2labelindex(index.start, self.label[ax])
+                index = slice(ix_start, index.stop, index.step)
+            if isstring(index.stop):                        
+                ix_stop = str2labelindex(index.stop, self.label[ax])
+                index = slice(index.start, ix_stop, index.step)                            
+            if isstring(index.step):
+                msg=  'Step size of a slice cannot be a string.'
+                raise IndexError, msg   
+            # -- string indexing (end) --------------------------------        
             label = list(self.label)
             label[0] = label[0][index]
             x = self.x[index]

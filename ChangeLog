@@ -1,5 +1,13 @@
 2010-02-06 Keith
 
+    * deflarry.py(__getitem__): Added support for indexing by labels!
+
+    * tests/string_indexing_test.py: New module of unit tests for indexing
+      by labels.
+
+    * util/misc.py(isstring), util/misc.py(str2labelindex): Two new functions
+      created to support indexing by label.
+
     * tests/empty_larry_test.py, doc/source/intro.rst: A new unit test module
       to test all larry methods for the proper handling of empty larrys.
 
