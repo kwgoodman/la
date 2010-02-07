@@ -1,3 +1,9 @@
+2010-02-07 Keith
+
+    * tests/deflarry_nose_test.py(test_conversion), doc/source/intro.rst:
+      Unit tests for the conversion methods: totuples, tolist, todict,
+      fromtuples, fromlist, fromdict.
+
 2010-02-06 Keith
 
     * deflarry.py(__getitem__): Added support for indexing by labels!

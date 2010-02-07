@@ -8,6 +8,7 @@ from numpy.testing import assert_, assert_equal
 
 from la import larry
 from la.util.testing import (printfail, noreference, nocopy)
+from la.util.testing import assert_larry_equal as ale
 
 
 def dup23(x):
@@ -523,4 +524,30 @@ def test_binary_regression():
 	z = x & y	
 	yield assert_equal, z.dtype, x.dtype, 'bool & (plain) float'	
 	
-# --------------------------------------------------------------------------             
+# --------------------------------------------------------------------------
+
+# Conversion tests
+#
+# The larry conversion methods are:
+#
+#             fromtuples, totuples
+#             fromlist,   tolist
+#             fromdict,   todict 
+#
+# Make sure that larrys don't change after a round trip:
+
+def test_conversion():
+    "Make sure that larrys don't change after a conversion round trip."
+    shapes = [(1,), (1,1), (3,), (3,1), (1,1,1), (1,1,2), (1,2,2), (2,2,2),
+              (3,2,1), (5,4,3,2,1), (0,)]
+    msg = 'Round trip %s conversion failed on shape %s'          
+    for shape in shapes:
+        y1 = larry(np.arange(np.prod(shape)).reshape(shape))
+        y2 = larry.fromtuples(y1.copy().totuples())
+        yield ale, y1, y2, msg % ('tuples', str(shape)), False
+        y2 = larry.fromlist(y1.copy().tolist())
+        yield ale, y1, y2, msg % ('list', str(shape)), False        
+        y2 = larry.fromdict(y1.copy().todict())
+        yield ale, y1, y2, msg % ('dict', str(shape)), False         
+                  
+                            
