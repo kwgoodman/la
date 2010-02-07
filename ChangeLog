@@ -1,5 +1,10 @@
 2010-02-07 Keith
 
+    * deflarry.py(sum), deflarry.py(std), deflarry.py(var), RELEASE,
+      tests/empty_larry_test.py, doc/source/intro.rst: Bug #518442. sum, std,
+      and var returned NaN for shapes that contain zero, e.g., (2, 0, 3).
+      Added unit tests.
+
     * tests/deflarry_nose_test.py(test_conversion), doc/source/intro.rst:
       Unit tests for the conversion methods: totuples, tolist, todict,
       fromtuples, fromlist, fromdict.
@@ -101,7 +106,7 @@
       Renamed test.py to testing.py and moved it.
 
     * RELEASE: Added a section to keep track of the changes for la 0.2.
-#
+
 2010-02-03 Keith
 
     * RELEASE: Add release date for la 0.1: TODAY!

@@ -1,9 +1,10 @@
 "Test larry methods for proper handling of empty larrys"
 
 import numpy as np
-from numpy.testing import assert_
+from numpy.testing import assert_, assert_equal
 
 from la import larry, nan
+from la.util.testing import assert_larry_equal as ale
 
 def lar():
     return larry([])
@@ -149,4 +150,23 @@ def test_empty():
                 result &= type(actual) == type(desired) 
                 msg = "method '" + attr + "' failed empty larry test"     
                 yield assert_, result, msg      
-         
+
+# ---------------------------------------------------------------------------
+
+# Above we tested larrys of shape (0,). What about larrys of shape, say,
+# (2,0) or (2,0,3)?
+
+def lar2():
+    return larry(arr2())
+
+def arr2():
+    return np.ones((2,0,3))
+
+def test_empty2():
+    "Test larry methods for proper handling of empty larrys with ndim > 1."
+    msg = "%s failed emtpy ndim > 1 test."
+    yield assert_equal, lar2().sum(), arr2().sum(), msg % "sum"
+    yield assert_equal, lar2().std(), arr2().std(), msg % "std"
+    yield assert_equal, lar2().var(), arr2().var(), msg % "var"
+    
+             

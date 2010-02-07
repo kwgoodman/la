@@ -830,7 +830,7 @@ class larry(object):
         array([ 3.,  6.])
                     
         """
-        if self.shape == (0,):
+        if 0 in self.shape:
             return np.array([]).sum()
         else:    
             return self.__reduce(axis, np.nansum)    
@@ -982,7 +982,7 @@ class larry(object):
         array([ 0.,  1.])  
                          
         """
-        if self.shape == (0,):
+        if 0 in self.shape:
             return np.array([]).std()
         else:         
             return self.__reduce(axis, nanstd)  
@@ -1022,7 +1022,7 @@ class larry(object):
         array([ 0.,  1.])
                     
         """
-        if self.shape == (0,):
+        if 0 in self.shape:
             return np.array([]).var() 
         else:           
             y = self.__reduce(axis, nanstd)
