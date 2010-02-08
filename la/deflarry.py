@@ -1369,6 +1369,97 @@ class larry(object):
         if np.isscalar(x):
             return x                                
         return larry(x, label)
+
+    @property    
+    def lix(self):
+        """Experimental support for indexing by labels.
+        
+        Experimental support for a method larry.lix that can be used for
+        label indexing like this:
+
+        lar.lix[['a']] # row 'a'
+        lar.lix[['a']:] # row 'a' and everything to the right (slicing)
+        lar.lix[:, ['a']] # column 'a'
+        lar.lix[['a'], ['b'], ['c']] # single element from 3d larry
+        lar.lix[['a', 'b', 'c']] # rows 'a', 'b', and 'c'
+        lar.lix[['a']:['b']] # slice
+        lar.lix[['a']:['b']:2] # slice with step
+
+        Only labels and slices are allowed. Inside the function the labels
+        will be converted to indices and then a call will be made to
+        lar[converted_index].
+
+        Indexing with more than one list of labels will do rectangular
+        indexing, not fancy indexing.
+        """
+        class getitemlabel(object):
+            def __init__(self2, self):
+                self2.lar = self
+            def __getitem__(self2, index):
+                msg = 'Could not map label to index value.' 
+                y = self2.lar
+                typ = type(index)
+                if typ == list:
+                    # Example: lar.lix[['a', 'b', 'c']]
+                    try:
+                        index2 = map(y.label[0].index, index)
+                    except ValueError:
+                        raise ValueError, msg
+                    if len(index) == 1:       
+                        index2 = index2[0]           
+                elif typ == slice:
+                    # Examples: lar.lix[['a']:], lar.lix[['a']:['b']],
+                    #           lar.lix[['a']:['b']:2]                    
+                    if index.start is None:
+                        start = None
+                    else:    
+                        try:
+                            start = y.label[0].index(index.start[0])
+                        except ValueError:
+                            raise ValueError, msg
+                    if index.stop is None: 
+                        stop = None                    
+                    else:                            
+                        try:
+                            stop = y.label[0].index(index.stop[0])
+                        except ValueError:
+                            raise ValueError, msg
+                    index2 = slice(start, stop, index.step)                                                        
+                elif typ == tuple:
+                    index2 = []
+                    for ax, idx in enumerate(index):
+                        typ = type(idx)
+                        if typ == list:
+                            try:
+                                idx2 = map(y.label[ax].index, idx)
+                            except ValueError:
+                                raise ValueError, msg
+                            if len(idx) == 1:       
+                                idx2 = idx2[0]                                
+                            index2.append(idx2)
+                        elif typ == slice: 
+                            if idx.start is None: 
+                                start = None 
+                            else:                         
+                                try:
+                                    start = y.label[ax].index(idx.start[0])
+                                except ValueError:
+                                    raise ValueError, msg
+                            if idx.stop is None: 
+                                stop = None 
+                            else:                                     
+                                try:
+                                    stop = y.label[ax].index(idx.stop[0])
+                                except ValueError:
+                                    raise ValueError, msg
+                            index2.append(slice(start, stop, idx.step))
+                        else:
+                            raise IndexError, 'Unsupported indexing operation.'
+                    index2 = tuple(index2)        
+                else:
+                    raise IndexError, 'Unsupported indexing operation.'                 
+                return y[index2]                
+        return getitemlabel(self)
         
     def __setitem__(self, index, value):
         """

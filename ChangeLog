@@ -1,3 +1,12 @@
+#--- Experimental index by label support ------------------------------------
+
+2010-02-08 Keith
+
+    * deflarry.py(lix): New method that adds ability to index larrys by label.
+
+
+#--- Experimental index by label support ------------------------------------
+
 2010-02-08 Keith
 
     * deflarry.py(__getitem__), tests/string_indexing_test.py,
