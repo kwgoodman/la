@@ -2,8 +2,9 @@
 
 2010-02-08 Keith
 
-    * deflarry.py(lix): New method that adds ability to index larrys by label.
+    * deflarry.py(lix): Bug fixes in new lix method.
 
+    * deflarry.py(lix): New method that adds ability to index larrys by label.
 
 #--- Experimental index by label support ------------------------------------
 

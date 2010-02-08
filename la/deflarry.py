@@ -1396,7 +1396,8 @@ class larry(object):
             def __init__(self2, self):
                 self2.lar = self
             def __getitem__(self2, index):
-                msg = 'Could not map label to index value.' 
+                msg = 'Could not map label to index value.'
+                msg2 = 'The %s element of a slice must be a list.' 
                 y = self2.lar
                 typ = type(index)
                 if typ == list:
@@ -1409,16 +1410,20 @@ class larry(object):
                         index2 = index2[0]           
                 elif typ == slice:
                     # Examples: lar.lix[['a']:], lar.lix[['a']:['b']],
-                    #           lar.lix[['a']:['b']:2]                    
+                    #           lar.lix[['a']:['b']:2]                  
                     if index.start is None:
                         start = None
+                    elif type(index.start) != list:
+                        raise ValueError, msg2 % 'start'      
                     else:    
                         try:
                             start = y.label[0].index(index.start[0])
                         except ValueError:
-                            raise ValueError, msg
+                            raise ValueError, msg        
                     if index.stop is None: 
-                        stop = None                    
+                        stop = None 
+                    elif type(index.stop) != list:
+                        raise ValueError, msg2 % 'stop'                                                  
                     else:                            
                         try:
                             stop = y.label[0].index(index.stop[0])
@@ -1439,14 +1444,18 @@ class larry(object):
                             index2.append(idx2)
                         elif typ == slice: 
                             if idx.start is None: 
-                                start = None 
+                                start = None
+                            elif type(idx.start) != list:
+                                raise ValueError, msg2 % 'start'                                     
                             else:                         
                                 try:
                                     start = y.label[ax].index(idx.start[0])
                                 except ValueError:
-                                    raise ValueError, msg
+                                    raise ValueError, msg                
                             if idx.stop is None: 
                                 stop = None 
+                            elif type(idx.stop) != list:
+                                raise ValueError, msg2 % 'stop'                                              
                             else:                                     
                                 try:
                                     stop = y.label[ax].index(idx.stop[0])
