@@ -1345,13 +1345,7 @@ class larry(object):
                                 raise IndexError, 'index out of range' 
                         lab = list(lab)                          
                     elif typ is slice:
-                        lab = self.label[ax][idx]  
-                    elif isstring(idx):                   
-                        ix = str2labelindex(idx, self.label[ax])
-                        lab = None
-                        index = list(index)
-                        index[ax] = ix  
-                        index = tuple(index)   
+                        lab = self.label[ax][idx] 
                     else:
                         msg = 'I do not recognize the way you are indexing'
                         raise IndexError, msg                       
