@@ -1397,7 +1397,8 @@ class larry(object):
                 self2.lar = self
             def __getitem__(self2, index):
                 msg = 'Could not map label to index value.'
-                msg2 = 'The %s element of a slice must be a list.' 
+                msg2 = 'The %s element of a slice must be a list.'
+                msg3 = 'The %s element of the slice contains more than one item.' 
                 y = self2.lar
                 typ = type(index)
                 if typ == list:
@@ -1407,7 +1408,8 @@ class larry(object):
                     except ValueError:
                         raise ValueError, msg
                     if len(index) == 1:       
-                        index2 = index2[0]           
+                        index2 = index2[0]
+                    return y[index2]               
                 elif typ == slice:
                     # Examples: lar.lix[['a']:], lar.lix[['a']:['b']],
                     #           lar.lix[['a']:['b']:2]                  
@@ -1415,7 +1417,9 @@ class larry(object):
                         start = None
                     elif type(index.start) != list:
                         raise ValueError, msg2 % 'start'      
-                    else:    
+                    else:
+                        if len(index.start) > 1:
+                            raise ValueError, msg3 % 'start'    
                         try:
                             start = y.label[0].index(index.start[0])
                         except ValueError:
@@ -1424,14 +1428,18 @@ class larry(object):
                         stop = None 
                     elif type(index.stop) != list:
                         raise ValueError, msg2 % 'stop'                                                  
-                    else:                            
+                    else: 
+                        if len(index.stop) > 1:
+                            raise ValueError, msg3 % 'stop'                             
                         try:
                             stop = y.label[0].index(index.stop[0])
                         except ValueError:
                             raise ValueError, msg
-                    index2 = slice(start, stop, index.step)                                                        
+                    index2 = slice(start, stop, index.step)
+                    return y[index2]                                                       
                 elif typ == tuple:
                     index2 = []
+                    label = []
                     for ax, idx in enumerate(index):
                         typ = type(idx)
                         if typ == list:
@@ -1440,14 +1448,18 @@ class larry(object):
                             except ValueError:
                                 raise ValueError, msg
                             if len(idx) == 1:       
-                                idx2 = idx2[0]                                
+                                label.append(idx2)
+                            else:
+                                label.append([y.label[ax][i] for i in idx2])                                                                
                             index2.append(idx2)
                         elif typ == slice: 
                             if idx.start is None: 
                                 start = None
                             elif type(idx.start) != list:
                                 raise ValueError, msg2 % 'start'                                     
-                            else:                         
+                            else: 
+                                if len(idx.start) > 1:
+                                    raise ValueError, msg3 % 'start'                          
                                 try:
                                     start = y.label[ax].index(idx.start[0])
                                 except ValueError:
@@ -1456,18 +1468,23 @@ class larry(object):
                                 stop = None 
                             elif type(idx.stop) != list:
                                 raise ValueError, msg2 % 'stop'                                              
-                            else:                                     
+                            else:
+                                if len(idx.stop) > 1:
+                                    raise ValueError, msg3 % 'start'                                        
                                 try:
                                     stop = y.label[ax].index(idx.stop[0])
                                 except ValueError:
                                     raise ValueError, msg
-                            index2.append(slice(start, stop, idx.step))
+                            s = slice(start, stop, idx.step)
+                            slar = range(*s.indices(y.shape[ax]))
+                            label.append(y.label[ax][s])        
+                            index2.append(slar)
                         else:
                             raise IndexError, 'Unsupported indexing operation.'
-                    index2 = tuple(index2)        
+                    x = y.x[np.ix_(*index2)]
+                    return larry(x, label)         
                 else:
-                    raise IndexError, 'Unsupported indexing operation.'                 
-                return y[index2]                
+                    raise IndexError, 'Unsupported indexing operation.'                                  
         return getitemlabel(self)
         
     def __setitem__(self, index, value):
