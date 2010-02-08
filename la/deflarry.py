@@ -7,7 +7,7 @@ import numpy as np
    
 from la.util.scipy import (nanmean, nanmedian, nanstd)
 from la.util.misc import (flattenlabel, isscalar, fromlists, list2index,
-                          fromlists, isstring, str2labelindex)
+                          fromlists)
 from la.afunc import (group_ranking, group_mean, group_median, covMissing,
                       fillforward_partially, quantile, ranking, lastrank,
                       movingsum_forward, lastrank_decay, movingrank,
@@ -1315,11 +1315,7 @@ class larry(object):
             if index >= self.shape[0]:
                 raise IndexError, 'index out of range'
             label = self.label[1:]
-            x = self.x[index]
-        elif isstring(index):
-            idx = str2labelindex(index, self.label[0])
-            label = self.label[1:]
-            x = self.x[idx]                                         
+            x = self.x[index]                                       
         elif typidx is tuple:
             label = []
             for ax in xrange(self.ndim):
@@ -1348,25 +1344,7 @@ class larry(object):
                             except IndexError:
                                 raise IndexError, 'index out of range' 
                         lab = list(lab)                          
-                    elif typ is slice:                    
-                        # -- string indexing (start) ------------------------
-                        idx_change = False
-                        if isstring(idx.start):                        
-                            ix_start = str2labelindex(idx.start, self.label[ax])
-                            idx = slice(ix_start, idx.stop, idx.step)
-                            idx_change = True
-                        if isstring(idx.stop):                        
-                            ix_stop = str2labelindex(idx.stop, self.label[ax])
-                            idx = slice(idx.start, ix_stop, idx.step)
-                            idx_change = True                            
-                        if isstring(idx.step):
-                            msg=  'Step size of a slice cannot be a string.'
-                            raise IndexError, msg
-                        if idx_change:
-                            index = list(index)
-                            index[ax] = idx
-                            index = tuple(index)                               
-                        # -- string indexing (end) --------------------------                                 
+                    elif typ is slice:
                         lab = self.label[ax][idx]  
                     elif isstring(idx):                   
                         ix = str2labelindex(idx, self.label[ax])
@@ -1382,19 +1360,7 @@ class larry(object):
                 if lab:     
                     label.append(lab)              
             x = self.x[index]
-        elif typidx is slice:
-            # -- string indexing (start) ------------------------------
-            ax = 0       
-            if isstring(index.start):                        
-                ix_start = str2labelindex(index.start, self.label[ax])
-                index = slice(ix_start, index.stop, index.step)
-            if isstring(index.stop):                        
-                ix_stop = str2labelindex(index.stop, self.label[ax])
-                index = slice(index.start, ix_stop, index.step)                            
-            if isstring(index.step):
-                msg=  'Step size of a slice cannot be a string.'
-                raise IndexError, msg   
-            # -- string indexing (end) --------------------------------        
+        elif typidx is slice:       
             label = list(self.label)
             label[0] = label[0][index]
             x = self.x[index]

@@ -1,3 +1,10 @@
+2010-02-08 Keith
+
+    * deflarry.py(__getitem__), tests/string_indexing_test.py,
+      doc/source/intro.rst, util/misc.py(str2labelindex): Removed ability to
+      index by labels using strings. Removed thefunction str2labelindex and
+      the unit test module string_indexing_test.py.
+
 2010-02-07 Keith
 
     * deflarry.py(sum), deflarry.py(std), deflarry.py(var), RELEASE,
