@@ -1,4 +1,61 @@
+2010-02-07 Keith
+
+    * deflarry.py(sum), deflarry.py(std), deflarry.py(var), RELEASE,
+      tests/empty_larry_test.py, doc/source/intro.rst: Bug #518442. sum, std,
+      and var returned NaN for shapes that contain zero, e.g., (2, 0, 3).
+      Added unit tests.
+
+    * tests/deflarry_nose_test.py(test_conversion), doc/source/intro.rst:
+      Unit tests for the conversion methods: totuples, tolist, todict,
+      fromtuples, fromlist, fromdict.
+
+2010-02-06 Keith
+
+    * deflarry.py(__getitem__): Added support for indexing by labels!
+
+    * tests/string_indexing_test.py: New module of unit tests for indexing
+      by labels.
+
+    * util/misc.py(isstring), util/misc.py(str2labelindex): Two new functions
+      created to support indexing by label.
+
+    * tests/empty_larry_test.py, doc/source/intro.rst: A new unit test module
+      to test all larry methods for the proper handling of empty larrys.
+
+    * deflarry.py(unflatten), RELEASE: Bug #518215. unflatten crashed on an
+      empty larry.
+
+    * deflarry.py(sum), deflarry.py(std), deflarry.py(var), RELEASE:
+      Bug #518210. sum, std, var returned NaN for empty larrys; now return
+      0.0.
+
+    * deflarry.py(keep_label), RELEASE: Bug #518135. keep_label crashes when
+      there is nothing to keep.
+
+    * ChangeLog: Updated. Hmm, I can't push to the mirror with modified files.
+
+    * deflarry.py(fromtuples), deflarry.py(fromlist), RELEASE: Bug #518114.
+      fromlist([]) and fromtuples([]) fail.
+
+    * util/misc.py(fromlists), RELEASE: Bug #518106. la.larry.fromdict({})
+      fails.
+
+    * RELEASE: Begin using as a place to plan changes for la 0.2 (avocado).
+
+    * deflarry.py: Bug #518096. larry.fromdict fails due to missing import.
+
+    * deflarry.py(__align): Bug #517912. Comparison operators (==. >, etc)
+      crashed when comparing empty larrys.
+
 2010-02-05 Keith
+
+    * RELEASE: Update after adding swapaxes and panel.
+
+    * func.py(panel), deflarry.py(swapaxes), doc/source/functions.rst, 
+      doc/source/reference.rst, doc/source/work.rst: Added a new function
+      called panel and a new method called swapaxes.
+
+    * doc/source/conf.py: Chaged docs to la 0.2.
 
     * doc/launchpad.txt: Update.
 
@@ -8,17 +65,6 @@
       util/testing.py(assert_iscopy), util/testing.py(assert_isview):
       Change the name of assert_noreference to assert_iscopy; changed the
       name of assert_nocopy to assert_isview.   
-
-2010-02-04 Josef
-
-    * util/tests/testing_test.py(Test_Testing_Assert_Larry): 
-      refactor test and add to it, most cases covered
-
-    * util/tests/misc_test.py, testing_test.py(Test_Testing_Assert_Larry): 
-      move test for assert to it's own module
-      
-    * util/tests/misc_test.py(Test_Testing_Assert_Larry): add first version 
-      of tests for new assert_larry_equal
 
 2010-02-04 Keith
 

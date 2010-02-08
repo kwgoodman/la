@@ -36,6 +36,14 @@ labels.
 Misc
 ----
 
+Miscellaneous functions that operate on larrys. 
+
+------------
+
 .. autofunction:: la.func.stack
+
+------------
+
+.. autofunction:: la.func.panel
 
 

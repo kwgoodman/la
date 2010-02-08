@@ -6,7 +6,8 @@ from copy import deepcopy
 import numpy as np
    
 from la.util.scipy import (nanmean, nanmedian, nanstd)
-from la.util.misc import flattenlabel, isscalar, fromlists, list2index
+from la.util.misc import (flattenlabel, isscalar, fromlists, list2index,
+                          fromlists, isstring, str2labelindex)
 from la.afunc import (group_ranking, group_mean, group_median, covMissing,
                       fillforward_partially, quantile, ranking, lastrank,
                       movingsum_forward, lastrank_decay, movingrank,
@@ -757,33 +758,40 @@ class larry(object):
 
     def __align(self, other):
         "Align larrys for binary operations."
-        if self.ndim != other.ndim:
-            msg = 'Binary operation on two larrys with different dimension'
-            raise IndexError, msg
-        idxs = []
-        idxo = []
-        label = []
-        shape = []
-        for ls, lo in zip(self.copylabel(), other.label):
-            if ls == lo:
-                lab = ls
-                ids = range(len(lab))
-                ido = ids
-            else:
-                lab = list(frozenset(ls) & frozenset(lo))
-                if len(lab) == 0:
-                    raise IndexError, 'A dimension has no matching labels'
-                lab.sort()
-                ids = map(ls.index, lab)
-                ido = map(lo.index, lab)
-            label.append(lab)
-            idxs.append(ids)
-            idxo.append(ido)
-            shape.append(len(lab))
-        shape = tuple(shape)
-        x = np.zeros(shape, dtype=self.x.dtype)
-        x += self.x[np.ix_(*idxs)]
-        y = other.x[np.ix_(*idxo)]
+        if self.label == other.label:
+            # Labels are already aligned
+            x = self.copyx()
+            y = other.x
+            label = self.copylabel()
+        else:  
+            # Labels are not aligned.  
+            if self.ndim != other.ndim:
+                msg = 'Binary operation on two larrys with different dimension'
+                raise IndexError, msg
+            idxs = []
+            idxo = []
+            label = []
+            shape = []
+            for ls, lo in zip(self.copylabel(), other.label):
+                if ls == lo:
+                    lab = ls
+                    ids = range(len(lab))
+                    ido = ids
+                else:
+                    lab = list(frozenset(ls) & frozenset(lo))
+                    if len(lab) == 0:
+                        raise IndexError, 'A dimension has no matching labels'
+                    lab.sort()
+                    ids = map(ls.index, lab)
+                    ido = map(lo.index, lab)
+                label.append(lab)
+                idxs.append(ids)
+                idxo.append(ido)
+                shape.append(len(lab))
+            shape = tuple(shape)
+            x = np.zeros(shape, dtype=self.x.dtype)
+            x += self.x[np.ix_(*idxs)]
+            y = other.x[np.ix_(*idxo)]
         return x, y, label
                   
     # Reduce functions -------------------------------------------------------   
@@ -822,7 +830,10 @@ class larry(object):
         array([ 3.,  6.])
                     
         """
-        return self.__reduce(axis, np.nansum)    
+        if 0 in self.shape:
+            return np.array([]).sum()
+        else:    
+            return self.__reduce(axis, np.nansum)    
 
     def prod(self, axis=None):
         """
@@ -971,7 +982,10 @@ class larry(object):
         array([ 0.,  1.])  
                          
         """
-        return self.__reduce(axis, nanstd)  
+        if 0 in self.shape:
+            return np.array([]).std()
+        else:         
+            return self.__reduce(axis, nanstd)  
         
     def var(self, axis=None):
         """
@@ -1008,12 +1022,15 @@ class larry(object):
         array([ 0.,  1.])
                     
         """
-        y = self.__reduce(axis, nanstd)
-        if np.isscalar(y):
-            y *= y 
-        else:       
-            np.multiply(y.x, y.x, y.x)
-        return y                 
+        if 0 in self.shape:
+            return np.array([]).var() 
+        else:           
+            y = self.__reduce(axis, nanstd)
+            if np.isscalar(y):
+                y *= y 
+            else:       
+                np.multiply(y.x, y.x, y.x)
+            return y                 
                             
     def max(self, axis=None):
         """
@@ -1298,46 +1315,86 @@ class larry(object):
             if index >= self.shape[0]:
                 raise IndexError, 'index out of range'
             label = self.label[1:]
-            x = self.x[index]                     
+            x = self.x[index]
+        elif isstring(index):
+            idx = str2labelindex(index, self.label[0])
+            label = self.label[1:]
+            x = self.x[idx]                                         
         elif typidx is tuple:
             label = []
-            for i in xrange(self.ndim):
-                if i < len(index):
-                    idx = index[i]
+            for ax in xrange(self.ndim):
+                if ax < len(index):
+                    idx = index[ax]
                     typ = type(idx)
                     if isscalar(idx):
-                        if idx >= self.shape[i]:
+                        if idx >= self.shape[ax]:
                             raise IndexError, 'index out of range'
                         lab = None
                     elif typ is list or typ is tuple:
                         try:
-                            lab = [self.label[i][z] for z in idx]
+                            lab = [self.label[ax][z] for z in idx]
                         except IndexError:
                             raise IndexError, 'index out of range' 
                         lab = list(lab)                              
                     elif typ is np.ndarray:
                         if idx.dtype.type == np.bool_:
                             try:
-                                lab = [self.label[i][j] for j, z in enumerate(idx) if z]
+                                lab = [self.label[ax][j] for j, z in enumerate(idx) if z]
                             except IndexError:
                                 raise IndexError, 'index out of range'                            
                         else:
                             try:
-                                lab = [self.label[i][z] for z in idx]
+                                lab = [self.label[ax][z] for z in idx]
                             except IndexError:
                                 raise IndexError, 'index out of range' 
                         lab = list(lab)                          
-                    elif typ is slice:
-                        lab = self.label[i][idx]
+                    elif typ is slice:                    
+                        # -- string indexing (start) ------------------------
+                        idx_change = False
+                        if isstring(idx.start):                        
+                            ix_start = str2labelindex(idx.start, self.label[ax])
+                            idx = slice(ix_start, idx.stop, idx.step)
+                            idx_change = True
+                        if isstring(idx.stop):                        
+                            ix_stop = str2labelindex(idx.stop, self.label[ax])
+                            idx = slice(idx.start, ix_stop, idx.step)
+                            idx_change = True                            
+                        if isstring(idx.step):
+                            msg=  'Step size of a slice cannot be a string.'
+                            raise IndexError, msg
+                        if idx_change:
+                            index = list(index)
+                            index[ax] = idx
+                            index = tuple(index)                               
+                        # -- string indexing (end) --------------------------                                 
+                        lab = self.label[ax][idx]  
+                    elif isstring(idx):                   
+                        ix = str2labelindex(idx, self.label[ax])
+                        lab = None
+                        index = list(index)
+                        index[ax] = ix  
+                        index = tuple(index)   
                     else:
                         msg = 'I do not recognize the way you are indexing'
                         raise IndexError, msg                       
                 else:
-                    lab = self.label[i]
+                    lab = self.label[ax]
                 if lab:     
                     label.append(lab)              
             x = self.x[index]
         elif typidx is slice:
+            # -- string indexing (start) ------------------------------
+            ax = 0       
+            if isstring(index.start):                        
+                ix_start = str2labelindex(index.start, self.label[ax])
+                index = slice(ix_start, index.stop, index.step)
+            if isstring(index.stop):                        
+                ix_stop = str2labelindex(index.stop, self.label[ax])
+                index = slice(index.start, ix_stop, index.step)                            
+            if isstring(index.step):
+                msg=  'Step size of a slice cannot be a string.'
+                raise IndexError, msg   
+            # -- string indexing (end) --------------------------------        
             label = list(self.label)
             label[0] = label[0][index]
             x = self.x[index]
@@ -1716,17 +1773,20 @@ class larry(object):
         if axis is None:
             raise ValueError, 'axis cannot be None'    
         if axis >= self.ndim:
-            raise IndexError, 'axis is out of range'   
-        y = self.copy()
+            raise IndexError, 'axis is out of range' 
+        y = self.copy()      
         cmd = '[(idx, z) for idx, z in enumerate(y.label[axis]) if z '
         cmd = cmd + op + ' value]'  
         idxlabel = eval(cmd)
-        idx, label = zip(*idxlabel)
-        y.label[axis] = list(label)
-        index = [slice(None,None,None)] * self.ndim
-        index[axis] = list(idx)
-        y.x = y.x[index]
-        return y
+        if len(idxlabel) == 0:
+            return larry([])
+        else:
+            idx, label = zip(*idxlabel)
+            y.label[axis] = list(label)
+            index = [slice(None,None,None)] * self.ndim
+            index[axis] = list(idx)
+            y.x = y.x[index]
+            return y
         
     def keep_x(self, op, value, vacuum=True):
         """
@@ -2829,7 +2889,61 @@ class larry(object):
         y = self.copy()
         y.x = y.x.T
         y.label = y.label[::-1]
-        return y     
+        return y 
+        
+    def swapaxes(self, axis1, axis2):
+        """
+        Swap the two specified axes.
+        
+        Parameters
+        ----------
+        axis1 : int
+            First axis. This axis will become the `axis2`.
+        axis2 : int    
+            Second axis. This axis will become the `axis1`.
+            
+        Returns
+        -------
+        y : larry
+            A larry with the specified axes swapped.
+            
+        Examples
+        --------
+        First create a (3,2) larry:
+        
+        >>> y = larry([[0, 1], [2, 3], [4, 5]])
+        >>> y
+        label_0
+            0
+            1
+            2
+        label_1
+            0
+            1
+        x
+        array([[0, 1],
+               [2, 3],
+               [4, 5]])
+        
+        Then swap axes 0 and 1 (i.e., take the transpose):
+        
+        >>> y.swapaxes(1,0)
+        label_0
+            0
+            1
+        label_1
+            0
+            1
+            2
+        x
+        array([[0, 2, 4],
+               [1, 3, 5]])
+                        
+        """
+        y = self.copy()
+        y.label[axis1], y.label[axis2] =  y.label[axis2], y.label[axis1]
+        y.x = np.swapaxes(y.x, axis1, axis2)
+        return y  
         
     def _2donly(self):
         "Only works on 2d arrays"
@@ -2838,7 +2952,7 @@ class larry(object):
             
     def flatten(self, order='C'):
         """
-        Return a copy of the larry collapsed into one dimension.
+        Return a copy of the larry after collapsing into one dimension.
         
         The elements of the label become tuples.
         
@@ -2938,15 +3052,17 @@ class larry(object):
         # Check input
         if self.ndim != 1:
             raise ValueError, 'Only 1d larrys can be unflattened.'
-        if not isscalar(self.x.flat[0]):
-            msg = 'Only scalar dtype is currently supported.'
-            raise NotImplementedError, msg 
-	    
-	    # Determine labels, shape, and index into array	
-        labels = zip(*self.label[0])
-        x, label = fromlists(self.x, labels) 
-    
-        return larry(x, label)
+            
+        if self.shape == (0,):            
+            return larry([])
+        else:	    
+    	    # Determine labels, shape, and index into array	
+    	    if not isscalar(self.x.flat[0]):
+                msg = 'Only scalar dtype is currently supported.'
+                raise NotImplementedError, msg 
+            labels = zip(*self.label[0])
+            x, label = fromlists(self.x, labels)     
+            return larry(x, label)
         
     # Conversion -------------------------------------------------------------         
 
@@ -3033,16 +3149,16 @@ class larry(object):
         array([[  1.,   2.],
                [  3.,  NaN]])
                 
-        """
-            
-        # Split data into label and x
-        labels = zip(*data)
-        xs = labels.pop(-1)   
-        
-        # Determine labels, shape, and index into array	
-        x, label = fromlists(xs, labels)  
-        
-        return larry(x, label) 
+        """        
+        if len(data) == 0:        
+            return larry([])                   
+        else:            
+            # Split data into label and x
+            labels = zip(*data)
+            xs = labels.pop(-1)               
+            # Determine labels, shape, and index into array	
+            x, label = fromlists(xs, labels)          
+            return larry(x, label) 
         
     def tolist(self):
         """
@@ -3110,8 +3226,11 @@ class larry(object):
                [ 3.,  4.]])
                
         """
-        x, label = fromlists(data[0], zip(*data[1]))      
-        return larry(x, label)             
+        if len(data) == 0:            
+            return larry([])           
+        else:    
+            x, label = fromlists(data[0], zip(*data[1]))      
+            return larry(x, label)             
 
     def todict(self):
         """
@@ -3176,8 +3295,8 @@ class larry(object):
         array([[ 1.,  2.],
                [ 3.,  4.]])
                
-        """  
-        return fromlist([data.values(), data.keys()])          
+        """ 
+        return larry.fromlist([data.values(), data.keys()])          
                
     # Copy -------------------------------------------------------------------        
           

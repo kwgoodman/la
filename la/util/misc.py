@@ -174,7 +174,11 @@ def isscalar(x):
     False 
                 
     """
-    return isfloat(x) or isint(x)  
+    return isfloat(x) or isint(x)
+    
+def isstring(s):
+    "Return True if input is a str or np.string_."
+    return issubclass(type(s), str)      
     
 def list2index(L):
     "Convert a list to a unique list and the corresponding indices."
@@ -218,16 +222,31 @@ def fromlists(xs, labels):
            [ 3.,  4.]])                    
     
     """
-    shape = []
-    index = []
-    label = []
-    for i, lab in enumerate(labels):
-        labelidx, label_unique = list2index(lab)
-        shape.append(len(label_unique))
-        index.append(labelidx)
-        label.append(label_unique)
-    x = np.empty(shape)
-    x.fill(np.nan)
-    x[index] = xs 
+    if (len(xs) == 0) and (len(labels) == 0):
+        x = np.array([])
+        label = None
+    else:
+        shape = []
+        index = []
+        label = []
+        for i, lab in enumerate(labels):
+            labelidx, label_unique = list2index(lab)
+            shape.append(len(label_unique))
+            index.append(labelidx)
+            label.append(label_unique)
+        x = np.empty(shape)
+        x.fill(np.nan)
+        x[index] = xs 
     return x, label 
-                        
+
+def str2labelindex(s, label):
+    "Find index of string in label; convert label to string and look again if not found."
+    try:
+        idx = label.index(s)
+    except ValueError:
+        strindex = map(str, label)
+        try:
+            idx = strindex.index(s)
+        except ValueError:
+            raise IndexError, 'label not found.' 
+    return idx                                       

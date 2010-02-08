@@ -3,6 +3,7 @@
 import numpy as np
 
 from la.deflarry import larry
+from la.util.misc import flattenlabel
 
 
 # Labels --------------------------------------------------------------------
@@ -135,4 +136,90 @@ def stack(mode, **kwargs):
         x[i] = y.x
         zlabel.append(key)
     label = [zlabel, row, col]
-    return larry(x, label)    
+    return larry(x, label) 
+    
+def panel(lar):
+    """
+    Convert a 3d larry of shape (n, m, k) to a 2d larry of shape (m*k, n).
+    
+    Parameters
+    ----------
+    lar : 3d larry
+        The input must be a 3d larry.
+        
+    Returns
+    -------
+    y : 2d larry
+        If the input larry has shape (n, m, k) then a larry of shape (m*k, n)
+        is returned.
+        
+    See Also
+    --------
+    la.larry.swapaxes : Swap the two specified axes.
+    la.larry.flatten : Collapsing into one dimension.  
+        
+    Examples
+    --------
+    First make a 3d larry:
+    
+    >>> import numpy as np
+    >>> y = larry(np.arange(24).reshape(2,3,4))
+    >>> y
+    label_0
+        0
+        1
+    label_1
+        0
+        1
+        2
+    label_2
+        0
+        1
+        2
+        3
+    x
+    array([[[ 0,  1,  2,  3],
+            [ 4,  5,  6,  7],
+            [ 8,  9, 10, 11]],
+    .
+           [[12, 13, 14, 15],
+            [16, 17, 18, 19],
+            [20, 21, 22, 23]]])
+            
+    Then make a panel:        
+            
+    >>> la.func.panel(y)
+    label_0
+        (0, 0)
+        (0, 1)
+        (0, 2)
+        ...
+        (2, 1)
+        (2, 2)
+        (2, 3)
+    label_1
+        0
+        1
+    x
+    array([[ 0, 12],
+           [ 4, 16],
+           [ 8, 20],
+           [ 1, 13],
+           [ 5, 17],
+           [ 9, 21],
+           [ 2, 14],
+           [ 6, 18],
+           [10, 22],
+           [ 3, 15],
+           [ 7, 19],
+           [11, 23]])            
+    
+    """
+    if lar.ndim != 3:
+        raise ValueError, "lar must be 3d."
+    y = lar.copy()
+    y.label = [flattenlabel([y.label[1], y.label[2]])[0], y.label[0]]
+    y.x = y.x.T.reshape(-1, y.shape[0])
+    return y
+        
+               

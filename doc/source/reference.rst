@@ -507,6 +507,10 @@ Some of the methods (**T, flatten, unflatten**) change the shape of the larry.
 ------------
 
 .. automethod:: la.larry.T
+
+------------
+
+.. automethod:: la.larry.swapaxes
     
 ------------
 
