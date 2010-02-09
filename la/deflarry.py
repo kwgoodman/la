@@ -1414,19 +1414,13 @@ class larry(object):
                     # Examples: lar.lix['a':], lar.lix['a':'b'],
                     #           lar.lix['a':'b':2]                  
                     if index.start is None:
-                        start = None     
+                        start = None    
                     else:  
-                        try:
-                            start = y.label[0].index(index.start)
-                        except ValueError:
-                            raise ValueError, msg        
+                        start = y.labelindex(index.start, axis=0)     
                     if index.stop is None: 
                         stop = None                                                 
                     else:                            
-                        try:
-                            stop = y.label[0].index(index.stop)
-                        except ValueError:
-                            raise ValueError, msg
+                        stop = y.labelindex(index.stop, axis=0) 
                     index2 = slice(start, stop, index.step)
                     return y[index2]                                                       
                 elif typ == tuple:
@@ -1446,17 +1440,11 @@ class larry(object):
                             if idx.start is None: 
                                 start = None                                    
                             else:                    
-                                try:
-                                    start = y.label[ax].index(idx.start)
-                                except ValueError:
-                                    raise ValueError, msg                
+                                start = y.labelindex(idx.start, axis=ax)                 
                             if idx.stop is None: 
                                 stop = None                                            
                             else:                                      
-                                try:
-                                    stop = y.label[ax].index(idx.stop)
-                                except ValueError:
-                                    raise ValueError, msg
+                                stop = y.labelindex(idx.stop, axis=ax) 
                             s = slice(start, stop, idx.step)
                             slar = range(*s.indices(y.shape[ax]))
                             lab = y.label[ax][s]
