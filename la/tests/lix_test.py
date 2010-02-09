@@ -57,11 +57,13 @@ def test_lix(si=si):
         if len(index) == 1:
             actual = original.lix[index[0]]
         elif len(index) == 2:
-            actual = original.lix[index[0], index[1]].x        
+            actual = original.lix[index[0], index[1]]        
         elif len(index) == 3:
-            actual = original.lix[index[0], index[1], index[2]].x
+            actual = original.lix[index[0], index[1], index[2]]
         elif len(index) == 4:
-            actual = original.lix[index[0], index[1], index[2], index[3]].x
+            actual = original.lix[index[0], index[1], index[2], index[3]]
+        if isinstance(actual, larry):
+            actual = actual.x        
         msg = '\nlix fail on shape %s and index %s\n'  
         yield assert_equal, actual, desired, msg  % (str(shape), str(index))                           
         

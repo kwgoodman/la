@@ -2,6 +2,9 @@
 
 2010-02-08 Keith
 
+    * deflarry.py(lix), tests/lix_test.py: Bug fix. array(0), for example,
+      was returned instead 0.
+
     * deflarry.py(lix): Simplify code by reusing existing larry methods.
 
     * deflarry.py(lix), tests/lix_test.py: Now labels do not need to

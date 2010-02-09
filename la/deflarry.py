@@ -1372,18 +1372,24 @@ class larry(object):
 
     @property    
     def lix(self):
-        """Experimental support for indexing by labels.
+        """
+        Index into a larry using labels instead of index numbers.
         
-        Experimental support for a method larry.lix that can be used for
-        label indexing like this:
+        Examples
+        --------
+        
+        Let's start by making a larry that we can use to demonstrate idexing
+        by label:
+        
+        
 
-        lar.lix[['a']] # row 'a'
-        lar.lix[['a']:] # row 'a' and everything to the right (slicing)
-        lar.lix[:, ['a']] # column 'a'
+        lar.lix[['a']] # row 'a' for 2d lar
+        lar.lix['a':] # row 'a' and everything to the right (slicing)
+        lar.lix[:, ['a']] # column 'a' for 2d
         lar.lix[['a'], ['b'], ['c']] # single element from 3d larry
         lar.lix[['a', 'b', 'c']] # rows 'a', 'b', and 'c'
-        lar.lix[['a']:['b']] # slice
-        lar.lix[['a']:['b']:2] # slice with step
+        lar.lix['a':'b'] # slice
+        lar.lix['a':'b':2] # slice with step
 
         Only labels and slices are allowed. Inside the function the labels
         will be converted to indices and then a call will be made to
@@ -1454,7 +1460,10 @@ class larry(object):
                         else:
                             raise IndexError, 'Unsupported indexing operation.'
                     x = np.squeeze(y.x[np.ix_(*index2)])
-                    return larry(x, label)       
+                    if x.ndim == 0:
+                        return x[()]
+                    else:    
+                        return larry(x, label)       
                 else:
                     raise IndexError, 'Unsupported indexing operation.'                                  
         return Getitemlabel(self)
