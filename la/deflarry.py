@@ -1475,7 +1475,9 @@ class larry(object):
                                     raise ValueError, msg
                             s = slice(start, stop, idx.step)
                             slar = range(*s.indices(y.shape[ax]))
-                            label.append(y.label[ax][s])        
+                            lab = y.label[ax][s]
+                            if len(lab) > 1:
+                                label.append(lab)        
                             index2.append(slar)
                         else:
                             raise IndexError, 'Unsupported indexing operation.'

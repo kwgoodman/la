@@ -2,6 +2,12 @@
 
 2010-02-08 Keith
 
+    * tests/lix_test.py: New module for lix unit tests.
+
+    * deflarry.py(lix): Bug fix.
+    
+    * doc/source/intro.rst: Update unit test count.
+
     * deflarry.py(lix): Dimension reduction. Code still buggy.
 
     * deflarry.py(lix): More features added.

@@ -97,9 +97,9 @@ After you have installed ``la``, run the suite of unit tests:
     >>> import la
     >>> la.test()
     <snip>
-    Ran 739 tests in 0.560s
+    Ran 763 tests in 0.560s
     OK
-    <nose.result.TextTestResult run=739 errors=0 failures=0>       
+    <nose.result.TextTestResult run=763 errors=0 failures=0>       
     
 URLs
 ====
