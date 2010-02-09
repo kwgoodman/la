@@ -1447,9 +1447,7 @@ class larry(object):
                                 idx2 = map(y.label[ax].index, idx)
                             except ValueError:
                                 raise ValueError, msg
-                            if len(idx) == 1:       
-                                label.append(idx2)
-                            else:
+                            if len(idx) > 1:       
                                 label.append([y.label[ax][i] for i in idx2])                                                                
                             index2.append(idx2)
                         elif typ == slice: 
@@ -1481,8 +1479,8 @@ class larry(object):
                             index2.append(slar)
                         else:
                             raise IndexError, 'Unsupported indexing operation.'
-                    x = y.x[np.ix_(*index2)]
-                    return larry(x, label)         
+                    x = np.squeeze(y.x[np.ix_(*index2)])
+                    return larry(x, label)       
                 else:
                     raise IndexError, 'Unsupported indexing operation.'                                  
         return getitemlabel(self)

@@ -2,7 +2,9 @@
 
 2010-02-08 Keith
 
-    * deflarry.py(lix):More features added.
+    * deflarry.py(lix): Dimension reduction. Code still buggy.
+
+    * deflarry.py(lix): More features added.
 
     * deflarry.py(lix): Bug fixes in new lix method.
 
