@@ -2,6 +2,9 @@
 
 2010-02-08 Keith
 
+    * deflarry.py(lix), tests/lix_test.py: Now labels do not need to
+      (actually, must not) be wrapped inside a list.
+
     * tests/lix_test.py: New module for lix unit tests.
 
     * deflarry.py(lix): Bug fix.

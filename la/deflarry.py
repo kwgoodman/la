@@ -1392,7 +1392,7 @@ class larry(object):
         Indexing with more than one list of labels will do rectangular
         indexing, not fancy indexing.
         """
-        class getitemlabel(object):
+        class Getitemlabel(object):
             def __init__(self2, self):
                 self2.lar = self
             def __getitem__(self2, index):
@@ -1411,28 +1411,20 @@ class larry(object):
                         index2 = index2[0]
                     return y[index2]               
                 elif typ == slice:
-                    # Examples: lar.lix[['a']:], lar.lix[['a']:['b']],
-                    #           lar.lix[['a']:['b']:2]                  
+                    # Examples: lar.lix['a':], lar.lix['a':'b'],
+                    #           lar.lix['a':'b':2]                  
                     if index.start is None:
-                        start = None
-                    elif type(index.start) != list:
-                        raise ValueError, msg2 % 'start'      
-                    else:
-                        if len(index.start) > 1:
-                            raise ValueError, msg3 % 'start'    
+                        start = None     
+                    else:  
                         try:
-                            start = y.label[0].index(index.start[0])
+                            start = y.label[0].index(index.start)
                         except ValueError:
                             raise ValueError, msg        
                     if index.stop is None: 
-                        stop = None 
-                    elif type(index.stop) != list:
-                        raise ValueError, msg2 % 'stop'                                                  
-                    else: 
-                        if len(index.stop) > 1:
-                            raise ValueError, msg3 % 'stop'                             
+                        stop = None                                                 
+                    else:                            
                         try:
-                            stop = y.label[0].index(index.stop[0])
+                            stop = y.label[0].index(index.stop)
                         except ValueError:
                             raise ValueError, msg
                     index2 = slice(start, stop, index.step)
@@ -1452,25 +1444,17 @@ class larry(object):
                             index2.append(idx2)
                         elif typ == slice: 
                             if idx.start is None: 
-                                start = None
-                            elif type(idx.start) != list:
-                                raise ValueError, msg2 % 'start'                                     
-                            else: 
-                                if len(idx.start) > 1:
-                                    raise ValueError, msg3 % 'start'                          
+                                start = None                                    
+                            else:                    
                                 try:
-                                    start = y.label[ax].index(idx.start[0])
+                                    start = y.label[ax].index(idx.start)
                                 except ValueError:
                                     raise ValueError, msg                
                             if idx.stop is None: 
-                                stop = None 
-                            elif type(idx.stop) != list:
-                                raise ValueError, msg2 % 'stop'                                              
-                            else:
-                                if len(idx.stop) > 1:
-                                    raise ValueError, msg3 % 'start'                                        
+                                stop = None                                            
+                            else:                                      
                                 try:
-                                    stop = y.label[ax].index(idx.stop[0])
+                                    stop = y.label[ax].index(idx.stop)
                                 except ValueError:
                                     raise ValueError, msg
                             s = slice(start, stop, idx.step)
@@ -1485,7 +1469,7 @@ class larry(object):
                     return larry(x, label)       
                 else:
                     raise IndexError, 'Unsupported indexing operation.'                                  
-        return getitemlabel(self)
+        return Getitemlabel(self)
         
     def __setitem__(self, index, value):
         """

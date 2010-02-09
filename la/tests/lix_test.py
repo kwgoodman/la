@@ -22,21 +22,21 @@ si = [
       ((2,3,4),   ([0],           S(N),         S(N))),
       ((2,3,4),   (S(N),          S(N),         S(N))),
 
-      ((2,3,4),   ([0],           [0],          S([1],N))),
-      ((2,3,4),   ([0],           S([1],N),     S(N))),      
-      ((2,3,4),   (S([1],N),      S(N),         S(N))),
+      ((2,3,4),   ([0],           [0],          S(1,N))),
+      ((2,3,4),   ([0],           S(1,N),       S(N))),      
+      ((2,3,4),   (S(1,N),        S(N),         S(N))),
 
-      ((2,3,4),   ([0],           [0],          S(N,[1]))),
-      ((2,3,4),   ([0],           S(N,[1]),     S(N))),      
-      ((2,3,4),   (S(N,[1]),      S(N),         S(N))),
+      ((2,3,4),   ([0],           [0],          S(N,1))),
+      ((2,3,4),   ([0],           S(N,1),       S(N))),      
+      ((2,3,4),   (S(N,1),        S(N),         S(N))),
 
-      ((2,3,4),   ([0],           [0],          S(N,[1],2))),
-      ((2,3,4),   ([0],           S(N,[1],2),   S(N))),      
-      ((2,3,4),   (S(N,[1],2),    S(N),         S(N))),
+      ((2,3,4),   ([0],           [0],          S(N,1,2))),
+      ((2,3,4),   ([0],           S(N,1,2),     S(N))),      
+      ((2,3,4),   (S(N,1,2),      S(N),         S(N))),
 
-      ((2,3,4),   ([0,1],         [0,2],        S(N,[1]))),
-      ((2,3,4),   ([1,0],         S(N,[1]),     S(N))),      
-      ((2,3,4),   (S(N,[1]),      [0],          S(N))),
+      ((2,3,4),   ([0,1],         [0,2],        S(N,1))),
+      ((2,3,4),   ([1,0],         S(N,1),       S(N))),      
+      ((2,3,4),   (S(N,1),        [0],          S(N))),
       
       ((2,3,4),   (S(N),)),      
       ((5,5,5,5), ([0, 1],        [0, 1, 2],    [0, 1, 2, 3])),            
@@ -49,14 +49,7 @@ def test_lix(si=si):
         original = larry(np.arange(np.prod(shape)).reshape(shape))
         aindex = []
         for ax, idx in enumerate(index):
-            if type(idx) == slice:
-                start = idx.start
-                if type(start) == list:
-                    start = start[0]
-                stop = idx.stop
-                if type(stop) == list:
-                    stop = stop[0] 
-                idx = slice(start, stop, idx.step)                       
+            if type(idx) == slice:                     
                 aindex.append(np.arange(*idx.indices(original.shape[ax])))
             else:
                 aindex.append([np.array(i) for i in idx])
