@@ -1375,54 +1375,119 @@ class larry(object):
         """
         Index into a larry using labels or index numbers or both.
         
+        In order to distinguish between labels and indices, label elements
+        must be wrapped in a list while indices (integers) cannot be wrapped
+        in a list. If you wrap indices in a list they will be interpreted as
+        label elements.
+        
+        When indexing with multi-element lists of labels along more than one
+        axes, rectangular indexing is used instead of fancy indexing. Note
+        that the corresponding situation with NumPy arrays would produce
+        fancy indexing.
+        
+        Slicing can be done with labels or indices or a combination of the
+        two. A single element along an axis can be selected with a label or
+        the index value. Several elements along an axis can be selected with
+        a multi-element list of labels. Lists of indices are not allowed.
+        
         Examples
         --------
         
         Let's start by making a larry that we can use to demonstrate idexing
         by label:
         
-        >>> import numpy as np
-        >>> x = np.arange(12).reshape(2,2,3)
-        >>> label = [['a', 'b'], ['hi', 'lo'], [2, 3, 4]]
-        >>> y = larry(x, label)
-        >>> y
+        >>> y = larry(range(6), [['a', 'b', 3, 4, 'e', 'f']])
+
+        We can select the first element of the larry using the index value, 0,
+        or the corresponding label, 'a':
+
+        >>> y.lix[0]
+        0
+        >>> y.lix[['a']]
+        0
+        
+        We can slice with index values or with labels:
+        
+        >>> y.lix[0:]
+        label_0
+            a
+            b
+            3
+            4
+            e
+            f
+        x
+        array([0, 1, 2, 3, 4, 5])
+        
+        >>> y.lix[['a']:]
+        label_0
+            a
+            b
+            3
+            4
+            e
+            f
+        x
+        array([0, 1, 2, 3, 4, 5])
+         
+        >>> y.lix[['a']:['e']]
+        label_0
+            a
+            b
+            3
+            4
+        x
+        array([0, 1, 2, 3])
+        
+        >>> y.lix[['a']:['e']:2]
+        label_0
+            a
+            3
+        x
+        array([0, 2])
+
+        Be careful of the difference between indexing with indices and
+        indexing with labels. In the first exmaple below 4 is an index; in
+        the second example 4 is a label element:
+
+        >>> y.lix[['a']:4]
+        label_0
+            a
+            b
+            3
+            4
+        x
+        array([0, 1, 2, 3])
+        
+        >>> y.lix[['a']:[4]]
+        label_0
+            a
+            b
+            3
+        x
+        array([0, 1, 2])
+        
+        Here's a demonstration of rectangular indexing:
+        
+        >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+        >>> y.lix[['a', 'b'], ['c', 'd']]
         label_0
             a
             b
         label_1
-            hi
-            lo
-        label_2
-            2
-            3
-            4
+            c
+            d
         x
-        array([[[ 0,  1,  2],
-                [ 3,  4,  5]],
+        array([[1, 2],
+               [3, 4]])
+               
+        The rectangular indexing above is very different from how Numpy arrays
+        behave. The corresponding example with a NumyPy array:       
 
-               [[ 6,  7,  8],
-                [ 9, 10, 11]]])        
+        >>> x = np.array([[1, 2], [3, 4]])
+        >>> x[[0, 1], [0, 1]]
+        array([1, 4])       
         
-        
-        Experimental support for indexing by labels.
-        
-        Experimental support for a method larry.lix that can be used for
-        label indexing like this:
-
-        lar.lix[['a']] # row 'a'
-        lar.lix[['a']:] # row 'a' and everything to the right (slicing)
-        lar.lix[:, ['a']] # column 'a'
-        lar.lix[['a'], ['b'], ['c']] # single element from 3d larry
-        lar.lix[['a', 'b', 'c']] # rows 'a', 'b', and 'c'
-        lar.lix[['a']:['b']] # slice
-        lar.lix[['a']:['b']:2] # slice with step
-
-        Only labels and slices are allowed. Inside the function the labels
-        will be converted to indices and then a call will be made to
-        lar[converted_index].
-
-        Indexing with more than one list of labels will do rectangular
-        indexing, not fancy indexing.
         """
         class Getitemlabel(object):
             def __init__(self2, self):

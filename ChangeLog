@@ -2,6 +2,8 @@
 
 2010-02-08 Keith
 
+    * la/deflarry.py(lix): Added a doc string.
+
     * la/deflarry.py, tests/lix_test.py, doc/source/intro.rst: changed lix to
       allow interger indexing as well as labels. Plus refactored.
   
