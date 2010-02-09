@@ -237,6 +237,10 @@ assign values to a subset of a larry.
 
 ------------
 
+.. automethod:: la.larry.lix
+
+------------
+
 .. automethod:: la.larry.__setitem__
 
 ------------

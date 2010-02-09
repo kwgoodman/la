@@ -266,8 +266,18 @@ There are more larry methods that deal with missing values. See
 Indexing
 --------
 
-In most cases, indexing into a larry is similar to indexing into a Numpy
-array:
+There are several ways to access subsets of a larry:
+
+* :ref:`regular_indexing`
+* :ref:`label_indexing`
+* :ref:`misc_indexing`
+
+.. _regular_indexing:
+
+Regular indexing
+""""""""""""""""
+
+Indexing into a larry is similar to indexing into a Numpy array:
 ::
     >>> y = larry([[1.0, 2.0], [3.0, 4.0]], [['a', 'b'], [11, 13]])
     >>> y[:,0]
@@ -290,11 +300,140 @@ The following types of indexing are not currently supported by larry (but they
 are supported when doing an assignment by indexing, see :ref:`assignment`):
 
 * Fancy indexing
-* Indexing with Ellipsis    
-    
-There are several ways to index by label name. For example, let's pull row
-'a' (the first row) from the larry *y*. We can use **labelindex**:
+* Indexing with Ellipsis 
+
+.. _label_indexing:
+
+Indexing by labels
+""""""""""""""""""
+
+You can also index into a larry using labels or index numbers or both.
+
+Let's start by making a larry that we can use to demonstrate idexing
+by label:
 ::
+    >>> y = larry(range(6), [['a', 'b', 3, 4, 'e', 'f']])
+
+We can select the first element of the larry using the index value, 0,
+or the corresponding label, 'a':
+::
+    >>> y.lix[0]
+    0
+    >>> y.lix[['a']]
+    0
+    
+In order to distinguish between labels and indices, label elements
+must be wrapped in a list while indices (integers) cannot be wrapped
+in a list. If you wrap indices in a list they will be interpreted as
+label elements.
+
+Slicing can be done with labels or indices or a combination of the
+two. A single element along an axis can be selected with a label or
+the index value. Several elements along an axis can be selected with
+a multi-element list of labels. Lists of indices are not allowed.    
+
+We can slice with index values or with labels:
+::
+    >>> y.lix[0:]
+    label_0
+        a
+        b
+        3
+        4
+        e
+        f
+    x
+    array([0, 1, 2, 3, 4, 5])
+
+    >>> y.lix[['a']:]
+    label_0
+        a
+        b
+        3
+        4
+        e
+        f
+    x
+    array([0, 1, 2, 3, 4, 5])
+        
+    >>> y.lix[['a']:['e']]
+    label_0
+        a
+        b
+        3
+        4
+    x
+    array([0, 1, 2, 3])
+
+    >>> y.lix[['a']:['e']:2]
+    label_0
+        a
+        3
+    x
+    array([0, 2])   
+
+Be careful of the difference between indexing with indices and
+indexing with labels. In the first exmaple below 4 is an index; in
+the second example 4 is a label element:
+::
+    >>> y.lix[['a']:4]
+    label_0
+        a
+        b
+        3
+        4
+    x
+    array([0, 1, 2, 3])
+
+    >>> y.lix[['a']:[4]]
+    label_0
+        a
+        b
+        3
+    x
+    array([0, 1, 2])
+
+.. warning::
+
+    When indexing with multi-element lists of labels along more than one
+    axes, rectangular indexing is used instead of fancy indexing. Note
+    that the corresponding situation with NumPy arrays would produce
+    fancy indexing.
+
+Here's a demonstration of rectangular indexing:
+::
+    >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+    >>> y.lix[['a', 'b'], ['c', 'd']]
+    label_0
+        a
+        b
+    label_1
+        c
+        d
+    x
+    array([[1, 2],
+           [3, 4]])
+        
+The rectangular indexing above is very different from how Numpy arrays
+behave. The corresponding example with a NumyPy array:       
+::
+    >>> x = np.array([[1, 2], [3, 4]])
+    >>> x[[0, 1], [0, 1]]
+    array([1, 4])       
+
+.. _misc_indexing:
+
+Other indexing by labels
+""""""""""""""""""""""""   
+    
+There are several other, miscellaneous ways to index by label name.
+
+Let's look at several different ways to pull row 'a' (the first row) from a
+larry *y*.
+
+We can use **labelindex**:
+::
+    >>> y = larry([[1.0, 2.0], [3.0, 4.0]], [['a', 'b'], [11, 13]])
     >>> idx = y.labelindex('a', axis=0)
     >>> y[idx,:]
     label_0

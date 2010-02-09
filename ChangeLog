@@ -1,5 +1,8 @@
 2010-02-09 Keith
 
+    * doc/source/work.rst, doc/source/reference.rst, doc/source/archive.rst:
+      Doc work for lix.
+  
     * la/deflarry.py(lix), tests/lix_test.py, la/deflarry.py(slicemaker), 
       la/deflarry.py(labels2indices), doc/source/intro.rst: Added support for
       indexing by labels.

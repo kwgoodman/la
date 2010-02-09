@@ -11,6 +11,8 @@ such as **save** and **load** and using the dictionary-like interface of the
 `HDF5 <http://www.hdfgroup.org/>`_ 1.8 format and require
 `h5py <http://h5py.alfven.org>`_.
 
+.. contents::
+
 
 .. _iofunction:
 
@@ -278,7 +280,8 @@ In this section we will discuss two limitations:
 * In order to archive a larry, its data and labels must be of a type supported
   by HDF5.   
 
-**Freespace**
+Freespace
+"""""""""
 
 HDF5 does not keep track of the freespace in an archive across opening and
 closing of the archive. Therefore, after opening, closing and deleting larrys
@@ -289,7 +292,8 @@ You can use the utility provided by HDF5 to repack the archive or you can use
 the repack method (see :ref:`ioclass`) or function (see :ref:`iofunction`) in
 the la package.
     
-**Data types**  
+Data types 
+""""""""""
 
 A larry can have labels of mixed type, for example strings and numbers.
 However, when archiving larrys in HDF5 format the labels are
