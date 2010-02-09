@@ -1,4 +1,13 @@
+2010-02-09 Keith
+
+    * la/deflarry.py(lix), tests/lix_test.py, la/deflarry.py(slicemaker), 
+      la/deflarry.py(labels2indices), doc/source/intro.rst: Added support for
+      indexing by labels.
+
 2010-02-08 Keith
+
+    * deflarry.py(__getitem__): Forgot to remove one block of index by string
+      code in the previous commit.
 
     * deflarry.py(__getitem__), tests/string_indexing_test.py,
       doc/source/intro.rst, util/misc.py(str2labelindex): Removed ability to

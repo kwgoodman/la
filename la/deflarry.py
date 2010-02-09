@@ -1369,6 +1369,174 @@ class larry(object):
         if np.isscalar(x):
             return x                                
         return larry(x, label)
+
+    @property    
+    def lix(self):
+        """
+        Index into a larry using labels or index numbers or both.
+        
+        In order to distinguish between labels and indices, label elements
+        must be wrapped in a list while indices (integers) cannot be wrapped
+        in a list. If you wrap indices in a list they will be interpreted as
+        label elements.
+        
+        When indexing with multi-element lists of labels along more than one
+        axes, rectangular indexing is used instead of fancy indexing. Note
+        that the corresponding situation with NumPy arrays would produce
+        fancy indexing.
+        
+        Slicing can be done with labels or indices or a combination of the
+        two. A single element along an axis can be selected with a label or
+        the index value. Several elements along an axis can be selected with
+        a multi-element list of labels. Lists of indices are not allowed.
+        
+        Examples
+        --------
+        
+        Let's start by making a larry that we can use to demonstrate idexing
+        by label:
+        
+        >>> y = larry(range(6), [['a', 'b', 3, 4, 'e', 'f']])
+
+        We can select the first element of the larry using the index value, 0,
+        or the corresponding label, 'a':
+
+        >>> y.lix[0]
+        0
+        >>> y.lix[['a']]
+        0
+        
+        We can slice with index values or with labels:
+        
+        >>> y.lix[0:]
+        label_0
+            a
+            b
+            3
+            4
+            e
+            f
+        x
+        array([0, 1, 2, 3, 4, 5])
+        
+        >>> y.lix[['a']:]
+        label_0
+            a
+            b
+            3
+            4
+            e
+            f
+        x
+        array([0, 1, 2, 3, 4, 5])
+         
+        >>> y.lix[['a']:['e']]
+        label_0
+            a
+            b
+            3
+            4
+        x
+        array([0, 1, 2, 3])
+        
+        >>> y.lix[['a']:['e']:2]
+        label_0
+            a
+            3
+        x
+        array([0, 2])
+
+        Be careful of the difference between indexing with indices and
+        indexing with labels. In the first exmaple below 4 is an index; in
+        the second example 4 is a label element:
+
+        >>> y.lix[['a']:4]
+        label_0
+            a
+            b
+            3
+            4
+        x
+        array([0, 1, 2, 3])
+        
+        >>> y.lix[['a']:[4]]
+        label_0
+            a
+            b
+            3
+        x
+        array([0, 1, 2])
+        
+        Here's a demonstration of rectangular indexing:
+        
+        >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+        >>> y.lix[['a', 'b'], ['c', 'd']]
+        label_0
+            a
+            b
+        label_1
+            c
+            d
+        x
+        array([[1, 2],
+               [3, 4]])
+               
+        The rectangular indexing above is very different from how Numpy arrays
+        behave. The corresponding example with a NumyPy array:       
+
+        >>> x = np.array([[1, 2], [3, 4]])
+        >>> x[[0, 1], [0, 1]]
+        array([1, 4])       
+        
+        """
+        class Getitemlabel(object):
+            def __init__(self2, self):
+                self2.lar = self
+            def __getitem__(self2, index):
+                y = self2.lar
+                typ = type(index)
+                if typ == list:
+                    # Example: lar.lix[['a', 'b', 'c']]
+                    index2 = labels2indices(y.label[0], index)
+                    if len(index) == 1:       
+                        index2 = index2[0]
+                    return y[index2]               
+                elif typ == slice:
+                    # Examples: lar.lix[['a']:], lar.lix[['a']:['b']],
+                    #           lar.lix[['a']:['b']:2], lar.lix[2:['b']] 
+                    return y[slicemaker(index, y.labelindex, 0)]                                                           
+                elif typ == tuple:
+                    index2 = []
+                    label = []
+                    for ax, idx in enumerate(index):
+                        typ = type(idx)
+                        if typ == list:
+                            idx2 = labels2indices(y.label[ax], idx)
+                            if len(idx) > 1:      
+                                label.append(idx)                                                                
+                            index2.append(idx2)
+                        elif typ == slice: 
+                            s = slicemaker(idx, y.labelindex, ax)
+                            slar = range(*s.indices(y.shape[ax]))
+                            lab = y.label[ax][s]
+                            if len(lab) > 1:
+                                label.append(lab)        
+                            index2.append(slar)
+                        elif isscalar(idx):
+                            index2.append([idx])    
+                        else:
+                            raise IndexError, 'Unsupported indexing operation.'
+                    x = np.squeeze(y.x[np.ix_(*index2)])
+                    if x.ndim == 0:
+                        return x[()]
+                    else:    
+                        return larry(x, label)                       
+                elif isscalar(index):
+                    # Example: lar.lix[0]
+                    return y[index]             
+                else:
+                    raise IndexError, 'Unsupported indexing operation.'                                  
+        return Getitemlabel(self)                               
         
     def __setitem__(self, index, value):
         """
@@ -3333,4 +3501,41 @@ class larry(object):
         x.append('x\n')
         x.append(repr(self.x))
         return ''.join(x)        
+
+
+# Label indexing support functions for the lix method ------------------------
+    
+def slicemaker(index, labelindex, axis): 
+    "Convert a slice that may contain labels to a slice with indices."
+    msg1 = 'The %s element of a slice must be a list or a scalar.'
+    msg2 = 'The %s element of the slice contains more than one item.'              
+    if index.start is None:
+        start = None
+    elif type(index.start) is list:
+        if len(index.start) > 1:
+            raise ValueError, msg2 % 'start'    
+        start = labelindex(index.start[0], axis=axis)
+    elif isscalar(index.start):
+        start = index.start
+    else:
+        raise ValueError, msg1 % 'start'    
+    if index.stop is None:
+        stop = None
+    elif type(index.stop) is list:
+        if len(index.stop) > 1:
+            raise ValueError, msg2 % 'start'    
+        stop = labelindex(index.stop[0], axis=axis)
+    elif isscalar(index.stop):
+        stop = index.stop                                                  
+    else:
+        raise ValueError, msg1 % 'stop'
+    return slice(start, stop, index.step)        
+
+def labels2indices(label, labels):
+    "Convert list of labels to indices"
+    try:
+        indices = map(label.index, labels)
+    except ValueError:
+        raise ValueError, 'Could not map label to index value.'
+    return indices  
         
