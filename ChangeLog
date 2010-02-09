@@ -2,6 +2,9 @@
 
 2010-02-08 Keith
 
+    * la/deflarry.py, tests/lix_test.py, doc/source/intro.rst: changed lix to
+      allow interger indexing as well as labels. Plus refactored.
+  
     * deflarry.py(lix), tests/lix_test.py: Bug fix. array(0), for example,
       was returned instead 0.
 
