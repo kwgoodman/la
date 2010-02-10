@@ -1,7 +1,7 @@
 2010-02-10 Keith
 
     * deflarry.py(flipaxis), test/deflarry_test.py, source/reference.rst, 
-      RELEASE, source/intro.rst: New larry methos: flipaxis.
+      RELEASE, source/intro.rst: New larry method: flipaxis.
 
     * doc/source/intro.rst: Doc tweak.
 
