@@ -8,14 +8,18 @@ la 0.2 (avocado)
 
 *Release date: Not yet released, in development*
 
-New functions and methods
--------------------------
-- larry.lix : Index into a larry using labels or index numbers or both
-- larry.swapaxes : Swap the two specified axes
-- larry.sortaxis : Sort data (and label) according to label along specified axis.
-- larry.tocsv : Save larry to a csv file.
-- larry.fromcsv : Load a larry from a csv file.
-- func.panel : Convert a 3d larry of shape (n, m, k) to a 2d larry of shape (m*k, n).
+New larry methods
+-----------------
+- lix : Index into a larry using labels or index numbers or both
+- swapaxes : Swap the two specified axes
+- sortaxis : Sort data (and label) according to label along specified axis.
+- flipaxis : Reverse the order of the elements along the specified axis.
+- tocsv : Save larry to a csv file.
+- fromcsv : Load a larry from a csv file.
+
+New function
+------------
+- panel : Convert a 3d larry of shape (n, m, k) to a 2d larry of shape (m*k, n).
 
 Enhancements
 ------------

@@ -2741,8 +2741,83 @@ class larry(object):
         for ax in axes:        
             index[ax] = sorted(self.label[ax], reverse=reverse)
         return self.lix[tuple(index)]
-                           
+        
+    def flipaxis(self, axis=None, copy=True):
+        """
+        Reverse the order of the elements along the specified axis.
+        
+        Parameters
+        ----------
+        axis : {int, None}, optional
+            The axis to flip. The default (None) is to flip all axes.
+        copy : {True, False}, optional
+            If True (default) return a copy; if False return a view.
+            
+        Returns
+        -------
+        y : larry
+            A copy or view (depending on the value of `copy`) of the larry
+            that has been flipped.
+            
+        Examples
+        --------
+        Create a larry:
+        
+        >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+        >>> y
+        label_0
+            a
+            b
+        label_1
+            c
+            d
+        x
+        array([[1, 2],
+               [3, 4]])
+               
+        Flip all axes:       
 
+        >>> y.flipaxis()
+        label_0
+            b
+            a
+        label_1
+            d
+            c
+        x
+        array([[4, 3],
+               [2, 1]])
+               
+        Flip axis 0 only:       
+
+        >>> y.flipaxis(axis=0)
+        label_0
+            b
+            a
+        label_1
+            c
+            d
+        x
+        array([[3, 4],
+               [1, 2]])            
+        
+        """
+        if copy:
+            y = self.copy()
+        else:
+            y = self
+        if axis is None:
+            axes = range(self.ndim)
+        else:
+            axes = [axis]
+        flip = slice(None, None, -1)    
+        for ax in axes:                
+            y.label[ax] = y.label[ax][flip]    
+            index = [slice(None)] * y.ndim
+            index[ax] = flip
+            y.x = y.x[index] 
+        return y               
+        
     # Shuffle ----------------------------------------------------------------
     
     def shuffle(self, axis=0):
