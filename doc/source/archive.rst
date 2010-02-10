@@ -85,7 +85,9 @@ reclaim the freespace is to repack the archive:
     >>> la.repack(f)
     
 To see how much space the archive takes on disk and to see how much freespace
-is in the archive see :ref:`ioclass`.  
+is in the archive see :ref:`ioclass`.
+
+For further information on the archive functions see :ref:`archive_functions`.  
      
 .. _ioclass:
     
@@ -266,7 +268,9 @@ larrys can be archived in a hierarchical structure:
 What filename is associated with the archive?
 ::
     >>> io.filename
-    '/tmp/data.hdf5'               
+    '/tmp/data.hdf5'
+    
+For further information on the IO class see :ref:`io_class_reference`.                   
 
 
 Limitations
@@ -347,3 +351,52 @@ attribute called 'larry' and assigned the value True. Inside the group are
 several HDF5 Datasets. For a 2d larry, for example, there are three datasets:
 one to hold the data (named 'x') and two to hold the labels (named '0' and
 '1'). In general, for a nd larry there are n+1 datasets.
+
+
+Reference
+=========
+
+This section contains the reference guide to the archive functions, 
+:ref:`archive_functions`, and the IO class methods, :ref:`io_class_reference`.
+
+
+.. _archive_functions:
+
+Archive function reference
+""""""""""""""""""""""""""
+
+------------
+
+.. automethod:: la.io.save
+
+------------
+
+.. automethod:: la.io.load
+
+------------
+
+.. automethod:: la.io.delete
+
+------------
+
+.. automethod:: la.io.repack
+
+------------
+
+.. automethod:: la.io.is_archived_larry
+
+------------
+
+.. automethod:: la.io.archive_directory
+
+
+.. _io_class_reference:
+
+IO class reference
+""""""""""""""""""
+
+.. autoclass:: la.IO
+   :members:  __init__, keys, values, has_key, items, iterkeys, itervalues,
+              iteritems, merge, space, freespace, repack, clear
+
+

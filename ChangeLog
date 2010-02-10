@@ -1,3 +1,7 @@
+2010-02-10 Keith
+
+    * doc/source/archive.rst, deflarry.py, io.py: Doc work.
+
 2010-02-09 Keith
 
     * deflarry.py(tocsv), deflarry.py(fromcsv), tests/deflarry_nose_test.py,

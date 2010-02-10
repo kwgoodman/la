@@ -3442,6 +3442,9 @@ class larry(object):
         `fromcsv`) will convert it to an integer. You can use the `maplabel`
         method to convert it back to an integer.
         
+        As you can see from above, the tocsv and fromcvs methods are fragile.
+        A more robust archiving solution is given by the IO class.        
+        
         The format of the csv file is:
         ::
             label0, label1, ..., labelN, value
@@ -3458,7 +3461,9 @@ class larry(object):
 
         See Also
         --------
-        la.larry.fromcsv : Load a larry from a csv file. 
+        la.larry.fromcsv : Load a larry from a csv file.
+        la.IO: Save and load larrys in HDF5 format using a dictionary-like
+               interface.         
         la.larry.totuples : Convert to a flattened list of tuples.
         la.larry.tolist : Convert to a flattened list.
         la.larry.todict : Convert to a dictionary.
@@ -3498,6 +3503,9 @@ class larry(object):
         element per axis can be missing; the missing label element will be
         replace with the empty string ''.
         
+        As you can see from above, the tocsv and fromcvs methods are fragile.
+        A more robust archiving solution is given by the IO class.
+        
         The format of the csv file is:
         ::
             label0, label1, ..., labelN, value
@@ -3520,6 +3528,8 @@ class larry(object):
         See Also
         --------
         la.larry.tocsv : Save larry to a csv file.
+        la.IO: Save and load larrys in HDF5 format using a dictionary-like
+               interface.
         la.larry.fromtuples : Convert a list of tuples to a larry.
         la.larry.fromlist : Convert a flattened list to a larry.
         la.larry.fromdict : Convert a dictionary to a larry.      

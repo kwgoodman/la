@@ -10,6 +10,7 @@ from la import larry
 
         
 class IO(object):
+    "Save and load larrys in HDF5 format using a dictionary-like interface."
     
     def __init__(self, filename, max_freespace=np.inf):
         """
@@ -63,8 +64,8 @@ class IO(object):
             
         See Also
         --------
-        save : Save larrys without a dictionary-like interface.
-        load : Load larrys without a dictionary-like interface.  
+        la.io.save : Save larrys without a dictionary-like interface.
+        la.io.load : Load larrys without a dictionary-like interface.  
             
         Notes
         -----
@@ -226,13 +227,13 @@ class IO(object):
     
     @property    
     def space(self):
-        "How many bytes does the archive use?"
+        "The number of bytes used by the archive."
         self.f.flush()
         return self.f.fid.get_filesize()
 
     @property         
     def freespace(self):
-        "How many bytes of freespace are in the archive?"
+        "The number of bytes of freespace in the archive."
         self.f.flush()
         global size
         size = 0
@@ -244,6 +245,7 @@ class IO(object):
         return self.space - size
         
     def repack(self):
+        "Repack archive to remove freespace."
         self.f = repack(self.f)
         
     def _repack_conditional(self):
@@ -361,8 +363,8 @@ def save(file, lar, key):
         
     See Also
     --------
-    load : Load larrys without a dictionary-like interface.
-    IO : A dictionary-like interface to the archive.    
+    la.io.load : Load larrys without a dictionary-like interface.
+    la.IO : A dictionary-like interface to the archive.    
         
     Examples
     --------
@@ -427,8 +429,8 @@ def load(file, key):
         
     See Also
     --------
-    save : Save larrys without a dictionary-like interface.
-    IO : A dictionary-like interface to the archive.  
+    la.io.save : Save larrys without a dictionary-like interface.
+    la.IO : A dictionary-like interface to the archive.  
         
     Examples
     --------
@@ -484,9 +486,9 @@ def delete(file, key):
         
     See Also
     --------
-    save : Save larrys without a dictionary-like interface.
-    load : Load larrys without a dictionary-like interface.
-    IO : A dictionary-like interface to the archive.  
+    la.io.save : Save larrys without a dictionary-like interface.
+    la.io.load : Load larrys without a dictionary-like interface.
+    la.IO : A dictionary-like interface to the archive.  
         
     Examples
     --------
