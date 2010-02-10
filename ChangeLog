@@ -1,5 +1,9 @@
 2010-02-09 Keith
 
+    * deflarry.py(tocsv), deflarry.py(fromcsv), tests/deflarry_nose_test.py,
+      doc/source/intro.rst, doc/source/reference.rst, doc/source/work.rst,
+      RELEASE: Added two new methods: tocsv and fromcsv.
+
     * doc/source/work.rst, doc/source/reference.rst, doc/source/archive.rst:
       Doc work for lix.
   

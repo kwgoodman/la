@@ -2,6 +2,7 @@
 
 import datetime
 from copy import deepcopy
+import csv
 
 import numpy as np
    
@@ -3200,9 +3201,10 @@ class larry(object):
         
         See Also
         --------
-        la.fromtuples : Convert a list of tuples to a larry.
+        la.larry.fromtuples : Convert a list of tuples to a larry.
         la.larry.tolist : Convert to a flattened list.
         la.larry.todict : Convert to a dictionary.
+        la.larry.tocsv : Save larry to a csv file.
         
         Examples
         --------
@@ -3245,6 +3247,7 @@ class larry(object):
         la.larry.totuples : Convert to a flattened list of tuples.
         la.larry.fromlist : Convert a list of tuples to a larry.
         la.larry.fromdict : Convert a dictionary to a larry.
+        la.larry.fromcsv : Load a larry from a csv file. 
 
         Examples
         --------
@@ -3297,6 +3300,7 @@ class larry(object):
         la.larry.fromlist : Convert a flattened list to a larry.
         la.larry.totuples : Convert to a flattened list of tuples.
         la.larry.todict : Convert to a dictionary.
+        la.larry.tocsv : Save larry to a csv file.
         
         Examples
         --------
@@ -3315,12 +3319,12 @@ class larry(object):
         
         The input data, if there are N dimensions and M data points, should have
         this form:
-        
-        [[value_1,  value_2,  ..., value_M],
-        [(label0_1, label1_1, ..., labelN_1),
-        (label0_2, label1_2, ..., labelN_2),
-        ...
-        (label0_M, label1_M, ..., labelN_M)]]    
+        ::
+            [[value_1,  value_2,  ..., value_M],
+            [(label0_1, label1_1, ..., labelN_1),
+            (label0_2, label1_2, ..., labelN_2),
+            ...
+            (label0_M, label1_M, ..., labelN_M)]]    
         
         Parameters
         ----------
@@ -3337,7 +3341,8 @@ class larry(object):
         --------
         la.larry.tolist : Convert to a flattened list.
         la.larry.fromtuples : Convert a list of tuples to a larry.
-        la.larry.fromdict : Convert a dictionary to a larry.  
+        la.larry.fromdict : Convert a dictionary to a larry.
+        la.larry.fromcsv : Load a larry from a csv file.   
 
         Examples
         --------
@@ -3368,6 +3373,7 @@ class larry(object):
         --------
         la.larry.totuples : Convert to a flattened list of tuples.
         la.larry.tolist : Convert to a flattened list.
+        la.larry.tocsv : Save larry to a csv file.
         
         Examples
         --------
@@ -3384,19 +3390,19 @@ class larry(object):
         """
         Convert a dictionary to a larry.
         
-        The input data, if there are N dimensions and M data points, should have
-        this form:
-        
-        {(label0_1, label1_1, ..., labelN_1): value_1,
-        (label0_2, label1_2, ..., labelN_2): value_2,
-        ...
-        (label0_M, label1_M, ..., labelN_M): value_M}   
+        The input data, if there are N dimensions and M data points, should
+        have this form:
+        ::
+            {(label0_1, label1_1, ..., labelN_1): value_1,
+            (label0_2, label1_2, ..., labelN_2): value_2,
+            ...
+            (label0_M, label1_M, ..., labelN_M): value_M}   
         
         Parameters
         ----------
         data : dict
-            The input must be a dictionary such as that returned by larry.todict
-            See the example below. 
+            The input must be a dictionary such as that returned by
+            larry.todict See the example below. 
             
         Returns
         -------
@@ -3408,6 +3414,7 @@ class larry(object):
         la.larry.todict : Convert to a dictionary. 
         la.larry.fromtuples : Convert a list of tuples to a larry.
         la.larry.fromlist : Convert a list of tuples to a larry.
+        la.larry.fromcsv : Load a larry from a csv file. 
 
         Examples
         --------
@@ -3424,7 +3431,118 @@ class larry(object):
                [ 3.,  4.]])
                
         """ 
-        return larry.fromlist([data.values(), data.keys()])          
+        return larry.fromlist([data.values(), data.keys()])
+        
+    def tocsv(self, filename, delimiter=','):
+        """
+        Save larry to a csv file.
+        
+        The type information of the labels will be lost. So if a label element
+        is, for example, an integer, a round trip (`tocsv` followed by
+        `fromcsv`) will convert it to an integer. You can use the `maplabel`
+        method to convert it back to an integer.
+        
+        The format of the csv file is:
+        ::
+            label0, label1, ..., labelN, value
+            label0, label1, ..., labelN, value
+            label0, label1, ..., labelN, value
+        
+        Parameters
+        ----------
+        filname : str
+            The filename of the csv file.
+        delimiter : str
+            The delimiter used to separate the labels elements from eachother
+            and from the values.
+
+        See Also
+        --------
+        la.larry.fromcsv : Load a larry from a csv file. 
+        la.larry.totuples : Convert to a flattened list of tuples.
+        la.larry.tolist : Convert to a flattened list.
+        la.larry.todict : Convert to a dictionary.
+            
+        Examples
+        --------        
+        >>> y = larry([1, 2, 3], [['a', 'b', 'c']])
+        >>> y.tocsv('/tmp/lar.csv')
+        >>> larry.fromcsv('/tmp/lar.csv')
+        label_0
+            a
+            b
+            c
+        x
+        array([ 1.,  2.,  3.])
+        
+        """
+        fid = open(filename, 'w')
+        writer = csv.writer(fid, delimiter=delimiter)
+        writer.writerows(self.totuples())
+        fid.close()                   
+
+    @staticmethod
+    def fromcsv(filename, delimiter=',', skiprows=0):
+        """
+        Load a larry from a csv file.
+        
+        The type information of the labels is not contained in a csv file.
+        Therefore, a label element that was, for example, an integer, will
+        be converted to a string after a round trip (`tocsv` followed by
+        `fromcsv`). You can use the `maplabel` methods to convert it back to
+        an integer.
+        
+        Integer data values will be converted to floats.
+        
+        If a data value is missing, a ValueError will be raised. One label
+        element per axis can be missing; the missing label element will be
+        replace with the empty string ''.
+        
+        The format of the csv file is:
+        ::
+            label0, label1, ..., labelN, value
+            label0, label1, ..., labelN, value
+            label0, label1, ..., labelN, value
+        
+        Parameters
+        ----------
+        filname : str
+            The filename of the csv file.
+        delimiter : str
+            The delimiter used to separate the labels elements from eachother
+            and from the values.
+            
+        Raises
+        ------
+        ValueError
+            If a data value is missing in the csv file.
+            
+        See Also
+        --------
+        la.larry.tocsv : Save larry to a csv file.
+        la.larry.fromtuples : Convert a list of tuples to a larry.
+        la.larry.fromlist : Convert a flattened list to a larry.
+        la.larry.fromdict : Convert a dictionary to a larry.      
+            
+        Examples
+        --------        
+        >>> y = larry([1, 2, 3], [['a', 'b', 'c']])
+        >>> y.tocsv('/tmp/lar.csv')
+        >>> larry.fromcsv('/tmp/lar.csv')
+        label_0
+            a
+            b
+            c
+        x
+        array([ 1.,  2.,  3.])
+        
+        """
+        fid = open(filename, 'r')
+        reader = csv.reader(fid, delimiter=delimiter)
+        [reader.next() for i in range(skiprows)]
+        data = [row for row in reader]
+        fid.close()
+        return larry.fromtuples(data) 
                
     # Copy -------------------------------------------------------------------        
           

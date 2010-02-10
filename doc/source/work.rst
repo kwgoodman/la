@@ -94,6 +94,7 @@ The following functions can also be used to create larrys:
 * **fromlist**
 * **fromtuples**
 * **fromdict**
+* **fromcsv**
 
 Here's how to create a larry using **fromlist**:
 ::
@@ -149,7 +150,19 @@ Here are examples of **fromtuples** and **fromdict**:
         d
     x
     array([[ 1.,  2.],
-           [ 3.,  4.]])         
+           [ 3.,  4.]])
+           
+And an example of creating a larry from a csv file:
+::
+    >>> y = larry([1, 2, 3], [['a', 'b', 'c']])
+    >>> y.tocsv('/tmp/lar.csv')
+    >>> larry.fromcsv('/tmp/lar.csv')
+    label_0
+        a
+        b
+        c
+    x
+    array([ 1.,  2.,  3.])                    
 
 See :ref:`conversion` for a discussion of the corresponding methods,
 **tolist, totuples, todict**. 
@@ -777,6 +790,7 @@ conversion methods:
 * **totuples**
 * **tolist**
 * **todict**
+* **tocsv**
 
 Some examples:
 ::
@@ -790,9 +804,11 @@ Some examples:
 
     >>> y.todict()
     {('r0', 'c1'): 2, ('r1', 'c1'): 4, ('r0', 'c0'): 1, ('r1', 'c0'): 3}
+    
+    >>> y.tocsv('/tmp/lar.csv')   
 
-The corresponding methods **fromtuples, fromlist, and fromdict** are discused
-in :ref:`creation`.
+The corresponding methods **fromtuples, fromlist, fromdict, and fromcsv** are
+discused in :ref:`creation`.
 
 Archiving
 ---------

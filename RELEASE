@@ -15,6 +15,7 @@ New features
 - Added nd ability to the larry methods that could only handle 2d input
 - swapaxes method
 - A function, panel, to make panel data
+- Added tocsv and fromcsv methods
 - Extend group methods to allow axis argument and 2d groups
 
 Unit testing
