@@ -443,6 +443,10 @@ aligns *y1* to *y2*; the second example aligns *y2* to *y1*:
 
 .. automethod:: la.larry.lag
 
+------------
+
+.. automethod:: la.larry.sortaxis
+
 
 Shuffle
 -------

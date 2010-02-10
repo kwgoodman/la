@@ -1,5 +1,8 @@
 2010-02-10 Keith
 
+    * deflarry.py(sortaxis), tests/deflarry_test.py, source/reference.rst, 
+      RELEASE. doc/source/intro.rst: Added a new larry method: sortaxis.
+
     * doc/source/archive.rst, deflarry.py, io.py: Doc work.
 
 2010-02-09 Keith

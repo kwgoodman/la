@@ -3143,7 +3143,7 @@ class Test_alignment(unittest.TestCase):
         self.l2.label[0] = [2,1,0]
         self.l2.label[1] = [1,0]
         self.x3 = np.random.rand(2,3,4)                
-        self.l3 = larry(self.x3)                                                       
+        self.l3 = larry(self.x3)                                                      
 
     def test_morph_1(self):
         "larry.morph_1"
@@ -3331,6 +3331,34 @@ class Test_alignment(unittest.TestCase):
         self.assert_(f.label == label, 'labels are wrong')
         self.assert_((f.x == y.x).all(), 'data are wrong')
         
+    def test_sortaxis_1(self):
+        "larry.sortaxis_1"
+        original = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']]) 
+        actual = original.sortaxis()
+        desired = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+        assert_larry_equal(actual, desired, 'sortaxis_1', original=original)
+             
+    def test_sortaxis_2(self):
+        "larry.sortaxis_2"
+        original = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']]) 
+        actual = original.sortaxis(reverse=True)
+        desired = original.copy()
+        assert_larry_equal(actual, desired, 'sortaxis_1', original=original)
+
+    def test_sortaxis_3(self):
+        "larry.sortaxis_3"
+        original = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']]) 
+        actual = original.sortaxis(axis=0)
+        desired = larry([[2, 1], [4, 3]], [['a', 'b'], ['d', 'c']])
+        assert_larry_equal(actual, desired, 'sortaxis_1', original=original)
+
+    def test_sortaxis_4(self):
+        "larry.sortaxis_4"
+        original = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']]) 
+        actual = original.sortaxis(axis=1)
+        desired = larry([[3, 4], [1, 2]], [['b', 'a'], ['c', 'd']]) 
+        assert_larry_equal(actual, desired, 'sortaxis_1', original=original)
+                
 class Test_random(unittest.TestCase):
     "Test randomizing functions of the larry class"
 

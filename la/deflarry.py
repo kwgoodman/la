@@ -2656,7 +2656,92 @@ class larry(object):
         index = [slice(None)] * self.ndim
         index[axis] = slice(0,-nlag)            
         y.x = y.x[index]
-        return y           
+        return y
+    
+    def sortaxis(self, axis=None, reverse=False):
+        """
+        Sort data (and label) according to label along specified axis.
+        
+        Parameters
+        ----------
+        axis : {int, None}, optional
+            The axis to sort along. The default (None) is to sort all axes.
+        reverse : {True, False}, optional
+            Sort in descending order (True) or ascending order (False). The
+            default is to sort in ascending order. 
+            
+        Returns
+        -------
+        y : larry
+            A sorted copy of the larry.
+            
+        Examples
+        -------- 
+        Let's make a larry that we can use to demonstrate the `sortaxis`
+        method: 
+                 
+        >>> y = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']])
+        >>> y
+        label_0
+            b
+            a
+        label_1
+            d
+            c
+        x
+        array([[4, 3],
+               [2, 1]])
+
+        By default all axes are sorted:
+
+        >>> y.sortaxis()
+        label_0
+            a
+            b
+        label_1
+            c
+            d
+        x
+        array([[1, 2],
+               [3, 4]])
+        
+        You can also sort in reverse order (although in this particular
+        example the larry is already in reverse order):
+        
+        >>> y.sortaxis(reverse=True)
+        label_0
+            b
+            a
+        label_1
+            d
+            c
+        x
+        array([[4, 3],
+               [2, 1]])
+
+        And you can sort along a single axis:
+
+        >>> y.sortaxis(axis=0)
+        label_0
+            a
+            b
+        label_1
+            d
+            c
+        x
+        array([[2, 1],
+               [4, 3]])
+               
+        """
+        if axis is None:
+            axes = range(self.ndim)
+        else:
+            axes = [axis]
+        index = [slice(None)] * self.ndim    
+        for ax in axes:        
+            index[ax] = sorted(self.label[ax], reverse=reverse)
+        return self.lix[tuple(index)]
+                           
 
     # Shuffle ----------------------------------------------------------------
     
