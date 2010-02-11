@@ -1495,6 +1495,12 @@ class larry(object):
                 self2.lar = self
             def __getitem__(self2, index):
                 y = self2.lar
+                if y.shape == (0,):
+                    return self
+                elif 0 in y.shape:
+                    msg = 'lix does not support shapes that contain 0 '
+                    msg += 'such as (0,) and (2, 0 ,3).'
+                    raise ValueError, msg
                 typ = type(index)
                 if typ == list:
                     # Example: lar.lix[['a', 'b', 'c']]
@@ -2737,9 +2743,11 @@ class larry(object):
             axes = range(self.ndim)
         else:
             axes = [axis]
-        index = [slice(None)] * self.ndim    
-        for ax in axes:        
-            index[ax] = sorted(self.label[ax], reverse=reverse)
+        index = [slice(None)] * self.ndim
+        shape = self.shape    
+        for ax in axes:
+            if shape[ax] > 0:        
+                index[ax] = sorted(self.label[ax], reverse=reverse)        
         return self.lix[tuple(index)]
         
     def flipaxis(self, axis=None, copy=True):

@@ -52,6 +52,7 @@ mts = [('A'          ,  'property' ,    arr()),
        ('exp'        ,  None       ,    lar()),
        ('fill'       ,  [0]        ,    None),
        ('flatten'    ,  None       ,    lar()),
+       ('flipaxis'   ,  None       ,    lar()),
        ('fromdict'   ,  [{}]       ,    lar()), 
        ('fromlist'   ,  [([],[])]  ,    lar()),
        ('fromlist'   ,  [[]]       ,    lar()),                               
@@ -63,6 +64,7 @@ mts = [('A'          ,  'property' ,    arr()),
        ('group_mean' ,  [lar()]    ,    lar()),               
        ('group_median', [lar()]    ,    lar()),
       #('group_ranking',[lar()]    ,    lar()),       # 2d only
+      #('insertaxis')                             # Not expected to pass
        ('isfinite'   ,  None       ,    lar()),                                                           
        ('isinf'      ,  None       ,    lar()), 
        ('isnan'      ,  None       ,    lar()), 
@@ -101,6 +103,7 @@ mts = [('A'          ,  'property' ,    arr()),
        ('shufflelabel', None       ,    None),
        ('sign'       ,  None       ,    lar()),                                            
        ('size'       ,  'property' ,    'use_numpy'),
+       ('sortaxis'   ,  None       ,    lar()),
        ('sqrt'       ,  None       ,    lar()), 
        ('squeeze'    ,  None       ,    'use_numpy'),
        ('std'        ,  None       ,    'use_numpy'),
@@ -168,5 +171,4 @@ def test_empty2():
     yield assert_equal, lar2().sum(), arr2().sum(), msg % "sum"
     yield assert_equal, lar2().std(), arr2().std(), msg % "std"
     yield assert_equal, lar2().var(), arr2().var(), msg % "var"
-    
-             
+            

@@ -1,5 +1,14 @@
 2010-02-11 Keith
 
+    * deflarry.py(sortaxis), deflarry.py(lix), doc/source/intro.rst: Handle
+      shapes that contain a zero such as (0,) and (2, 0, 3). Although sortaxis
+      now handles shapes with zero, the call to lix that sortaxis makes will
+      fail because lix does not handle shapes with zero (except for (0,)).
+      Added a check for zero shapes in lix.
+      
+    * tests/empty_larry_test.py(test_empty): Added empty array unit tests for
+      sortaxis and flip axis.      
+
     * util/testing.py(iscopy), util/testing.py(isview):
       Use np.may_share_memory to check for references between numpy arrays.
 
