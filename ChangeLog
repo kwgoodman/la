@@ -1,4 +1,7 @@
 2010-02-11 Keith
+    
+    * doc/source/work.rst: Added sortaxis, flipaxis, and insertaxis to sphinx
+      docs.
 
     * deflarry.py(sortaxis), deflarry.py(lix), doc/source/intro.rst: Handle
       shapes that contain a zero such as (0,) and (2, 0, 3). Although sortaxis
