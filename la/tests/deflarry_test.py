@@ -3386,6 +3386,35 @@ class Test_alignment(unittest.TestCase):
         actual = original.flipaxis(0)
         desired = larry([[3, 4], [1, 2]], [['b', 'a'], ['c', 'd']]) 
         ale(actual, desired, 'flipaxis_4', original=original)
+
+    def test_insertaxis_1(self):
+        "larry.insertaxis_1"
+        original = larry([1, 2]) 
+        actual = original.insertaxis(0, 'new')
+        desired = larry([[1, 2]], [['new'], [0, 1]]) 
+        ale(actual, desired, 'insertaxis_1', original=original)
+
+    def test_insertaxis_2(self):
+        "larry.insertaxis_2"
+        original = larry([1, 2]) 
+        actual = original.insertaxis(1, 'new')
+        desired = larry([[1], [2]], [[0, 1], ['new']]) 
+        ale(actual, desired, 'insertaxis_2', original=original)
+
+    def test_insertaxis_3(self):
+        "larry.insertaxis_3"
+        original = larry([1, 2]) 
+        actual = original.insertaxis(-2, 'new')
+        desired = larry([[1, 2]], [['new'], [0, 1]]) 
+        ale(actual, desired, 'insertaxis_1', original=original)
+
+    def test_insertaxis_4(self):
+        "larry.insertaxis_4"
+        original = larry([1, 2]) 
+        actual = original.insertaxis(-1, 'new')
+        desired = larry([[1], [2]], [[0, 1], ['new']]) 
+        ale(actual, desired, 'insertaxis_2', original=original)
+        
                         
 class Test_random(unittest.TestCase):
     "Test randomizing functions of the larry class"

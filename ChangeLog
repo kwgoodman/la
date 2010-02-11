@@ -1,5 +1,11 @@
 2010-02-10 Keith
 
+    * deflarry.py(insertaxis), tests/deflarry_test.py, doc/source/intro.rst
+      doc/source/reference.rst, RELEASE: New larry method: insertaxis.
+  
+    * util/testing.py(iscopy), util/testing.py(isview): Removed constraint
+      that both input larrys must have the same number of dimensions.
+
     * deflarry.py(flipaxis), test/deflarry_test.py, source/reference.rst, 
       RELEASE, source/intro.rst: New larry method: flipaxis.
 

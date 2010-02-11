@@ -209,12 +209,10 @@ def assert_iscopy(larry1, larry2):
         raise TypeError, 'Input must be a larry'
     if not isinstance(larry2, larry):
         raise TypeError, 'Input must be a larry'
-    if larry1.ndim != larry2.ndim:
-        raise ValueError, 'larrys must have the same dimensions'
     msg = []    
     if larry1.x is larry2.x:
         msg.append('The data arrays share a reference.')
-    for i in xrange(larry1.ndim):
+    for i in xrange(min(larry1.ndim, larry2.ndim)):
         if larry1.label[i] is larry2.label[i]:
             msg.append('The labels along axis %d share a reference.' % i)
     if len(msg) > 0:
@@ -228,12 +226,10 @@ def assert_isview(larry1, larry2):
         raise TypeError, 'Input must be a larry'
     if not isinstance(larry2, larry):
         raise TypeError, 'Input must be a larry'
-    if larry1.ndim != larry2.ndim:
-        raise ValueError, 'larrys must have the same dimensions'
     msg = []    
     if larry1.x is not larry2.x:
         msg.append('The data arrays do not share a reference.')
-    for i in xrange(larry1.ndim):
+    for i in xrange(min(larry1.ndim, larry2.ndim)):
         if larry1.label[i] is not larry2.label[i]:
             text = 'The labels along axis %d does not share a reference.'
             msg.append(text % i)

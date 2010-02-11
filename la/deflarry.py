@@ -3307,7 +3307,6 @@ class larry(object):
         --------
         la.larry.flatten : Return a copy of the larry collapsed into one dimension.
         
-        
         Examples
         --------
         First create a flattened larry:
@@ -3352,6 +3351,68 @@ class larry(object):
             labels = zip(*self.label[0])
             x, label = fromlists(self.x, labels)     
             return larry(x, label)
+                        
+    def insertaxis(self, axis, label):
+        """
+        Insert a new axis at the specified position.
+        
+        Parameters
+        ----------
+        axis : int
+            The position to insert the new axis into.
+        label : str, scalar, object, etc
+            The label element of the new axis. The length of the new axis is
+            always 1, so only one label element is needed.
+            
+        Returns
+        -------
+        y : larry
+            A copy of the larry with a new axis inserted in the specified
+            position.
+            
+        Examples
+        --------
+        Create a 1d larry and then insert a new axis in position 0:
+                  
+        >>> y = larry([1, 2, 3])
+        >>> y.insertaxis(0, 'NEW')
+        label_0
+            NEW
+        label_1
+            0
+            1
+            2
+        x
+        array([[1, 2, 3]])
+
+        Try inserting a new axis in position 1:
+         
+        >>> y.insertaxis(1, 'NEW')
+        label_0
+            0
+            1
+            2
+        label_1
+            NEW
+        x
+        array([[1],
+               [2],
+               [3]])
+                   
+        """
+        if axis is None:
+            raise ValueError, "`axis` cannot be None."
+        x = self.getx(copy=True)
+        x = np.expand_dims(x, axis)
+        lab = self.copylabel()
+        if int(axis) == -1:
+            ax = len(lab)
+        elif int(axis) < -1:
+            ax = axis + 1
+        else:
+            ax = axis        
+        lab.insert(ax, [label])
+        return larry(x, lab)            
         
     # Conversion -------------------------------------------------------------         
 
