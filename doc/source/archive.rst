@@ -11,6 +11,8 @@ such as **save** and **load** and using the dictionary-like interface of the
 `HDF5 <http://www.hdfgroup.org/>`_ 1.8 format and require
 `h5py <http://h5py.alfven.org>`_.
 
+.. contents::
+
 
 .. _iofunction:
 
@@ -83,7 +85,9 @@ reclaim the freespace is to repack the archive:
     >>> la.repack(f)
     
 To see how much space the archive takes on disk and to see how much freespace
-is in the archive see :ref:`ioclass`.  
+is in the archive see :ref:`ioclass`.
+
+For further information on the archive functions see :ref:`archive_functions`.  
      
 .. _ioclass:
     
@@ -264,7 +268,9 @@ larrys can be archived in a hierarchical structure:
 What filename is associated with the archive?
 ::
     >>> io.filename
-    '/tmp/data.hdf5'               
+    '/tmp/data.hdf5'
+    
+For further information on the IO class see :ref:`io_class_reference`.                   
 
 
 Limitations
@@ -278,7 +284,8 @@ In this section we will discuss two limitations:
 * In order to archive a larry, its data and labels must be of a type supported
   by HDF5.   
 
-**Freespace**
+Freespace
+"""""""""
 
 HDF5 does not keep track of the freespace in an archive across opening and
 closing of the archive. Therefore, after opening, closing and deleting larrys
@@ -289,7 +296,8 @@ You can use the utility provided by HDF5 to repack the archive or you can use
 the repack method (see :ref:`ioclass`) or function (see :ref:`iofunction`) in
 the la package.
     
-**Data types**  
+Data types 
+""""""""""
 
 A larry can have labels of mixed type, for example strings and numbers.
 However, when archiving larrys in HDF5 format the labels are
@@ -343,3 +351,52 @@ attribute called 'larry' and assigned the value True. Inside the group are
 several HDF5 Datasets. For a 2d larry, for example, there are three datasets:
 one to hold the data (named 'x') and two to hold the labels (named '0' and
 '1'). In general, for a nd larry there are n+1 datasets.
+
+
+Reference
+=========
+
+This section contains the reference guide to the archive functions, 
+:ref:`archive_functions`, and the IO class methods, :ref:`io_class_reference`.
+
+
+.. _archive_functions:
+
+Archive function reference
+""""""""""""""""""""""""""
+
+------------
+
+.. automethod:: la.io.save
+
+------------
+
+.. automethod:: la.io.load
+
+------------
+
+.. automethod:: la.io.delete
+
+------------
+
+.. automethod:: la.io.repack
+
+------------
+
+.. automethod:: la.io.is_archived_larry
+
+------------
+
+.. automethod:: la.io.archive_directory
+
+
+.. _io_class_reference:
+
+IO class reference
+""""""""""""""""""
+
+.. autoclass:: la.IO
+   :members:  __init__, keys, values, has_key, items, iterkeys, itervalues,
+              iteritems, merge, space, freespace, repack, clear
+
+

@@ -8,13 +8,23 @@ la 0.2 (avocado)
 
 *Release date: Not yet released, in development*
 
-New features
-------------
+New larry methods
+-----------------
+- lix : Index into a larry using labels or index numbers or both
+- swapaxes : Swap the two specified axes
+- sortaxis : Sort data (and label) according to label along specified axis.
+- flipaxis : Reverse the order of the elements along the specified axis.
+- tocsv : Save larry to a csv file.
+- fromcsv : Load a larry from a csv file.
+- insertaxis : Insert a new axis at the specified position.
 
-- New ability to index by label
+New function
+------------
+- panel : Convert a 3d larry of shape (n, m, k) to a 2d larry of shape (m*k, n).
+
+Enhancements
+------------
 - Added nd ability to the larry methods that could only handle 2d input
-- swapaxes method
-- A function, panel, to make panel data
 - Extend group methods to allow axis argument and 2d groups
 
 Unit testing
@@ -22,8 +32,7 @@ Unit testing
 
 - Simplify unit testing with new assert_larry_equal function
 - Unit test all larry methods for ability to handle empty larrys
-- dtype unit test of all methods
-- Added unit tests for larry methods that don't have any
+- Increased unit test coverage
 
 Bug fixes
 ---------

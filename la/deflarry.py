@@ -2,12 +2,13 @@
 
 import datetime
 from copy import deepcopy
+import csv
 
 import numpy as np
    
 from la.util.scipy import (nanmean, nanmedian, nanstd)
 from la.util.misc import (flattenlabel, isscalar, fromlists, list2index,
-                          fromlists, isstring, str2labelindex)
+                          fromlists)
 from la.afunc import (group_ranking, group_mean, group_median, covMissing,
                       fillforward_partially, quantile, ranking, lastrank,
                       movingsum_forward, lastrank_decay, movingrank,
@@ -1315,11 +1316,7 @@ class larry(object):
             if index >= self.shape[0]:
                 raise IndexError, 'index out of range'
             label = self.label[1:]
-            x = self.x[index]
-        elif isstring(index):
-            idx = str2labelindex(index, self.label[0])
-            label = self.label[1:]
-            x = self.x[idx]                                         
+            x = self.x[index]                                       
         elif typidx is tuple:
             label = []
             for ax in xrange(self.ndim):
@@ -1348,32 +1345,8 @@ class larry(object):
                             except IndexError:
                                 raise IndexError, 'index out of range' 
                         lab = list(lab)                          
-                    elif typ is slice:                    
-                        # -- string indexing (start) ------------------------
-                        idx_change = False
-                        if isstring(idx.start):                        
-                            ix_start = str2labelindex(idx.start, self.label[ax])
-                            idx = slice(ix_start, idx.stop, idx.step)
-                            idx_change = True
-                        if isstring(idx.stop):                        
-                            ix_stop = str2labelindex(idx.stop, self.label[ax])
-                            idx = slice(idx.start, ix_stop, idx.step)
-                            idx_change = True                            
-                        if isstring(idx.step):
-                            msg=  'Step size of a slice cannot be a string.'
-                            raise IndexError, msg
-                        if idx_change:
-                            index = list(index)
-                            index[ax] = idx
-                            index = tuple(index)                               
-                        # -- string indexing (end) --------------------------                                 
-                        lab = self.label[ax][idx]  
-                    elif isstring(idx):                   
-                        ix = str2labelindex(idx, self.label[ax])
-                        lab = None
-                        index = list(index)
-                        index[ax] = ix  
-                        index = tuple(index)   
+                    elif typ is slice:
+                        lab = self.label[ax][idx] 
                     else:
                         msg = 'I do not recognize the way you are indexing'
                         raise IndexError, msg                       
@@ -1382,19 +1355,7 @@ class larry(object):
                 if lab:     
                     label.append(lab)              
             x = self.x[index]
-        elif typidx is slice:
-            # -- string indexing (start) ------------------------------
-            ax = 0       
-            if isstring(index.start):                        
-                ix_start = str2labelindex(index.start, self.label[ax])
-                index = slice(ix_start, index.stop, index.step)
-            if isstring(index.stop):                        
-                ix_stop = str2labelindex(index.stop, self.label[ax])
-                index = slice(index.start, ix_stop, index.step)                            
-            if isstring(index.step):
-                msg=  'Step size of a slice cannot be a string.'
-                raise IndexError, msg   
-            # -- string indexing (end) --------------------------------        
+        elif typidx is slice:       
             label = list(self.label)
             label[0] = label[0][index]
             x = self.x[index]
@@ -1409,6 +1370,180 @@ class larry(object):
         if np.isscalar(x):
             return x                                
         return larry(x, label)
+
+    @property    
+    def lix(self):
+        """
+        Index into a larry using labels or index numbers or both.
+        
+        In order to distinguish between labels and indices, label elements
+        must be wrapped in a list while indices (integers) cannot be wrapped
+        in a list. If you wrap indices in a list they will be interpreted as
+        label elements.
+        
+        When indexing with multi-element lists of labels along more than one
+        axes, rectangular indexing is used instead of fancy indexing. Note
+        that the corresponding situation with NumPy arrays would produce
+        fancy indexing.
+        
+        Slicing can be done with labels or indices or a combination of the
+        two. A single element along an axis can be selected with a label or
+        the index value. Several elements along an axis can be selected with
+        a multi-element list of labels. Lists of indices are not allowed.
+        
+        Examples
+        --------
+        
+        Let's start by making a larry that we can use to demonstrate idexing
+        by label:
+        
+        >>> y = larry(range(6), [['a', 'b', 3, 4, 'e', 'f']])
+
+        We can select the first element of the larry using the index value, 0,
+        or the corresponding label, 'a':
+
+        >>> y.lix[0]
+        0
+        >>> y.lix[['a']]
+        0
+        
+        We can slice with index values or with labels:
+        
+        >>> y.lix[0:]
+        label_0
+            a
+            b
+            3
+            4
+            e
+            f
+        x
+        array([0, 1, 2, 3, 4, 5])
+        
+        >>> y.lix[['a']:]
+        label_0
+            a
+            b
+            3
+            4
+            e
+            f
+        x
+        array([0, 1, 2, 3, 4, 5])
+         
+        >>> y.lix[['a']:['e']]
+        label_0
+            a
+            b
+            3
+            4
+        x
+        array([0, 1, 2, 3])
+        
+        >>> y.lix[['a']:['e']:2]
+        label_0
+            a
+            3
+        x
+        array([0, 2])
+
+        Be careful of the difference between indexing with indices and
+        indexing with labels. In the first exmaple below 4 is an index; in
+        the second example 4 is a label element:
+
+        >>> y.lix[['a']:4]
+        label_0
+            a
+            b
+            3
+            4
+        x
+        array([0, 1, 2, 3])
+        
+        >>> y.lix[['a']:[4]]
+        label_0
+            a
+            b
+            3
+        x
+        array([0, 1, 2])
+        
+        Here's a demonstration of rectangular indexing:
+        
+        >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+        >>> y.lix[['a', 'b'], ['c', 'd']]
+        label_0
+            a
+            b
+        label_1
+            c
+            d
+        x
+        array([[1, 2],
+               [3, 4]])
+               
+        The rectangular indexing above is very different from how Numpy arrays
+        behave. The corresponding example with a NumyPy array:       
+
+        >>> x = np.array([[1, 2], [3, 4]])
+        >>> x[[0, 1], [0, 1]]
+        array([1, 4])       
+        
+        """
+        class Getitemlabel(object):
+            def __init__(self2, self):
+                self2.lar = self
+            def __getitem__(self2, index):
+                y = self2.lar
+                if y.shape == (0,):
+                    return self
+                elif 0 in y.shape:
+                    msg = 'lix does not support shapes that contain 0 '
+                    msg += 'such as (0,) and (2, 0 ,3).'
+                    raise ValueError, msg
+                typ = type(index)
+                if typ == list:
+                    # Example: lar.lix[['a', 'b', 'c']]
+                    index2 = labels2indices(y.label[0], index)
+                    if len(index) == 1:       
+                        index2 = index2[0]
+                    return y[index2]               
+                elif typ == slice:
+                    # Examples: lar.lix[['a']:], lar.lix[['a']:['b']],
+                    #           lar.lix[['a']:['b']:2], lar.lix[2:['b']] 
+                    return y[slicemaker(index, y.labelindex, 0)]                                                           
+                elif typ == tuple:
+                    index2 = []
+                    label = []
+                    for ax, idx in enumerate(index):
+                        typ = type(idx)
+                        if typ == list:
+                            idx2 = labels2indices(y.label[ax], idx)
+                            if len(idx) > 1:      
+                                label.append(idx)                                                                
+                            index2.append(idx2)
+                        elif typ == slice: 
+                            s = slicemaker(idx, y.labelindex, ax)
+                            slar = range(*s.indices(y.shape[ax]))
+                            lab = y.label[ax][s]
+                            if len(lab) > 1:
+                                label.append(lab)        
+                            index2.append(slar)
+                        elif isscalar(idx):
+                            index2.append([idx])    
+                        else:
+                            raise IndexError, 'Unsupported indexing operation.'
+                    x = np.squeeze(y.x[np.ix_(*index2)])
+                    if x.ndim == 0:
+                        return x[()]
+                    else:    
+                        return larry(x, label)                       
+                elif isscalar(index):
+                    # Example: lar.lix[0]
+                    return y[index]             
+                else:
+                    raise IndexError, 'Unsupported indexing operation.'                                  
+        return Getitemlabel(self)                               
         
     def __setitem__(self, index, value):
         """
@@ -2527,8 +2662,170 @@ class larry(object):
         index = [slice(None)] * self.ndim
         index[axis] = slice(0,-nlag)            
         y.x = y.x[index]
-        return y           
+        return y
+    
+    def sortaxis(self, axis=None, reverse=False):
+        """
+        Sort data (and label) according to label along specified axis.
+        
+        Parameters
+        ----------
+        axis : {int, None}, optional
+            The axis to sort along. The default (None) is to sort all axes.
+        reverse : {True, False}, optional
+            Sort in descending order (True) or ascending order (False). The
+            default is to sort in ascending order. 
+            
+        Returns
+        -------
+        y : larry
+            A sorted copy of the larry.
+            
+        Examples
+        -------- 
+        Let's make a larry that we can use to demonstrate the `sortaxis`
+        method: 
+                 
+        >>> y = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']])
+        >>> y
+        label_0
+            b
+            a
+        label_1
+            d
+            c
+        x
+        array([[4, 3],
+               [2, 1]])
 
+        By default all axes are sorted:
+
+        >>> y.sortaxis()
+        label_0
+            a
+            b
+        label_1
+            c
+            d
+        x
+        array([[1, 2],
+               [3, 4]])
+        
+        You can also sort in reverse order (although in this particular
+        example the larry is already in reverse order):
+        
+        >>> y.sortaxis(reverse=True)
+        label_0
+            b
+            a
+        label_1
+            d
+            c
+        x
+        array([[4, 3],
+               [2, 1]])
+
+        And you can sort along a single axis:
+
+        >>> y.sortaxis(axis=0)
+        label_0
+            a
+            b
+        label_1
+            d
+            c
+        x
+        array([[2, 1],
+               [4, 3]])
+               
+        """
+        if axis is None:
+            axes = range(self.ndim)
+        else:
+            axes = [axis]
+        index = [slice(None)] * self.ndim
+        shape = self.shape    
+        for ax in axes:
+            if shape[ax] > 0:        
+                index[ax] = sorted(self.label[ax], reverse=reverse)        
+        return self.lix[tuple(index)]
+        
+    def flipaxis(self, axis=None, copy=True):
+        """
+        Reverse the order of the elements along the specified axis.
+        
+        Parameters
+        ----------
+        axis : {int, None}, optional
+            The axis to flip. The default (None) is to flip all axes.
+        copy : {True, False}, optional
+            If True (default) return a copy; if False return a view.
+            
+        Returns
+        -------
+        y : larry
+            A copy or view (depending on the value of `copy`) of the larry
+            that has been flipped.
+            
+        Examples
+        --------
+        Create a larry:
+        
+        >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+        >>> y
+        label_0
+            a
+            b
+        label_1
+            c
+            d
+        x
+        array([[1, 2],
+               [3, 4]])
+               
+        Flip all axes:       
+
+        >>> y.flipaxis()
+        label_0
+            b
+            a
+        label_1
+            d
+            c
+        x
+        array([[4, 3],
+               [2, 1]])
+               
+        Flip axis 0 only:       
+
+        >>> y.flipaxis(axis=0)
+        label_0
+            b
+            a
+        label_1
+            c
+            d
+        x
+        array([[3, 4],
+               [1, 2]])            
+        
+        """
+        if copy:
+            y = self.copy()
+        else:
+            y = self
+        if axis is None:
+            axes = range(self.ndim)
+        else:
+            axes = [axis]
+        flip = slice(None, None, -1)    
+        for ax in axes:                
+            y.label[ax] = y.label[ax][flip]    
+            index = [slice(None)] * y.ndim
+            index[ax] = flip
+            y.x = y.x[index] 
+        return y               
+        
     # Shuffle ----------------------------------------------------------------
     
     def shuffle(self, axis=0):
@@ -3018,7 +3315,6 @@ class larry(object):
         --------
         la.larry.flatten : Return a copy of the larry collapsed into one dimension.
         
-        
         Examples
         --------
         First create a flattened larry:
@@ -3063,6 +3359,68 @@ class larry(object):
             labels = zip(*self.label[0])
             x, label = fromlists(self.x, labels)     
             return larry(x, label)
+                        
+    def insertaxis(self, axis, label):
+        """
+        Insert a new axis at the specified position.
+        
+        Parameters
+        ----------
+        axis : int
+            The position to insert the new axis into.
+        label : str, scalar, object, etc
+            The label element of the new axis. The length of the new axis is
+            always 1, so only one label element is needed.
+            
+        Returns
+        -------
+        y : larry
+            A copy of the larry with a new axis inserted in the specified
+            position.
+            
+        Examples
+        --------
+        Create a 1d larry and then insert a new axis in position 0:
+                  
+        >>> y = larry([1, 2, 3])
+        >>> y.insertaxis(0, 'NEW')
+        label_0
+            NEW
+        label_1
+            0
+            1
+            2
+        x
+        array([[1, 2, 3]])
+
+        Try inserting a new axis in position 1:
+         
+        >>> y.insertaxis(1, 'NEW')
+        label_0
+            0
+            1
+            2
+        label_1
+            NEW
+        x
+        array([[1],
+               [2],
+               [3]])
+                   
+        """
+        if axis is None:
+            raise ValueError, "`axis` cannot be None."
+        x = self.getx(copy=True)
+        x = np.expand_dims(x, axis)
+        lab = self.copylabel()
+        if int(axis) == -1:
+            ax = len(lab)
+        elif int(axis) < -1:
+            ax = axis + 1
+        else:
+            ax = axis        
+        lab.insert(ax, [label])
+        return larry(x, lab)            
         
     # Conversion -------------------------------------------------------------         
 
@@ -3072,9 +3430,10 @@ class larry(object):
         
         See Also
         --------
-        la.fromtuples : Convert a list of tuples to a larry.
+        la.larry.fromtuples : Convert a list of tuples to a larry.
         la.larry.tolist : Convert to a flattened list.
         la.larry.todict : Convert to a dictionary.
+        la.larry.tocsv : Save larry to a csv file.
         
         Examples
         --------
@@ -3117,6 +3476,7 @@ class larry(object):
         la.larry.totuples : Convert to a flattened list of tuples.
         la.larry.fromlist : Convert a list of tuples to a larry.
         la.larry.fromdict : Convert a dictionary to a larry.
+        la.larry.fromcsv : Load a larry from a csv file. 
 
         Examples
         --------
@@ -3169,6 +3529,7 @@ class larry(object):
         la.larry.fromlist : Convert a flattened list to a larry.
         la.larry.totuples : Convert to a flattened list of tuples.
         la.larry.todict : Convert to a dictionary.
+        la.larry.tocsv : Save larry to a csv file.
         
         Examples
         --------
@@ -3187,12 +3548,12 @@ class larry(object):
         
         The input data, if there are N dimensions and M data points, should have
         this form:
-        
-        [[value_1,  value_2,  ..., value_M],
-        [(label0_1, label1_1, ..., labelN_1),
-        (label0_2, label1_2, ..., labelN_2),
-        ...
-        (label0_M, label1_M, ..., labelN_M)]]    
+        ::
+            [[value_1,  value_2,  ..., value_M],
+            [(label0_1, label1_1, ..., labelN_1),
+            (label0_2, label1_2, ..., labelN_2),
+            ...
+            (label0_M, label1_M, ..., labelN_M)]]    
         
         Parameters
         ----------
@@ -3209,7 +3570,8 @@ class larry(object):
         --------
         la.larry.tolist : Convert to a flattened list.
         la.larry.fromtuples : Convert a list of tuples to a larry.
-        la.larry.fromdict : Convert a dictionary to a larry.  
+        la.larry.fromdict : Convert a dictionary to a larry.
+        la.larry.fromcsv : Load a larry from a csv file.   
 
         Examples
         --------
@@ -3240,6 +3602,7 @@ class larry(object):
         --------
         la.larry.totuples : Convert to a flattened list of tuples.
         la.larry.tolist : Convert to a flattened list.
+        la.larry.tocsv : Save larry to a csv file.
         
         Examples
         --------
@@ -3256,19 +3619,19 @@ class larry(object):
         """
         Convert a dictionary to a larry.
         
-        The input data, if there are N dimensions and M data points, should have
-        this form:
-        
-        {(label0_1, label1_1, ..., labelN_1): value_1,
-        (label0_2, label1_2, ..., labelN_2): value_2,
-        ...
-        (label0_M, label1_M, ..., labelN_M): value_M}   
+        The input data, if there are N dimensions and M data points, should
+        have this form:
+        ::
+            {(label0_1, label1_1, ..., labelN_1): value_1,
+            (label0_2, label1_2, ..., labelN_2): value_2,
+            ...
+            (label0_M, label1_M, ..., labelN_M): value_M}   
         
         Parameters
         ----------
         data : dict
-            The input must be a dictionary such as that returned by larry.todict
-            See the example below. 
+            The input must be a dictionary such as that returned by
+            larry.todict See the example below. 
             
         Returns
         -------
@@ -3280,6 +3643,7 @@ class larry(object):
         la.larry.todict : Convert to a dictionary. 
         la.larry.fromtuples : Convert a list of tuples to a larry.
         la.larry.fromlist : Convert a list of tuples to a larry.
+        la.larry.fromcsv : Load a larry from a csv file. 
 
         Examples
         --------
@@ -3296,7 +3660,128 @@ class larry(object):
                [ 3.,  4.]])
                
         """ 
-        return larry.fromlist([data.values(), data.keys()])          
+        return larry.fromlist([data.values(), data.keys()])
+        
+    def tocsv(self, filename, delimiter=','):
+        """
+        Save larry to a csv file.
+        
+        The type information of the labels will be lost. So if a label element
+        is, for example, an integer, a round trip (`tocsv` followed by
+        `fromcsv`) will convert it to an integer. You can use the `maplabel`
+        method to convert it back to an integer.
+        
+        As you can see from above, the tocsv and fromcvs methods are fragile.
+        A more robust archiving solution is given by the IO class.        
+        
+        The format of the csv file is:
+        ::
+            label0, label1, ..., labelN, value
+            label0, label1, ..., labelN, value
+            label0, label1, ..., labelN, value
+        
+        Parameters
+        ----------
+        filname : str
+            The filename of the csv file.
+        delimiter : str
+            The delimiter used to separate the labels elements from eachother
+            and from the values.
+
+        See Also
+        --------
+        la.larry.fromcsv : Load a larry from a csv file.
+        la.IO: Save and load larrys in HDF5 format using a dictionary-like
+               interface.         
+        la.larry.totuples : Convert to a flattened list of tuples.
+        la.larry.tolist : Convert to a flattened list.
+        la.larry.todict : Convert to a dictionary.
+            
+        Examples
+        --------        
+        >>> y = larry([1, 2, 3], [['a', 'b', 'c']])
+        >>> y.tocsv('/tmp/lar.csv')
+        >>> larry.fromcsv('/tmp/lar.csv')
+        label_0
+            a
+            b
+            c
+        x
+        array([ 1.,  2.,  3.])
+        
+        """
+        fid = open(filename, 'w')
+        writer = csv.writer(fid, delimiter=delimiter)
+        writer.writerows(self.totuples())
+        fid.close()                   
+
+    @staticmethod
+    def fromcsv(filename, delimiter=',', skiprows=0):
+        """
+        Load a larry from a csv file.
+        
+        The type information of the labels is not contained in a csv file.
+        Therefore, a label element that was, for example, an integer, will
+        be converted to a string after a round trip (`tocsv` followed by
+        `fromcsv`). You can use the `maplabel` methods to convert it back to
+        an integer.
+        
+        Integer data values will be converted to floats.
+        
+        If a data value is missing, a ValueError will be raised. One label
+        element per axis can be missing; the missing label element will be
+        replace with the empty string ''.
+        
+        As you can see from above, the tocsv and fromcvs methods are fragile.
+        A more robust archiving solution is given by the IO class.
+        
+        The format of the csv file is:
+        ::
+            label0, label1, ..., labelN, value
+            label0, label1, ..., labelN, value
+            label0, label1, ..., labelN, value
+        
+        Parameters
+        ----------
+        filname : str
+            The filename of the csv file.
+        delimiter : str
+            The delimiter used to separate the labels elements from eachother
+            and from the values.
+            
+        Raises
+        ------
+        ValueError
+            If a data value is missing in the csv file.
+            
+        See Also
+        --------
+        la.larry.tocsv : Save larry to a csv file.
+        la.IO: Save and load larrys in HDF5 format using a dictionary-like
+               interface.
+        la.larry.fromtuples : Convert a list of tuples to a larry.
+        la.larry.fromlist : Convert a flattened list to a larry.
+        la.larry.fromdict : Convert a dictionary to a larry.      
+            
+        Examples
+        --------        
+        >>> y = larry([1, 2, 3], [['a', 'b', 'c']])
+        >>> y.tocsv('/tmp/lar.csv')
+        >>> larry.fromcsv('/tmp/lar.csv')
+        label_0
+            a
+            b
+            c
+        x
+        array([ 1.,  2.,  3.])
+        
+        """
+        fid = open(filename, 'r')
+        reader = csv.reader(fid, delimiter=delimiter)
+        [reader.next() for i in range(skiprows)]
+        data = [row for row in reader]
+        fid.close()
+        return larry.fromtuples(data) 
                
     # Copy -------------------------------------------------------------------        
           
@@ -3373,4 +3858,41 @@ class larry(object):
         x.append('x\n')
         x.append(repr(self.x))
         return ''.join(x)        
+
+
+# Label indexing support functions for the lix method ------------------------
+    
+def slicemaker(index, labelindex, axis): 
+    "Convert a slice that may contain labels to a slice with indices."
+    msg1 = 'The %s element of a slice must be a list or a scalar.'
+    msg2 = 'The %s element of the slice contains more than one item.'              
+    if index.start is None:
+        start = None
+    elif type(index.start) is list:
+        if len(index.start) > 1:
+            raise ValueError, msg2 % 'start'    
+        start = labelindex(index.start[0], axis=axis)
+    elif isscalar(index.start):
+        start = index.start
+    else:
+        raise ValueError, msg1 % 'start'    
+    if index.stop is None:
+        stop = None
+    elif type(index.stop) is list:
+        if len(index.stop) > 1:
+            raise ValueError, msg2 % 'start'    
+        stop = labelindex(index.stop[0], axis=axis)
+    elif isscalar(index.stop):
+        stop = index.stop                                                  
+    else:
+        raise ValueError, msg1 % 'stop'
+    return slice(start, stop, index.step)        
+
+def labels2indices(label, labels):
+    "Convert list of labels to indices"
+    try:
+        indices = map(label.index, labels)
+    except ValueError:
+        raise ValueError, 'Could not map label to index value.'
+    return indices  
         

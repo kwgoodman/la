@@ -1,3 +1,61 @@
+2010-02-11 Keith
+    
+    * doc/source/work.rst: Added sortaxis, flipaxis, and insertaxis to sphinx
+      docs.
+
+    * deflarry.py(sortaxis), deflarry.py(lix), doc/source/intro.rst: Handle
+      shapes that contain a zero such as (0,) and (2, 0, 3). Although sortaxis
+      now handles shapes with zero, the call to lix that sortaxis makes will
+      fail because lix does not handle shapes with zero (except for (0,)).
+      Added a check for zero shapes in lix.
+      
+    * tests/empty_larry_test.py(test_empty): Added empty array unit tests for
+      sortaxis and flip axis.      
+
+    * util/testing.py(iscopy), util/testing.py(isview):
+      Use np.may_share_memory to check for references between numpy arrays.
+
+2010-02-10 Keith
+
+    * deflarry.py(insertaxis), tests/deflarry_test.py, doc/source/intro.rst
+      doc/source/reference.rst, RELEASE: New larry method: insertaxis.
+  
+    * util/testing.py(iscopy), util/testing.py(isview): Removed constraint
+      that both input larrys must have the same number of dimensions.
+
+    * deflarry.py(flipaxis), test/deflarry_test.py, source/reference.rst, 
+      RELEASE, source/intro.rst: New larry method: flipaxis.
+
+    * doc/source/intro.rst: Doc tweak.
+
+    * deflarry.py(sortaxis), tests/deflarry_test.py, source/reference.rst, 
+      RELEASE. doc/source/intro.rst: Added a new larry method: sortaxis.
+
+    * doc/source/archive.rst, deflarry.py, io.py: Doc work.
+
+2010-02-09 Keith
+
+    * deflarry.py(tocsv), deflarry.py(fromcsv), tests/deflarry_nose_test.py,
+      doc/source/intro.rst, doc/source/reference.rst, doc/source/work.rst,
+      RELEASE: Added two new methods: tocsv and fromcsv.
+
+    * doc/source/work.rst, doc/source/reference.rst, doc/source/archive.rst:
+      Doc work for lix.
+  
+    * la/deflarry.py(lix), tests/lix_test.py, la/deflarry.py(slicemaker), 
+      la/deflarry.py(labels2indices), doc/source/intro.rst: Added support for
+      indexing by labels.
+
+2010-02-08 Keith
+
+    * deflarry.py(__getitem__): Forgot to remove one block of index by string
+      code in the previous commit.
+
+    * deflarry.py(__getitem__), tests/string_indexing_test.py,
+      doc/source/intro.rst, util/misc.py(str2labelindex): Removed ability to
+      index by labels using strings. Removed thefunction str2labelindex and
+      the unit test module string_indexing_test.py.
+
 2010-02-07 Keith
 
     * deflarry.py(sum), deflarry.py(std), deflarry.py(var), RELEASE,

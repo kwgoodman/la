@@ -17,6 +17,8 @@ The reference guide for the larry functions, as opposed to methods, can be
 found in :ref:`functions`.     
     
 
+.. _creation:
+
 Creation
 --------
 
@@ -37,6 +39,10 @@ The creation methods allow you to create larrys.
 ------------
 
 .. automethod:: la.larry.fromdict
+
+------------
+
+.. automethod:: la.larry.fromcsv
 
 
 Unary
@@ -237,6 +243,10 @@ assign values to a subset of a larry.
 
 ------------
 
+.. automethod:: la.larry.lix
+
+------------
+
 .. automethod:: la.larry.__setitem__
 
 ------------
@@ -433,6 +443,14 @@ aligns *y1* to *y2*; the second example aligns *y2* to *y1*:
 
 .. automethod:: la.larry.lag
 
+------------
+
+.. automethod:: la.larry.sortaxis
+
+------------
+
+.. automethod:: la.larry.flipaxis
+
 
 Shuffle
 -------
@@ -520,11 +538,16 @@ Some of the methods (**T, flatten, unflatten**) change the shape of the larry.
 
 .. automethod:: la.larry.unflatten 
 
+------------
+
+.. automethod:: la.larry.insertaxis
+
 
 Conversion
 ----------
 
-Methods to convert larrys to other formats.
+Methods to convert larrys to other formats. For the corresponding 'from'
+methods, see :ref:`creation`.
 
 ------------
 
@@ -537,6 +560,11 @@ Methods to convert larrys to other formats.
 ------------
 
 .. automethod:: la.larry.todict 
+
+------------
+
+.. automethod:: la.larry.tocsv         
+
 
 
 Copy

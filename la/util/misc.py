@@ -239,14 +239,3 @@ def fromlists(xs, labels):
         x[index] = xs 
     return x, label 
 
-def str2labelindex(s, label):
-    "Find index of string in label; convert label to string and look again if not found."
-    try:
-        idx = label.index(s)
-    except ValueError:
-        strindex = map(str, label)
-        try:
-            idx = strindex.index(s)
-        except ValueError:
-            raise IndexError, 'label not found.' 
-    return idx                                       

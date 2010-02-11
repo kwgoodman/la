@@ -94,6 +94,7 @@ The following functions can also be used to create larrys:
 * **fromlist**
 * **fromtuples**
 * **fromdict**
+* **fromcsv**
 
 Here's how to create a larry using **fromlist**:
 ::
@@ -149,7 +150,19 @@ Here are examples of **fromtuples** and **fromdict**:
         d
     x
     array([[ 1.,  2.],
-           [ 3.,  4.]])         
+           [ 3.,  4.]])
+           
+And an example of creating a larry from a csv file:
+::
+    >>> y = larry([1, 2, 3], [['a', 'b', 'c']])
+    >>> y.tocsv('/tmp/lar.csv')
+    >>> larry.fromcsv('/tmp/lar.csv')
+    label_0
+        a
+        b
+        c
+    x
+    array([ 1.,  2.,  3.])                    
 
 See :ref:`conversion` for a discussion of the corresponding methods,
 **tolist, totuples, todict**. 
@@ -172,9 +185,12 @@ array:
     dtype('float64') 
     
 larry does not have a reshape method. A reshape would scramble all the labels.
-But larry does have a **flatten** method:
+But larry does have a **flatten** method and an **insertaxis** method.
+
+Here's the **flatten** method:
 ::
     >>> y = larry([[1.0, 2.0], [3.0, 4.0]], [['r0', 'r1'], ['c0', 'c1']])
+    
     >>> y.flatten()
     label_0
         ('r0', 'c0')
@@ -183,6 +199,7 @@ But larry does have a **flatten** method:
         ('r1', 'c1')
     x
     array([ 1.,  2.,  3.,  4.])
+    
     >>> y.flatten(order='F')
     label_0
         ('r0', 'c0')
@@ -205,6 +222,29 @@ Flattened larrys can be unflattened:
     x
     array([[ 1.,  2.],
            [ 3.,  4.]])
+           
+To insert a new axis use **insertaxis**:
+::
+    >>> y = larry([1, 2], [['a', 'b']])
+    
+    >>> y.insertaxis(axis=0, label='NEW')
+    label_0
+        NEW
+    label_1
+        a
+        b
+    x
+    array([[1, 2]])
+
+    >>> y.insertaxis(axis=1, label='NEW')
+    label_0
+        a
+        b
+    label_1
+        NEW
+    x
+    array([[1],
+           [2]])               
            
 The transpose of a larry:
 ::
@@ -266,8 +306,18 @@ There are more larry methods that deal with missing values. See
 Indexing
 --------
 
-In most cases, indexing into a larry is similar to indexing into a Numpy
-array:
+There are several ways to access subsets of a larry:
+
+* :ref:`regular_indexing`
+* :ref:`label_indexing`
+* :ref:`misc_indexing`
+
+.. _regular_indexing:
+
+Regular indexing
+""""""""""""""""
+
+Indexing into a larry is similar to indexing into a Numpy array:
 ::
     >>> y = larry([[1.0, 2.0], [3.0, 4.0]], [['a', 'b'], [11, 13]])
     >>> y[:,0]
@@ -290,11 +340,140 @@ The following types of indexing are not currently supported by larry (but they
 are supported when doing an assignment by indexing, see :ref:`assignment`):
 
 * Fancy indexing
-* Indexing with Ellipsis    
-    
-There are several ways to index by label name. For example, let's pull row
-'a' (the first row) from the larry *y*. We can use **labelindex**:
+* Indexing with Ellipsis 
+
+.. _label_indexing:
+
+Indexing by labels
+""""""""""""""""""
+
+You can also index into a larry using labels or index numbers or both.
+
+Let's start by making a larry that we can use to demonstrate idexing
+by label:
 ::
+    >>> y = larry(range(6), [['a', 'b', 3, 4, 'e', 'f']])
+
+We can select the first element of the larry using the index value, 0,
+or the corresponding label, 'a':
+::
+    >>> y.lix[0]
+    0
+    >>> y.lix[['a']]
+    0
+    
+In order to distinguish between labels and indices, label elements
+must be wrapped in a list while indices (integers) cannot be wrapped
+in a list. If you wrap indices in a list they will be interpreted as
+label elements.
+
+Slicing can be done with labels or indices or a combination of the
+two. A single element along an axis can be selected with a label or
+the index value. Several elements along an axis can be selected with
+a multi-element list of labels. Lists of indices are not allowed.    
+
+We can slice with index values or with labels:
+::
+    >>> y.lix[0:]
+    label_0
+        a
+        b
+        3
+        4
+        e
+        f
+    x
+    array([0, 1, 2, 3, 4, 5])
+
+    >>> y.lix[['a']:]
+    label_0
+        a
+        b
+        3
+        4
+        e
+        f
+    x
+    array([0, 1, 2, 3, 4, 5])
+        
+    >>> y.lix[['a']:['e']]
+    label_0
+        a
+        b
+        3
+        4
+    x
+    array([0, 1, 2, 3])
+
+    >>> y.lix[['a']:['e']:2]
+    label_0
+        a
+        3
+    x
+    array([0, 2])   
+
+Be careful of the difference between indexing with indices and
+indexing with labels. In the first exmaple below 4 is an index; in
+the second example 4 is a label element:
+::
+    >>> y.lix[['a']:4]
+    label_0
+        a
+        b
+        3
+        4
+    x
+    array([0, 1, 2, 3])
+
+    >>> y.lix[['a']:[4]]
+    label_0
+        a
+        b
+        3
+    x
+    array([0, 1, 2])
+
+.. warning::
+
+    When indexing with multi-element lists of labels along more than one
+    axes, rectangular indexing is used instead of fancy indexing. Note
+    that the corresponding situation with NumPy arrays would produce
+    fancy indexing.
+
+Here's a demonstration of rectangular indexing:
+::
+    >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+    >>> y.lix[['a', 'b'], ['c', 'd']]
+    label_0
+        a
+        b
+    label_1
+        c
+        d
+    x
+    array([[1, 2],
+           [3, 4]])
+        
+The rectangular indexing above is very different from how Numpy arrays
+behave. The corresponding example with a NumyPy array:       
+::
+    >>> x = np.array([[1, 2], [3, 4]])
+    >>> x[[0, 1], [0, 1]]
+    array([1, 4])       
+
+.. _misc_indexing:
+
+Other indexing by labels
+""""""""""""""""""""""""   
+    
+There are several other, miscellaneous ways to index by label name.
+
+Let's look at several different ways to pull row 'a' (the first row) from a
+larry *y*.
+
+We can use **labelindex**:
+::
+    >>> y = larry([[1.0, 2.0], [3.0, 4.0]], [['a', 'b'], [11, 13]])
     >>> idx = y.labelindex('a', axis=0)
     >>> y[idx,:]
     label_0
@@ -489,7 +668,7 @@ It is often convenient to pre-align larrys. To align two larrys we use
     array([ 4.,  5.,  6.])
     
 Alternatively, when we only want to align the larry along one axis (the
-example above only contain one axis):    
+example above only contains one axis):    
 ::    
     >>> y2.morph(y1.getlabel(axis=0), axis=0)
     label_0
@@ -511,6 +690,84 @@ the following example):
         e
     x
     array([  1.,   2.,   3.,  NaN,  NaN])
+    
+As we've seen above, binary operations such as ``+``, ``-``, ``*`` , and
+``/`` may return a larry whose label ordering is different from the two input
+larrys.
+
+Along any axis where the two input larrys of a binary operation are not
+aligned, the labels in the output larry will be sorted (in ascending order).
+For those axes where the two input larrys are already aligned, the label
+ordering will not change.
+
+Let's look at an example where axis 0 is not aligned but axis 1 is aligned.
+Note that the labels along axis 1 are in descending order:
+::
+    >>> y1 = larry([[1, 2], [3, 4]], [['a', 'z'], ['z', 'a']])
+    >>> y2 = larry([[1, 2], [3, 4]], [['z', 'a'], ['z', 'a']])
+
+    >>> y1 + y2
+    label_0
+        a
+        z
+    label_1
+        z
+        a
+    x
+    array([[4, 6],
+           [4, 6]])
+           
+In the example above, axis 0 in ``y1`` and ``y2`` is not aligned, therefore
+axis 0 in the output larry is aligned in ascending order. However, axis 1,
+which is already aligned is left in descending order.
+
+If you want to change the ordering of the labels, you can use **sortaxis**:
+::           
+    >>> y2.sortaxis()
+    label_0
+        a
+        z
+    label_1
+        a
+        z
+    x
+    array([[4, 3],
+           [2, 1]])
+
+    >>> y2.sortaxis(axis=1)
+    label_0
+        z
+        a
+    label_1
+        a
+        z
+    x
+    array([[2, 1],
+           [4, 3]])
+ 
+    >>> y2.sortaxis(reverse=True)
+    label_0
+        z
+        a
+    label_1
+        z
+        a
+    x
+    array([[1, 2],
+           [3, 4]])
+
+You can also change the ordering of the axis with **flipaxis**:
+::
+    >>> y2.flipaxis(axis=0)
+    label_0
+        a
+        z
+    label_1
+        z
+        a
+    x
+    array([[3, 4],
+           [1, 2]])
     
 
 .. _merge:
@@ -638,6 +895,7 @@ conversion methods:
 * **totuples**
 * **tolist**
 * **todict**
+* **tocsv**
 
 Some examples:
 ::
@@ -651,9 +909,11 @@ Some examples:
 
     >>> y.todict()
     {('r0', 'c1'): 2, ('r1', 'c1'): 4, ('r0', 'c0'): 1, ('r1', 'c0'): 3}
+    
+    >>> y.tocsv('/tmp/lar.csv')   
 
-The corresponding methods **fromtuples, fromlist, and fromdict** are discused
-in :ref:`creation`.
+The corresponding methods **fromtuples, fromlist, fromdict, and fromcsv** are
+discused in :ref:`creation`.
 
 Archiving
 ---------

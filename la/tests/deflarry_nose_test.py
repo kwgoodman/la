@@ -1,5 +1,7 @@
 
 import unittest
+import os
+import tempfile
 from copy import deepcopy
 
 import numpy as np
@@ -548,6 +550,15 @@ def test_conversion():
         y2 = larry.fromlist(y1.copy().tolist())
         yield ale, y1, y2, msg % ('list', str(shape)), False        
         y2 = larry.fromdict(y1.copy().todict())
-        yield ale, y1, y2, msg % ('dict', str(shape)), False         
+        yield ale, y1, y2, msg % ('dict', str(shape)), False
+        suffix = '.csv'
+        prefix = 'la_csv_unittest'
+        filename = tempfile.mktemp(suffix=suffix, prefix=prefix)
+        y1.copy().tocsv(filename)
+        y2 = larry.fromcsv(filename)
+        y2 = y2.maplabel(int) # labels loaded as strings; convert to int
+        os.unlink(filename)
+        yield ale, y1, y2, msg % ('csv', str(shape)), False                
+        
                   
                             

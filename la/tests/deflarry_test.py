@@ -9,8 +9,8 @@ from numpy.testing import (assert_, assert_almost_equal, assert_raises,
                            assert_equal)
 
 from la import larry
-from la.util.testing import (printfail, noreference, nocopy,
-                             assert_larry_equal)
+from la.util.testing import printfail, noreference, nocopy
+from la.util.testing import assert_larry_equal as ale
 
 
 class Test_init(unittest.TestCase):
@@ -81,7 +81,7 @@ class Test_unary(unittest.TestCase):
         d = larry([[ 0.0, 0.0],
                    [ 0.0, 0.0],
                    [ 0.0, 0.0]])
-        assert_larry_equal(self.l.log(), d, 'log_1', original=self.l)
+        ale(self.l.log(), d, 'log_1', original=self.l)
 
     def test_log_2(self):
         "larry.log_2"
@@ -3143,7 +3143,7 @@ class Test_alignment(unittest.TestCase):
         self.l2.label[0] = [2,1,0]
         self.l2.label[1] = [1,0]
         self.x3 = np.random.rand(2,3,4)                
-        self.l3 = larry(self.x3)                                                       
+        self.l3 = larry(self.x3)                                                      
 
     def test_morph_1(self):
         "larry.morph_1"
@@ -3331,6 +3331,91 @@ class Test_alignment(unittest.TestCase):
         self.assert_(f.label == label, 'labels are wrong')
         self.assert_((f.x == y.x).all(), 'data are wrong')
         
+    def test_sortaxis_1(self):
+        "larry.sortaxis_1"
+        original = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']]) 
+        actual = original.sortaxis()
+        desired = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
+        ale(actual, desired, 'sortaxis_1', original=original)
+             
+    def test_sortaxis_2(self):
+        "larry.sortaxis_2"
+        original = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']]) 
+        actual = original.sortaxis(reverse=True)
+        desired = original.copy()
+        ale(actual, desired, 'sortaxis_1', original=original)
+
+    def test_sortaxis_3(self):
+        "larry.sortaxis_3"
+        original = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']]) 
+        actual = original.sortaxis(axis=0)
+        desired = larry([[2, 1], [4, 3]], [['a', 'b'], ['d', 'c']])
+        ale(actual, desired, 'sortaxis_1', original=original)
+
+    def test_sortaxis_4(self):
+        "larry.sortaxis_4"
+        original = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']]) 
+        actual = original.sortaxis(axis=1)
+        desired = larry([[3, 4], [1, 2]], [['b', 'a'], ['c', 'd']]) 
+        ale(actual, desired, 'sortaxis_1', original=original)
+        
+    def test_flipaxis_1(self):
+        "larry.flipaxis_1"
+        original = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']]) 
+        actual = original.flipaxis()
+        desired = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']]) 
+        ale(actual, desired, 'flipaxis_1', original=original)
+        
+    def test_flipaxis_2(self):
+        "larry.flipaxis_2"
+        original = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']]) 
+        actual = original.flipaxis(copy=False)
+        desired = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']]) 
+        ale(actual, desired, 'flipaxis_2', original=original, iscopy=False)
+
+    def test_flipaxis_3(self):
+        "larry.flipaxis_3"
+        original = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']]) 
+        actual = original.flipaxis(0).flipaxis(1)
+        desired = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']]) 
+        ale(actual, desired, 'flipaxis_3', original=original)
+
+    def test_flipaxis_4(self):
+        "larry.flipaxis_4"
+        original = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']]) 
+        actual = original.flipaxis(0)
+        desired = larry([[3, 4], [1, 2]], [['b', 'a'], ['c', 'd']]) 
+        ale(actual, desired, 'flipaxis_4', original=original)
+
+    def test_insertaxis_1(self):
+        "larry.insertaxis_1"
+        original = larry([1, 2]) 
+        actual = original.insertaxis(0, 'new')
+        desired = larry([[1, 2]], [['new'], [0, 1]]) 
+        ale(actual, desired, 'insertaxis_1', original=original)
+
+    def test_insertaxis_2(self):
+        "larry.insertaxis_2"
+        original = larry([1, 2]) 
+        actual = original.insertaxis(1, 'new')
+        desired = larry([[1], [2]], [[0, 1], ['new']]) 
+        ale(actual, desired, 'insertaxis_2', original=original)
+
+    def test_insertaxis_3(self):
+        "larry.insertaxis_3"
+        original = larry([1, 2]) 
+        actual = original.insertaxis(-2, 'new')
+        desired = larry([[1, 2]], [['new'], [0, 1]]) 
+        ale(actual, desired, 'insertaxis_1', original=original)
+
+    def test_insertaxis_4(self):
+        "larry.insertaxis_4"
+        original = larry([1, 2]) 
+        actual = original.insertaxis(-1, 'new')
+        desired = larry([[1], [2]], [[0, 1], ['new']]) 
+        ale(actual, desired, 'insertaxis_2', original=original)
+        
+                        
 class Test_random(unittest.TestCase):
     "Test randomizing functions of the larry class"
 
