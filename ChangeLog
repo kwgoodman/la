@@ -1,3 +1,8 @@
+2010-02-11 Keith
+
+    * util/testing.py(iscopy), util/testing.py(isview):
+      Use np.may_share_memory to check for references between numpy arrays.
+
 2010-02-10 Keith
 
     * deflarry.py(insertaxis), tests/deflarry_test.py, doc/source/intro.rst

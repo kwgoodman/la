@@ -210,7 +210,7 @@ def assert_iscopy(larry1, larry2):
     if not isinstance(larry2, larry):
         raise TypeError, 'Input must be a larry'
     msg = []    
-    if larry1.x is larry2.x:
+    if np.may_share_memory(larry1.x, larry2.x):
         msg.append('The data arrays share a reference.')
     for i in xrange(min(larry1.ndim, larry2.ndim)):
         if larry1.label[i] is larry2.label[i]:
@@ -227,7 +227,7 @@ def assert_isview(larry1, larry2):
     if not isinstance(larry2, larry):
         raise TypeError, 'Input must be a larry'
     msg = []    
-    if larry1.x is not larry2.x:
+    if not np.may_share_memory(larry1.x, larry2.x):
         msg.append('The data arrays do not share a reference.')
     for i in xrange(min(larry1.ndim, larry2.ndim)):
         if larry1.label[i] is not larry2.label[i]:
