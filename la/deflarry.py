@@ -1503,7 +1503,7 @@ class larry(object):
                     raise ValueError, msg
                 typ = type(index)
                 if typ == list:
-                    # Example: lar.lix[['a', 'b', 'c']]
+                    # Example: lar.lix[[['a'], ['b'], ['c']]]
                     index2 = labels2indices(y.label[0], index)
                     if len(index) == 1:       
                         index2 = index2[0]

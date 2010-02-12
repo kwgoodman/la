@@ -1,3 +1,7 @@
+2010-02-12 Keith
+
+    * deflarry.py(lix): Update code comment to match code.
+
 2010-02-11 Keith
     
     * doc/source/work.rst: Added sortaxis, flipaxis, and insertaxis to sphinx
@@ -140,7 +144,7 @@
       Tweak.
 
     * util/testing.py(assert_noreference), util/testing.py(assert_nocopy):
-      Refactored and specify where the reference or copt is found (label,
+      Refactored and specify where the reference or copy is found (label,
       axis, array).
 
     * util/testing.py(assert_larry_equal), util/testing.py(heading):
@@ -156,7 +160,7 @@
       New functions.
       
     * util/testing.py(assert_noreference), util/testing.py(assert_nocopy), 
-      util/testing.py(noreference), util.testing.py(nocopy): Convert imput
+      util/testing.py(noreference), util.testing.py(nocopy): Convert input
       check asserts to if statements.    
 
     * tests/test.py, util/testing.py, __init__.py, tests/afunc_arr_test.py,
