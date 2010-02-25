@@ -1489,60 +1489,7 @@ class larry(object):
         >>> x[[0, 1], [0, 1]]
         array([1, 4])       
         
-        """
-        class Getitemlabel(object):
-            def __init__(self2, self):
-                self2.lar = self
-            def __getitem__(self2, index):
-                y = self2.lar
-                if y.shape == (0,):
-                    return self
-                elif 0 in y.shape:
-                    msg = 'lix does not support shapes that contain 0 '
-                    msg += 'such as (0,) and (2, 0 ,3).'
-                    raise ValueError, msg
-                typ = type(index)
-                if typ == list:
-                    # Example: lar.lix[['a', 'b', 'c']]
-                    index2 = labels2indices(y.label[0], index)
-                    if len(index) == 1:       
-                        index2 = index2[0]
-                    return y[index2]               
-                elif typ == slice:
-                    # Examples: lar.lix[['a']:], lar.lix[['a']:['b']],
-                    #           lar.lix[['a']:['b']:2], lar.lix[2:['b']] 
-                    return y[slicemaker(index, y.labelindex, 0)]                                                           
-                elif typ == tuple:
-                    index2 = []
-                    label = []
-                    for ax, idx in enumerate(index):
-                        typ = type(idx)
-                        if typ == list:
-                            idx2 = labels2indices(y.label[ax], idx)
-                            if len(idx) > 1:      
-                                label.append(idx)                                                                
-                            index2.append(idx2)
-                        elif typ == slice: 
-                            s = slicemaker(idx, y.labelindex, ax)
-                            slar = range(*s.indices(y.shape[ax]))
-                            lab = y.label[ax][s]
-                            if len(lab) > 1:
-                                label.append(lab)        
-                            index2.append(slar)
-                        elif isscalar(idx):
-                            index2.append([idx])    
-                        else:
-                            raise IndexError, 'Unsupported indexing operation.'
-                    x = np.squeeze(y.x[np.ix_(*index2)])
-                    if x.ndim == 0:
-                        return x[()]
-                    else:    
-                        return larry(x, label)                       
-                elif isscalar(index):
-                    # Example: lar.lix[0]
-                    return y[index]             
-                else:
-                    raise IndexError, 'Unsupported indexing operation.'                                  
+        """                       
         return Getitemlabel(self)                               
         
     def __setitem__(self, index, value):
@@ -3861,6 +3808,63 @@ class larry(object):
 
 
 # Label indexing support functions for the lix method ------------------------
+
+class Getitemlabel(object):
+    "Utility class for the lix method."
+    
+    def __init__(self2, self):
+        self2.lar = self
+        
+    def __getitem__(self2, index):
+        y = self2.lar
+        if y.shape == (0,):
+            return self2.lar
+        elif 0 in y.shape:
+            msg = 'lix does not support shapes that contain 0 '
+            msg += 'such as (0,) and (2, 0 ,3).'
+            raise ValueError, msg
+        typ = type(index)
+        if typ == list:
+            # Example: lar.lix[['a', 'b', 'c']]
+            index2 = labels2indices(y.label[0], index)
+            if len(index) == 1:       
+                index2 = index2[0]
+            return y[index2]               
+        elif typ == slice:
+            # Examples: lar.lix[['a']:], lar.lix[['a']:['b']],
+            #           lar.lix[['a']:['b']:2], lar.lix[2:['b']] 
+            return y[slicemaker(index, y.labelindex, 0)]                                                           
+        elif typ == tuple:
+            index2 = []
+            label = []
+            for ax, idx in enumerate(index):
+                typ = type(idx)
+                if typ == list:
+                    idx2 = labels2indices(y.label[ax], idx)
+                    if len(idx) > 1:      
+                        label.append(idx)                                                                
+                    index2.append(idx2)
+                elif typ == slice: 
+                    s = slicemaker(idx, y.labelindex, ax)
+                    slar = range(*s.indices(y.shape[ax]))
+                    lab = y.label[ax][s]
+                    if len(lab) > 1:
+                        label.append(lab)        
+                    index2.append(slar)
+                elif isscalar(idx):
+                    index2.append([idx])    
+                else:
+                    raise IndexError, 'Unsupported indexing operation.'
+            x = np.squeeze(y.x[np.ix_(*index2)])
+            if x.ndim == 0:
+                return x[()]
+            else:    
+                return larry(x, label)                       
+        elif isscalar(index):
+            # Example: lar.lix[0]
+            return y[index]             
+        else:
+            raise IndexError, 'Unsupported indexing operation.'           
     
 def slicemaker(index, labelindex, axis): 
     "Convert a slice that may contain labels to a slice with indices."

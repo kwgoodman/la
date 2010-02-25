@@ -1,3 +1,9 @@
+2010-02-25 Keith
+
+    * deflarry.py(lix), deflarry.py(Getitemlabel): Moved the Getitemlabel
+      class code out of the lix method. Now the class is defined at import
+      instead of each time lix is called. Much faster.
+
 2010-02-12 Keith
 
     * deflarry.py(lix): Reverse update of code comment in previous commit.
