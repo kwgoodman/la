@@ -1,3 +1,9 @@
+2010-03-10 Keith
+
+    * io.py(save), io.py(_list2array), io.py(_load_label), tests/io_test.py,
+      RELEASE, doc/source/archive.rst, doc/source/intro.rst: Add ability to
+      archive larrys that have dates (datetime.date) as labels.
+
 2010-02-25 Keith
 
     * deflarry.py(lix), deflarry.py(Getitemlabel): Moved the Getitemlabel

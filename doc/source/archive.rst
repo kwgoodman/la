@@ -282,7 +282,7 @@ In this section we will discuss two limitations:
 * The freespace in the archive is not by default automatically reclaimed after
   deleting larrys.
 * In order to archive a larry, its data and labels must be of a type supported
-  by HDF5.   
+  by HDF5.
 
 Freespace
 """""""""
@@ -304,39 +304,9 @@ However, when archiving larrys in HDF5 format the labels are
 converted to Numpy arrays and the elements of a Numpy array must be of the
 same type. Therefore, to archive a larry the labels along any one dimension
 must be of the same type and that type must be one that is recognized by
-h5py and HDF5: strings and scalars. So, for example, if your labels are
-datetime.date objects, then you must convert them before archiving. To
-demonstrate, let's create a larry with dates (datetime.date objects) as
-labels:
-::
-    >>> import datetime
-    >>> d = datetime.date
-    >>> y = la.larry([1, 2], [[d(2010,1,22), d(2010,1,23)]])
-    >>> y
-    label_0
-        2010-01-22
-        2010-01-23
-    x
-    array([1, 2])    
-
-To archive a larry with dates as labels you could convert the dates to
-integers:
-::
-    >>> y.maplabel(datetime.date.toordinal, axis=0)
-    label_0
-        733794
-        733795
-    x
-    array([1, 2])
-    
-or you could convert the dates to strings:
-::
-    >>> y.maplabel(str, axis=0)
-    label_0
-        2010-01-22
-        2010-01-23
-    x
-    array([1, 2])
+h5py and HDF5: strings and scalars. An exception is made for labels with dates
+of type datetime.date: la automatically converts dates to integers when saving
+and back to dates when loading. 
 
 
 Archive format
@@ -350,7 +320,11 @@ in this manual as the key, is the name of the larry. The group is given an
 attribute called 'larry' and assigned the value True. Inside the group are
 several HDF5 Datasets. For a 2d larry, for example, there are three datasets:
 one to hold the data (named 'x') and two to hold the labels (named '0' and
-'1'). In general, for a nd larry there are n+1 datasets.
+'1'). In general, for a nd larry there are n+1 datasets. Each label Dataset
+is given an attribute called 'isdate' which is set to True if all labels along
+the given axis are dates of type datetime.date; False otherwise. If 'isdate'
+is True then the labels are converted to integers before saving, and converted
+back to datetime.date object when loading.
 
 
 Reference

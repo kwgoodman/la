@@ -26,6 +26,7 @@ Enhancements
 ------------
 - Added nd ability to the larry methods that could only handle 2d input
 - Extend group methods to allow axis argument and 2d groups
+- Add ability to save larrys with datetime.date labels
 
 Unit testing
 ------------

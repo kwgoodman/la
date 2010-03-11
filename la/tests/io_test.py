@@ -3,12 +3,14 @@
 import unittest
 import tempfile
 import os
+import datetime
 
 import numpy as np
 nan = np.nan
 
 from la import larry
 from la import (IO, archive_directory)
+from la.util.testing import assert_larry_equal
 
 
 class Test_io(unittest.TestCase):
@@ -58,6 +60,16 @@ class Test_io(unittest.TestCase):
         keys.sort()
         theory = ['1', '1/2/3/4', '2']
         self.assert_(keys == theory, 'keys do not match')
+        
+    def test_io_4(self):
+        "io_dates"
+        io = IO(self.filename)
+        x = [1, 2]
+        label = [[datetime.date(2010,3,1), datetime.date(2010,3,2)]]
+        desired = larry(x, label) 
+        io['desired'] = desired
+        actual = io['desired']
+        assert_larry_equal(actual, desired)      
      
         
 def testsuite():
