@@ -1,3 +1,21 @@
+2010-03-10 Keith
+
+    * io.py(save), io.py(_list2array), io.py(_load_label), tests/io_test.py,
+      RELEASE, doc/source/archive.rst, doc/source/intro.rst: Add ability to
+      archive larrys that have dates (datetime.date) as labels.
+
+2010-02-25 Keith
+
+    * deflarry.py(lix), deflarry.py(Getitemlabel): Moved the Getitemlabel
+      class code out of the lix method. Now the class is defined at import
+      instead of each time lix is called. Much faster.
+
+2010-02-12 Keith
+
+    * deflarry.py(lix): Reverse update of code comment in previous commit.
+
+    * deflarry.py(lix): Update code comment to match code.
+
 2010-02-11 Keith
     
     * doc/source/work.rst: Added sortaxis, flipaxis, and insertaxis to sphinx
@@ -140,7 +158,7 @@
       Tweak.
 
     * util/testing.py(assert_noreference), util/testing.py(assert_nocopy):
-      Refactored and specify where the reference or copt is found (label,
+      Refactored and specify where the reference or copy is found (label,
       axis, array).
 
     * util/testing.py(assert_larry_equal), util/testing.py(heading):
@@ -156,7 +174,7 @@
       New functions.
       
     * util/testing.py(assert_noreference), util/testing.py(assert_nocopy), 
-      util/testing.py(noreference), util.testing.py(nocopy): Convert imput
+      util/testing.py(noreference), util.testing.py(nocopy): Convert input
       check asserts to if statements.    
 
     * tests/test.py, util/testing.py, __init__.py, tests/afunc_arr_test.py,

@@ -1,5 +1,6 @@
 
 import os
+import datetime
 
 import numpy as np
 import h5py
@@ -352,6 +353,12 @@ def save(file, lar, key):
     elements of a label along any one dimension must be of the same type
     and that type must be supported by HDF5.
     
+    If all labels along an axis are dates of type datetime.date, then the
+    dates are converted to integers before saving and the HDF5 Dataset used
+    to store that label is assigned an attribute name 'isdate' which is set
+    to True. When loading the larry, the dates will automatically be converted
+    back to datetime.date dates.
+    
     Parameters
     ----------
     file : str or h5py.File
@@ -395,7 +402,8 @@ def save(file, lar, key):
     fkey.attrs['larry'] = True
     fkey['x'] = lar.x
     for i in range(lar.ndim):
-        fkey[str(i)] = _list2array(lar.label[i])
+        fkey[str(i)], isdate = _list2array(lar.label[i])
+        fkey[str(i)].attrs['isdate'] = isdate
     
     # Close if file is a filename   
     if opened:
@@ -587,7 +595,10 @@ def _load_label(group, ndim):
     "Load larry labels from archive given the hpy5.Group object of the larry."
     label = []
     for i in range(ndim):
-        label.append(group[str(i)][:].tolist())
+        labellist = group[str(i)][:].tolist()
+        if group[str(i)].attrs['isdate']:
+            labellist = map(datetime.date.fromordinal, labellist)
+        label.append(labellist)
     return label                     
 
 def _list2array(x):
@@ -599,7 +610,11 @@ def _list2array(x):
         msg = 'Elements of a label along any one dimension must be of the '
         msg += 'same type.'  
         raise TypeError, msg
-    return np.asarray(x)                 
+    isdate = False    
+    if type0 == datetime.date:
+        x = map(datetime.date.toordinal, x)
+        isdate = True    
+    return np.asarray(x), isdate                 
     
 def _openfile(file):
     """
