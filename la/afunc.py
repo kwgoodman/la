@@ -163,12 +163,14 @@ def geometric_mean(x, axis=1, check_for_greater_than_zero=True):
     x = np.multiply(x, idx)
     return np.expand_dims(x, axis) 
 
-def movingsum(x, window, axis=-1, norm=False):
+def movingsum(x, window, skip=0, axis=-1, norm=False):
     """Moving sum optionally normalized for missing (NaN) data."""
     if window < 1:  
         raise ValueError, 'window must be at least 1'
     if window > x.shape[axis]:
         raise ValueError, 'Window is too big.'      
+    if skip > x.shape[axis]:
+        raise IndexError, 'Your skip is too large.'
     m = np.isfinite(x) 
     x = 1.0 * x 
     x[m == 0] = 0
@@ -192,28 +194,36 @@ def movingsum(x, window, axis=-1, norm=False):
         ms[msm == 0] = np.nan
 
     initshape = list(x.shape)  
-    initshape[axis] = window - 1
+    initshape[axis] = skip + window - 1
+    #Note: skip could be included in starting window
+    cutslice = [slice(None)] * x.ndim   
+    cutslice[axis] = slice(None,-skip or None,None)
     nans = np.nan * np.zeros(initshape)
-    ms = np.concatenate((nans, ms), axis) 
-    return ms
-  
-def movingsum_forward(x, window, skip=0, axis=1, norm=False):
-    """Movingsum in the forward direction skipping skip dates."""
-    if axis == 0:
-        x = x.T
-    x = np.fliplr(x)
-    nr, nc = x.shape
-    if skip > nc:
-        raise IndexError, 'Your skip is too large.'
-    ms = movingsum(x, window, axis=1, norm=norm)
-    ms = np.fliplr(ms)
-    nans = np.nan * np.zeros((nr, skip))
-    ms = np.concatenate((ms[:,skip:], nans), 1)  
-    if axis == 0:
-        ms = ms.T
+    ms = np.concatenate((nans, ms[cutslice]), axis) 
     return ms
 
-def movingrank(x, window, axis=1):
+def movingsum_forward(x, window, skip=0, axis=-1, norm=False):
+    """Movingsum in the forward direction skipping skip dates."""
+    flip_index = [slice(None)] * x.ndim 
+    flip_index[axis] = slice(None, None, -1)
+    msf = movingsum(x[flip_index], window, skip=skip, axis=axis, norm=norm)
+    return msf[flip_index]
+    
+#    if axis == 0:
+#        x = x.T
+#    x = np.fliplr(x)
+#    nr, nc = x.shape
+#    if skip > nc:
+#        raise IndexError, 'Your skip is too large.'
+#    ms = movingsum(x, window, axis=1, norm=norm)
+#    ms = np.fliplr(ms)
+#    nans = np.nan * np.zeros((nr, skip))
+#    ms = np.concatenate((ms[:,skip:], nans), 1)  
+#    if axis == 0:
+#        ms = ms.T
+#    return ms
+
+def movingrank(x, window, axis=-1):
     """Moving rank (normalized to -1 and 1) of a given window along axis.
 
     Normalized for missing (NaN) data.
@@ -224,44 +234,72 @@ def movingrank(x, window, axis=1):
         raise ValueError, 'Window is too big.'
     if window < 2:
         raise ValueError, 'Window is too small.'
-    if axis == 0:
-        x = x.T
-    nr, nt = x.shape
-    mr = np.nan * np.zeros((nr,nt))        
+#    if axis == 0:
+#        x = x.T
+    nt = x.shape[axis]
+    mr = np.nan * np.zeros(x.shape)        
     for i in xrange(window-1,nt): 
-        mr[:,i] = np.squeeze(lastrank(x[:,(i-window+1):(i+1)]))  #check i:i+1      
-    if axis == 0:
-        mr = mr.T
+        index1 = [slice(None)] * x.ndim 
+        index1[axis] = i
+        index2 = [slice(None)] * x.ndim 
+        index2[axis] = slice(i-window+1, i+1, None)
+        print 'lastrank(x[index2]).shape, mr[index1].shape'
+        print lastrank(x[index2],axis=axis).shape, mr[index1].shape
+        mr[index1] = np.squeeze(lastrank(x[index2],axis=axis))
+#        mr[:,i] = np.squeeze(lastrank(x[:,(i-window+1):(i+1)]))  #check i:i+1      
+#    if axis == 0:
+#        mr = mr.T
     return mr
-   
-def lastrank(x):
+       
+def lastrank(x, axis=-1):
     "Rank of last column only"
-    g = (x[:,-1:] > x).sum(1)
-    e = (x[:,-1:] == x).sum(1)
-    n = np.isfinite(x).sum(1)
+    #note this is just a special case of lastrank_decay with decay=0
+    #changes for nd, not tried out
+    indlast = [slice(None)] * x.ndim 
+    indlast[axis] = slice(-1, None)
+    indlast2 = [slice(None)] * x.ndim 
+    indlast2[axis] = -1
+    g = (x[indlast] > x).sum(axis)
+    e = (x[indlast] == x).sum(axis)
+    n = np.isfinite(x).sum(axis)
     r = (g + g + e - 1.0) / 2.0
     r = r / (n - 1.0)
     r = 2.0 * (r - 0.5)
-    r[~np.isfinite(x[:,-1])] = np.nan
-    return r[:,None]
+    print indlast
+    print x[indlast]
+    print r.shape, x.shape
+    r[~np.isfinite(x[indlast2])] = np.nan  # not sure
+    return np.expand_dims(r,axis) #[:,None]    #TODO:need to add lost (in sum) dimension again
 
-def lastrank_decay(x, decay):
+def lastrank_decay(x, decay, axis=-1):
     "Exponential decay rank of last column only"
     assert decay >= 0, 'Min decay is 0.'
-    x = np.atleast_2d(x) # so that indexing and axis work correctly
-    nt = x.shape[1]
-    w = nt - np.ones((1,nt)).cumsum(1)
+    #x = np.atleast_2d(x) # so that indexing and axis work correctly
+    # is atleast_2d still necessary
+    nt = x.shape[axis]
+    w = nt - np.ones(nt).cumsum()
     w = np.exp(-decay * w)
     w = nt * w / w.sum()
+    matchdim = [None] * x.ndim 
+    matchdim[axis] = slice(None)
+    w = w[matchdim]
     # inner or dot ?
-    g = np.inner((x[:,-1:] > x), w).sum(1)
-    e = np.inner((x[:,-1:] == x), w).sum(1)
-    n = np.inner(np.isfinite(x), w).sum(1)
-    r = (g + g + e - w[0,-1]) / 2.0
-    r = r / (n - w[0,-1])
+    indlast = [slice(None)] * x.ndim 
+    indlast[axis] = slice(-1, None)
+    indlast2 = [slice(None)] * x.ndim 
+    indlast2[axis] = -1 #slice(-1, None)
+    g = ((x[indlast] > x) * w).sum(axis)  #JP:inner and sum do the same thing
+    e = ((x[indlast] == x) * w).sum(axis) #one is redundant
+    n = (np.isfinite(x) * w).sum(axis)
+    r = (g + g + e - w.flat[-1]) / 2.0
+    r = r / (n - w.flat[-1])
     r = 2.0 * (r - 0.5)
-    r[~np.isfinite(x[:,-1])] = np.nan
-    return r[:,None]
+    print 'r',r
+    print 'x',x
+    print indlast
+    print 'x[indlast]', x[indlast2]
+    r[~np.isfinite(x[indlast2])] = np.nan
+    return np.expand_dims(r,axis) #r[:,None]
 
 def ranking(x, axis=0, norm='-1,1', ties=True):
     """
@@ -349,20 +387,29 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
     idx[(countnotnan==1)*(~masknan)] = middle
     return idx
 
-def fillforward_partially(x, n):
+def fillforward_partially(x, n, axis=-1):
     "Fill missing values (NaN) with most recent non-missing values if recent."
-    y = np.asarray(x.copy())
+    
+    if axis != -1:
+        x = np.rollaxis(axis)
+    #y = np.asarray(x.copy())
+    y = np.array(x)
+    if axis != -1:
+        y = np.rollaxis(y,axis)
+        
     fidx = np.isfinite(y)
-    recent = np.nan * np.ones(y.shape[0])  
-    count = np.nan * np.ones(y.shape[0])          
-    for i in xrange(y.shape[1]):
+    recent = np.nan * np.ones(y.shape[:-1])  
+    count = np.nan * np.ones(y.shape[:-1])          
+    for i in xrange(y.shape[-1]):
         idx = (i - count) > n
         recent[idx] = np.nan
-        idx = ~fidx[:,i]
+        idx = ~fidx[...,i]
         y[idx, i] = recent[idx]
-        idx = fidx[:,i]
+        idx = fidx[...,i]
         count[idx] = i
         recent[idx] = y[idx,i]
+    if axis != -1:
+        y = np.rollaxis(y, -1, axis)
     return y
 
 def quantile(x, q):

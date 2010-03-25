@@ -2190,14 +2190,14 @@ class larry(object):
     def movingsum(self, window, axis=-1, norm=False):
         """Moving sum, NaNs treated as 0, optionally normalized for NaNs."""
         y = self.copy()
-        y.x = movingsum(y.x, window, axis, norm)
+        y.x = movingsum(y.x, window, axis=axis, norm=norm)
         return y 
         
     def movingsum_forward(self, window, skip=0, axis=1, norm=False):    
         """Movingsum in the forward direction skipping skip dates"""
         self._2donly()        
         y = self.copy()
-        y.x = movingsum_forward(y.x, window, skip, axis, norm)
+        y.x = movingsum_forward(y.x, window, skip=skip, axis=axis, norm=norm)
         return y
                          
     def ranking(self, axis=0, norm='-1,1', ties=True):
@@ -2239,7 +2239,7 @@ class larry(object):
         
         """
         y = self.copy()
-        y.x = ranking(y.x, axis, norm, ties)
+        y.x = ranking(y.x, axis, norm=norm, ties=ties)
         return y
                             
     def movingrank(self, window, axis=1):
