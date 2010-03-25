@@ -67,11 +67,11 @@ def check_3d(func, args):
         res1 = res
     assert_(np.shape(res1)>0, repr(func)+'does not return array for 3d')
    
-def _est_3d():
+def test_3d():
     # many of these tests fail, skip to reduce noise during testing
     x = np.array([[9.0, 3.0, nan, nan, 9.0, nan],
                   [1.0, 1.0, 1.0, nan, nan, nan],
-                  [2.0, 2.0, 0.0, nan, 1.0, nan],
+                  [2.0, 2.0, 0.1, nan, 1.0, nan],  # 0.0 kills geometric mean
                   [3.0, 9.0, 2.0, nan, nan, nan],
                   [4.0, 4.0, 3.0, 9.0, 2.0, nan],
                   [5.0, 5.0, 4.0, 4.0, nan, nan]])
@@ -86,7 +86,7 @@ def _est_3d():
     for func in funcs_oneint:
         xc = x.copy()
         args = (xc, 2)
-        #yield check_3d, func, args
+        yield check_3d, func, args
         
     for func in funcs_onefrac:
         xc = x.copy()
