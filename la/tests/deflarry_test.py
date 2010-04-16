@@ -484,9 +484,31 @@ class Test_unary(unittest.TestCase):
         msg = printfail(t, p.x, 'x')      
         self.assert_((t == p.x).all(), msg) 
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l4), 'Reference found')          
-      
+        self.assert_(noreference(p, self.l4), 'Reference found')
+        
+    def test_invert_1(self):
+        "larry.invert_1"
+        o = larry([True, False])
+        d = larry([False, True])
+        ale(o.invert(), d, 'invert_1', bool, original=o)                  
 
+    def test_invert_2(self):
+        "larry.invert_2"
+        y = larry([0, 1])
+        self.failUnlessRaises(TypeError, y.invert)      
+
+    def test___invert___1(self):
+        "larry.__invert___1"
+        o = larry([True, False])
+        d = larry([False, True])
+        ale(~o, d, 'invert_1', bool, original=o)
+
+    def test___invert___2(self):
+        "larry.__invert___2"
+        y = larry([0, 1])
+        self.failUnlessRaises(TypeError, y.invert)  
+        
+        
 class Test_binary(unittest.TestCase):
     "Test binary functions of Data class"
     

@@ -1,5 +1,9 @@
 2010-04-16 Keith
 
+    * deflarry.py(invert), deflarry.py(__invert__), tests/deflarry_test.py,
+      RELEASE, doc/source/intro.rst, doc/source/reference.rst: Add invert
+      method.
+
     * RELEASE: Minor typos.
 
 2010-03-10 Keith

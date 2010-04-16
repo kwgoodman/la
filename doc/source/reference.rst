@@ -99,6 +99,14 @@ and do not change its shape or ordering.
 
 .. automethod:: la.larry.isinf                   
 
+------------
+
+.. automethod:: la.larry.invert
+
+------------
+
+.. automethod:: la.larry.__invert__
+
              
 Binary
 ------

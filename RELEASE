@@ -17,6 +17,7 @@ New larry methods
 - tocsv : Save larry to a csv file
 - fromcsv : Load a larry from a csv file
 - insertaxis : Insert a new axis at the specified position
+- invert : Element by element inverting of True to False and False to True
 
 New function
 ------------

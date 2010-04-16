@@ -495,7 +495,53 @@ class larry(object):
         """    
         label = self.copylabel()
         x = np.isinf(self.x)
-        return type(self)(x, label)                        
+        return type(self)(x, label) 
+        
+    def __invert__(self):
+        """
+        Element by element inverting of True to False and False to True.
+        
+        Raises
+        ------
+        TypeError
+            If larry does not have bool dtype.
+            
+        Examples
+        --------
+        >>> y = larry([True, False])
+        >>> ~y
+        label_0
+            0
+            1
+        x
+        array([False,  True], dtype=bool)
+            
+        """
+        return self.invert()
+        
+    def invert(self):
+        """
+        Element by element inverting of True to False and False to True.
+        
+        Raises
+        ------
+        TypeError
+            If larry does not have bool dtype.
+            
+        Examples
+        --------
+        >>> y = larry([True, False])
+        >>> y.invert()
+        label_0
+            0
+            1
+        x
+        array([False,  True], dtype=bool)
+            
+        """
+        if self.dtype != bool:
+            raise TypeError, 'Only larrys with bool dtype can be inverted.'
+        return larry(~self.x, self.copylabel())                                       
         
     # Binary Functions ------------------------------------------------------- 
     
