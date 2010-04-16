@@ -12,11 +12,11 @@ New larry methods
 -----------------
 - lix : Index into a larry using labels or index numbers or both
 - swapaxes : Swap the two specified axes
-- sortaxis : Sort data (and label) according to label along specified axis.
-- flipaxis : Reverse the order of the elements along the specified axis.
-- tocsv : Save larry to a csv file.
-- fromcsv : Load a larry from a csv file.
-- insertaxis : Insert a new axis at the specified position.
+- sortaxis : Sort data (and label) according to label along specified axis
+- flipaxis : Reverse the order of the elements along the specified axis
+- tocsv : Save larry to a csv file
+- fromcsv : Load a larry from a csv file
+- insertaxis : Insert a new axis at the specified position
 
 New function
 ------------
@@ -44,8 +44,8 @@ Bug fixes
 - #518114: fromlist([]) and fromtuples([]) failed
 - #518135: keep_label crashed when there was nothing to keep
 - #518210: sum, std, var returned NaN for empty larrys; now return 0.0 
-- #518215. unflatten crashed on an empty larry
-- #518442. sum, std, var returned NaN for shapes that contain zero: (2, 0, 3)
+- #518215: unflatten crashed on an empty larry
+- #518442: sum, std, var returned NaN for shapes that contain zero: (2, 0, 3)
 
 
 la 0.1 (first release)

@@ -1,3 +1,7 @@
+2010-04-16 Keith
+
+    * RELEASE: Minor typos.
+
 2010-03-10 Keith
 
     * io.py(save), io.py(_list2array), io.py(_load_label), tests/io_test.py,
