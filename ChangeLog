@@ -1,5 +1,7 @@
 2010-04-18 Keith
 
+    * deflarry.py(lix): Typo in doc string.    
+
     * doc/source/work.rst, deflarry.py(fromtuples): Doc bugs and rewrite.
 
 2010-04-16 Keith

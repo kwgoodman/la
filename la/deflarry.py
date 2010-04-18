@@ -1494,7 +1494,7 @@ class larry(object):
         array([0, 2])
 
         Be careful of the difference between indexing with indices and
-        indexing with labels. In the first exmaple below 4 is an index; in
+        indexing with labels. In the first example below 4 is an index; in
         the second example 4 is a label element:
 
         >>> y.lix[['a']:4]
