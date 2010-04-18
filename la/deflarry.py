@@ -3476,7 +3476,7 @@ class larry(object):
         Convert a list of label, value pairs to a larry:
         
         >>> data = [('r0', 'c0', 1), ('r0', 'c1', 2), ('r1', 'c0', 3), ('r1', 'c1', 4)]
-        >>> la.fromtuples(data)
+        >>> larry.fromtuples(data)
         label_0
             r0
             r1

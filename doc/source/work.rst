@@ -91,15 +91,46 @@ to create a larry whose data shape does not agree with the label shape:
     
 The following functions can also be used to create larrys:
 
-* **fromlist**
 * **fromtuples**
 * **fromdict**
+* **fromlist**
 * **fromcsv**
 
-Here's how to create a larry using **fromlist**:
+Here's how to create a larry using **fromtuples**:
 ::
-    >>> data = [[1, 2, 3, 4], [('a', 'c'), ('a', 'd'), ('b', 'c'), ('b', 'd')]]
-    >>> la.fromlist(data)
+    >>> data = [('a', 'a', 1), ('a', 'b', 2), ('b', 'a', 3), ('b', 'b', 4)]
+    >>> larry.fromtuples(data)
+    label_0
+        a
+        b
+    label_1
+        a
+        b
+    x
+    array([[ 1.,  2.],
+           [ 3.,  4.]])
+           
+Note that **fromtuples** changed the data type from integer to float. That
+allows for the possibility of missing data (because NaN is represented as a
+float). Let's throw out the last data point in the example above (note the
+NaN):
+::
+    >>> data = [('a', 'a', 1), ('a', 'b', 2), ('b', 'a', 3)]
+    >>> larry.fromtuples(data)
+    label_0
+        a
+        b
+    label_1
+        a
+        b
+    x
+    array([[  1.,   2.],
+           [  3.,  NaN]])
+            
+Here are examples of **fromtuples** and **fromlist**:
+::
+    >>> data = {('a', 'c'): 1, ('a', 'd'): 2, ('b', 'c'): 3, ('b', 'd'): 4}
+    >>> larry.fromdict(data)
     label_0
         a
         b
@@ -110,38 +141,8 @@ Here's how to create a larry using **fromlist**:
     array([[ 1.,  2.],
            [ 3.,  4.]])
            
-Note that **fromlist** changed the data type from integer to float. That
-allows for the possibility of missing data. Let's throw out the last data
-point in the example above (note the NaN):
-::
-    >>> data = [[1, 2, 3], [('a', 'c'), ('a', 'd'), ('b', 'c')]]
-    >>> la.fromlist(data)
-    label_0
-        a
-        b
-    label_1
-        c
-        d
-    x
-    array([[  1.,   2.],
-           [  3.,  NaN]])
-            
-Here are examples of **fromtuples** and **fromdict**:
-::
-    >>> data = [('a', 'a', 1), ('a', 'b', 2), ('b', 'a', 3), ('b', 'b', 4)]
-    >>> la.fromtuples(data)
-    label_0
-        a
-        b
-    label_1
-        a
-        b
-    x
-    array([[ 1.,  2.],
-           [ 3.,  4.]])
-
-    >>> data = {('a', 'c'): 1, ('a', 'd'): 2, ('b', 'c'): 3, ('b', 'd'): 4}
-    >>> la.fromdict(data)
+    >>> data = [[1, 2, 3, 4], [('a', 'c'), ('a', 'd'), ('b', 'c'), ('b', 'd')]]
+    >>> larry.fromlist(data)
     label_0
         a
         b
@@ -150,7 +151,7 @@ Here are examples of **fromtuples** and **fromdict**:
         d
     x
     array([[ 1.,  2.],
-           [ 3.,  4.]])
+           [ 3.,  4.]])           
            
 And an example of creating a larry from a csv file:
 ::

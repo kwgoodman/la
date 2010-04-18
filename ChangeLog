@@ -1,3 +1,7 @@
+2010-04-18 Keith
+
+    * doc/source/work.rst, deflarry.py(fromtuples): Doc bugs and rewrite.
+
 2010-04-16 Keith
 
     * deflarry.py(invert), deflarry.py(__invert__), tests/deflarry_test.py,
