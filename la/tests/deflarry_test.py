@@ -1359,6 +1359,11 @@ class Test_reduce(unittest.TestCase):
         p = self.l2.std()
         msg = printfail(t, p, '')
         self.assert_(p == t, msg)
+        
+    def test_std_6(self):
+        "larry.std_6"        
+        s = larry([1, 1, 1]).std(axis=-1)
+        self.assert_(s == 0, 'Not equal')
 
     def test_var_1(self):
         "larry.var_1"
@@ -1402,7 +1407,12 @@ class Test_reduce(unittest.TestCase):
         t = 2./3
         p = self.l2.var()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)      
+        self.assert_(p == t, msg) 
+        
+    def test_var_6(self):
+        "larry.var_6"        
+        s = larry([1, 1, 1]).var(axis=-1)
+        self.assert_(s == 0, 'Not equal')             
         
     def test_max_1(self):
         "larry.max_1"

@@ -1,3 +1,9 @@
+2010-04-21 Keith
+
+    * util/scipy.py(nanstd), tests/deflarry_test.py, doc/source/intro.rst:
+      Bug in scipy.stats.nanstd makes it crash on negative axis. Fixed bug in
+      la's local copy of nanstd. Added unit tests.
+
 2010-04-18 Keith
 
     * deflarry.py(lix): Typo in doc string.    
