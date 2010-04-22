@@ -1,3 +1,9 @@
+2010-04-22 Keith
+
+    * RELEASE: Update release notes.
+    
+    * setup.py: Bump version number from 0.1.0 to 0.2.0.
+
 2010-04-21 Keith
 
     * util/scipy.py(nanstd), tests/deflarry_test.py, doc/source/intro.rst:
