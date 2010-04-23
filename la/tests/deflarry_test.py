@@ -484,9 +484,31 @@ class Test_unary(unittest.TestCase):
         msg = printfail(t, p.x, 'x')      
         self.assert_((t == p.x).all(), msg) 
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l4), 'Reference found')          
-      
+        self.assert_(noreference(p, self.l4), 'Reference found')
+        
+    def test_invert_1(self):
+        "larry.invert_1"
+        o = larry([True, False])
+        d = larry([False, True])
+        ale(o.invert(), d, 'invert_1', bool, original=o)                  
 
+    def test_invert_2(self):
+        "larry.invert_2"
+        y = larry([0, 1])
+        self.failUnlessRaises(TypeError, y.invert)      
+
+    def test___invert___1(self):
+        "larry.__invert___1"
+        o = larry([True, False])
+        d = larry([False, True])
+        ale(~o, d, 'invert_1', bool, original=o)
+
+    def test___invert___2(self):
+        "larry.__invert___2"
+        y = larry([0, 1])
+        self.failUnlessRaises(TypeError, y.invert)  
+        
+        
 class Test_binary(unittest.TestCase):
     "Test binary functions of Data class"
     
@@ -1337,6 +1359,11 @@ class Test_reduce(unittest.TestCase):
         p = self.l2.std()
         msg = printfail(t, p, '')
         self.assert_(p == t, msg)
+        
+    def test_std_6(self):
+        "larry.std_6"        
+        s = larry([1, 1, 1]).std(axis=-1)
+        self.assert_(s == 0, 'Not equal')
 
     def test_var_1(self):
         "larry.var_1"
@@ -1380,7 +1407,12 @@ class Test_reduce(unittest.TestCase):
         t = 2./3
         p = self.l2.var()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)      
+        self.assert_(p == t, msg) 
+        
+    def test_var_6(self):
+        "larry.var_6"        
+        s = larry([1, 1, 1]).var(axis=-1)
+        self.assert_(s == 0, 'Not equal')             
         
     def test_max_1(self):
         "larry.max_1"

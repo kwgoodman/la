@@ -495,7 +495,53 @@ class larry(object):
         """    
         label = self.copylabel()
         x = np.isinf(self.x)
-        return type(self)(x, label)                        
+        return type(self)(x, label) 
+        
+    def __invert__(self):
+        """
+        Element by element inverting of True to False and False to True.
+        
+        Raises
+        ------
+        TypeError
+            If larry does not have bool dtype.
+            
+        Examples
+        --------
+        >>> y = larry([True, False])
+        >>> ~y
+        label_0
+            0
+            1
+        x
+        array([False,  True], dtype=bool)
+            
+        """
+        return self.invert()
+        
+    def invert(self):
+        """
+        Element by element inverting of True to False and False to True.
+        
+        Raises
+        ------
+        TypeError
+            If larry does not have bool dtype.
+            
+        Examples
+        --------
+        >>> y = larry([True, False])
+        >>> y.invert()
+        label_0
+            0
+            1
+        x
+        array([False,  True], dtype=bool)
+            
+        """
+        if self.dtype != bool:
+            raise TypeError, 'Only larrys with bool dtype can be inverted.'
+        return larry(~self.x, self.copylabel())                                       
         
     # Binary Functions ------------------------------------------------------- 
     
@@ -1448,7 +1494,7 @@ class larry(object):
         array([0, 2])
 
         Be careful of the difference between indexing with indices and
-        indexing with labels. In the first exmaple below 4 is an index; in
+        indexing with labels. In the first example below 4 is an index; in
         the second example 4 is a label element:
 
         >>> y.lix[['a']:4]
@@ -3430,7 +3476,7 @@ class larry(object):
         Convert a list of label, value pairs to a larry:
         
         >>> data = [('r0', 'c0', 1), ('r0', 'c1', 2), ('r1', 'c0', 3), ('r1', 'c1', 4)]
-        >>> la.fromtuples(data)
+        >>> larry.fromtuples(data)
         label_0
             r0
             r1

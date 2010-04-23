@@ -44,10 +44,13 @@ def nanmean(x, axis=0):
     x[np.isnan(x)] = 0
     return np.mean(x,axis)/factor
 
-# One change was made to the SciPy version of nanstd. The default for nanstd
-# was changed from bias=False (N-1 normalization) to bias=False (N
-# normalization). That makes it match the defaults for np.std and scipy.std.
-# Oh, and array was changed to np.array.
+# Three changes were made to the SciPy version of nanstd:
+# 1: The default for nanstd was changed from bias=False (N-1 normalization)
+#    to bias=False (N normalization). That makes it match the defaults for
+#    np.std and scipy.std.
+# 2: array was changed to np.array.
+# 3: Bug fix to allow negative axis
+#    http://projects.scipy.org/scipy/ticket/1161
 def nanstd(x, axis=0, bias=True):
     """Compute the standard deviation over the given axis ignoring nans
 
@@ -75,8 +78,8 @@ def nanstd(x, axis=0, bias=True):
 
     # Kludge to subtract m1 from the correct axis
     if axis!=0:
-        shape = np.arange(x.ndim).tolist()
-        shape.remove(axis)
+        shape = range(x.ndim)
+        shape.remove(shape[axis])
         shape.insert(0,axis)
         x = x.transpose(tuple(shape))
         d = (x-m1)**2.0

@@ -12,40 +12,32 @@ New larry methods
 -----------------
 - lix : Index into a larry using labels or index numbers or both
 - swapaxes : Swap the two specified axes
-- sortaxis : Sort data (and label) according to label along specified axis.
-- flipaxis : Reverse the order of the elements along the specified axis.
-- tocsv : Save larry to a csv file.
-- fromcsv : Load a larry from a csv file.
-- insertaxis : Insert a new axis at the specified position.
-
-New function
-------------
-- panel : Convert a 3d larry of shape (n, m, k) to a 2d larry of shape (m*k, n).
+- sortaxis : Sort data (and label) according to label along specified axis
+- flipaxis : Reverse the order of the elements along the specified axis
+- tocsv : Save larry to a csv file
+- fromcsv : Load a larry from a csv file
+- insertaxis : Insert a new axis at the specified position
+- invert : Element by element inverting of True to False and False to True
 
 Enhancements
 ------------
-- Added nd ability to the larry methods that could only handle 2d input
-- Extend group methods to allow axis argument and 2d groups
 - Add ability to save larrys with datetime.date labels
-
-Unit testing
-------------
-
-- Simplify unit testing with new assert_larry_equal function
-- Unit test all larry methods for ability to handle empty larrys
+- panel : New function to convert a 3d larry of shape (n, m, k) to a 2d larry
+          of shape (m*k, n).
 - Increased unit test coverage
+- Simplify unit testing with new assert_larry_equal function
 
 Bug fixes
 ---------
-
 - #517912: larry([]) == larry([]) raised IndexError
 - #518096: larry.fromdict failed due to missing import
 - #518106: la.larry.fromdict({}) failed
 - #518114: fromlist([]) and fromtuples([]) failed
 - #518135: keep_label crashed when there was nothing to keep
 - #518210: sum, std, var returned NaN for empty larrys; now return 0.0 
-- #518215. unflatten crashed on an empty larry
-- #518442. sum, std, var returned NaN for shapes that contain zero: (2, 0, 3)
+- #518215: unflatten crashed on an empty larry
+- #518442: sum, std, var returned NaN for shapes that contain zero: (2, 0, 3)
+- #568175: larry.std(axis=-1) and var crashed on negative axis input
 
 
 la 0.1 (first release)

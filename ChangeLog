@@ -1,3 +1,29 @@
+2010-04-22 Keith
+
+    * RELEASE: Update release notes.
+    
+    * setup.py: Bump version number from 0.1.0 to 0.2.0.
+
+2010-04-21 Keith
+
+    * util/scipy.py(nanstd), tests/deflarry_test.py, doc/source/intro.rst:
+      Bug in scipy.stats.nanstd makes it crash on negative axis. Fixed bug in
+      la's local copy of nanstd. Added unit tests.
+
+2010-04-18 Keith
+
+    * deflarry.py(lix): Typo in doc string.    
+
+    * doc/source/work.rst, deflarry.py(fromtuples): Doc bugs and rewrite.
+
+2010-04-16 Keith
+
+    * deflarry.py(invert), deflarry.py(__invert__), tests/deflarry_test.py,
+      RELEASE, doc/source/intro.rst, doc/source/reference.rst: Add invert
+      method.
+
+    * RELEASE: Minor typos.
+
 2010-03-10 Keith
 
     * io.py(save), io.py(_list2array), io.py(_load_label), tests/io_test.py,
