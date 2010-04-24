@@ -1,3 +1,10 @@
+2010-04-24 Keith
+
+    * tests/larry_axis_test.py: Added a new module to unit test all larry
+      methods that take axis as input. The unit tests make sure that axis=-1
+      and axis=1 give the same results for a 2d larry. These unit tests found
+      many bugs. I haven't fixed them yet.
+
 2010-04-22 Keith
 
     * RELEASE: Update release notes.
