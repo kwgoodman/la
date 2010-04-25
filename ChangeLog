@@ -1,5 +1,18 @@
 2010-04-24 Keith
 
+    * deflarry.py(pull), deflarry.py(demean), deflarry.py(demedian),
+      deflarry.py(zscore), deflarry.py(cut_missing), afunc.py(ranking),  
+      doc/source/intro.rst: Bug fixes for larry methods that did not handle
+      negative axis input correctly.
+
+    * tests/deflarry_test.py: Two unit tests for larry.pull.
+
+    * util/scipy.py(nanstd): Ported bug fix from scipy.
+
+    * tests/larry_axis_test.py: Removed negative axis test for the insertaxis
+      method. It should behave differently for axis=-1 and axis=1 (on a 2d
+      larry).
+
     * tests/larry_axis_test.py: Added a new module to unit test all larry
       methods that take axis as input. The unit tests make sure that axis=-1
       and axis=1 give the same results for a 2d larry. These unit tests found

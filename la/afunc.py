@@ -303,6 +303,9 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
     
     """
     ax = axis
+    if ax < 0:
+        # This converts a negative axis to the equivalent positive axis
+        ax = range(x.ndim)[ax]
     masknan = np.isnan(x)
     countnan = np.expand_dims(masknan.sum(ax), ax)
     countnotnan = x.shape[ax] - countnan
