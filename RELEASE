@@ -38,7 +38,7 @@ Bug fixes
 - #518215: unflatten crashed on an empty larry
 - #518442: sum, std, var returned NaN for shapes that contain zero: (2, 0, 3)
 - #568175: larry.std(axis=-1) and var crashed on negative axis input
-
+- #569622: Negative axis input gave wrong output for several larry methods
 
 la 0.1 (first release)
 ======================

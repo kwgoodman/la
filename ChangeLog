@@ -1,5 +1,7 @@
 2010-04-24 Keith
 
+    * RELEASE: Update release notes with negative axis bug fix.
+
     * deflarry.py(pull), deflarry.py(demean), deflarry.py(demedian),
       deflarry.py(zscore), deflarry.py(cut_missing), afunc.py(ranking),  
       doc/source/intro.rst: Bug fixes for larry methods that did not handle
