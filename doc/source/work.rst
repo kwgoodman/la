@@ -127,7 +127,7 @@ NaN):
     array([[  1.,   2.],
            [  3.,  NaN]])
             
-Here are examples of **fromtuples** and **fromlist**:
+Here are examples of **fromdict** and **fromlist**:
 ::
     >>> data = {('a', 'c'): 1, ('a', 'd'): 2, ('b', 'c'): 3, ('b', 'd'): 4}
     >>> larry.fromdict(data)
@@ -166,7 +166,7 @@ And an example of creating a larry from a csv file:
     array([ 1.,  2.,  3.])                    
 
 See :ref:`conversion` for a discussion of the corresponding methods,
-**tolist, totuples, todict**. 
+**totuples, todict, tolist**. 
 
 
 Shape, size, type
