@@ -76,17 +76,11 @@ def nanstd(x, axis=0, bias=True):
     x[np.isnan(x)] = 0.
     m1 = np.sum(x,axis)/n
 
-    # Kludge to subtract m1 from the correct axis
-    if axis!=0:
-        shape = range(x.ndim)
-        shape.remove(shape[axis])
-        shape.insert(0,axis)
-        x = x.transpose(tuple(shape))
-        d = (x-m1)**2.0
-        shape = tuple(np.array(shape).argsort())
-        d = d.transpose(shape)
+    if axis:
+        d = (x - np.expand_dims(m1, axis))**2.0
     else:
-        d = (x-m1)**2.0
+        d = (x - m1)**2.0
+
     m2 = np.sum(d,axis)-(m1*m1)*Nnan
     if bias:
         m2c = m2 / n

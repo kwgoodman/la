@@ -1766,7 +1766,8 @@ class larry(object):
         """
         Pull out the values for a given label name along a specified axis.
         
-        A view is returned and the dimension is reduced by one.
+        A view of the data (but a copy of the label) is returned and the
+        dimension is reduced by one.
         
         Parameters
         ----------
@@ -1813,8 +1814,9 @@ class larry(object):
                         
         """
         if axis is None:
-            raise ValueError, 'axis cannot be None'
-        label = [z for i, z in enumerate(self.label) if i != axis]    
+            raise ValueError, 'axis cannot be None'        
+        label = list(self.label)
+        label.pop(axis)  
         idx = self.labelindex(name, axis)
         index = [slice(None)] * self.ndim 
         index[axis] = idx
@@ -2162,9 +2164,9 @@ class larry(object):
             
         """
         # Adapted from pylab.demean
-        if axis:
-            ind = [slice(None)] * axis
-            ind.append(np.newaxis)
+        if axis != 0 and not axis is None:
+            ind = [slice(None)] * self.ndim
+            ind[axis] = np.newaxis
             x = self.x - nanmean(self.x, axis)[ind]
         else:
             x = self.x - nanmean(self.x, axis)   
@@ -2194,9 +2196,9 @@ class larry(object):
             
         """
         # Adapted from pylab.demean
-        if axis:
-            ind = [slice(None)] * axis
-            ind.append(np.newaxis)
+        if axis != 0 and not axis is None:
+            ind = [slice(None)] * self.ndim
+            ind[axis] = np.newaxis
             x = self.x - nanmedian(self.x, axis)[ind]
         else:
             x = self.x - nanmedian(self.x, axis)   
@@ -2225,13 +2227,13 @@ class larry(object):
             
         """
         y = self.demean(axis)
-        if axis:
-            ind = [slice(None)] * axis
-            ind.append(np.newaxis)
+        if axis != 0 and not axis is None:
+            ind = [slice(None)] * self.ndim
+            ind[axis] = np.newaxis
             y.x /= nanstd(y.x, axis)[ind]
         else:
             y.x /= nanstd(y.x, axis)   
-        return y
+        return y             
             
     def movingsum(self, window, axis=-1, norm=False):
         """Moving sum, NaNs treated as 0, optionally normalized for NaNs."""
@@ -2944,19 +2946,15 @@ class larry(object):
         
         if axis is None:
             axes = range(ndim)
-        elif not hasattr(axis, '__iter__'):
-            axes = [axis]
         else:
-            axes = axis
-        # Change meaning of axes to axes not in original axes
-        axes = [a for a in range(ndim) if a not in axes]    
-        
+            axes = [range(ndim)[axis]]
+  
         threshold = (1.0 - fraction) * np.array(y.shape)
         idxsl = []
         labsnew = []
         for ax in range(ndim):
-            sl = [None]*ndim
-            if ax not in axes:
+            sl = [None] * ndim
+            if ax in axes:
                 labsnew.append(y.label[ax])
                 sl[ax] = slice(None)
                 idxsl.append(np.arange(y.shape[ax])[sl])

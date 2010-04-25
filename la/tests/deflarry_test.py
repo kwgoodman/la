@@ -2244,8 +2244,26 @@ class Test_getset(unittest.TestCase):
         p[np.isnan(p.x)] = self.nancode        
         self.assert_((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))          
-
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        
+    def test_pull_1(self):
+        "larry.pull_1"
+        original = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
+        actual = original.pull('r0', axis=0)
+        desired = larry([1, 2], [['c0', 'c1']])
+        ale(actual, desired, 'pull_1')
+        
+    def test_pull_2(self):
+        "larry.pull_2"        
+        x = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
+        label = [['experiment1', 'experient2'], ['r0', 'r1'], ['c0', 'c1']]
+        original = larry(x, label)
+        actual = original.pull('experiment1', axis=0)
+        desired = larry([[1, 2],
+                         [3, 4]],
+                        [['r0', 'r1'], ['c0', 'c1']])
+        ale(actual, desired, 'pull_2')
+       
 
 class Test_label(unittest.TestCase):
     "Test label functions of the larry class"
