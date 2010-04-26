@@ -2241,9 +2241,9 @@ class larry(object):
         y.x = movingsum(y.x, window, axis=axis, norm=norm)
         return y 
         
-    def movingsum_forward(self, window, skip=0, axis=1, norm=False):    
+    def movingsum_forward(self, window, skip=0, axis=-1, norm=False):    
         """Movingsum in the forward direction skipping skip dates"""
-        self._2donly()        
+        #self._2donly()        
         y = self.copy()
         y.x = movingsum_forward(y.x, window, skip=skip, axis=axis, norm=norm)
         return y
@@ -2290,25 +2290,25 @@ class larry(object):
         y.x = ranking(y.x, axis, norm=norm, ties=ties)
         return y
                             
-    def movingrank(self, window, axis=1):
+    def movingrank(self, window, axis=-1):
         """Moving rank (normalized to -1 and 1) of a given window along axis.
 
         Normalized for missing (NaN) data.
         A data point with NaN data is returned as NaN
         If a window is all NaNs except last, this is returned as NaN
         """
-        self._2donly()
+        #self._2donly()
         y = self.copy()
-        y.x = movingrank(y.x, window, axis)
+        y.x = movingrank(y.x, window, axis=axis)
         return y
         
-    def quantile(self, q):
+    def quantile(self, q, axis=0):
         """Convert elements in each column to integers between 1 and q; then
         normalize to to -1, 1
         """
-        self._2donly()
+        #self._2donly()
         y = self.copy()
-        y.x = quantile(y.x, q)       
+        y.x = quantile(y.x, q, axis=axis)       
         return y
      
     def cov(self):
@@ -2337,7 +2337,7 @@ class larry(object):
         y.x = covMissing(y.x)
         return y         
         
-    def lastrank(self):
+    def lastrank(self, axis=-1):
         """
         Rank of elements in last column, ignoring NaNs.
         
@@ -2354,13 +2354,15 @@ class larry(object):
             If larry is not 2d.    
                     
         """
-        self._2donly()
+        #self._2donly()
         label = self.copylabel()
-        label[1] = [label[1][-1]]
-        x = lastrank(self.x)
+        label[axis] = [label[axis][-1]]
+        x = lastrank(self.x, axis=axis)
+        #print 'label', label
+        #print 'x', x
         return type(self)(x, label)
         
-    def lastrank_decay(self, decay):
+    def lastrank_decay(self, decay, axis=-1):
         """
         Exponentially decayed rank of elements in last column, ignoring NaNs.
         
@@ -2384,10 +2386,10 @@ class larry(object):
             If decay is less than zero.            
                     
         """
-        self._2donly()
+        #self._2donly()
         label = self.copylabel()
-        label[1] = [label[1][-1]]
-        x = lastrank_decay(self.x, decay)
+        label[axis] = [label[axis][-1]]
+        x = lastrank_decay(self.x, decay, axis=axis)
         return type(self)(x, label)                                                                       
         
     # Group calc -------------------------------------------------------------  
@@ -2398,7 +2400,7 @@ class larry(object):
         The row labels of the object must be a subset of the row labels of the
         group.
         """ 
-        self._2donly()
+        #self._2donly()
         y = self.copy()
         aligned_group_list = y._group_align(group)
         y.x = group_ranking(y.x, aligned_group_list)

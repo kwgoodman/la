@@ -243,8 +243,8 @@ def movingrank(x, window, axis=-1):
         index1[axis] = i
         index2 = [slice(None)] * x.ndim 
         index2[axis] = slice(i-window+1, i+1, None)
-        print 'lastrank(x[index2]).shape, mr[index1].shape'
-        print lastrank(x[index2],axis=axis).shape, mr[index1].shape
+        #print 'lastrank(x[index2]).shape, mr[index1].shape'
+        #print lastrank(x[index2],axis=axis).shape, mr[index1].shape
         mr[index1] = np.squeeze(lastrank(x[index2],axis=axis))
 #        mr[:,i] = np.squeeze(lastrank(x[:,(i-window+1):(i+1)]))  #check i:i+1      
 #    if axis == 0:
@@ -265,9 +265,9 @@ def lastrank(x, axis=-1):
     r = (g + g + e - 1.0) / 2.0
     r = r / (n - 1.0)
     r = 2.0 * (r - 0.5)
-    print indlast
-    print x[indlast]
-    print r.shape, x.shape
+    #print indlast
+    #print x[indlast]
+    #print r.shape, x.shape
     r[~np.isfinite(x[indlast2])] = np.nan  # not sure
     return np.expand_dims(r,axis) #[:,None]    #TODO:need to add lost (in sum) dimension again
 
@@ -294,10 +294,10 @@ def lastrank_decay(x, decay, axis=-1):
     r = (g + g + e - w.flat[-1]) / 2.0
     r = r / (n - w.flat[-1])
     r = 2.0 * (r - 0.5)
-    print 'r',r
-    print 'x',x
-    print indlast
-    print 'x[indlast]', x[indlast2]
+    #print 'r',r
+    #print 'x',x
+    #print indlast
+    #print 'x[indlast]', x[indlast2]
     r[~np.isfinite(x[indlast2])] = np.nan
     return np.expand_dims(r,axis) #r[:,None]
 
@@ -393,12 +393,12 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
 def fillforward_partially(x, n, axis=-1):
     "Fill missing values (NaN) with most recent non-missing values if recent."
     
-    if axis != -1:
-        x = np.rollaxis(axis)
+    if axis != -1 or axis != x.ndim-1:
+        x = np.rollaxis(x, axis, x.ndim)
     #y = np.asarray(x.copy())
     y = np.array(x)
-    if axis != -1:
-        y = np.rollaxis(y,axis)
+#    if axis != -1 or axis != y.ndim-1:
+#        y = np.rollaxis(y,axis, y.ndim)
         
     fidx = np.isfinite(y)
     recent = np.nan * np.ones(y.shape[:-1])  
@@ -411,11 +411,49 @@ def fillforward_partially(x, n, axis=-1):
         idx = fidx[...,i]
         count[idx] = i
         recent[idx] = y[idx,i]
-    if axis != -1:
-        y = np.rollaxis(y, -1, axis)
+    if axis != -1 or axis != x.ndim-1:
+        y = np.rollaxis(y, x.ndim-1, axis)
+    return y
+def _quantileraw1d(xi, q):
+    y = np.nan * np.asarray(xi)
+    idx = np.where(np.isfinite(xi))[0]
+    xi = xi[idx,:]
+    nx = idx.size
+    if nx:
+        jdx = xi.argsort(axis=0).argsort(axis=0)
+        mdx = np.nan * jdx
+        kdx = 1.0 * (nx - 1) / (q) * np.ones((q,1))
+        kdx = kdx.cumsum(axis=0)
+        kdx = np.concatenate((-1*np.ones((1,kdx.shape[1])), kdx), 0)
+        kdx[-1,0] = nx
+        for j in xrange(1, q+1):
+            mdx[(jdx > kdx[j-1]) & (jdx <= kdx[j]),:] = j
+        y[idx] = mdx
     return y
 
-def quantile(x, q):
+def quantile(x, q, axis=0):
+    """
+    Convert elements in each column to integers between 1 and q then normalize.
+    
+    Result is normalized to -1, 1.
+    
+    Parameters
+    ----------
+    x : array_like, 1d or 2d
+    q : int
+        quantile between 2 and number of elements in first axis (x.shape[0])
+    """
+    assert q > 1, 'q must be greater than one.'
+    assert q <= x.shape[axis], 'q must be less than or equal to the number of rows in x.'
+
+    y = np.apply_along_axis(_quantileraw1d, axis, x, q)
+
+    y = y - 1.0
+    y = 1.0 * y / (q - 1.0)
+    y = 2.0 * (y - 0.5)
+    return y 
+
+def quantile_old(x, q):
     """
     Convert elements in each column to integers between 1 and q then normalize.
     

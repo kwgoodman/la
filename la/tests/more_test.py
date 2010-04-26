@@ -9,10 +9,11 @@ from la.util.scipy import nanstd
 from la.afunc import (covMissing, fillforward_partially, geometric_mean,
                       lastrank, lastrank_decay, movingrank, movingsum,
                       movingsum_forward, nans, quantile, ranking,
-                      group_mean, group_median, group_ranking)
+                      group_mean, group_median, group_ranking, nanmedian)
 
 # Functions to test
-funcs_one = [covMissing, geometric_mean, lastrank, nanstd, ranking]
+#funcs_one = [covMissing, geometric_mean, lastrank, nanstd, ranking, nanmedian]
+funcs_one = [geometric_mean, lastrank, nanstd, ranking, nanmedian]
 funcs_oneint = [movingrank, movingsum, movingsum_forward, quantile, 
                 fillforward_partially]
 funcs_onefrac = [lastrank_decay]
@@ -97,4 +98,21 @@ def test_3d():
         xc = x.copy()
         args = (xc, sectors)
         yield check_3d, func, args
- 
+
+#print 'funcs = ['
+#pref = ' '*9
+#lenname = 22
+#for f in funcs_one:
+#    print pref+"(('%s' %s, ())," % (f.__name__, ' '*(lenname-1 - len(f.__name__)))
+#for f in funcs_oneint:
+#    print pref+"(('%s' %s, (argint,))," % (f.__name__, ' '*(lenname-1 - len(f.__name__)))
+#for f in funcs_onefrac:
+#    print pref+"(('%s' %s, (argfrac,))," % (f.__name__, ' '*(lenname-1 - len(f.__name__)))
+#for f in funcs_sect:
+#    print pref+"(('%s' %s, (argsector,))," % (f.__name__, ' '*(lenname-1 - len(f.__name__)))
+#
+#import la
+##check:
+#ignore = ['nans', 'np']
+#allinafunc = [f for f in dir(la.afunc) if not f in ignore and not f[0]=='_']
+#set(allinafunc)^set([f.__name__ for f in funcs_one+funcs_oneint+funcs_onefrac+funcs_sect])
