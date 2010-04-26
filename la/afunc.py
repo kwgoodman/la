@@ -59,19 +59,20 @@ def group_ranking(x, groups, norm='-1,1', ties=True):
 
 def group_mean(x, groups, axis=0):
     """
-    Mean with groups along axis=0.
+    Mean with groups along an axis.
     
     Parameters
     ----------
     x : ndarray
         Input data.
     groups : list
-        List of group membership of each element along axis=0.
+        List of group membership of each element along the axis.
         
     Returns
     -------
     idx : ndarray
-        The group mean of the data along axis 0.
+        An array with the same shape as the input array where every element is
+        replaced by the group mean along the given axis.
 
     """
 

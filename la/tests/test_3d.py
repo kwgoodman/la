@@ -20,7 +20,7 @@ def getfuncs(argint, argfrac, argsector):
              ('movingrank'            , (argint,), ()),
              ('movingsum'             , (argint,), ()),
              ('movingsum_forward'     , (argint,), ()),
-             ('quantile'              , (argint,), (0,0)),
+             ('quantile'              , (argint,), ()),
              ('fillforward_partially' , (argint,), ()),
              ('lastrank_decay'        , (argfrac,), ()),
              ('group_mean'            , (argsector,), ()),#(0,0)),
