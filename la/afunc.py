@@ -9,7 +9,7 @@ from la.util.scipy import nanmedian, rankdata
 
 def group_ranking(x, groups, norm='-1,1', ties=True, axis=0):
     """
-    Ranking within groups along axis=0.
+    Ranking within groups along axis.
     
     Parameters
     ----------
@@ -17,15 +17,17 @@ def group_ranking(x, groups, norm='-1,1', ties=True, axis=0):
         Data to be ranked.
     groups : list
         List of group membership of each element along axis=0.
-    norm: str
+    norm : str
         A string that specifies the normalization:
         '0,N-1'     Zero to N-1 ranking
         '-1,1'      Scale zero to N-1 ranking to be between -1 and 1
         'gaussian'  Rank data then scale to a Gaussian distribution
-    ties: bool
+    ties : bool
         If two elements of `x` have the same value then they will be ranked
         by their order in the array (False). If `ties` is set to True
         (default), then the ranks are averaged.
+    axis : int, {default: 0}
+        axis along which the ranking is calculated
         
     Returns
     -------
@@ -69,6 +71,8 @@ def group_mean(x, groups, axis=0):
         Input data.
     groups : list
         List of group membership of each element along the axis.
+    axis : int, {default: 0}
+        axis along which the mean is calculated
         
     Returns
     -------
@@ -99,14 +103,16 @@ def group_mean(x, groups, axis=0):
 
 def group_median(x, groups, axis=0):
     """
-    Median with groups along axis=0.
+    Median with groups along an axis.
     
     Parameters
     ----------
     x : ndarray
         Input data.
     groups : list
-        List of group membership of each element along axis=0.
+        List of group membership of each element along the given axis.
+    axis : int, {default: 0}
+        axis along which the ranking is calculated.
         
     Returns
     -------
@@ -216,20 +222,7 @@ def movingsum_forward(x, window, skip=0, axis=-1, norm=False):
     flip_index[axis] = slice(None, None, -1)
     msf = movingsum(x[flip_index], window, skip=skip, axis=axis, norm=norm)
     return msf[flip_index]
-    
-#    if axis == 0:
-#        x = x.T
-#    x = np.fliplr(x)
-#    nr, nc = x.shape
-#    if skip > nc:
-#        raise IndexError, 'Your skip is too large.'
-#    ms = movingsum(x, window, axis=1, norm=norm)
-#    ms = np.fliplr(ms)
-#    nans = np.nan * np.zeros((nr, skip))
-#    ms = np.concatenate((ms[:,skip:], nans), 1)  
-#    if axis == 0:
-#        ms = ms.T
-#    return ms
+
 
 def movingrank(x, window, axis=-1):
     """Moving rank (normalized to -1 and 1) of a given window along axis.
@@ -251,12 +244,8 @@ def movingrank(x, window, axis=-1):
         index1[axis] = i
         index2 = [slice(None)] * x.ndim 
         index2[axis] = slice(i-window+1, i+1, None)
-        #print 'lastrank(x[index2]).shape, mr[index1].shape'
-        #print lastrank(x[index2],axis=axis).shape, mr[index1].shape
         mr[index1] = np.squeeze(lastrank(x[index2],axis=axis))
-#        mr[:,i] = np.squeeze(lastrank(x[:,(i-window+1):(i+1)]))  #check i:i+1      
-#    if axis == 0:
-#        mr = mr.T
+
     return mr
        
 def lastrank(x, axis=-1):
@@ -273,17 +262,12 @@ def lastrank(x, axis=-1):
     r = (g + g + e - 1.0) / 2.0
     r = r / (n - 1.0)
     r = 2.0 * (r - 0.5)
-    #print indlast
-    #print x[indlast]
-    #print r.shape, x.shape
-    r[~np.isfinite(x[indlast2])] = np.nan  # not sure
-    return np.expand_dims(r,axis) #[:,None]    #TODO:need to add lost (in sum) dimension again
+    r[~np.isfinite(x[indlast2])] = np.nan  
+    return np.expand_dims(r,axis)
 
 def lastrank_decay(x, decay, axis=-1):
     "Exponential decay rank of last column only"
     assert decay >= 0, 'Min decay is 0.'
-    #x = np.atleast_2d(x) # so that indexing and axis work correctly
-    # is atleast_2d still necessary
     nt = x.shape[axis]
     w = nt - np.ones(nt).cumsum()
     w = np.exp(-decay * w)
@@ -291,23 +275,18 @@ def lastrank_decay(x, decay, axis=-1):
     matchdim = [None] * x.ndim 
     matchdim[axis] = slice(None)
     w = w[matchdim]
-    # inner or dot ?
     indlast = [slice(None)] * x.ndim 
     indlast[axis] = slice(-1, None)
     indlast2 = [slice(None)] * x.ndim 
-    indlast2[axis] = -1 #slice(-1, None)
-    g = ((x[indlast] > x) * w).sum(axis)  #JP:inner and sum do the same thing
-    e = ((x[indlast] == x) * w).sum(axis) #one is redundant
+    indlast2[axis] = -1
+    g = ((x[indlast] > x) * w).sum(axis)
+    e = ((x[indlast] == x) * w).sum(axis)
     n = (np.isfinite(x) * w).sum(axis)
     r = (g + g + e - w.flat[-1]) / 2.0
     r = r / (n - w.flat[-1])
     r = 2.0 * (r - 0.5)
-    #print 'r',r
-    #print 'x',x
-    #print indlast
-    #print 'x[indlast]', x[indlast2]
     r[~np.isfinite(x[indlast2])] = np.nan
-    return np.expand_dims(r,axis) #r[:,None]
+    return np.expand_dims(r,axis)
 
 def ranking(x, axis=0, norm='-1,1', ties=True):
     """
@@ -403,10 +382,7 @@ def fillforward_partially(x, n, axis=-1):
     
     if axis != -1 or axis != x.ndim-1:
         x = np.rollaxis(x, axis, x.ndim)
-    #y = np.asarray(x.copy())
     y = np.array(x)
-#    if axis != -1 or axis != y.ndim-1:
-#        y = np.rollaxis(y,axis, y.ndim)
         
     fidx = np.isfinite(y)
     recent = np.nan * np.ones(y.shape[:-1])  
@@ -461,41 +437,6 @@ def quantile(x, q, axis=0):
     y = 2.0 * (y - 0.5)
     return y 
 
-def quantile_old(x, q):
-    """
-    Convert elements in each column to integers between 1 and q then normalize.
-    
-    Result is normalized to -1, 1.
-    
-    Parameters
-    ----------
-    x : array_like, 1d or 2d
-    q : int
-        quantile between 2 and number of elements in first axis (x.shape[0])
-    """
-    assert q > 1, 'q must be greater than one.'
-    assert q <= x.shape[0], 'q must be less than or equal to the number of rows in x.'
-    y = np.nan * np.asarray(x)
-    for i in xrange(x.shape[1]):
-        xi = x[:,i]
-        idx = np.where(np.isfinite(xi))[0]
-        xi = xi[idx,:]
-        nx = idx.size
-        if nx:
-            jdx = xi.argsort(axis=0).argsort(axis=0)
-            mdx = np.nan * jdx
-            kdx = 1.0 * (nx - 1) / (q) * np.ones((q,1))
-            kdx = kdx.cumsum(axis=0)
-            kdx = np.concatenate((-1*np.ones((1,kdx.shape[1])), kdx), 0)
-            kdx[-1,0] = nx
-            for j in xrange(1, q+1):
-                mdx[(jdx > kdx[j-1]) & (jdx <= kdx[j]),:] = j
-            y[idx,i] = mdx
-    y = np.asarray(y)
-    y = y - 1.0
-    y = 1.0 * y / (q - 1.0)
-    y = 2.0 * (y - 0.5)
-    return y 
    
 # Calc functions -----------------------------------------------------------
 
