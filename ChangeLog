@@ -1,3 +1,21 @@
+2010-04-26 Josef
+
+    * deflarry.py, afunc.py: Converted the following array functions (and
+      larry methods) from 2d input only to nd input: push, movingrank, 
+      movingsum_forward, quantile, last_rank, last_rank_decay, group_ranking,
+      afunc.geometric_mean.
+
+    * tests/test_3d.py: New module for unit tests of 3d ability of the array
+      functions in afunc.py.
+      
+    * util/tests/testing_test.py: New module for unit tests of the
+      assert_larry_equal function.
+      
+    * tests/more_test.py: Turn on 3d function check (was commented out since
+      many functions were previously 2d only). Add nanmedian to the list of
+      functions to test; remove covMissing from the list. Remove 0.0 from test
+      array so that geometric_mean doesn't complain.
+
 2010-04-25 Keith
 
     * doc/source/work.rst: Typo in doc.

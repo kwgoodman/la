@@ -7,9 +7,9 @@ from la.util.scipy import nanmedian, rankdata
 
 # Group functions ----------------------------------------------------------
 
-def group_ranking(x, groups, norm='-1,1', ties=True):
+def group_ranking(x, groups, norm='-1,1', ties=True, axis=0):
     """
-    Ranking within groups along axis=0.
+    Ranking within groups along axis.
     
     Parameters
     ----------
@@ -17,15 +17,17 @@ def group_ranking(x, groups, norm='-1,1', ties=True):
         Data to be ranked.
     groups : list
         List of group membership of each element along axis=0.
-    norm: str
+    norm : str
         A string that specifies the normalization:
         '0,N-1'     Zero to N-1 ranking
         '-1,1'      Scale zero to N-1 ranking to be between -1 and 1
         'gaussian'  Rank data then scale to a Gaussian distribution
-    ties: bool
+    ties : bool
         If two elements of `x` have the same value then they will be ranked
         by their order in the array (False). If `ties` is set to True
         (default), then the ranks are averaged.
+    axis : int, {default: 0}
+        axis along which the ranking is calculated
         
     Returns
     -------
@@ -53,25 +55,30 @@ def group_ranking(x, groups, norm='-1,1', ties=True):
     xnorm = np.nan * np.zeros(x.shape)
     for group in ugroups:
         idx = groups == group
-        xnorm[idx,:] = ranking(x[idx,:], axis=0, norm=norm, ties=ties) 
+        idxall = [slice(None)] * x.ndim
+        idxall[axis] = idx
+        xnorm[idxall] = ranking(x[idxall], axis=axis, norm=norm, ties=ties) 
            
     return xnorm
 
-def group_mean(x, groups):
+def group_mean(x, groups, axis=0):
     """
-    Mean with groups along axis=0.
+    Mean with groups along an axis.
     
     Parameters
     ----------
     x : ndarray
         Input data.
     groups : list
-        List of group membership of each element along axis=0.
+        List of group membership of each element along the axis.
+    axis : int, {default: 0}
+        axis along which the mean is calculated
         
     Returns
     -------
     idx : ndarray
-        The group mean of the data along axis 0.
+        An array with the same shape as the input array where every element is
+        replaced by the group mean along the given axis.
 
     """
 
@@ -82,25 +89,29 @@ def group_mean(x, groups):
     groups = np.asarray(groups)    
   
     # Loop through unique groups and normalize
-    xmean = np.nan * np.zeros(x.shape)
+    xmean = np.nan * np.zeros(x.shape)    
     for group in ugroups:
         idx = groups == group
+        idxall = [slice(None)] * x.ndim
+        idxall[axis] = idx
         if idx.sum() > 0:
-            norm = 1.0 * (~np.isnan(x[idx,...])).sum(0)
-            xmean[idx,...] = np.nansum(x[idx,...], axis=0) / norm
+            norm = 1.0 * (~np.isnan(x[idxall])).sum(axis)
+            xmean[idxall] = np.expand_dims(np.nansum(x[idxall], axis=axis) / norm, axis)
             
     return xmean
 
-def group_median(x, groups):
+def group_median(x, groups, axis=0):
     """
-    Median with groups along axis=0.
+    Median with groups along an axis.
     
     Parameters
     ----------
     x : ndarray
         Input data.
     groups : list
-        List of group membership of each element along axis=0.
+        List of group membership of each element along the given axis.
+    axis : int, {default: 0}
+        axis along which the ranking is calculated.
         
     Returns
     -------
@@ -119,8 +130,10 @@ def group_median(x, groups):
     xmedian = np.nan * np.zeros(x.shape)
     for group in ugroups:
         idx = groups == group
+        idxall = [slice(None)] * x.ndim
+        idxall[axis] = idx
         if idx.sum() > 0:
-            xmedian[idx,...] = nanmedian(x[idx,...])
+            xmedian[idxall] = np.expand_dims(nanmedian(x[idxall], axis=axis), axis)
             
     return xmedian
     
@@ -163,12 +176,14 @@ def geometric_mean(x, axis=1, check_for_greater_than_zero=True):
     x = np.multiply(x, idx)
     return np.expand_dims(x, axis) 
 
-def movingsum(x, window, axis=-1, norm=False):
+def movingsum(x, window, skip=0, axis=-1, norm=False):
     """Moving sum optionally normalized for missing (NaN) data."""
     if window < 1:  
         raise ValueError, 'window must be at least 1'
     if window > x.shape[axis]:
         raise ValueError, 'Window is too big.'      
+    if skip > x.shape[axis]:
+        raise IndexError, 'Your skip is too large.'
     m = np.isfinite(x) 
     x = 1.0 * x 
     x[m == 0] = 0
@@ -192,28 +207,23 @@ def movingsum(x, window, axis=-1, norm=False):
         ms[msm == 0] = np.nan
 
     initshape = list(x.shape)  
-    initshape[axis] = window - 1
+    initshape[axis] = skip + window - 1
+    #Note: skip could be included in starting window
+    cutslice = [slice(None)] * x.ndim   
+    cutslice[axis] = slice(None,-skip or None,None)
     nans = np.nan * np.zeros(initshape)
-    ms = np.concatenate((nans, ms), axis) 
-    return ms
-  
-def movingsum_forward(x, window, skip=0, axis=1, norm=False):
-    """Movingsum in the forward direction skipping skip dates."""
-    if axis == 0:
-        x = x.T
-    x = np.fliplr(x)
-    nr, nc = x.shape
-    if skip > nc:
-        raise IndexError, 'Your skip is too large.'
-    ms = movingsum(x, window, axis=1, norm=norm)
-    ms = np.fliplr(ms)
-    nans = np.nan * np.zeros((nr, skip))
-    ms = np.concatenate((ms[:,skip:], nans), 1)  
-    if axis == 0:
-        ms = ms.T
+    ms = np.concatenate((nans, ms[cutslice]), axis) 
     return ms
 
-def movingrank(x, window, axis=1):
+def movingsum_forward(x, window, skip=0, axis=-1, norm=False):
+    """Movingsum in the forward direction skipping skip dates."""
+    flip_index = [slice(None)] * x.ndim 
+    flip_index[axis] = slice(None, None, -1)
+    msf = movingsum(x[flip_index], window, skip=skip, axis=axis, norm=norm)
+    return msf[flip_index]
+
+
+def movingrank(x, window, axis=-1):
     """Moving rank (normalized to -1 and 1) of a given window along axis.
 
     Normalized for missing (NaN) data.
@@ -224,44 +234,55 @@ def movingrank(x, window, axis=1):
         raise ValueError, 'Window is too big.'
     if window < 2:
         raise ValueError, 'Window is too small.'
-    if axis == 0:
-        x = x.T
-    nr, nt = x.shape
-    mr = np.nan * np.zeros((nr,nt))        
+    nt = x.shape[axis]
+    mr = np.nan * np.zeros(x.shape)        
     for i in xrange(window-1,nt): 
-        mr[:,i] = np.squeeze(lastrank(x[:,(i-window+1):(i+1)]))  #check i:i+1      
-    if axis == 0:
-        mr = mr.T
+        index1 = [slice(None)] * x.ndim 
+        index1[axis] = i
+        index2 = [slice(None)] * x.ndim 
+        index2[axis] = slice(i-window+1, i+1, None)
+        mr[index1] = np.squeeze(lastrank(x[index2],axis=axis))
+
     return mr
-   
-def lastrank(x):
+       
+def lastrank(x, axis=-1):
     "Rank of last column only"
-    g = (x[:,-1:] > x).sum(1)
-    e = (x[:,-1:] == x).sum(1)
-    n = np.isfinite(x).sum(1)
+    # Note this is just a special case of lastrank_decay with decay=0
+    indlast = [slice(None)] * x.ndim 
+    indlast[axis] = slice(-1, None)
+    indlast2 = [slice(None)] * x.ndim 
+    indlast2[axis] = -1
+    g = (x[indlast] > x).sum(axis)
+    e = (x[indlast] == x).sum(axis)
+    n = np.isfinite(x).sum(axis)
     r = (g + g + e - 1.0) / 2.0
     r = r / (n - 1.0)
     r = 2.0 * (r - 0.5)
-    r[~np.isfinite(x[:,-1])] = np.nan
-    return r[:,None]
+    r[~np.isfinite(x[indlast2])] = np.nan  
+    return np.expand_dims(r,axis)
 
-def lastrank_decay(x, decay):
+def lastrank_decay(x, decay, axis=-1):
     "Exponential decay rank of last column only"
     assert decay >= 0, 'Min decay is 0.'
-    x = np.atleast_2d(x) # so that indexing and axis work correctly
-    nt = x.shape[1]
-    w = nt - np.ones((1,nt)).cumsum(1)
+    nt = x.shape[axis]
+    w = nt - np.ones(nt).cumsum()
     w = np.exp(-decay * w)
     w = nt * w / w.sum()
-    # inner or dot ?
-    g = np.inner((x[:,-1:] > x), w).sum(1)
-    e = np.inner((x[:,-1:] == x), w).sum(1)
-    n = np.inner(np.isfinite(x), w).sum(1)
-    r = (g + g + e - w[0,-1]) / 2.0
-    r = r / (n - w[0,-1])
+    matchdim = [None] * x.ndim 
+    matchdim[axis] = slice(None)
+    w = w[matchdim]
+    indlast = [slice(None)] * x.ndim 
+    indlast[axis] = slice(-1, None)
+    indlast2 = [slice(None)] * x.ndim 
+    indlast2[axis] = -1
+    g = ((x[indlast] > x) * w).sum(axis)
+    e = ((x[indlast] == x) * w).sum(axis)
+    n = (np.isfinite(x) * w).sum(axis)
+    r = (g + g + e - w.flat[-1]) / 2.0
+    r = r / (n - w.flat[-1])
     r = 2.0 * (r - 0.5)
-    r[~np.isfinite(x[:,-1])] = np.nan
-    return r[:,None]
+    r[~np.isfinite(x[indlast2])] = np.nan
+    return np.expand_dims(r, axis)
 
 def ranking(x, axis=0, norm='-1,1', ties=True):
     """
@@ -352,23 +373,44 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
     idx[(countnotnan==1)*(~masknan)] = middle
     return idx
 
-def fillforward_partially(x, n):
+def fillforward_partially(x, n, axis=-1):
     "Fill missing values (NaN) with most recent non-missing values if recent."
-    y = np.asarray(x.copy())
+    if axis != -1 or axis != x.ndim-1:
+        x = np.rollaxis(x, axis, x.ndim)
+    y = np.array(x)       
     fidx = np.isfinite(y)
-    recent = np.nan * np.ones(y.shape[0])  
-    count = np.nan * np.ones(y.shape[0])          
-    for i in xrange(y.shape[1]):
+    recent = np.nan * np.ones(y.shape[:-1])  
+    count = np.nan * np.ones(y.shape[:-1])          
+    for i in xrange(y.shape[-1]):
         idx = (i - count) > n
         recent[idx] = np.nan
-        idx = ~fidx[:,i]
+        idx = ~fidx[...,i]
         y[idx, i] = recent[idx]
-        idx = fidx[:,i]
+        idx = fidx[...,i]
         count[idx] = i
         recent[idx] = y[idx,i]
+    if axis != -1 or axis != x.ndim-1:
+        y = np.rollaxis(y, x.ndim-1, axis)
     return y
 
-def quantile(x, q):
+def _quantileraw1d(xi, q):
+    y = np.nan * np.asarray(xi)
+    idx = np.where(np.isfinite(xi))[0]
+    xi = xi[idx,:]
+    nx = idx.size
+    if nx:
+        jdx = xi.argsort(axis=0).argsort(axis=0)
+        mdx = np.nan * jdx
+        kdx = 1.0 * (nx - 1) / (q) * np.ones((q,1))
+        kdx = kdx.cumsum(axis=0)
+        kdx = np.concatenate((-1*np.ones((1,kdx.shape[1])), kdx), 0)
+        kdx[-1,0] = nx
+        for j in xrange(1, q+1):
+            mdx[(jdx > kdx[j-1]) & (jdx <= kdx[j]),:] = j
+        y[idx] = mdx
+    return y
+
+def quantile(x, q, axis=0):
     """
     Convert elements in each column to integers between 1 and q then normalize.
     
@@ -381,28 +423,15 @@ def quantile(x, q):
         quantile between 2 and number of elements in first axis (x.shape[0])
     """
     assert q > 1, 'q must be greater than one.'
-    assert q <= x.shape[0], 'q must be less than or equal to the number of rows in x.'
-    y = np.nan * np.asarray(x)
-    for i in xrange(x.shape[1]):
-        xi = x[:,i]
-        idx = np.where(np.isfinite(xi))[0]
-        xi = xi[idx,:]
-        nx = idx.size
-        if nx:
-            jdx = xi.argsort(axis=0).argsort(axis=0)
-            mdx = np.nan * jdx
-            kdx = 1.0 * (nx - 1) / (q) * np.ones((q,1))
-            kdx = kdx.cumsum(axis=0)
-            kdx = np.concatenate((-1*np.ones((1,kdx.shape[1])), kdx), 0)
-            kdx[-1,0] = nx
-            for j in xrange(1, q+1):
-                mdx[(jdx > kdx[j-1]) & (jdx <= kdx[j]),:] = j
-            y[idx,i] = mdx
-    y = np.asarray(y)
+    assert q <= x.shape[axis], 'q must be less than or equal to the number of rows in x.'
+
+    y = np.apply_along_axis(_quantileraw1d, axis, x, q)
+
     y = y - 1.0
     y = 1.0 * y / (q - 1.0)
     y = 2.0 * (y - 0.5)
     return y 
+
    
 # Calc functions -----------------------------------------------------------
 
