@@ -2242,8 +2242,7 @@ class larry(object):
         return y 
         
     def movingsum_forward(self, window, skip=0, axis=-1, norm=False):    
-        """Movingsum in the forward direction skipping skip dates"""
-        #self._2donly()        
+        """Movingsum in the forward direction skipping skip dates"""      
         y = self.copy()
         y.x = movingsum_forward(y.x, window, skip=skip, axis=axis, norm=norm)
         return y
@@ -2297,7 +2296,6 @@ class larry(object):
         A data point with NaN data is returned as NaN
         If a window is all NaNs except last, this is returned as NaN
         """
-        #self._2donly()
         y = self.copy()
         y.x = movingrank(y.x, window, axis=axis)
         return y
@@ -2306,7 +2304,6 @@ class larry(object):
         """Convert elements in each column to integers between 1 and q; then
         normalize to to -1, 1
         """
-        #self._2donly()
         y = self.copy()
         y.x = quantile(y.x, q, axis=axis)       
         return y
@@ -2354,12 +2351,9 @@ class larry(object):
             If larry is not 2d.    
                     
         """
-        #self._2donly()
         label = self.copylabel()
         label[axis] = [label[axis][-1]]
         x = lastrank(self.x, axis=axis)
-        #print 'label', label
-        #print 'x', x
         return type(self)(x, label)
         
     def lastrank_decay(self, decay, axis=-1):
@@ -2386,7 +2380,6 @@ class larry(object):
             If decay is less than zero.            
                     
         """
-        #self._2donly()
         label = self.copylabel()
         label[axis] = [label[axis][-1]]
         x = lastrank_decay(self.x, decay, axis=axis)
@@ -2399,8 +2392,7 @@ class larry(object):
         
         The row labels of the object must be a subset of the row labels of the
         group.
-        """ 
-        #self._2donly()
+        """
         y = self.copy()
         aligned_group_list = y._group_align(group, axis=axis)
         y.x = group_ranking(y.x, aligned_group_list, axis=axis)
@@ -2443,22 +2435,7 @@ class larry(object):
         g = group.morph(self.label[axis], 0)
         g = g.x.tolist()
         return g 
-                
-    def _group_align_old(self, group):
-        """Return a row aligned group list (e.g. sector list) of values.
-        
-        group must have exactly one column. The row labels of the object must
-        be a subset of the row labels of the group.
-        """
-        if not isinstance(group, larry):
-            raise TypeError, 'group must be a larry'
-        if group.ndim != 1:
-            raise ValueError, 'group must be a 1d larry'
-        if len(frozenset(self.label[0]) - frozenset(group.label[0])):
-            raise IndexError, 'label is not a subset of group label'
-        g = group.morph(self.label[0], 0)
-        g = g.x.tolist()
-        return g                                                             
+                                                                 
 
     # Alignment --------------------------------------------------------------
 
@@ -2999,14 +2976,13 @@ class larry(object):
         else:
             return y
             
-    def push(self, window):
+    def push(self, window, axis=-1):
         """Fill missing values (NaNs) with most recent non-missing values if
         recent, where recent is defined by the window. The filling proceeds
         from left to right along each row.
         """
-        self._2donly()
         y = self.copy()
-        y.x = fillforward_partially(y.x, window)
+        y.x = fillforward_partially(y.x, window, axis=axis)
         return y
         
     def vacuum(self, axis=None):

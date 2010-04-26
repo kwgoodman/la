@@ -94,12 +94,13 @@ def test_3d():
         #print funcname, 'is ok'
         
         #test the corresponding larry methods
-        if funcname in ['geometric_mean', 'fillforward_partially']:
+        if funcname in ['geometric_mean']:#, 'fillforward_partially']:
                         #'lastrank', 
                         #'ranking','nanmedian',
                         #'movingrank', 'lastrank_decay']:
             continue
         if funcname == 'nanmedian': funcname = 'median'
+        if funcname == 'fillforward_partially': funcname = 'push'
         if 'group' in funcname:
             funcargs = (lasectors,)
             
