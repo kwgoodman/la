@@ -57,7 +57,7 @@ def group_ranking(x, groups, norm='-1,1', ties=True):
            
     return xnorm
 
-def group_mean(x, groups):
+def group_mean(x, groups, axis=0):
     """
     Mean with groups along axis=0.
     
@@ -83,11 +83,14 @@ def group_mean(x, groups):
   
     # Loop through unique groups and normalize
     xmean = np.nan * np.zeros(x.shape)
+    
     for group in ugroups:
         idx = groups == group
+        idxall = [slice(None)]*x.ndim
+        idxall[axis] = idx
         if idx.sum() > 0:
-            norm = 1.0 * (~np.isnan(x[idx,...])).sum(0)
-            xmean[idx,...] = np.nansum(x[idx,...], axis=0) / norm
+            norm = 1.0 * (~np.isnan(x[idxall])).sum(axis)
+            xmean[idxall] = np.expand_dims(np.nansum(x[idxall], axis=axis) / norm,axis)
             
     return xmean
 

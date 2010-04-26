@@ -23,7 +23,7 @@ def getfuncs(argint, argfrac, argsector):
              ('quantile'              , (argint,), (0,0)),
              ('fillforward_partially' , (argint,), ()),
              ('lastrank_decay'        , (argfrac,), ()),
-             ('group_mean'            , (argsector,), (0,0)),
+             ('group_mean'            , (argsector,), ()),#(0,0)),
              ('group_median'          , (argsector,), (0,0)),
              ('group_ranking'         , (argsector,), (0,0))]
     return funcs
@@ -112,29 +112,8 @@ def test_3d():
         #print funcname, '(larry) is ok'
         
 
-        
-        
-#        
-#    return x2d, x3, x
-#
-#x2d, x3, x = test_3d()
-#
-#la2d = larry(x2d)
-#la3 = larry(x3)
-#lar = larry(x)
-#la2d.ranking(1)
-#la3.ranking(2)[:,:,0]
-#from la.util.testing import assert_larry_equal
-#assert_larry_equal(lar.ranking(2)[0], la2d.ranking(1))
-#assert_larry_equal(la3.ranking(1)[:,:,0], la2d.ranking(1))
-#assert_larry_equal(lar.quantile(3,2)[0], la2d.quantile(3,1))
-#assert_larry_equal(la3.quantile(3,1)[:,:,0], la2d.quantile(3,1))
-#
-#afunc.lastrank(la2d.x,0)
-#la2d.T.lastrank(1).T
-#la2d.lastrank(0)
-#la3.lastrank(0)[:,:,0]
-#
+
+
 
 
 

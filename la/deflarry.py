@@ -2406,15 +2406,15 @@ class larry(object):
         y.x = group_ranking(y.x, aligned_group_list)
         return y
             
-    def group_mean(self, group):
+    def group_mean(self, group, axis=0):
         """Group (e.g. sector) mean along columns (zero axis).
         
         The row labels of the object must be a subset of the row labels of the
         group.
         """        
         y = self.copy() 
-        aligned_group_list = y._group_align(group)
-        y.x = group_mean(y.x, aligned_group_list)                                         
+        aligned_group_list = y._group_align(group, axis=axis)
+        y.x = group_mean(y.x, aligned_group_list, axis=axis)                                         
         return y
         
     def group_median(self, group):
@@ -2427,8 +2427,24 @@ class larry(object):
         aligned_group_list = y._group_align(group)   
         y.x = group_median(y.x, aligned_group_list)
         return y
+    
+    def _group_align(self, group, axis=0):
+        """Return a row aligned group list (e.g. sector list) of values.
+        
+        group must have exactly one column. The row labels of the object must
+        be a subset of the row labels of the group.
+        """
+        if not isinstance(group, larry):
+            raise TypeError, 'group must be a larry'
+        if group.ndim != 1:
+            raise ValueError, 'group must be a 1d larry'
+        if len(frozenset(self.label[axis]) - frozenset(group.label[0])):
+            raise IndexError, 'label is not a subset of group label'
+        g = group.morph(self.label[axis], 0)
+        g = g.x.tolist()
+        return g 
                 
-    def _group_align(self, group):
+    def _group_align_old(self, group):
         """Return a row aligned group list (e.g. sector list) of values.
         
         group must have exactly one column. The row labels of the object must
