@@ -7,7 +7,7 @@ from la.util.scipy import nanmedian, rankdata
 
 # Group functions ----------------------------------------------------------
 
-def group_ranking(x, groups, norm='-1,1', ties=True):
+def group_ranking(x, groups, norm='-1,1', ties=True, axis=0):
     """
     Ranking within groups along axis=0.
     
@@ -53,7 +53,9 @@ def group_ranking(x, groups, norm='-1,1', ties=True):
     xnorm = np.nan * np.zeros(x.shape)
     for group in ugroups:
         idx = groups == group
-        xnorm[idx,:] = ranking(x[idx,:], axis=0, norm=norm, ties=ties) 
+        idxall = [slice(None)]*x.ndim
+        idxall[axis] = idx
+        xnorm[idxall] = ranking(x[idxall], axis=axis, norm=norm, ties=ties) 
            
     return xnorm
 
@@ -91,11 +93,11 @@ def group_mean(x, groups, axis=0):
         idxall[axis] = idx
         if idx.sum() > 0:
             norm = 1.0 * (~np.isnan(x[idxall])).sum(axis)
-            xmean[idxall] = np.expand_dims(np.nansum(x[idxall], axis=axis) / norm,axis)
+            xmean[idxall] = np.expand_dims(np.nansum(x[idxall], axis=axis) / norm, axis)
             
     return xmean
 
-def group_median(x, groups):
+def group_median(x, groups, axis=0):
     """
     Median with groups along axis=0.
     
@@ -123,8 +125,10 @@ def group_median(x, groups):
     xmedian = np.nan * np.zeros(x.shape)
     for group in ugroups:
         idx = groups == group
+        idxall = [slice(None)]*x.ndim
+        idxall[axis] = idx
         if idx.sum() > 0:
-            xmedian[idx,...] = nanmedian(x[idx,...])
+            xmedian[idxall] = np.expand_dims(nanmedian(x[idxall], axis=axis), axis)
             
     return xmedian
     

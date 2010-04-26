@@ -24,8 +24,8 @@ def getfuncs(argint, argfrac, argsector):
              ('fillforward_partially' , (argint,), ()),
              ('lastrank_decay'        , (argfrac,), ()),
              ('group_mean'            , (argsector,), ()),#(0,0)),
-             ('group_median'          , (argsector,), (0,0)),
-             ('group_ranking'         , (argsector,), (0,0))]
+             ('group_median'          , (argsector,), ()),#(0,0)),
+             ('group_ranking'         , (argsector,), ())]#(0,0))]
     return funcs
          
 def check_3d(func, args):

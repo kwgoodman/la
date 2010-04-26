@@ -2394,7 +2394,7 @@ class larry(object):
         
     # Group calc -------------------------------------------------------------  
                  
-    def group_ranking(self, group):
+    def group_ranking(self, group, axis=0):
         """Group (e.g. sector) ranking along columns.
         
         The row labels of the object must be a subset of the row labels of the
@@ -2402,8 +2402,8 @@ class larry(object):
         """ 
         #self._2donly()
         y = self.copy()
-        aligned_group_list = y._group_align(group)
-        y.x = group_ranking(y.x, aligned_group_list)
+        aligned_group_list = y._group_align(group, axis=axis)
+        y.x = group_ranking(y.x, aligned_group_list, axis=axis)
         return y
             
     def group_mean(self, group, axis=0):
@@ -2417,15 +2417,15 @@ class larry(object):
         y.x = group_mean(y.x, aligned_group_list, axis=axis)                                         
         return y
         
-    def group_median(self, group):
+    def group_median(self, group, axis=0):
         """Group (e.g. sector) median along columns (zero axis).
         
         The row labels of the object must be a subset of the row labels of the
         group.
         """ 
         y = self.copy()
-        aligned_group_list = y._group_align(group)   
-        y.x = group_median(y.x, aligned_group_list)
+        aligned_group_list = y._group_align(group, axis=axis)   
+        y.x = group_median(y.x, aligned_group_list, axis=axis)
         return y
     
     def _group_align(self, group, axis=0):
