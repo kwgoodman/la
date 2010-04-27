@@ -1,5 +1,7 @@
 2010-04-27 Keith
 
+    * RELEASE: Set release date to today!
+
     * RELEASE, doc/source/intro.rst: Tweaks.
 
     * tests/func_test.py, doc/source/intro.rst: Add unit tests for the
