@@ -4,6 +4,7 @@ import numpy as np
 
 from la.deflarry import larry
 from la.util.misc import flattenlabel
+from la.afunc import covMissing
 
 
 # Labels --------------------------------------------------------------------
@@ -221,5 +222,39 @@ def panel(lar):
     y.label = [flattenlabel([y.label[1], y.label[2]])[0], y.label[0]]
     y.x = y.x.T.reshape(-1, y.shape[0])
     return y
+
+# Calc -------------------------------------------------------------
         
-               
+def cov(lar):
+    """
+    Covariance matrix adjusted for missing (NaN) values.
+    
+    Note: Only works on 2d larrys.
+    
+    The mean of each row is assumed to be zero. So rows are not demeaned
+    and therefore the covariance is normalized by the number of columns,
+    not by the number of columns minus 1.        
+    
+    Parameters
+    ----------
+    lar : larry
+        The larry you want to find the covariance of.
+        
+    Returns
+    -------
+    out : larry
+        For 2d input of shape (N, T), for example, returns a NxN covariance
+        matrix.
+        
+    Raises
+    ------
+    ValueError
+        If input is not 2d    
+
+    """
+    if lar.ndim != 2:
+        raise ValueError, 'This function only works on 2d larrys'      
+    y = lar.copy()
+    y.label[1] = list(y.label[0])
+    y.x = covMissing(y.x)
+    return y                

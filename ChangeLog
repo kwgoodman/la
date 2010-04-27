@@ -1,5 +1,11 @@
 2010-04-26 Keith
 
+    * RELEASE: Update release notes.
+    
+    * deflarry.py(cov), func.py(cov), tests/deflarry_test.py,
+      doc/source/functions.rst, doc/source/reference.rst: Move covariance from
+      larry method to larry function.
+
     * deflarry.py(lastrank), deflarry.py(lastrank_decay),
       deflarry.py(cut_missing): Update doc strings for new nd ability.
 

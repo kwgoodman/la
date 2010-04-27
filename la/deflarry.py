@@ -2309,33 +2309,7 @@ class larry(object):
         """
         y = self.copy()
         y.x = quantile(y.x, q, axis=axis)       
-        return y
-     
-    def cov(self):
-        """
-        Covariance matrix adjusted for missing (NaN) values.
-        
-        Note: Only works on 2d larrys.
-        
-        The mean of each row is assumed to be zero. So rows are not demeaned
-        and therefore the covariance is normalized by the number of columns,
-        not by the number of columns minus 1.        
-        
-        Parameters
-        ----------
-        No input.
-        
-        Returns
-        -------
-        out : larry
-            Returns NxN covariance matrix where N is the number of rows.
-
-        """
-        self._2donly()       
-        y = self.copy()
-        y.label[1] = list(y.label[0])
-        y.x = covMissing(y.x)
-        return y         
+        return y        
         
     def lastrank(self, axis=-1):
         """
@@ -3211,12 +3185,7 @@ class larry(object):
         y = self.copy()
         y.label[axis1], y.label[axis2] =  y.label[axis2], y.label[axis1]
         y.x = np.swapaxes(y.x, axis1, axis2)
-        return y  
-        
-    def _2donly(self):
-        "Only works on 2d arrays"
-        if self.ndim != 2:
-            raise ValueError, 'This function only works on 2d larrys'
+        return y
             
     def flatten(self, order='C'):
         """

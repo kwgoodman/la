@@ -1,7 +1,7 @@
 
-==================
-la Release History
-==================
+=============
+Release Notes
+=============
 
 la 0.2 (avocado)
 ================
@@ -21,11 +21,11 @@ New larry methods
 
 Enhancements
 ------------
-- Add ability to save larrys with datetime.date labels
-- panel : New function to convert a 3d larry of shape (n, m, k) to a 2d larry
-          of shape (m*k, n).
-- Increased unit test coverage
-- Simplify unit testing with new assert_larry_equal function
+- All larry methods can now take nd input arrays (some previously 2d only)
+- Added ability to save larrys with datetime.date labels
+- New function (panel) to convert larry of shape (n, m, k) to shape (m*k, n)
+- Expanded documentation
+- Over 250 new unit tests; testing easier with new assert_larry_equal function
 
 Bug fixes
 ---------
@@ -39,6 +39,7 @@ Bug fixes
 - #518442: sum, std, var returned NaN for shapes that contain zero: (2, 0, 3)
 - #568175: larry.std(axis=-1) and var crashed on negative axis input
 - #569622: Negative axis input gave wrong output for several larry methods
+
 
 la 0.1 (first release)
 ======================
