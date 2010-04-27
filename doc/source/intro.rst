@@ -76,7 +76,8 @@ Installation
 
 The ``la`` package requires Python and Numpy. Numpy 1.4 or newer is
 recommended for its improved NaN handling. Also some of the unit tests in the
-``la`` package require Numpy 1.4 or newer.
+``la`` package require Numpy 1.4 or newer and many require
+`nose <http://somethingaboutorange.com/mrl/projects/nose>`_.
 
 To save and load larrys in HDF5 format, you need
 `h5py <http://h5py.alfven.org>`_ with HDF5 1.8.
