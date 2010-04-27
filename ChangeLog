@@ -1,5 +1,12 @@
 2010-04-27 Keith
 
+    * tests/func_test.py, doc/source/intro.rst: Add unit tests for the
+      following functions: union, intersection, panel, stack.
+
+    * __init__.py: import stack, panel, and cov to the top level.
+    
+    * func.py(stack): Add an example to the doc string.
+
     * tests/func_test.py: Forgot to include this new module in yesterday's
       commit. Also rewrote to use assert_larry_equal plus general clean up.
 

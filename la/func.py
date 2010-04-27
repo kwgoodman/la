@@ -116,7 +116,29 @@ def stack(mode, **kwargs):
     ValueError
         If mode is not union or intersection or if any of the input larrys are
         not 2d.
-                    
+        
+    Examples
+    --------
+    >>> import la
+    >>> y1 = la.larry([[1, 2], [3, 4]])
+    >>> y2 = la.larry([[5, 6], [7, 8]])
+    >>> la.stack('union', name1=y1, othername=y2)
+    label_0
+        othername
+        name1
+    label_1
+        0
+        1
+    label_2
+        0
+        1
+    x
+    array([[[ 5.,  6.],
+            [ 7.,  8.]],
+    .
+           [[ 1.,  2.],
+            [ 3.,  4.]]])    
+                        
     """
     if not np.all([kwargs[key].ndim == 2 for key in kwargs]):
         raise ValueError, 'All input larrys must be 2d'
