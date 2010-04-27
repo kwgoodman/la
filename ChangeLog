@@ -1,5 +1,7 @@
 2010-04-26 Keith
 
+    * tests/test_3d.py: Code clean up.
+
     * RELEASE: Update release notes.
     
     * deflarry.py(cov), func.py(cov), tests/deflarry_test.py,
