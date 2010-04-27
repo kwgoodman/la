@@ -12,7 +12,7 @@ except (ImportError, ValueError):
 
 from numpy import nan, inf
 
-from la.func import union, intersection
+from la.func import union, intersection, stack, panel, cov
 from la.version import __version__
 from la.util import testing
 

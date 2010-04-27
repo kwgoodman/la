@@ -1,6 +1,3 @@
-'''
-
-'''
 
 import numpy as np
 from numpy.testing import assert_equal, assert_raises
@@ -12,11 +9,10 @@ nan = np.nan
 
 
 class Test_Testing_Assert_Larry(object):
-    #tests for assert_larry_equal
-    #no yields because of double list in assert_raises
+    # Tests for assert_larry_equal
+    # No yields because of double list in assert_raises
     
     def setup(self):
-#        self.x = larry([1,2,3])
         self.y1 = larry([2.0,2.0,3.0], [['a', 'b', 'c']])
         self.y1dt = larry([2,2,3], [['a', 'b', 'c']])
         self.x = larry([[nan, 2.0],
@@ -80,7 +76,6 @@ class Test_Testing_Assert_Larry(object):
         assert_raises(AssertionError, assert_larry_equal, 
                       y, y, 'raise nocopy labels', original=yc,
                       iscopy=False)
-
 
     def test_assert_larry_shaper(self):
         y,y1 = self.y, self.y1

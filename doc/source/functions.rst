@@ -46,4 +46,8 @@ Miscellaneous functions that operate on larrys.
 
 .. autofunction:: la.func.panel
 
+------------
+
+.. autofunction:: la.func.cov
+
 

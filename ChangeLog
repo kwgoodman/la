@@ -1,3 +1,68 @@
+2010-04-27 Keith
+
+    * tests/func_test.py, doc/source/intro.rst: Add unit tests for the
+      following functions: union, intersection, panel, stack.
+
+    * __init__.py: import stack, panel, and cov to the top level.
+    
+    * func.py(stack): Add an example to the doc string.
+
+    * tests/func_test.py: Forgot to include this new module in yesterday's
+      commit. Also rewrote to use assert_larry_equal plus general clean up.
+
+    * afunc.py(fillforward_partially), afunc.py(push), deflarry.py(push),
+      tests/deflarry_test.py, tests/more_test.py, tests/test_3d.py: Rename
+      the array function fillforward_partially to push to match the name of
+      larry method.
+      
+    * tests/test_3d.py, afunc.py: Add 3d unit tests for nanstd and nanmean.
+
+    * tests/test_3d.py: Minor code clean up.
+
+    * tests/larry_axis_test.py: Remove a unit test that depended on scipy.
+  
+    * RELEASE, doc/source/intro.rst: Update release notes and unit test count. 
+
+2010-04-26 Keith
+
+    * tests/test_3d.py: Code clean up.
+
+    * RELEASE: Update release notes.
+    
+    * deflarry.py(cov), func.py(cov), tests/deflarry_test.py,
+      doc/source/functions.rst, doc/source/reference.rst: Move covariance from
+      larry method to larry function.
+
+    * deflarry.py(lastrank), deflarry.py(lastrank_decay),
+      deflarry.py(cut_missing): Update doc strings for new nd ability.
+
+    * deflarry.py, afunc.py, tests/deflarry_test.py: Replace assert statements
+      with "if...raise".
+      
+    * doc/source/intro.rst: Update unit test count.  
+
+2010-04-26 Josef
+
+    * deflarry.py, afunc.py: Converted the following array functions (and
+      larry methods) from 2d input only to nd input: push, movingrank, 
+      movingsum_forward, quantile, last_rank, last_rank_decay, group_ranking,
+      afunc.geometric_mean.
+
+    * tests/test_3d.py: New module for unit tests of 3d ability of the array
+      functions in afunc.py.
+      
+    * util/tests/testing_test.py: New module for unit tests of the
+      assert_larry_equal function.
+      
+    * tests/more_test.py: Turn on 3d function check (was commented out since
+      many functions were previously 2d only). Add nanmedian to the list of
+      functions to test; remove covMissing from the list. Remove 0.0 from test
+      array so that geometric_mean doesn't complain.
+
+2010-04-25 Keith
+
+    * doc/source/work.rst: Typo in doc.
+
 2010-04-24 Keith
 
     * RELEASE: Update release notes with negative axis bug fix.

@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from la.util.scipy import nanmedian, rankdata
+from la.util.scipy import nanmedian, rankdata, nanstd, nanmean
 
 
 # Group functions ----------------------------------------------------------
@@ -55,7 +55,7 @@ def group_ranking(x, groups, norm='-1,1', ties=True, axis=0):
     xnorm = np.nan * np.zeros(x.shape)
     for group in ugroups:
         idx = groups == group
-        idxall = [slice(None)]*x.ndim
+        idxall = [slice(None)] * x.ndim
         idxall[axis] = idx
         xnorm[idxall] = ranking(x[idxall], axis=axis, norm=norm, ties=ties) 
            
@@ -89,11 +89,10 @@ def group_mean(x, groups, axis=0):
     groups = np.asarray(groups)    
   
     # Loop through unique groups and normalize
-    xmean = np.nan * np.zeros(x.shape)
-    
+    xmean = np.nan * np.zeros(x.shape)    
     for group in ugroups:
         idx = groups == group
-        idxall = [slice(None)]*x.ndim
+        idxall = [slice(None)] * x.ndim
         idxall[axis] = idx
         if idx.sum() > 0:
             norm = 1.0 * (~np.isnan(x[idxall])).sum(axis)
@@ -131,7 +130,7 @@ def group_median(x, groups, axis=0):
     xmedian = np.nan * np.zeros(x.shape)
     for group in ugroups:
         idx = groups == group
-        idxall = [slice(None)]*x.ndim
+        idxall = [slice(None)] * x.ndim
         idxall[axis] = idx
         if idx.sum() > 0:
             xmedian[idxall] = np.expand_dims(nanmedian(x[idxall], axis=axis), axis)
@@ -235,8 +234,6 @@ def movingrank(x, window, axis=-1):
         raise ValueError, 'Window is too big.'
     if window < 2:
         raise ValueError, 'Window is too small.'
-#    if axis == 0:
-#        x = x.T
     nt = x.shape[axis]
     mr = np.nan * np.zeros(x.shape)        
     for i in xrange(window-1,nt): 
@@ -250,8 +247,7 @@ def movingrank(x, window, axis=-1):
        
 def lastrank(x, axis=-1):
     "Rank of last column only"
-    #note this is just a special case of lastrank_decay with decay=0
-    #changes for nd, not tried out
+    # Note this is just a special case of lastrank_decay with decay=0
     indlast = [slice(None)] * x.ndim 
     indlast[axis] = slice(-1, None)
     indlast2 = [slice(None)] * x.ndim 
@@ -267,7 +263,8 @@ def lastrank(x, axis=-1):
 
 def lastrank_decay(x, decay, axis=-1):
     "Exponential decay rank of last column only"
-    assert decay >= 0, 'Min decay is 0.'
+    if decay < 0:
+        raise ValueError, 'decay must be greater than or equal to zero.'
     nt = x.shape[axis]
     w = nt - np.ones(nt).cumsum()
     w = np.exp(-decay * w)
@@ -286,7 +283,7 @@ def lastrank_decay(x, decay, axis=-1):
     r = r / (n - w.flat[-1])
     r = 2.0 * (r - 0.5)
     r[~np.isfinite(x[indlast2])] = np.nan
-    return np.expand_dims(r,axis)
+    return np.expand_dims(r, axis)
 
 def ranking(x, axis=0, norm='-1,1', ties=True):
     """
@@ -377,13 +374,11 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
     idx[(countnotnan==1)*(~masknan)] = middle
     return idx
 
-def fillforward_partially(x, n, axis=-1):
+def push(x, n, axis=-1):
     "Fill missing values (NaN) with most recent non-missing values if recent."
-    
     if axis != -1 or axis != x.ndim-1:
         x = np.rollaxis(x, axis, x.ndim)
-    y = np.array(x)
-        
+    y = np.array(x)       
     fidx = np.isfinite(y)
     recent = np.nan * np.ones(y.shape[:-1])  
     count = np.nan * np.ones(y.shape[:-1])          
@@ -398,6 +393,7 @@ def fillforward_partially(x, n, axis=-1):
     if axis != -1 or axis != x.ndim-1:
         y = np.rollaxis(y, x.ndim-1, axis)
     return y
+
 def _quantileraw1d(xi, q):
     y = np.nan * np.asarray(xi)
     idx = np.where(np.isfinite(xi))[0]
@@ -427,11 +423,12 @@ def quantile(x, q, axis=0):
     q : int
         quantile between 2 and number of elements in first axis (x.shape[0])
     """
-    assert q > 1, 'q must be greater than one.'
-    assert q <= x.shape[axis], 'q must be less than or equal to the number of rows in x.'
-
+    if q <= 1:
+        raise ValueError, 'q must be greater than one.'
+    if q > x.shape[axis]:
+        msg = 'q must be less than or equal to the number of rows in x.'
+        raise ValueError, msg
     y = np.apply_along_axis(_quantileraw1d, axis, x, q)
-
     y = y - 1.0
     y = 1.0 * y / (q - 1.0)
     y = 2.0 * (y - 0.5)

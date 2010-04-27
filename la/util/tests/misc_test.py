@@ -5,7 +5,6 @@ import unittest
 import numpy as np
 from numpy.testing import assert_equal
 
-from la.util.testing import assert_larry_equal
 from la.util.misc import randstring, isint, isfloat, isscalar
 
 
@@ -39,8 +38,7 @@ def test_isa():
         yield assert_equal, isfloat(key), value[1], msg
         msg = '\nisscalar(' + str(key) + ')'
         yield assert_equal, isscalar(key), (value[0] or value[1]), msg
-
-              
+                        
 def suite():
     s = []
     u = unittest.TestLoader().loadTestsFromTestCase

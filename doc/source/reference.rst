@@ -355,10 +355,6 @@ The calculation methods transform the larry.
 
 ------------
 
-.. automethod:: la.larry.cov
-
-------------
-
 .. automethod:: la.larry.lastrank
 
 ------------

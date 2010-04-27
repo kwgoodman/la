@@ -10,7 +10,7 @@ from la.util.scipy import (nanmean, nanmedian, nanstd)
 from la.util.misc import (flattenlabel, isscalar, fromlists, list2index,
                           fromlists)
 from la.afunc import (group_ranking, group_mean, group_median, covMissing,
-                      fillforward_partially, quantile, ranking, lastrank,
+                      push, quantile, ranking, lastrank,
                       movingsum_forward, lastrank_decay, movingrank,
                       movingsum, shuffle, nans)
 
@@ -271,7 +271,7 @@ class larry(object):
             
         Raises
         ------
-        AssertionError
+        ValueError
             If axis is None.
             
         Examples
@@ -286,7 +286,8 @@ class larry(object):
         array([1, 3, 6])                        
                         
         """
-        assert axis is not None, 'axis cannot be None'
+        if axis == None:
+            raise ValueError, 'axis cannot be None'
         y = self.copy()
         y[np.isnan(y.x)] = 0
         y.x.cumsum(axis, out=y.x)
@@ -309,7 +310,7 @@ class larry(object):
             
         Raises
         ------
-        AssertionError
+        ValueError
             If axis is None.
             
         Examples
@@ -324,7 +325,8 @@ class larry(object):
         array([1, 2, 6])                       
                         
         """
-        assert axis is not None, 'axis cannot be None'
+        if axis == None:
+            raise ValueError, 'axis cannot be None'
         y = self.copy()
         y[np.isnan(y.x)] = 1
         y.x.cumprod(axis, out=y.x)
@@ -348,7 +350,7 @@ class larry(object):
             
         Raises
         ------
-        AssertionError
+        ValueError
             If `lo` is greater than `hi`.
             
         Examples
@@ -364,7 +366,8 @@ class larry(object):
         array([2, 2, 3, 3])                    
         
         """
-        assert lo <= hi, 'lo should be less than or equal to hi'
+        if lo > hi:
+            raise ValueError, 'lo should be less than or equal to hi'
         y = self.copy()
         y.x.clip(lo, hi, y.x)
         return y
@@ -2306,49 +2309,19 @@ class larry(object):
         """
         y = self.copy()
         y.x = quantile(y.x, q, axis=axis)       
-        return y
-     
-    def cov(self):
-        """
-        Covariance matrix adjusted for missing (NaN) values.
-        
-        Note: Only works on 2d larrys.
-        
-        The mean of each row is assumed to be zero. So rows are not demeaned
-        and therefore the covariance is normalized by the number of columns,
-        not by the number of columns minus 1.        
-        
-        Parameters
-        ----------
-        No input.
-        
-        Returns
-        -------
-        out : larry
-            Returns NxN covariance matrix where N is the number of rows.
-
-        """
-        self._2donly()       
-        y = self.copy()
-        y.label[1] = list(y.label[0])
-        y.x = covMissing(y.x)
-        return y         
+        return y        
         
     def lastrank(self, axis=-1):
         """
         Rank of elements in last column, ignoring NaNs.
-        
-        Note: Only works on 2d larrys.
             
         Returns
         -------
         d : larry
-            A 2d larry is returned.
-            
-        Raises
-        ------
-        ValueError
-            If larry is not 2d.    
+            In the case of, for example, a 2d larry of shape (n, m) the output
+            will contain the rank (normalized to be between -1 and 1) of the
+            the last element of each row. The outout in this example will have
+            shape (n, 1).   
                     
         """
         label = self.copylabel()
@@ -2358,9 +2331,7 @@ class larry(object):
         
     def lastrank_decay(self, decay, axis=-1):
         """
-        Exponentially decayed rank of elements in last column, ignoring NaNs.
-        
-        Note: Only works on 2d larrys.        
+        Exponentially decayed rank of elements in last column, ignoring NaNs.       
 
         Parameters
         ----------
@@ -2370,14 +2341,10 @@ class larry(object):
         Returns
         -------
         d : larry
-            A 2d larry is returned.
-            
-        Raises
-        ------
-        ValueError
-            If larry is not 2d. 
-        AssertionError
-            If decay is less than zero.            
+            In the case of, for example, a 2d larry of shape (n, m) the output
+            will contain the exponetially decayed rank (normalized to be
+            between -1 and 1) of the the last element of each row. The outout
+            in this example will have shape (n, 1).           
                     
         """
         label = self.copylabel()
@@ -2915,24 +2882,17 @@ class larry(object):
         Parameters
         ----------
         fraction : scalar
-            Usually a float that give the minimum allowable fraction of missing
-            data before the row or column is cut.
-        axis : {0, 1}
+            Usually a float that give the minimum allowable fraction of
+            missing data before the row or column is cut.
+        axis : {int, None}
             Look for missing data along this axis. So for axis=0, the missing
-            data along columns are checked and columns are cut. For axis=1, the
-            missing data along rows are checked and rows are cut.
+            data along columns are checked and columns are cut. For axis=1,
+            the missing data along rows are checked and rows are cut.
             
         Returns
         -------
         out : larry
             Returns a copy with rows or columns with lots of missing data cut.                
-        
-        Raises
-        ------
-        ValueError
-            If larry is not 2d.        
-        IndexError
-            If axis is not 0 or 1.
             
         """    
         
@@ -2982,7 +2942,7 @@ class larry(object):
         from left to right along each row.
         """
         y = self.copy()
-        y.x = fillforward_partially(y.x, window, axis=axis)
+        y.x = push(y.x, window, axis=axis)
         return y
         
     def vacuum(self, axis=None):
@@ -3225,12 +3185,7 @@ class larry(object):
         y = self.copy()
         y.label[axis1], y.label[axis2] =  y.label[axis2], y.label[axis1]
         y.x = np.swapaxes(y.x, axis1, axis2)
-        return y  
-        
-    def _2donly(self):
-        "Only works on 2d arrays"
-        if self.ndim != 2:
-            raise ValueError, 'This function only works on 2d larrys'
+        return y
             
     def flatten(self, order='C'):
         """
