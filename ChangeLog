@@ -1,5 +1,8 @@
 2010-04-26 Keith
 
+    * deflarry.py(lastrank), deflarry.py(lastrank_decay),
+      deflarry.py(cut_missing): Update doc strings for new nd ability.
+
     * deflarry.py, afunc.py, tests/deflarry_test.py: Replace assert statements
       with "if...raise".
       

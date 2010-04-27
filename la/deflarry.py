@@ -2340,18 +2340,14 @@ class larry(object):
     def lastrank(self, axis=-1):
         """
         Rank of elements in last column, ignoring NaNs.
-        
-        Note: Only works on 2d larrys.
             
         Returns
         -------
         d : larry
-            A 2d larry is returned.
-            
-        Raises
-        ------
-        ValueError
-            If larry is not 2d.    
+            In the case of, for example, a 2d larry of shape (n, m) the output
+            will contain the rank (normalized to be between -1 and 1) of the
+            the last element of each row. The outout in this example will have
+            shape (n, 1).   
                     
         """
         label = self.copylabel()
@@ -2361,9 +2357,7 @@ class larry(object):
         
     def lastrank_decay(self, decay, axis=-1):
         """
-        Exponentially decayed rank of elements in last column, ignoring NaNs.
-        
-        Note: Only works on 2d larrys.        
+        Exponentially decayed rank of elements in last column, ignoring NaNs.       
 
         Parameters
         ----------
@@ -2373,12 +2367,10 @@ class larry(object):
         Returns
         -------
         d : larry
-            A 2d larry is returned.
-            
-        Raises
-        ------
-        ValueError
-            If larry is not 2d. If decay is less than zero.            
+            In the case of, for example, a 2d larry of shape (n, m) the output
+            will contain the exponetially decayed rank (normalized to be
+            between -1 and 1) of the the last element of each row. The outout
+            in this example will have shape (n, 1).           
                     
         """
         label = self.copylabel()
@@ -2916,24 +2908,17 @@ class larry(object):
         Parameters
         ----------
         fraction : scalar
-            Usually a float that give the minimum allowable fraction of missing
-            data before the row or column is cut.
-        axis : {0, 1}
+            Usually a float that give the minimum allowable fraction of
+            missing data before the row or column is cut.
+        axis : {int, None}
             Look for missing data along this axis. So for axis=0, the missing
-            data along columns are checked and columns are cut. For axis=1, the
-            missing data along rows are checked and rows are cut.
+            data along columns are checked and columns are cut. For axis=1,
+            the missing data along rows are checked and rows are cut.
             
         Returns
         -------
         out : larry
             Returns a copy with rows or columns with lots of missing data cut.                
-        
-        Raises
-        ------
-        ValueError
-            If larry is not 2d.        
-        IndexError
-            If axis is not 0 or 1.
             
         """    
         
