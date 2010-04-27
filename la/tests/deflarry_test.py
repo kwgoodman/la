@@ -326,7 +326,7 @@ class Test_unary(unittest.TestCase):
         
     def test_clip_4(self):
         "larry.clip_4"
-        self.failUnlessRaises(AssertionError, self.l.clip, 3, 2)
+        self.failUnlessRaises(ValueError, self.l.clip, 3, 2)
         
     def test_nan_replace_1(self):
         "larry.nan_replace_1"        

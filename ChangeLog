@@ -1,3 +1,10 @@
+2010-04-26 Keith
+
+    * deflarry.py, afunc.py, tests/deflarry_test.py: Replace assert statements
+      with "if...raise".
+      
+    * doc/source/intro.rst: Update unit test count.  
+
 2010-04-26 Josef
 
     * deflarry.py, afunc.py: Converted the following array functions (and

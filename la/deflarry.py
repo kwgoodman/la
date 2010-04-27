@@ -271,7 +271,7 @@ class larry(object):
             
         Raises
         ------
-        AssertionError
+        ValueError
             If axis is None.
             
         Examples
@@ -286,7 +286,8 @@ class larry(object):
         array([1, 3, 6])                        
                         
         """
-        assert axis is not None, 'axis cannot be None'
+        if axis == None:
+            raise ValueError, 'axis cannot be None'
         y = self.copy()
         y[np.isnan(y.x)] = 0
         y.x.cumsum(axis, out=y.x)
@@ -309,7 +310,7 @@ class larry(object):
             
         Raises
         ------
-        AssertionError
+        ValueError
             If axis is None.
             
         Examples
@@ -324,7 +325,8 @@ class larry(object):
         array([1, 2, 6])                       
                         
         """
-        assert axis is not None, 'axis cannot be None'
+        if axis == None:
+            raise ValueError, 'axis cannot be None'
         y = self.copy()
         y[np.isnan(y.x)] = 1
         y.x.cumprod(axis, out=y.x)
@@ -348,7 +350,7 @@ class larry(object):
             
         Raises
         ------
-        AssertionError
+        ValueError
             If `lo` is greater than `hi`.
             
         Examples
@@ -364,7 +366,8 @@ class larry(object):
         array([2, 2, 3, 3])                    
         
         """
-        assert lo <= hi, 'lo should be less than or equal to hi'
+        if lo > hi:
+            raise ValueError, 'lo should be less than or equal to hi'
         y = self.copy()
         y.x.clip(lo, hi, y.x)
         return y
@@ -2375,9 +2378,7 @@ class larry(object):
         Raises
         ------
         ValueError
-            If larry is not 2d. 
-        AssertionError
-            If decay is less than zero.            
+            If larry is not 2d. If decay is less than zero.            
                     
         """
         label = self.copylabel()

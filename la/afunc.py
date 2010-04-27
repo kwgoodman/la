@@ -263,7 +263,8 @@ def lastrank(x, axis=-1):
 
 def lastrank_decay(x, decay, axis=-1):
     "Exponential decay rank of last column only"
-    assert decay >= 0, 'Min decay is 0.'
+    if decay < 0:
+        raise ValueError, 'decay must be greater than or equal to zero.'
     nt = x.shape[axis]
     w = nt - np.ones(nt).cumsum()
     w = np.exp(-decay * w)
@@ -422,11 +423,12 @@ def quantile(x, q, axis=0):
     q : int
         quantile between 2 and number of elements in first axis (x.shape[0])
     """
-    assert q > 1, 'q must be greater than one.'
-    assert q <= x.shape[axis], 'q must be less than or equal to the number of rows in x.'
-
+    if q <= 1:
+        raise ValueError, 'q must be greater than one.'
+    if q > x.shape[axis]:
+        msg = 'q must be less than or equal to the number of rows in x.'
+        raise ValueError, msg
     y = np.apply_along_axis(_quantileraw1d, axis, x, q)
-
     y = y - 1.0
     y = 1.0 * y / (q - 1.0)
     y = 2.0 * (y - 0.5)
