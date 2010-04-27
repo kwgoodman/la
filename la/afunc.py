@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from la.util.scipy import nanmedian, rankdata
+from la.util.scipy import nanmedian, rankdata, nanstd, nanmean
 
 
 # Group functions ----------------------------------------------------------
@@ -374,7 +374,7 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
     idx[(countnotnan==1)*(~masknan)] = middle
     return idx
 
-def fillforward_partially(x, n, axis=-1):
+def push(x, n, axis=-1):
     "Fill missing values (NaN) with most recent non-missing values if recent."
     if axis != -1 or axis != x.ndim-1:
         x = np.rollaxis(x, axis, x.ndim)

@@ -1,4 +1,4 @@
-'''testing afunc functions for 3d arrays'''
+"Test ability to handle 3d arrays"
 
 import numpy as np
 from numpy.testing import assert_almost_equal
@@ -12,11 +12,13 @@ def getfuncs(argint, argfrac, argsector):
              ('lastrank'              , (), ()),
              ('ranking'               , (), ()),
              ('nanmedian'             , (), ()),
+             ('nanmean'               , (), ()),
+             ('nanstd'                , (), ()),
              ('movingrank'            , (argint,), ()),
              ('movingsum'             , (argint,), ()),
              ('movingsum_forward'     , (argint,), ()),
              ('quantile'              , (argint,), ()),
-             ('fillforward_partially' , (argint,), ()),
+             ('push'                  , (argint,), ()),
              ('lastrank_decay'        , (argfrac,), ()),
              ('group_mean'            , (argsector,), ()),
              ('group_median'          , (argsector,), ()),
@@ -24,6 +26,7 @@ def getfuncs(argint, argfrac, argsector):
     return funcs
 
 def test_3d():
+    "Test ability to handle 3d arrays"
     x2d = np.array([[9.0, 3.0, nan, nan, 9.0, nan],
                     [1.0, 1.0, 1.0, nan, nan, nan],
                     [2.0, 2.0, 0.1, nan, 1.0, nan],
@@ -42,7 +45,7 @@ def test_3d():
     argfrac = 0.75
     argsectors = sectors
     funcs = getfuncs(argint, argfrac, argsectors)
-    for funcname, funcargs, axisargs in funcs:#[:1]:
+    for funcname, funcargs, axisargs in funcs:
         func = getattr(afunc, funcname)
         xc = x.copy()
         x2dc = x2d.copy()
@@ -77,7 +80,8 @@ def test_3d():
         if funcname in ['geometric_mean']:
             continue
         if funcname == 'nanmedian': funcname = 'median'
-        if funcname == 'fillforward_partially': funcname = 'push'
+        if funcname == 'nanmean': funcname = 'mean'
+        if funcname == 'nanstd': funcname = 'std'
         if 'group' in funcname:
             funcargs = (lasectors,)
         meth2d = getattr(lar2dc, funcname)

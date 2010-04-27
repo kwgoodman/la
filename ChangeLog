@@ -1,3 +1,18 @@
+2010-04-27 Keith
+
+    * afunc.py(fillforward_partially), afunc.py(push), deflarry.py(push),
+      tests/deflarry_test.py, tests/more_test.py, tests/test_3d.py: Rename
+      the array function fillforward_partially to push to match the name of
+      larry method.
+      
+    * tests/test_3d.py, afunc.py: Add 3d unit tests for nanstd and nanmean.
+
+    * tests/test_3d.py: Minor code clean up.
+
+    * tests/larry_axis_test.py: Remove a unit test that depended on scipy.
+  
+    * RELEASE, doc/source/intro.rst: Update release notes and unit test count. 
+
 2010-04-26 Keith
 
     * tests/test_3d.py: Code clean up.

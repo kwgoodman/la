@@ -10,7 +10,7 @@ from la.util.scipy import (nanmean, nanmedian, nanstd)
 from la.util.misc import (flattenlabel, isscalar, fromlists, list2index,
                           fromlists)
 from la.afunc import (group_ranking, group_mean, group_median, covMissing,
-                      fillforward_partially, quantile, ranking, lastrank,
+                      push, quantile, ranking, lastrank,
                       movingsum_forward, lastrank_decay, movingrank,
                       movingsum, shuffle, nans)
 
@@ -2942,7 +2942,7 @@ class larry(object):
         from left to right along each row.
         """
         y = self.copy()
-        y.x = fillforward_partially(y.x, window, axis=axis)
+        y.x = push(y.x, window, axis=axis)
         return y
         
     def vacuum(self, axis=None):

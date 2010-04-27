@@ -6,15 +6,14 @@ nan = np.nan
 
 from la.util.testing import printfail
 from la.util.scipy import nanstd
-from la.afunc import (covMissing, fillforward_partially, geometric_mean,
-                      lastrank, lastrank_decay, movingrank, movingsum,
+from la.afunc import (covMissing, push, geometric_mean, lastrank,
+                      lastrank_decay, movingrank, movingsum,
                       movingsum_forward, nans, quantile, ranking,
                       group_mean, group_median, group_ranking, nanmedian)
 
 # Functions to test
 funcs_one = [geometric_mean, lastrank, nanstd, ranking, nanmedian]
-funcs_oneint = [movingrank, movingsum, movingsum_forward, quantile, 
-                fillforward_partially]
+funcs_oneint = [movingrank, movingsum, movingsum_forward, quantile, push]
 funcs_onefrac = [lastrank_decay]
 funcs_sect = [group_mean, group_median, group_ranking]
 

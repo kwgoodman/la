@@ -2610,8 +2610,8 @@ class Test_calc(unittest.TestCase):
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l4), 'Reference found')
 
-    def test_fillforward_partially_3(self):
-        "larry.fillforward_partially_3"
+    def test_push_3(self):
+        "larry.push_3"
         t = np.array([[ nan, 1.0, 2.0, 3.0, 4.0],
                       [ 1.0, 1.0, 2.0, 2.0, nan],
                       [ 2.0, 2.0, 2.0, nan, nan],

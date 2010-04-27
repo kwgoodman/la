@@ -25,7 +25,7 @@ Enhancements
 - Added ability to save larrys with datetime.date labels
 - New function (panel) to convert larry of shape (n, m, k) to shape (m*k, n)
 - Expanded documentation
-- Over 250 new unit tests; testing easier with new assert_larry_equal function
+- Over 280 new unit tests; testing easier with new assert_larry_equal function
 
 Bug fixes
 ---------
