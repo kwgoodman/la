@@ -89,10 +89,9 @@ class IO(object):
         
         Examine the contents of the archive:
         
-        >>> io
-           
+        >>> io   
         larry  dtype  shape
-        -------------------
+        ------------------
         x      int64  (3,)
         
         Overwrite the contents of x in the archive: 
@@ -377,7 +376,7 @@ def save(file, lar, key):
     --------
     Create a larry:
     
-    >>> la.save(x, 'x')
+    >>> x = la.larry([1, 2, 3])
 
     Save the larry:
 
@@ -444,7 +443,7 @@ def load(file, key):
     --------
     Create a larry:
     
-    >>> la.save(x, 'x')
+    >>> x = la.larry([1, 2, 3])
 
     Save the larry:
 
@@ -502,7 +501,7 @@ def delete(file, key):
     --------
     Create a larry:
     
-    >>> la.save(x, 'x')
+    >>> x = la.larry([1, 2, 3])
 
     Save the larry:
 
@@ -510,7 +509,7 @@ def delete(file, key):
     
     Now delete it:
     
-    >>> y = la.delete('/tmp/x.hdf5', 'x')            
+    >>> la.delete('/tmp/x.hdf5', 'x')            
  
     """
     
