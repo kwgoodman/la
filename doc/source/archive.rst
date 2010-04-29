@@ -5,13 +5,16 @@
 I/O
 ===
 
-The la package provides two ways to archive larrys: using archive functions
+The ``la`` package provides two ways to archive larrys: using archive functions
 such as **save** and **load** and using the dictionary-like interface of the
 **IO** class. Both I/O methods store larrys in
 `HDF5 <http://www.hdfgroup.org/>`_ 1.8 format and require
 `h5py <http://h5py.alfven.org>`_.
 
 .. contents::
+
+Not all data types can be saved to a HDF5 archive; see :ref:`data_types` for
+details. 
 
 
 .. _iofunction:
@@ -32,7 +35,7 @@ One method to archive larrys is to use the archive functions (see
 To demonstrate, let's start by creating a larry:
 ::
     >>> import la
-    >>> y = la.larry([1,2,3])
+    >>> y = la.larry([1, 2, 3])
 
 Next let's save the larry, *y*, in an archive using the **save** function:
 ::
@@ -99,8 +102,8 @@ The **IO** class provides a dictionary-like interface to the archive.
 To demonstrate, let's start by creating two larrys, *a* and *b*:
 ::
     >>> import la
-    >>> a = la.larry([1.0,2.0,3.0,4.0])
-    >>> b = la.larry([[1,2],[3,4]])
+    >>> a = la.larry([1.0, 2.0, 3.0, 4.0])
+    >>> b = la.larry([[1, 2],[3, 4]])
 
 To work with an archive you need to create an **IO** object:
 ::
@@ -211,7 +214,7 @@ Before looking at the size of the archive, let's add some bigger larrys:
     rand   float64  (1000, 1000)
     randn  float64  (1000, 1000)
     
-How many MB does that archive occupy on disk?
+How many MB does the archive occupy on disk?
 ::
     >>> io.space / 1e6    
     16.038903999999999  # MB
@@ -262,7 +265,7 @@ The keys (larrys) in an **IO** object (archive) must be strings. But the
 string may contain one or more forward slashes ('/'), which is to say that
 larrys can be archived in a hierarchical structure:
 ::
-    >>> io['/experiment/2/y'] = la.larry([1,2,3])
+    >>> io['/experiment/2/y'] = la.larry([1, 2, 3])
     >>> z = io['/experiment/2/y']
           
 What filename is associated with the archive?
@@ -294,7 +297,9 @@ reclaim the freespace is to repack the archive.
 
 You can use the utility provided by HDF5 to repack the archive or you can use
 the repack method (see :ref:`ioclass`) or function (see :ref:`iofunction`) in
-the la package.
+the ``la`` package.
+
+.. _data_types:
     
 Data types 
 """"""""""
@@ -305,8 +310,8 @@ converted to Numpy arrays and the elements of a Numpy array must be of the
 same type. Therefore, to archive a larry the labels along any one dimension
 must be of the same type and that type must be one that is recognized by
 h5py and HDF5: strings and scalars. An exception is made for labels with dates
-of type datetime.date: la automatically converts dates to integers when saving
-and back to dates when loading. 
+of type datetime.date: ``la`` automatically converts dates to integers when
+saving and back to dates when loading. 
 
 
 Archive format
