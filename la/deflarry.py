@@ -3839,7 +3839,13 @@ class Getitemlabel(object):
         elif typ == tuple:
             index2 = []
             label = []
-            for ax, idx in enumerate(index):
+            if len(index) == y.ndim:
+                index3 = index
+            elif len(index) < y.ndim:
+                index3 = list(index) + [slice(None)] * (y.ndim - len(index))
+            else:
+                raise IndexError, 'Invalid index'        
+            for ax, idx in enumerate(index3):
                 typ = type(idx)
                 if typ == list:
                     idx2 = labels2indices(y.label[ax], idx)

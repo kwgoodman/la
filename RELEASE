@@ -20,6 +20,7 @@ Bug fixes
 ---------
 - #571813: Three larry methods crashed on 1d input
 - #571737: skiprows missing from parameters section of the fromcsv doc string
+- #571899: label indexing fails when larry is 3d and index is a tuple of len 2
 
 la 0.2 (avocado)
 ================

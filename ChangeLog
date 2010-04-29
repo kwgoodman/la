@@ -1,5 +1,11 @@
 2010-04-29 Keith
 
+    * deflarry.py(Getitemlabel), RELEASE: Bug #571899: label indexing with lix
+      fails when, for example, larry is 3d and the index is a tuple of length
+      2.
+      
+    * doc/source/intro.rst: Update unit test count.      
+
     * deflarry.py(larry.__init__), doc/source/intro.rst, README: With this
       change, 0d larrys are no longer allowed. The reason for not allowing
       them is that not all larry methods support 0d larrys.
