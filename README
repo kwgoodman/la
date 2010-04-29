@@ -16,8 +16,8 @@ MEET LARRY
                         [234.56, 234.56, 234.56],
                         [456.67, 460.07, 458.23]])               
     
-    A larry can have any dimension. Here, for example, is one way to create a
-    1d larry:
+    A larry can have any number of dimensions except zero. Here, for example,
+    is one way to create a one-dimensional larry:
 
     >>> import la
     >>> y = la.larry([1, 2, 3])

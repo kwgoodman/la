@@ -1,5 +1,9 @@
 2010-04-29 Keith
 
+    * deflarry.py(larry.__init__), doc/source/intro.rst, README: With this
+      change, 0d larrys are no longer allowed. The reason for not allowing
+      them is that not all larry methods support 0d larrys.
+
     * tests/all_nan_test.py: A new unit test to check that a 1d larry that
       contains all NaNs will return NaN output. There are 3 test failures:
       prod, cumprod, cumsum.

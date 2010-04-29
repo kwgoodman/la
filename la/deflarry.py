@@ -40,7 +40,8 @@ class larry(object):
             If x cannot be converted to a numpy array, or if the number of
             elements in label does not match the dimensions of x, or if the
             elements in label are not unique along each dimension, or if the
-            elements of label are not lists.
+            elements of label are not lists, or if the number of dimensions
+            is zero.
             
         Examples
         --------
@@ -79,8 +80,14 @@ class larry(object):
                 raise ValueError, "x must be array_like."    
         if label is None:
             label = [range(z) for z in x.shape]
-        if x.ndim != len(label):
-            ValueError, 'Exactly one label per dimension needed'
+        ndim = x.ndim
+        if ndim != len(label):
+            raise ValueError, 'Exactly one label per dimension needed'
+        if ndim == 0:
+            # A 0d larry can be created if you comment out this ndim == 0
+            # test. The reason that 0d is not allowed is that not all methods
+            # support 0d larrys
+            raise ValueError, '0d larrys are not supported'
         for i, l in enumerate(label):
             nlabel = len(l)
             if x.shape[i] != nlabel:

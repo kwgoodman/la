@@ -29,8 +29,8 @@ array and a list of lists:
                         [129.03, 130.39, 130.55],
                         [ 14.82,  15.11,  14.94]])               
     
-A larry can have any dimension. Here, for example, is one way to create a
-one-dimensional larry:
+A larry can have any number of dimensions except zero. Here, for example, is
+one way to create a one-dimensional larry:
 ::
     >>> import la
     >>> y = la.larry([1, 2, 3])
