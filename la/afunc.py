@@ -147,7 +147,7 @@ def unique_group(groups):
     
 # Normalize functions -------------------------------------------------------
 
-def geometric_mean(x, axis=1, check_for_greater_than_zero=True):
+def geometric_mean(x, axis=-1, check_for_greater_than_zero=True):
     """
     Return the geometric mean of matrix x along axis, ignore NaNs.
     
@@ -172,7 +172,11 @@ def geometric_mean(x, axis=1, check_for_greater_than_zero=True):
     x = np.multiply(g, x)
     x = np.exp(x)
     idx = np.ones(x.shape)
-    idx[m == 0] = np.nan
+    if idx.ndim == 0:
+        if m==0:
+            idx = np.nan
+    else:
+        idx[m == 0] = np.nan
     x = np.multiply(x, idx)
     return np.expand_dims(x, axis) 
 
@@ -258,7 +262,11 @@ def lastrank(x, axis=-1):
     r = (g + g + e - 1.0) / 2.0
     r = r / (n - 1.0)
     r = 2.0 * (r - 0.5)
-    r[~np.isfinite(x[indlast2])] = np.nan  
+    if x.ndim == 1:
+        if not np.isfinite(x[indlast2]):
+            r = np.nan
+    else:
+        r[~np.isfinite(x[indlast2])] = np.nan  
     return np.expand_dims(r,axis)
 
 def lastrank_decay(x, decay, axis=-1):
@@ -282,7 +290,12 @@ def lastrank_decay(x, decay, axis=-1):
     r = (g + g + e - w.flat[-1]) / 2.0
     r = r / (n - w.flat[-1])
     r = 2.0 * (r - 0.5)
-    r[~np.isfinite(x[indlast2])] = np.nan
+    
+    if x.ndim == 1:
+        if not np.isfinite(x[indlast2]):
+            r = np.nan
+    else:
+        r[~np.isfinite(x[indlast2])] = np.nan
     return np.expand_dims(r, axis)
 
 def ranking(x, axis=0, norm='-1,1', ties=True):
@@ -378,7 +391,9 @@ def push(x, n, axis=-1):
     "Fill missing values (NaN) with most recent non-missing values if recent."
     if axis != -1 or axis != x.ndim-1:
         x = np.rollaxis(x, axis, x.ndim)
-    y = np.array(x)       
+    y = np.array(x) 
+    if y.ndim == 1:
+        y = y[None,:]
     fidx = np.isfinite(y)
     recent = np.nan * np.ones(y.shape[:-1])  
     count = np.nan * np.ones(y.shape[:-1])          
@@ -392,6 +407,8 @@ def push(x, n, axis=-1):
         recent[idx] = y[idx,i]
     if axis != -1 or axis != x.ndim-1:
         y = np.rollaxis(y, x.ndim-1, axis)
+    if x.ndim == 1:
+        return y[0]
     return y
 
 def _quantileraw1d(xi, q):

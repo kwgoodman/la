@@ -1,3 +1,11 @@
+2010-04-29 Josef
+
+    * afunc.py(geometric_mean), afunc.py(geometric_mean), afunc.py(lastrank),
+      afunc.py(lastrank_decay), afunc.py(push): Bug #571813: The following
+      larry methods (and corresponding functions) crash on 1d input: push,
+      lastrank, lastrank_decay, and (a function but not yet a larry method)
+      geometric_mean.
+
 2010-04-28 Keith
 
     * RELEASE: Begin work on la 0.3.
