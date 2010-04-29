@@ -147,7 +147,7 @@ def unique_group(groups):
     
 # Normalize functions -------------------------------------------------------
 
-def geometric_mean(x, axis=1, check_for_greater_than_zero=True):
+def geometric_mean(x, axis=-1, check_for_greater_than_zero=True):
     """
     Return the geometric mean of matrix x along axis, ignore NaNs.
     
