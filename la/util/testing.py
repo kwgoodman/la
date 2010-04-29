@@ -105,6 +105,14 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
     # Initialize
     fail = []
     
+    # Check input
+    if dtype not in (True, False):
+        raise TypeError, 'dtype must be True or False.'
+    if iscopy not in (True, False):
+        raise TypeError, 'iscopy must be True or False.'
+    if type(msg) is not str:
+        raise TypeError, 'msg must be a string.'        
+            
     # Function to make section headings
     def heading(text):
         line = '-' * len(text)

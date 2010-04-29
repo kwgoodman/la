@@ -490,7 +490,7 @@ class Test_unary(unittest.TestCase):
         "larry.invert_1"
         o = larry([True, False])
         d = larry([False, True])
-        ale(o.invert(), d, 'invert_1', bool, original=o)                  
+        ale(o.invert(), d, 'invert_1', original=o)                  
 
     def test_invert_2(self):
         "larry.invert_2"
@@ -501,7 +501,7 @@ class Test_unary(unittest.TestCase):
         "larry.__invert___1"
         o = larry([True, False])
         d = larry([False, True])
-        ale(~o, d, 'invert_1', bool, original=o)
+        ale(~o, d, 'invert_1', original=o)
 
     def test___invert___2(self):
         "larry.__invert___2"

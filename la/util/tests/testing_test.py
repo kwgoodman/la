@@ -32,26 +32,26 @@ class Test_Testing_Assert_Larry(object):
         self.ycl.label[0] = self.y.label[0]
     
     def test_assert_larry_identical(self):
-        y,x,yc = self.y, self.x, self.yc
+        y, x, yc = self.y, self.x, self.yc
         assert_larry_equal(y, y, 'identity')
 
     def test_assert_larry_xr(self):
-        y,x = self.y, self.x
+        y, x = self.y, self.x
         assert_raises(AssertionError, assert_larry_equal, 
                       y, x, 'different x')
 
     def test_assert_larry_labelr(self):
-        y,x = self.y, self.x2
+        y, x = self.y, self.x2
         assert_raises(AssertionError, assert_larry_equal, 
                       y, x, 'different labels')
     
     def test_assert_larry_norefr(self):
-        y,x,yc = self.y, self.x, self.yc
+        y, x, yc = self.y, self.x, self.yc
         assert_larry_equal(y, y, 'identity', original=yc, iscopy=True)
     
         
     def test_assert_larry_norefr(self):
-        y,x,yc = self.y, self.x, self.yc
+        y, x, yc = self.y, self.x, self.yc
         assert_raises(AssertionError, assert_larry_equal, 
                       y, y, 'raise noreference in c', original=y, iscopy=True)
 
@@ -78,18 +78,33 @@ class Test_Testing_Assert_Larry(object):
                       iscopy=False)
 
     def test_assert_larry_shaper(self):
-        y,y1 = self.y, self.y1
+        y, y1 = self.y, self.y1
         assert_raises(AssertionError, assert_larry_equal, 
                       y, y1, 'different shape')
 
     def test_assert_larry_dtyper(self):
-        y,y1 = self.y1, self.y1dt
+        y, y1 = self.y1, self.y1dt
         assert_raises(AssertionError, assert_larry_equal, 
                       y, y1, 'different dtype')
 
     def test_assert_larry_dtype(self):
-        y,y1 = self.y1, self.y1dt
+        y, y1 = self.y1, self.y1dt
         assert_larry_equal(y, y1, 'different dtype', dtype=False)
+        
+    def test_input_types(self):
+        ar = assert_raises
+        x = self.x
+        y = self.y
+        msg = True
+        dtype = True
+        iscopy = True
+        ar(TypeError, assert_larry_equal, x, y, msg, dtype, x, iscopy)
+        msg = ''
+        dtype = ''
+        iscopy = True
+        ar(TypeError, assert_larry_equal, x, y, msg, dtype, x, iscopy)                              
+        msg = ''
+        dtype = True
+        iscopy = ''
+        ar(TypeError, assert_larry_equal, x, y, msg, dtype, x, iscopy)          
             
-
-

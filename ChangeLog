@@ -1,5 +1,11 @@
 2010-04-29 Keith
 
+    * util/testing.py, tests/deflarry_test.py, util/tests/testing_test.py,
+      doc/source/intro.rst: Add an input type check for some of the input
+      parameters of assert_larry_equal. And add unit tests for it. Plus fix
+      harmless typo (harmless in this case anyway) in two unit tests that use
+      assert_larry_equal.
+
     * deflarry.py(Getitemlabel), RELEASE: Bug #571899: label indexing with lix
       fails when, for example, larry is 3d and the index is a tuple of length
       2.
