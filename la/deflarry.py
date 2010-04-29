@@ -3688,6 +3688,8 @@ class larry(object):
         delimiter : str
             The delimiter used to separate the labels elements from eachother
             and from the values.
+        skiprows : int, optional
+            Skip the first `skiprows` lines. No rows are skipped by default.          
             
         Raises
         ------

@@ -10,7 +10,7 @@ la 0.3 (banana)
 
 New larry methods
 -----------------
-
+- 
 
 Enhancements
 ------------
@@ -18,8 +18,8 @@ Enhancements
 
 Bug fixes
 ---------
-
-
+- #571813: Three larry methods crashed on 1d input
+- #571737: skiprows missing from parameters section of the fromcsv doc string
 
 la 0.2 (avocado)
 ================

@@ -1,3 +1,14 @@
+2010-04-29 Keith
+
+    * tests/all_nan_test.py: A new unit test to check that a 1d larry that
+      contains all NaNs will return NaN output. There are 3 test failures:
+      prod, cumprod, cumsum.
+      
+    * deflarry.py(fromcsv): Bug #571737: skiprows missing from the parameters
+      section of the fromcsv doc string.
+      
+    * RELEASE: Update.  
+
 2010-04-29 Josef
 
     * afunc.py(geometric_mean), afunc.py(geometric_mean), afunc.py(lastrank),
