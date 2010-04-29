@@ -172,7 +172,7 @@ def geometric_mean(x, axis=1, check_for_greater_than_zero=True):
     x = np.multiply(g, x)
     x = np.exp(x)
     idx = np.ones(x.shape)
-    if np.isscalar(idx):
+    if idx.ndim == 0:
         if m==0:
             idx = np.nan
     else:
@@ -391,7 +391,9 @@ def push(x, n, axis=-1):
     "Fill missing values (NaN) with most recent non-missing values if recent."
     if axis != -1 or axis != x.ndim-1:
         x = np.rollaxis(x, axis, x.ndim)
-    y = np.array(x)       
+    y = np.array(x) 
+    if y.ndim == 1:
+        y = y[None,:]
     fidx = np.isfinite(y)
     recent = np.nan * np.ones(y.shape[:-1])  
     count = np.nan * np.ones(y.shape[:-1])          
@@ -405,6 +407,8 @@ def push(x, n, axis=-1):
         recent[idx] = y[idx,i]
     if axis != -1 or axis != x.ndim-1:
         y = np.rollaxis(y, x.ndim-1, axis)
+    if x.ndim == 1:
+        return y[0]
     return y
 
 def _quantileraw1d(xi, q):
