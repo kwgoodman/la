@@ -942,7 +942,7 @@ class larry(object):
         if 0 in self.shape:
             return np.array([]).sum()
         else:    
-            return self.__reduce(axis, np.nansum)    
+            return self.__reduce(np.nansum, axis=axis)    
 
     def prod(self, axis=None):
         """
@@ -999,7 +999,7 @@ class larry(object):
         y = self.copy()
         idx = np.isnan(y.x)
         y.x[idx] = 1
-        y = y.__reduce(axis, np.prod)
+        y = y.__reduce(np.prod, axis=axis)
         idx = idx.all(axis)
         if idx.ndim == 0:
             if idx:
@@ -1043,7 +1043,7 @@ class larry(object):
         array([ 3.,  3.])       
                     
         """
-        return self.__reduce(axis, nanmean) 
+        return self.__reduce(nanmean, axis=axis) 
 
     def median(self, axis=None):
         """
@@ -1080,7 +1080,7 @@ class larry(object):
         array([ 3.,  3.])
                     
         """
-        return self.__reduce(axis, nanmedian) 
+        return self.__reduce(nanmedian, axis=axis) 
             
     def std(self, axis=None):
         """
@@ -1120,7 +1120,7 @@ class larry(object):
         if 0 in self.shape:
             return np.array([]).std()
         else:         
-            return self.__reduce(axis, nanstd)  
+            return self.__reduce(nanstd, axis=axis)  
         
     def var(self, axis=None):
         """
@@ -1160,7 +1160,7 @@ class larry(object):
         if 0 in self.shape:
             return np.array([]).var() 
         else:           
-            y = self.__reduce(axis, nanstd)
+            y = self.__reduce(nanstd, axis=axis)
             if np.isscalar(y):
                 y *= y 
             else:       
@@ -1202,7 +1202,7 @@ class larry(object):
         array([ 3.,  4.])
                     
         """            
-        return self.__reduce(axis, np.nanmax)             
+        return self.__reduce(np.nanmax, axis=axis)             
            
     def min(self, axis=None):
         """
@@ -1239,11 +1239,12 @@ class larry(object):
         array([ 3.,  2.])
                     
         """
-        return self.__reduce(axis, np.nanmin)  
+        return self.__reduce(np.nanmin, axis=axis)  
 
-    def __reduce(self, axis, op):
+    def __reduce(self, op, **kwargs):
+        axis = kwargs['axis']
         if np.isscalar(axis):
-            x = op(self.x, axis)
+            x = op(self.x, **kwargs)
             if np.isscalar(x):
                 return x
             else:    
@@ -1251,7 +1252,7 @@ class larry(object):
                 label.pop(axis)
                 return type(self)(x, label)      
         elif axis is None:
-            return op(self.x, axis)
+            return op(self.x, **kwargs)
         else:
             raise ValueError, 'axis should be an integer or None'
         
@@ -1302,7 +1303,7 @@ class larry(object):
         if axis is None:
             return self.x.any()
         else:
-            return self.__reduce(axis, np.any)
+            return self.__reduce(np.any, axis=axis)
         
     def all(self, axis=None):
         """
@@ -1351,7 +1352,7 @@ class larry(object):
         if axis is None:
             return self.x.all()
         else:
-            return self.__reduce(axis, np.all)                                         
+            return self.__reduce(np.all, axis=axis)                                         
         
     # Comparision ------------------------------------------------------------                                              
         

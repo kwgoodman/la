@@ -1,3 +1,11 @@
+2010-04-30 Keith
+
+    * deflarry(__reduce): Changed the reduce function from taking (axis, op)
+      as input to taking (op, **kwargs) in preparation for using __reduce
+      for lastrank_decay which takes decay, as well as axis, as input. This
+      change meant that I had to modify the code for all the reduce functions:
+      sum, mean, max, any, etc.
+
 2010-04-29 Keith
 
     * deflarry.py(prod), deflarry.py(cumprod), deflarry.py(cumsum), RELEASE,
