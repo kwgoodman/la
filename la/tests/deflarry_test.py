@@ -230,6 +230,26 @@ class Test_unary(unittest.TestCase):
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l2), 'Reference found')                      
 
+    def test_cumsum_5(self):
+        "larry.cumsum_5"
+        original = larry([[ nan, nan],
+                          [ 2.0, 3.0]])
+        actual = original.cumsum(axis=1)
+        desired = larry([[ nan, nan],
+                         [ 2.0, 5.0]])
+        msg = 'cumsum with row of all nans'                 
+        ale(actual, desired, msg=msg, original=original)          
+
+    def test_cumsum_6(self):
+        "larry.cumsum_6"
+        original = larry([[ nan, 2.0],
+                          [ nan, 3.0]])
+        actual = original.cumsum(axis=0)
+        desired = larry([[ nan, 2.0],
+                         [ nan, 5.0]])
+        msg = 'cumsum with column of all nans'                 
+        ale(actual, desired, msg=msg, original=original)
+
     def test_cumprod_1(self):
         "larry.cumprod_1"       
         t = np.array([[ 1.0, 1.0],
@@ -280,7 +300,29 @@ class Test_unary(unittest.TestCase):
         self.assert_((abs(t - p) < self.tol).all(), msg) 
         label = [[0,1]]
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l2), 'Reference found') 
+        self.assert_(noreference(p, self.l2), 'Reference found')
+        
+    def test_cumprod_5(self):
+        "larry.cumprod_5"
+        original = larry([[ nan, nan, nan],
+                          [ 2.0, nan, 3.0]])
+        actual = original.cumprod(axis=1)
+        desired = larry([[ nan, nan, nan],
+                         [ 2.0, nan, 6.0]])
+        msg = 'cumprod with row of all nans'                 
+        ale(actual, desired, msg=msg, original=original)          
+
+    def test_cumprod_6(self):
+        "larry.cumprod_6"
+        original = larry([[ nan, 2.0],
+                          [ nan, nan],
+                          [ nan, 3.0]])
+        actual = original.cumprod(axis=0)
+        desired = larry([[ nan, 2.0],
+                         [ nan, nan],
+                         [ nan, 6.0]])
+        msg = 'cumprod with column of all nans'                 
+        ale(actual, desired, msg=msg, original=original)
         
     def test_clip_1(self):
         "larry.clip_1"        
@@ -1231,6 +1273,28 @@ class Test_reduce(unittest.TestCase):
         p = self.l2.prod()
         msg = printfail(t, p, '')
         self.assert_(p == t, msg)
+
+    def test_prod_6(self):
+        "larry.prod_6"
+        original = larry([[ nan, 2.0],
+                          [ nan, nan],
+                          [ nan, 3.0]])
+        actual = original.prod(axis=0)
+        desired = larry([ nan, 6.0])
+        msg = 'prod with row of all nans'                 
+        ale(actual, desired, msg=msg, original=original)
+
+    def test_prod_7(self):
+        "larry.prod_7"
+        original = larry([[ nan, 2.0],
+                          [ nan, nan],
+                          [ nan, 3.0]])
+        actual = original.prod(axis=1)
+        desired = larry( [ 2.0,
+                           nan,
+                           3.0])
+        msg = 'prod with column of all nans'                 
+        ale(actual, desired, msg=msg, original=original)
 
     def test_mean_1(self):
         "larry.mean_1"

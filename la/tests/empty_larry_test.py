@@ -92,7 +92,7 @@ mts = [('A'          ,  'property' ,    arr()),
        ('ndim'       ,  'property' ,    'use_numpy'),               
        ('nx'         ,  'property' ,    np.array([0])[0]),                
        ('power'      ,  [2]        ,    lar()),                                                            
-       ('prod'       ,  None       ,    'use_numpy'), 
+       ('prod'       ,  None       ,    nan), 
       #('pull',[[], 0],IndexError) ,    # Unit test doesn't handle Errors
       #('push'       ,  [0]        ,    lar()),       # 2d only              
       #('quantile'   ,  [4]        ,    lar()),       # 2d only               
@@ -146,6 +146,9 @@ def test_empty():
                 yield assert_, False, msg % attr
             else:                                         
                 result = actual == desired
+                if np.isscalar(actual) and np.isscalar(desired):
+                    if np.isnan(actual).all() and np.isnan(desired).all():
+                        result = True
                 if type(result) == larry:
                     result = result.all()
                 else:

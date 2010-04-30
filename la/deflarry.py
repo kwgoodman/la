@@ -281,6 +281,15 @@ class larry(object):
         ValueError
             If axis is None.
             
+        See Also
+        --------
+        la.larry.sum: Sum of values along axis, ignoring NaNs.
+        
+        Notes
+        -----
+        NaNs are ignored except for when all elements in a cumsum are NaN.
+        In that case, a NaN is returned.
+            
         Examples
         --------
         >>> y = larry([1, 2, 3])
@@ -290,14 +299,31 @@ class larry(object):
             1
             2
         x
-        array([1, 3, 6])                        
+        array([1, 3, 6])
+        
+        If all elements are NaN along the specified axis then NaN is returned:
+        
+        >>> from la import nan
+        >>> y = larry([[nan, 2], [nan,  4]])
+        >>> y.cumsum(axis=0)
+        label_0
+            0
+            1
+        label_1
+            0
+            1
+        x
+        array([[ NaN,   2.],
+               [ NaN,   6.]])
                         
         """
         if axis == None:
             raise ValueError, 'axis cannot be None'
         y = self.copy()
-        y[np.isnan(y.x)] = 0
+        idx = np.isnan(y.x)
+        y[idx] = 0
         y.x.cumsum(axis, out=y.x)
+        y.x[idx] = np.nan
         return y        
 
     def cumprod(self, axis): 
@@ -320,6 +346,15 @@ class larry(object):
         ValueError
             If axis is None.
             
+        See Also
+        --------
+        la.larry.prod: Product of values along axis, ignoring NaNs.
+        
+        Notes
+        -----
+        NaNs are ignored except for when all elements in a cumprod are NaN.
+        In that case, a NaN is returned.            
+            
         Examples
         --------
         >>> y = larry([1, 2, 3])
@@ -329,14 +364,31 @@ class larry(object):
             1
             2
         x
-        array([1, 2, 6])                       
+        array([1, 2, 6])
+        
+        If all elements are NaN along the specified axis then NaN is returned:
+        
+        >>> from la import nan
+        >>> y = larry([[nan, 2], [nan,  4]])
+        >>> y.cumprod(axis=0)
+        label_0
+            0
+            1
+        label_1
+            0
+            1
+        x
+        array([[ NaN,   2.],
+               [ NaN,   8.]])                               
                         
         """
         if axis == None:
             raise ValueError, 'axis cannot be None'
         y = self.copy()
-        y[np.isnan(y.x)] = 1
+        idx = np.isnan(y.x)
+        y[idx] = 1
         y.x.cumprod(axis, out=y.x)
+        y.x[idx] = np.nan
         return y
 
     def clip(self, lo, hi):
@@ -898,20 +950,26 @@ class larry(object):
 
         Parameters
         ----------
-        axis : {None, integer}, optional
+        axis : {None, int}, optional
             Axis to find the product along or find the product over a
             all axes (None, default).
             
         Returns
         -------
         d : {larry, scalar}
-            When axis is an integer a larry is returned. When axis is None
-            (default) a scalar is returned (assuming larry contains scalars).
+            Returns a larry or a scalar. When axis is None (default) the larry
+            is flattened and a scalar, the product of all elements, is
+            returned; when larry is 1d and axis=0 a salar is returned.
             
-        Raises
-        ------
-        ValueError
-            If axis is not an integer or None.
+        See Also
+        --------
+        la.larry.cumprod: Cumulative product, ignoring NaNs.  
+
+        Notes
+        -----
+        NaNs are ignored except for when all elements in a product are NaN.
+        In that case, a NaN is returned. Also the product of an empty
+        larry is NaN.
             
         Examples
         --------
@@ -925,10 +983,30 @@ class larry(object):
             1
         x
         array([ 3.,  8.])
-             
+        
+        If all elements are NaN along the specified axis then NaN is returned:
+        
+        >>> from la import nan 
+        >>> y = larry([[nan, 2], [nan,  4]])
+        >>> y.prod(axis=0)
+        label_0
+            0
+            1
+        x
+        array([ NaN,   8.])
+                    
         """
-        y = self.nan_replace(1)
-        return y.__reduce(axis, np.prod) 
+        y = self.copy()
+        idx = np.isnan(y.x)
+        y.x[idx] = 1
+        y = y.__reduce(axis, np.prod)
+        idx = idx.all(axis)
+        if idx.ndim == 0:
+            if idx:
+                y = np.nan
+        else:        
+            y[idx] = np.nan
+        return y 
 
     def mean(self, axis=None):
         """

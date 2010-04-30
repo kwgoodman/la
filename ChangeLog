@@ -1,5 +1,11 @@
 2010-04-29 Keith
 
+    * deflarry.py(prod), deflarry.py(cumprod), deflarry.py(cumsum), RELEASE,
+      deflarry_test.py, doc/source/intro.rst, tests/empty_larry_test.py:    
+      Bug #571830: prod, cumprod, and cumsum did not return NaN for NaN input.
+      Added unit tests. And updated doc strings. And changed the behavior of
+      prod to return NaN for emtpy larry input.
+
     * util/testing.py, tests/deflarry_test.py, util/tests/testing_test.py,
       doc/source/intro.rst: Add an input type check for some of the input
       parameters of assert_larry_equal. And add unit tests for it. Plus fix
