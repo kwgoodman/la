@@ -7,14 +7,14 @@ nan = np.nan
 from la.util.testing import printfail
 from la.util.scipy import nanstd
 from la.afunc import (covMissing, push, geometric_mean, lastrank,
-                      lastrank_decay, movingrank, movingsum,
-                      movingsum_forward, nans, quantile, ranking,
-                      group_mean, group_median, group_ranking, nanmedian)
+                      movingrank, movingsum, movingsum_forward, nans,
+                      quantile, ranking, group_mean, group_median,
+                      group_ranking, nanmedian)
 
 # Functions to test
 funcs_one = [geometric_mean, lastrank, nanstd, ranking, nanmedian]
 funcs_oneint = [movingrank, movingsum, movingsum_forward, quantile, push]
-funcs_onefrac = [lastrank_decay]
+funcs_onefrac = [lastrank]
 funcs_sect = [group_mean, group_median, group_ranking]
 
 def check_return_array(func, args):
@@ -50,7 +50,7 @@ def test_return_array():
         
     for func in funcs_onefrac:
         xc = x.copy()
-        args = (xc, 0.5)
+        args = (xc, -1, 0.5)
         yield check_return_array, func, args
         
     for func in funcs_sect:
@@ -89,7 +89,7 @@ def test_3d():
         
     for func in funcs_onefrac:
         xc = x.copy()
-        args = (xc, 0.5)
+        args = (xc, -1, 0.5)
         yield check_3d, func, args
     
     for func in funcs_sect:

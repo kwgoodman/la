@@ -226,7 +226,6 @@ def movingsum_forward(x, window, skip=0, axis=-1, norm=False):
     msf = movingsum(x[flip_index], window, skip=skip, axis=axis, norm=norm)
     return msf[flip_index]
 
-
 def movingrank(x, window, axis=-1):
     """Moving rank (normalized to -1 and 1) of a given window along axis.
 
@@ -240,63 +239,50 @@ def movingrank(x, window, axis=-1):
         raise ValueError, 'Window is too small.'
     nt = x.shape[axis]
     mr = np.nan * np.zeros(x.shape)        
-    for i in xrange(window-1,nt): 
+    for i in xrange(window-1, nt): 
         index1 = [slice(None)] * x.ndim 
         index1[axis] = i
         index2 = [slice(None)] * x.ndim 
         index2[axis] = slice(i-window+1, i+1, None)
-        mr[index1] = np.squeeze(lastrank(x[index2],axis=axis))
-
+        mr[index1] = np.squeeze(lastrank(x[index2], axis=axis))
     return mr
-       
-def lastrank(x, axis=-1):
-    "Rank of last column only"
-    # Note this is just a special case of lastrank_decay with decay=0
-    indlast = [slice(None)] * x.ndim 
-    indlast[axis] = slice(-1, None)
-    indlast2 = [slice(None)] * x.ndim 
-    indlast2[axis] = -1
-    g = (x[indlast] > x).sum(axis)
-    e = (x[indlast] == x).sum(axis)
-    n = np.isfinite(x).sum(axis)
-    r = (g + g + e - 1.0) / 2.0
-    r = r / (n - 1.0)
-    r = 2.0 * (r - 0.5)
-    if x.ndim == 1:
-        if not np.isfinite(x[indlast2]):
-            r = np.nan
-    else:
-        r[~np.isfinite(x[indlast2])] = np.nan  
-    return np.expand_dims(r,axis)
-
-def lastrank_decay(x, decay, axis=-1):
+   
+def lastrank(x, axis=-1, decay=0.0):
     "Exponential decay rank of last column only"
-    if decay < 0:
-        raise ValueError, 'decay must be greater than or equal to zero.'
-    nt = x.shape[axis]
-    w = nt - np.ones(nt).cumsum()
-    w = np.exp(-decay * w)
-    w = nt * w / w.sum()
-    matchdim = [None] * x.ndim 
-    matchdim[axis] = slice(None)
-    w = w[matchdim]
     indlast = [slice(None)] * x.ndim 
     indlast[axis] = slice(-1, None)
     indlast2 = [slice(None)] * x.ndim 
-    indlast2[axis] = -1
-    g = ((x[indlast] > x) * w).sum(axis)
-    e = ((x[indlast] == x) * w).sum(axis)
-    n = (np.isfinite(x) * w).sum(axis)
-    r = (g + g + e - w.flat[-1]) / 2.0
-    r = r / (n - w.flat[-1])
-    r = 2.0 * (r - 0.5)
-    
+    indlast2[axis] = -1  
+    if decay > 0:
+        # Exponential decay 
+        nt = x.shape[axis]
+        w = nt - np.ones(nt).cumsum()
+        w = np.exp(-decay * w)
+        w = nt * w / w.sum()
+        matchdim = [None] * x.ndim 
+        matchdim[axis] = slice(None)
+        w = w[matchdim]
+        g = ((x[indlast] > x) * w).sum(axis)
+        e = ((x[indlast] == x) * w).sum(axis)
+        n = (np.isfinite(x) * w).sum(axis)
+        r = (g + g + e - w.flat[-1]) / 2.0
+        r = r / (n - w.flat[-1])
+    elif decay < 0:
+        raise ValueError, 'decay must be greater than or equal to zero.'        
+    else:
+        # Special case the most common case, decay = 0, for speed
+        g = (x[indlast] > x).sum(axis)
+        e = (x[indlast] == x).sum(axis)
+        n = np.isfinite(x).sum(axis)
+        r = (g + g + e - 1.0) / 2.0
+        r = r / (n - 1.0)      
+    r = 2.0 * (r - 0.5)    
     if x.ndim == 1:
         if not np.isfinite(x[indlast2]):
             r = np.nan
     else:
         r[~np.isfinite(x[indlast2])] = np.nan
-    return np.expand_dims(r, axis)
+    return np.expand_dims(r, axis)    
 
 def ranking(x, axis=0, norm='-1,1', ties=True):
     """

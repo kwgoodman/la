@@ -1562,14 +1562,14 @@ class Test_reduce(unittest.TestCase):
         self.assert_(p.label == t.label, msg)
         self.assert_(noreference(p, t), 'Reference found') 
         
-    def test_lastrank_decay_1(self):
-        "larry.lastrank_decay_1"
+    def test_lastrank_2(self):
+        "larry.lastrank_2"
         t = np.array([[ nan],
                       [ 1.0],
                       [-1.0]])           
         label = [[0, 1, 2], [2]] 
         t = larry(t, label)              
-        p = self.l3.lastrank_decay(0)
+        p = self.l3.lastrank(decay=0)
         t[np.isnan(t.x)] = self.nancode
         p[p.isnan()] = self.nancode          
         msg = printfail(t.x, p.x, 'x')
@@ -1578,14 +1578,14 @@ class Test_reduce(unittest.TestCase):
         self.assert_(p.label == t.label, msg)
         self.assert_(noreference(p, t), 'Reference found') 
         
-    def test_lastrank_decay_2(self):
-        "larry.lastrank_decay_2"
+    def test_lastrank_3(self):
+        "larry.lastrank_23"
         t = np.array([[ nan],
                       [ 1.0],
                       [-1.0]])           
         label = [[0, 1, 2], [2]] 
         t = larry(t, label)              
-        p = self.l3.lastrank_decay(10)
+        p = self.l3.lastrank(decay=10)
         t[np.isnan(t.x)] = self.nancode
         p[p.isnan()] = self.nancode          
         msg = printfail(t.x, p.x, 'x')

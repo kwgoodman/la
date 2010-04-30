@@ -19,7 +19,6 @@ def getfuncs(argint, argfrac, argsector):
              ('movingsum_forward'     , (argint,), ()),
              ('quantile'              , (argint,), ()),
              ('push'                  , (argint,), ()),
-             ('lastrank_decay'        , (argfrac,), ()),
              ('group_mean'            , (argsector,), ()),
              ('group_median'          , (argsector,), ()),
              ('group_ranking'         , (argsector,), ())]

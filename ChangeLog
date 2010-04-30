@@ -1,5 +1,11 @@
 2010-04-30 Keith
 
+    * afunc.py(lastrank), afunc.py(lastrank_decay), deflarry.py(lastrank),
+      deflarry.py(lastrank_decay), tests/deflarry_test.py, tests/more_test.py,
+      la/tests/test_3d.py, RELEASE: Combined lastrank and lastrank_decay into
+      one function (afunc.py) and one method (deflarry.py). The new name is
+      lastrank.
+
     * deflarry(__reduce): Changed the reduce function from taking (axis, op)
       as input to taking (op, **kwargs) in preparation for using __reduce
       for lastrank_decay which takes decay, as well as axis, as input. This

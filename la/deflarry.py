@@ -10,9 +10,8 @@ from la.util.scipy import (nanmean, nanmedian, nanstd)
 from la.util.misc import (flattenlabel, isscalar, fromlists, list2index,
                           fromlists)
 from la.afunc import (group_ranking, group_mean, group_median, covMissing,
-                      push, quantile, ranking, lastrank,
-                      movingsum_forward, lastrank_decay, movingrank,
-                      movingsum, shuffle, nans)
+                      push, quantile, ranking, lastrank, movingsum_forward,
+                      movingrank, movingsum, shuffle, nans)
 
 
 class larry(object):
@@ -2395,27 +2394,9 @@ class larry(object):
         """
         y = self.copy()
         y.x = quantile(y.x, q, axis=axis)       
-        return y        
+        return y
         
-    def lastrank(self, axis=-1):
-        """
-        Rank of elements in last column, ignoring NaNs.
-            
-        Returns
-        -------
-        d : larry
-            In the case of, for example, a 2d larry of shape (n, m) the output
-            will contain the rank (normalized to be between -1 and 1) of the
-            the last element of each row. The outout in this example will have
-            shape (n, 1).   
-                    
-        """
-        label = self.copylabel()
-        label[axis] = [label[axis][-1]]
-        x = lastrank(self.x, axis=axis)
-        return type(self)(x, label)
-        
-    def lastrank_decay(self, decay, axis=-1):
+    def lastrank(self, axis=-1, decay=0):
         """
         Exponentially decayed rank of elements in last column, ignoring NaNs.       
 
@@ -2435,7 +2416,7 @@ class larry(object):
         """
         label = self.copylabel()
         label[axis] = [label[axis][-1]]
-        x = lastrank_decay(self.x, decay, axis=axis)
+        x = lastrank(self.x, axis=axis, decay=decay)
         return type(self)(x, label)                                                                       
         
     # Group calc -------------------------------------------------------------  
