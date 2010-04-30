@@ -316,6 +316,14 @@ def lastrank(x, axis=-1, decay=0.0):
     -1.0
     
     """
+    if x.size == 0:
+        # At least one dimension has length 0
+        shape = list(x.shape)
+        shape.pop(axis)
+        r = nans(shape, dtype=x.dtype) 
+        if r.ndim==0 and r.size==1:
+            r = np.nan     
+        return r 
     indlast = [slice(None)] * x.ndim 
     indlast[axis] = slice(-1, None)
     indlast2 = [slice(None)] * x.ndim 

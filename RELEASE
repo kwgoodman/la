@@ -16,8 +16,8 @@ Enhancements
 ------------
 - Expanded documentation
 
-API change
-----------
+API changes
+-----------
 - lastrank and lastrank_decay methods combined into one method: lastrank
 - Given shape (n,m) input, lastrank now returns shape (n,) instead of (n,1)
 
@@ -26,7 +26,8 @@ Bug fixes
 - #571813: Three larry methods crashed on 1d input
 - #571737: skiprows missing from parameters section of the fromcsv doc string
 - #571899: label indexing fails when larry is 3d and index is a tuple of len 2
-- #571830: prod, cumprod, and cumsum did not return NaN for NaN input
+- #571830: prod, cumprod, and cumsum did not return NaN for all-NaN input
+- #572638: lastrank chokes on input with a shape tuple that contains zero
 
 
 la 0.2 (avocado)
@@ -71,8 +72,5 @@ la 0.1 (first release)
 ======================
 
 *Release date: 2010-02-03*
-
-Changes
--------
 
 This is the first release of the la package.

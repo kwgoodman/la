@@ -10,9 +10,9 @@ def lar():
     return larry([])
 
 def arr():
-    return np.array([])
+    return np.array([])   
 
-#               Method        Parameters     Returns
+#       Method          Parameters      Returns
 mts = [('A'          ,  'property' ,    arr()),
        ('T'          ,  'property' ,    'use_numpy'),
        ('__abs__'    ,  None       ,    'use_numpy'),
@@ -43,7 +43,6 @@ mts = [('A'          ,  'property' ,    arr()),
        ('copy'       ,  None       ,    'use_numpy'), 
        ('copylabel'  ,  None       ,    [[]]),                              
        ('copyx'      ,  None       ,    arr()),
-      #('cov'        ,  None       ,    lar()),       # 2d only
        ('cumprod'    ,  [0]        ,    'use_numpy'),
        ('cumsum'     ,  [0]        ,    'use_numpy'), 
        ('cut_missing',  [0]        ,    lar()),                                            
@@ -72,8 +71,7 @@ mts = [('A'          ,  'property' ,    arr()),
        ('label'      ,  'property' ,    [[]]),               
       #('labelindex',[0, 0],IndexError),# Unit test doesn't handle Errors
        ('lag'        ,  [0]        ,    lar()),
-      #('last_rank'  ,  None       ,    lar()),       # 2d only
-      #('last_rank_decay', None    ,    lar()),       # 2d only
+       ('lastrank'   ,  None       ,    nan),
        ('log'        ,  None       ,    lar()), 
        ('maplabel'   ,  [None, 0]  ,    lar()),
       #('max',[0],IndexError),          # Unit test doesn't handle Errors               

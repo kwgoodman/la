@@ -1,5 +1,9 @@
 2010-04-30 Keith
 
+    * afunc.py(lastrank), tests/empty_larry_test.py, RELEASE,
+      source/intro.rst: Bug #572638: lastrank chokes on input with a shape
+      tuple that contains zero. 
+
     * afunc.py(lastrank), deflarry.py(lastrank), tests/deflarry_test.py,
       tests/larry_axis_test.py, doc/source/reference.rst, RELEASE: Bug #572533
       Given input of shape (n, m) and axis=1, lastrank now returns output of
