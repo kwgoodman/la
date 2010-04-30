@@ -248,7 +248,74 @@ def movingrank(x, window, axis=-1):
     return mr
    
 def lastrank(x, axis=-1, decay=0.0):
-    "Exponential decay rank of last column only"
+    """
+    The ranking of the last element along the axis, ignoring NaNs.
+    
+    The ranking is normalized to be between -1 and 1 instead of the more
+    common 1 and N. The results are adjusted for ties.      
+
+    Parameters
+    ----------
+    x : numpy array
+        The array to rank.
+    axis : int, optional
+        The axis over which to rank. By default (axis=-1) the ranking
+        (and reducing) is performed over the last axis.          
+    decay : scalar, optional
+        Exponential decay strength. Cannot be negative. The default
+        (decay=0) is no decay. In normal ranking (decay=0) all elements
+        used to calculate the rank are equally weighted and so the
+        ordering of all but the last element does not matter. In
+        exponentially decayed ranking the ordering of the elements
+        influences the ranking: elements nearer the last element get more
+        weight.
+        
+    Returns
+    -------
+    d : array
+        In the case of, for example, a 2d array of shape (n, m) and
+        axis=1, the output will contain the rank (normalized to be between
+        -1 and 1 and adjusted for ties) of the the last element of each row.
+        The output in this example will have shape (n,). 
+            
+    Examples
+    -------- 
+    Create an array:
+                    
+    >>> y1 = larry([1, 2, 3])
+    
+    What is the rank of the last element (the value 3 in this example)?
+    It is the largest element so the rank is 1.0:
+    
+    >>> import numpy as np
+    >>> from la.afunc import lastrank
+    >>> x1 = np.array([1, 2, 3])
+    >>> lastrank(x1)
+    1.0
+    
+    Now let's try an example where the last element has the smallest
+    value:
+    
+    >>> x2 = np.array([3, 2, 1])
+    >>> lastrank(x2)
+    -1.0
+    
+    Here's an example where the last element is not the minimum or maximum
+    value:
+    
+    >>> x3 = np.array([1, 3, 4, 5, 2])
+    >>> lastrank(x3)
+    -0.5
+    
+    Finally, let's add a large decay. The decay means that the elements
+    closest to the last element receive the most weight. Because the
+    decay is large, the first element (the value 1) doesn't get any weight
+    and therefore the last element (2) becomes the smallest element:
+    
+    >>> lastrank(x3, decay=10)
+    -1.0
+    
+    """
     indlast = [slice(None)] * x.ndim 
     indlast[axis] = slice(-1, None)
     indlast2 = [slice(None)] * x.ndim 
@@ -282,7 +349,7 @@ def lastrank(x, axis=-1, decay=0.0):
             r = np.nan
     else:
         r[~np.isfinite(x[indlast2])] = np.nan
-    return np.expand_dims(r, axis)    
+    return r    
 
 def ranking(x, axis=0, norm='-1,1', ties=True):
     """

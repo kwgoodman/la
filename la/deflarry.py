@@ -1351,7 +1351,77 @@ class larry(object):
         if axis is None:
             return self.x.all()
         else:
-            return self.__reduce(np.all, axis=axis)                                         
+            return self.__reduce(np.all, axis=axis) 
+            
+    def lastrank(self, axis=-1, decay=0):
+        """
+        The ranking of the last element along the axis, ignoring NaNs.
+        
+        The ranking is normalized to be between -1 and 1 instead of the more
+        common 1 and N. The results are adjusted for ties.    
+
+        Parameters
+        ----------
+        axis : int, optional
+            The axis over which to rank. By default (axis=-1) the ranking
+            (and reducing) is performed over the last axis.          
+        decay : scalar, optional
+            Exponential decay strength. Cannot be negative. The default
+            (decay=0) is no decay. In normal ranking (decay=0) all elements
+            used to calculate the rank are equally weighted and so the
+            ordering of all but the last element does not matter. In
+            exponentially decayed ranking the ordering of the elements
+            influences the ranking: elements nearer the last element get more
+            weight.
+            
+        Returns
+        -------
+        d : larry
+            In the case of, for example, a 2d larry of shape (n, m) and
+            axis=1, the output will contain the rank (normalized to be between
+            -1 and 1 and adjusted for ties) of the the last element of each
+            row. The output in this example will have shape (n,). 
+            
+        See Also
+        --------
+        la.larry.ranking: Rank elements treating NaN as missing. 
+                
+        Examples
+        -------- 
+        Create a larry:
+                     
+        >>> y1 = larry([1, 2, 3])
+        
+        What is the rank of the last element (the value 3 in this example)?
+        It is the largest element so the rank is 1.0:
+        
+        >>> y1.lastrank()
+        1.0
+        
+        Now let's try an example where the last element has the smallest
+        value:
+        
+        >>> y2 = larry([3, 2, 1])
+        >>> y2.lastrank()
+        -1.0
+        
+        Here's an example where the last element is not the minimum or maximum
+        value:
+        
+        >>> y3 = larry([1, 3, 4, 5, 2])
+        >>> y3.lastrank()
+        -0.5
+        
+        Finally, let's add a large decay. The decay means that the elements
+        closest to the last element receive the most weight. Because the
+        decay is large, the first element (the value 1) doesn't get any weight
+        and therefore the last element (2) becomes the smallest element:
+        
+        >>> y3.lastrank(decay=10)
+        -1.0
+                    
+        """
+        return self.__reduce(lastrank, axis=axis, decay=decay)                                                    
         
     # Comparision ------------------------------------------------------------                                              
         
@@ -2394,30 +2464,7 @@ class larry(object):
         """
         y = self.copy()
         y.x = quantile(y.x, q, axis=axis)       
-        return y
-        
-    def lastrank(self, axis=-1, decay=0):
-        """
-        Exponentially decayed rank of elements in last column, ignoring NaNs.       
-
-        Parameters
-        ----------
-        decay : scalar
-            Exponential decay strength. Should not be negative.
-            
-        Returns
-        -------
-        d : larry
-            In the case of, for example, a 2d larry of shape (n, m) the output
-            will contain the exponetially decayed rank (normalized to be
-            between -1 and 1) of the the last element of each row. The outout
-            in this example will have shape (n, 1).           
-                    
-        """
-        label = self.copylabel()
-        label[axis] = [label[axis][-1]]
-        x = lastrank(self.x, axis=axis, decay=decay)
-        return type(self)(x, label)                                                                       
+        return y                                                                      
         
     # Group calc -------------------------------------------------------------  
                  

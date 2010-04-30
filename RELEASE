@@ -19,6 +19,7 @@ Enhancements
 API change
 ----------
 - lastrank and lastrank_decay methods combined into one method: lastrank
+- Given shape (n,m) input, lastrank now returns shape (n,) instead of (n,1)
 
 Bug fixes
 ---------

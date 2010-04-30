@@ -183,7 +183,11 @@ axes thereby reducing the dimension of the larry.
 
 ------------
 
-.. automethod:: la.larry.all                      
+.. automethod:: la.larry.all
+
+------------
+
+.. automethod:: la.larry.lastrank                      
            
              
 Comparison
@@ -352,14 +356,6 @@ The calculation methods transform the larry.
 ------------
 
 .. automethod:: la.larry.quantile
-
-------------
-
-.. automethod:: la.larry.lastrank
-
-------------
-
-.. automethod:: la.larry.lastrank_decay
 
 
 Group

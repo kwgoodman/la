@@ -1,5 +1,12 @@
 2010-04-30 Keith
 
+    * afunc.py(lastrank), deflarry.py(lastrank), tests/deflarry_test.py,
+      tests/larry_axis_test.py, doc/source/reference.rst, RELEASE: Bug #572533
+      Given input of shape (n, m) and axis=1, lastrank now returns output of
+      shape (n,) instead of (n, 1). So it now reduces in the same way as all
+      other reducing methods. Updated unit tests and added two more. Finally
+      created doc strings (function and method).  
+
     * afunc.py(lastrank), afunc.py(lastrank_decay), deflarry.py(lastrank),
       deflarry.py(lastrank_decay), tests/deflarry_test.py, tests/more_test.py,
       la/tests/test_3d.py, RELEASE: Combined lastrank and lastrank_decay into

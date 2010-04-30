@@ -1548,10 +1548,8 @@ class Test_reduce(unittest.TestCase):
         
     def test_lastrank_1(self):
         "larry.lastrank_1"
-        t = np.array([[ nan],
-                      [ 1.0],
-                      [-1.0]])            
-        label = [[0, 1, 2], [2]] 
+        t = np.array([ nan,  1.0, -1.0])            
+        label = [[0, 1, 2]] 
         t = larry(t, label)              
         p = self.l3.lastrank()
         t[np.isnan(t.x)] = self.nancode
@@ -1564,10 +1562,8 @@ class Test_reduce(unittest.TestCase):
         
     def test_lastrank_2(self):
         "larry.lastrank_2"
-        t = np.array([[ nan],
-                      [ 1.0],
-                      [-1.0]])           
-        label = [[0, 1, 2], [2]] 
+        t = np.array([ nan, 1.0, -1.0])           
+        label = [[0, 1, 2]] 
         t = larry(t, label)              
         p = self.l3.lastrank(decay=0)
         t[np.isnan(t.x)] = self.nancode
@@ -1580,10 +1576,8 @@ class Test_reduce(unittest.TestCase):
         
     def test_lastrank_3(self):
         "larry.lastrank_23"
-        t = np.array([[ nan],
-                      [ 1.0],
-                      [-1.0]])           
-        label = [[0, 1, 2], [2]] 
+        t = np.array([ nan, 1.0, -1.0])           
+        label = [[0, 1, 2]] 
         t = larry(t, label)              
         p = self.l3.lastrank(decay=10)
         t[np.isnan(t.x)] = self.nancode
