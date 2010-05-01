@@ -104,16 +104,12 @@ mts = [('A'          ,  'property' ,    arr()),
        ('sortaxis'   ,  None       ,    lar()),
        ('sqrt'       ,  None       ,    lar()), 
        ('squeeze'    ,  None       ,    'use_numpy'),
-       ('std'        ,  None       ,    'use_numpy'),
-       ('sum'        ,  None       ,    'use_numpy'), 
        ('swapaxes'   ,  [0, 0]     ,    lar()), 
        ('todict'     ,  None       ,    {}), 
        ('tolist'     ,  None       ,    [[],[]]),
        ('totuples'   ,  None       ,    []),
        ('unflatten'  ,  None       ,    lar()),                                       
-       ('vacuum'     ,  None       ,    lar()),
-       ('var'        ,  None       ,    'use_numpy'),       
-       ('std'        ,  None       ,    'use_numpy'),
+       ('vacuum'     ,  None       ,    lar()),     
        ('x'          ,  'property' ,    arr()),
        ('zscore'     ,  None       ,    lar()),
       ] 
@@ -153,23 +149,55 @@ def test_empty():
                     result = np.all(result)    
                 result &= type(actual) == type(desired) 
                 msg = "method '" + attr + "' failed empty larry test"     
-                yield assert_, result, msg      
-
+                yield assert_, result, msg
+    
 # ---------------------------------------------------------------------------
 
-# Above we tested larrys of shape (0,). What about larrys of shape, say,
-# (2,0) or (2,0,3)?
+# Check that the right shape and value are returned by the reducing methods
+# when the input has a shape tuple that contains 0
 
-def lar2():
-    return larry(arr2())
+False = np.False_
+True = ~False
 
-def arr2():
-    return np.ones((2,0,3))
-
-def test_empty2():
-    "Test larry methods for proper handling of empty larrys with ndim > 1."
-    msg = "%s failed emtpy ndim > 1 test."
-    yield assert_equal, lar2().sum(), arr2().sum(), msg % "sum"
-    yield assert_equal, lar2().std(), arr2().std(), msg % "std"
-    yield assert_equal, lar2().var(), arr2().var(), msg % "var"
+def reduce_methods():
+    r = [{'la': 'sum',      'np': 'sum', 'dflt': nan,   'kw': {}},
+         {'la': 'prod',     'np': 'sum', 'dflt': nan,   'kw': {}},
+         {'la': 'mean',     'np': 'sum', 'dflt': nan,   'kw': {}},
+         {'la': 'median',   'np': 'sum', 'dflt': nan,   'kw': {}},
+         {'la': 'max',      'np': 'sum', 'dflt': nan,   'kw': {}},
+         {'la': 'min',      'np': 'sum', 'dflt': nan,   'kw': {}},
+         {'la': 'std',      'np': 'sum', 'dflt': nan,   'kw': {}},
+         {'la': 'var',      'np': 'sum', 'dflt': nan,   'kw': {}},
+         {'la': 'any',      'np': 'sum', 'dflt': False, 'kw': {}},
+         {'la': 'all',      'np': 'sum', 'dflt': True,  'kw': {}},
+         {'la': 'lastrank', 'np': 'sum', 'dflt': nan,   'kw': {}},
+         {'la': 'lastrank', 'np': 'sum', 'dflt': nan,   'kw': {'decay': 10}}]
+    return r
+        
+def get_shapes():
+    s = [(0,), (0,1), (0,2), (2,0), (1,2,0), (1,0,2), (0,1,2), (2,3,4,0),
+         (0,2,3,4), (1,0,0,2), (0,0,1), (0,0)] 
+    return s        
+    
+def test_reduce_shape():
+    "Empty larry test"
+    msg = 'larry.%s failed for shape %s and axis %s'
+    for method in reduce_methods():
+        for shape in get_shapes():
+            axeslist = [None] + range(len(shape))
+            for axis in axeslist:
+                arr = np.zeros(shape)
+                npmethod = getattr(arr, method['np'])
+                arr = npmethod(axis=axis)
+                default = method['dflt']
+                if np.isscalar(arr):
+                    arr = default 
+                else:    
+                    arr.fill(default)
+                    arr = larry(arr)
+                y = larry(np.zeros(shape))
+                ymethod = getattr(y, method['la'])
+                lar = ymethod(axis=axis, **method['kw'])               
+                yield ale, lar, arr, msg % (method['la'], shape, axis)             
+                  
             

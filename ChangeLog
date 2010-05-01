@@ -1,5 +1,9 @@
 2010-05-01 Keith
 
+    * deflarry.py, tests/empty_larry_test.py, doc/source/intro.rst, RELEASE:
+      Bug #573240: Reduce methods give wrong output with shapes that contain
+      0.
+
     * util/testing.py(assert_larry_equal), util/tests/testing_test.py: I
       needed to add a new capability to assert_larry_equal for a unit test
       that I am writting. If one input is a larry and the other is not, then

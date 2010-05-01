@@ -937,11 +937,8 @@ class larry(object):
         x
         array([ 3.,  6.])
                     
-        """
-        if 0 in self.shape:
-            return np.array([]).sum()
-        else:    
-            return self.__reduce(np.nansum, axis=axis)    
+        """   
+        return self.__reduce(np.nansum, axis=axis)    
 
     def prod(self, axis=None):
         """
@@ -1115,11 +1112,8 @@ class larry(object):
         x
         array([ 0.,  1.])  
                          
-        """
-        if 0 in self.shape:
-            return np.array([]).std()
-        else:         
-            return self.__reduce(nanstd, axis=axis)  
+        """      
+        return self.__reduce(nanstd, axis=axis)  
         
     def var(self, axis=None):
         """
@@ -1155,16 +1149,13 @@ class larry(object):
         x
         array([ 0.,  1.])
                     
-        """
-        if 0 in self.shape:
-            return np.array([]).var() 
-        else:           
-            y = self.__reduce(nanstd, axis=axis)
-            if np.isscalar(y):
-                y *= y 
-            else:       
-                np.multiply(y.x, y.x, y.x)
-            return y                 
+        """         
+        y = self.__reduce(nanstd, axis=axis)
+        if np.isscalar(y):
+            y *= y 
+        else:       
+            np.multiply(y.x, y.x, y.x)
+        return y                 
                             
     def max(self, axis=None):
         """
@@ -1240,8 +1231,22 @@ class larry(object):
         """
         return self.__reduce(np.nanmin, axis=axis)  
 
-    def __reduce(self, op, **kwargs):
+    def __reduce(self, op, default=np.nan, **kwargs):
         axis = kwargs['axis']
+        if self.size == 0:
+            # At least one dimension has length 0
+            if axis == None:
+                return default
+            shape = list(self.shape)
+            shape.pop(axis)   
+            x = np.ones(shape, dtype=self.dtype) 
+            x.fill(default)
+            if x.ndim==0 and x.size==1:
+                return default
+            else:
+                label = self.copylabel()
+                label.pop(axis)
+                return larry(x, label)
         if np.isscalar(axis):
             x = op(self.x, **kwargs)
             if np.isscalar(x):
@@ -1299,10 +1304,7 @@ class larry(object):
         array([ True, False], dtype=bool)
         
         """
-        if axis is None:
-            return self.x.any()
-        else:
-            return self.__reduce(np.any, axis=axis)
+        return self.__reduce(np.any, default=np.False_, axis=axis)
         
     def all(self, axis=None):
         """
@@ -1348,10 +1350,7 @@ class larry(object):
         array([False,  True], dtype=bool)
         
         """
-        if axis is None:
-            return self.x.all()
-        else:
-            return self.__reduce(np.all, axis=axis) 
+        return self.__reduce(np.all, default=~np.False_, axis=axis) 
             
     def lastrank(self, axis=-1, decay=0):
         """
