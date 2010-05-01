@@ -68,7 +68,7 @@ class Test_io(unittest.TestCase):
         label = [[datetime.date(2010,3,1), datetime.date(2010,3,2)]]
         desired = larry(x, label) 
         io['desired'] = desired
-        actual = io['desired']
+        actual = io['desired'][:]
         assert_larry_equal(actual, desired)      
      
         

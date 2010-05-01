@@ -120,10 +120,11 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
         line = '-' * len(text)
         return '\n\n' + line + '\n' + text + '\n' + line + '\n'
     
-    # Are both actual and desired scalars instead of larrys?
+    # The assert depends on the type of actual and desired
     if np.isscalar(actual) and np.isscalar(desired):
     
-        # Yes
+        # Both actual and desired are scalars
+        
         try:
             assert_almost_equal(actual, desired)
         except AssertionError, err:
@@ -132,10 +133,19 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
             try: 
                 assert_equal(type(actual), type(desired))
             except AssertionError, err:
-                fail.append(heading('TYPE') + str(err))                          
+                fail.append(heading('TYPE') + str(err))
+                
+    elif (type(actual) == larry) + (type(desired) == larry) == 1:
+    
+        # Only one of actual and desired are larrys; test failed
+        try: 
+            assert_equal(type(actual), type(desired))
+        except AssertionError, err:
+            fail.append(heading('TYPE') + str(err))
+                                                   
     else:
         
-        # No, at least one of them is not a scalar
+        # Both actual and desired are larrys
     
         # label
         try:         

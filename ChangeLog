@@ -1,3 +1,15 @@
+2010-05-01 Keith
+
+    * util/testing.py(assert_larry_equal), util/tests/testing_test.py: I
+      needed to add a new capability to assert_larry_equal for a unit test
+      that I am writting. If one input is a larry and the other is not, then
+      raise an AssertionError instead of crashing. Added a unit test too.
+
+    * tests/io_test.py: The added ability of assert_larry_equal (directly
+      above) uncovered a typo in an io unit test. The test was comparing a
+      lara to a larry. Fixed. (When evaluated the lara turns into a larry so
+      that's why the unit test passed.)
+
 2010-04-30 Keith
 
     * util/testing.py(assert_larry_equal), util/tests/testing_test.py,

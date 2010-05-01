@@ -104,4 +104,6 @@ class Test_Testing_Assert_Larry(object):
         ale(1, 1, 'scalar #4')
         ale(1.0, 1.0, 'scalar #5')
         ale(nan, nan, 'scalar #6') 
-                                         
+
+    def test_assert_larry_nonlarry_type(self):
+        assert_raises(AssertionError, ale, larry([1]), 1, 'nonlarry type #1')                                          
