@@ -1,5 +1,7 @@
 2010-05-01 Keith
 
+    * afunc.py(lastrank), deflarry.py(lastrank): Doc string edit.
+
     * deflarry.py, tests/empty_larry_test.py, doc/source/intro.rst, RELEASE:
       Bug #573240: Reduce methods give wrong output with shapes that contain
       0.

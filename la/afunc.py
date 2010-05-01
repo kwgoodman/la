@@ -252,7 +252,9 @@ def lastrank(x, axis=-1, decay=0.0):
     The ranking of the last element along the axis, ignoring NaNs.
     
     The ranking is normalized to be between -1 and 1 instead of the more
-    common 1 and N. The results are adjusted for ties.      
+    common 1 and N. The results are adjusted for ties. Suitably slicing
+    the output of the `ranking` method will give the same result as
+    `lastrank`. The only difference is that `lastrank` is faster.       
 
     Parameters
     ----------

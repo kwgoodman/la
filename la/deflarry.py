@@ -1357,7 +1357,9 @@ class larry(object):
         The ranking of the last element along the axis, ignoring NaNs.
         
         The ranking is normalized to be between -1 and 1 instead of the more
-        common 1 and N. The results are adjusted for ties.    
+        common 1 and N. The results are adjusted for ties. Suitably slicing
+        the output of the `ranking` method will give the same result as
+        `lastrank`. The only difference is that `lastrank` is faster.   
 
         Parameters
         ----------
@@ -1384,6 +1386,7 @@ class larry(object):
         See Also
         --------
         la.larry.ranking: Rank elements treating NaN as missing. 
+        la.larry.movingrank: Moving rank in a given window along axis.
                 
         Examples
         -------- 
