@@ -8,13 +8,13 @@ la 0.3 (banana)
 
 *Release date: Not yet released, in development*
 
-New larry methods
------------------
-- 
+The focus of this release is stability: unit tests, bug fixes, API cleaning,
+and documentation.
 
 Enhancements
 ------------
-- Expanded documentation
+- Improved documentation
+- Improved assert_larry_equal
 
 API changes
 -----------

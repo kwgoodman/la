@@ -3,7 +3,7 @@ import numpy as np
 from numpy.testing import assert_equal, assert_raises
 
 from la import larry
-from la.util.testing import assert_larry_equal
+from la.util.testing import assert_larry_equal as ale
 
 nan = np.nan
 
@@ -33,78 +33,75 @@ class Test_Testing_Assert_Larry(object):
     
     def test_assert_larry_identical(self):
         y, x, yc = self.y, self.x, self.yc
-        assert_larry_equal(y, y, 'identity')
+        ale(y, y, 'identity')
 
     def test_assert_larry_xr(self):
         y, x = self.y, self.x
-        assert_raises(AssertionError, assert_larry_equal, 
-                      y, x, 'different x')
+        assert_raises(AssertionError, ale, y, x, 'different x')
 
     def test_assert_larry_labelr(self):
         y, x = self.y, self.x2
-        assert_raises(AssertionError, assert_larry_equal, 
-                      y, x, 'different labels')
+        assert_raises(AssertionError, ale, y, x, 'different labels')
     
     def test_assert_larry_norefr(self):
         y, x, yc = self.y, self.x, self.yc
-        assert_larry_equal(y, y, 'identity', original=yc, iscopy=True)
+        ale(y, y, 'identity', original=yc, iscopy=True)
     
         
     def test_assert_larry_norefr(self):
         y, x, yc = self.y, self.x, self.yc
-        assert_raises(AssertionError, assert_larry_equal, 
+        assert_raises(AssertionError, ale, 
                       y, y, 'raise noreference in c', original=y, iscopy=True)
 
     def test_assert_larry_noreflr(self):
         y, yc = self.y, self.ycl
-        assert_raises(AssertionError, assert_larry_equal, 
+        assert_raises(AssertionError, ale, 
                       y, y, 'raise noreference in labels', original=yc,
                       iscopy=False)
         
     def test_assert_larry_nocopy(self):
         y, yc = self.y, self.yc
-        assert_larry_equal(y, y, 'nocopy', original=y, iscopy=False)
+        ale(y, y, 'nocopy', original=y, iscopy=False)
         
     def test_assert_larry_nocopyr(self):
         y, yc = self.y, self.yc
-        assert_raises(AssertionError, assert_larry_equal, 
-                      y, y, 'raise nocopy', original=yc,
-                      iscopy=False)
+        assert_raises(AssertionError, ale, 
+                      y, y, 'raise nocopy', original=yc, iscopy=False)
 
     def test_assert_larry_nocopylr(self):
         y, yc = self.y, self.ycl
-        assert_raises(AssertionError, assert_larry_equal, 
-                      y, y, 'raise nocopy labels', original=yc,
-                      iscopy=False)
+        assert_raises(AssertionError, ale, y, y, 'raise nocopy labels',
+                      original=yc, iscopy=False)
 
     def test_assert_larry_shaper(self):
         y, y1 = self.y, self.y1
-        assert_raises(AssertionError, assert_larry_equal, 
-                      y, y1, 'different shape')
+        assert_raises(AssertionError, ale, y, y1, 'different shape')
 
     def test_assert_larry_dtyper(self):
         y, y1 = self.y1, self.y1dt
-        assert_raises(AssertionError, assert_larry_equal, 
-                      y, y1, 'different dtype')
+        assert_raises(AssertionError, ale, y, y1, 'different dtype')
 
     def test_assert_larry_dtype(self):
         y, y1 = self.y1, self.y1dt
-        assert_larry_equal(y, y1, 'different dtype', dtype=False)
+        ale(y, y1, 'different dtype', dtype=False)
         
     def test_input_types(self):
         ar = assert_raises
-        x = self.x
-        y = self.y
-        msg = True
-        dtype = True
-        iscopy = True
-        ar(TypeError, assert_larry_equal, x, y, msg, dtype, x, iscopy)
-        msg = ''
-        dtype = ''
-        iscopy = True
-        ar(TypeError, assert_larry_equal, x, y, msg, dtype, x, iscopy)                              
-        msg = ''
-        dtype = True
-        iscopy = ''
-        ar(TypeError, assert_larry_equal, x, y, msg, dtype, x, iscopy)          
-            
+        x, y = self.x, self.y
+        msg, dtype, iscopy = True, True, True
+        ar(TypeError, ale, x, y, msg, dtype, x, iscopy)
+        x, y = self.x, self.y
+        msg, dtype, iscopy = '', '', True
+        ar(TypeError, ale, x, y, msg, dtype, x, iscopy)                              
+        x, y = self.x, self.y
+        msg, dtype, iscopy = '', True, ''
+        ar(TypeError, ale, x, y, msg, dtype, x, iscopy) 
+        
+    def test_assert_larry_scalar(self):
+        assert_raises(AssertionError, ale, 1, 1.0, 'scalar #1')                     
+        assert_raises(AssertionError, ale, 1.0, 1, 'scalar #2')
+        assert_raises(AssertionError, ale, 2, nan, 'scalar #3')
+        ale(1, 1, 'scalar #4')
+        ale(1.0, 1.0, 'scalar #5')
+        ale(nan, nan, 'scalar #6') 
+                                         

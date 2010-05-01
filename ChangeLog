@@ -1,5 +1,10 @@
 2010-04-30 Keith
 
+    * util/testing.py(assert_larry_equal), util/tests/testing_test.py,
+      RELEASE: Added ability to compare two scalars since some larry methods
+      return scalar (e.g. lar.sum()). Doc string, code cleaning, and unit
+      tests too.
+
     * afunc.py(lastrank), tests/empty_larry_test.py, RELEASE,
       source/intro.rst: Bug #572638: lastrank chokes on input with a shape
       tuple that contains zero. 
