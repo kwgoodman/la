@@ -1,3 +1,4 @@
+"Misc utility functions."
 
 import random
 import string
@@ -34,7 +35,7 @@ def flattenlabel(label, order='C'):
                 t.append(i+[y])
         idx = t
     if order == 'C':
-         idx = [i[::-1] for i in idx]
+        idx = [i[::-1] for i in idx]
     idx = [tuple(i) for i in idx]     
     return [idx]
     
@@ -183,7 +184,7 @@ def isstring(s):
 def list2index(L):
     "Convert a list to a unique list and the corresponding indices."
     uL = sorted(set(L))
-    idx = dict((y,x) for x,y in enumerate(uL))
+    idx = dict((y, x) for x, y in enumerate(uL))
     return [idx[x] for x in L], uL  
 
 def fromlists(xs, labels):
@@ -229,7 +230,7 @@ def fromlists(xs, labels):
         shape = []
         index = []
         label = []
-        for i, lab in enumerate(labels):
+        for lab in labels:
             labelidx, label_unique = list2index(lab)
             shape.append(len(label_unique))
             index.append(labelidx)

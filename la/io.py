@@ -1,3 +1,4 @@
+"larry IO module."
 
 import os
 import datetime
@@ -238,6 +239,7 @@ class IO(object):
         global size
         size = 0
         def sizefinder(key, value):
+            "Add size of object to running total"
             global size
             if isinstance(value, h5py.Dataset):
                 size += value.id.get_storage_size()
@@ -256,6 +258,7 @@ class IO(object):
                 
     @property    
     def filename(self):
+        "filename of archive."
         return self.f.filename                
                               
 class lara(object):
@@ -327,13 +330,15 @@ class lara(object):
         
     @property
     def ndim(self):
+        "Number of dimensions."
         return len(self.shape)                       
 
     @property
     def size(self):
+        "Number of elements."
         return np.prod(self.shape, dtype=int)
         
-# Archive functions ---------------------------------------------------------       
+# Archive functions ---------------------------------------------------------
 
 def save(file, lar, key):
     """
@@ -588,7 +593,7 @@ def archive_directory(file):
         f.close()
     return keys            
     
-# Utility functions for internal use ----------------------------------------                  
+# Utility functions for internal use ----------------------------------------
 
 def _load_label(group, ndim):
     "Load larry labels from archive given the hpy5.Group object of the larry."

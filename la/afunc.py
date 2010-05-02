@@ -96,7 +96,8 @@ def group_mean(x, groups, axis=0):
         idxall[axis] = idx
         if idx.sum() > 0:
             norm = 1.0 * (~np.isnan(x[idxall])).sum(axis)
-            xmean[idxall] = np.expand_dims(np.nansum(x[idxall], axis=axis) / norm, axis)
+            ns = np.nansum(x[idxall], axis=axis) / norm
+            xmean[idxall] = np.expand_dims(ns, axis)
             
     return xmean
 
@@ -133,7 +134,8 @@ def group_median(x, groups, axis=0):
         idxall = [slice(None)] * x.ndim
         idxall[axis] = idx
         if idx.sum() > 0:
-            xmedian[idxall] = np.expand_dims(nanmedian(x[idxall], axis=axis), axis)
+            ns = nanmedian(x[idxall], axis=axis)
+            xmedian[idxall] = np.expand_dims(ns, axis)
             
     return xmedian
     
@@ -173,7 +175,7 @@ def geometric_mean(x, axis=-1, check_for_greater_than_zero=True):
     x = np.exp(x)
     idx = np.ones(x.shape)
     if idx.ndim == 0:
-        if m==0:
+        if m == 0:
             idx = np.nan
     else:
         idx[m == 0] = np.nan
@@ -214,9 +216,9 @@ def movingsum(x, window, skip=0, axis=-1, norm=False):
     initshape[axis] = skip + window - 1
     #Note: skip could be included in starting window
     cutslice = [slice(None)] * x.ndim   
-    cutslice[axis] = slice(None,-skip or None,None)
-    nans = np.nan * np.zeros(initshape)
-    ms = np.concatenate((nans, ms[cutslice]), axis) 
+    cutslice[axis] = slice(None, -skip or None, None)
+    pad = np.nan * np.zeros(initshape)
+    ms = np.concatenate((pad, ms[cutslice]), axis) 
     return ms
 
 def movingsum_forward(x, window, skip=0, axis=-1, norm=False):
@@ -323,7 +325,7 @@ def lastrank(x, axis=-1, decay=0.0):
         shape = list(x.shape)
         shape.pop(axis)
         r = nans(shape, dtype=x.dtype) 
-        if r.ndim==0 and r.size==1:
+        if (r.ndim == 0) and (r.size == 1):
             r = np.nan     
         return r 
     indlast = [slice(None)] * x.ndim 
@@ -456,7 +458,7 @@ def push(x, n, axis=-1):
         x = np.rollaxis(x, axis, x.ndim)
     y = np.array(x) 
     if y.ndim == 1:
-        y = y[None,:]
+        y = y[None, :]
     fidx = np.isfinite(y)
     recent = np.nan * np.ones(y.shape[:-1])  
     count = np.nan * np.ones(y.shape[:-1])          
@@ -467,7 +469,7 @@ def push(x, n, axis=-1):
         y[idx, i] = recent[idx]
         idx = fidx[...,i]
         count[idx] = i
-        recent[idx] = y[idx,i]
+        recent[idx] = y[idx, i]
     if axis != -1 or axis != x.ndim-1:
         y = np.rollaxis(y, x.ndim-1, axis)
     if x.ndim == 1:
@@ -482,10 +484,10 @@ def _quantileraw1d(xi, q):
     if nx:
         jdx = xi.argsort(axis=0).argsort(axis=0)
         mdx = np.nan * jdx
-        kdx = 1.0 * (nx - 1) / (q) * np.ones((q,1))
+        kdx = 1.0 * (nx - 1) / (q) * np.ones((q, 1))
         kdx = kdx.cumsum(axis=0)
-        kdx = np.concatenate((-1*np.ones((1,kdx.shape[1])), kdx), 0)
-        kdx[-1,0] = nx
+        kdx = np.concatenate((-1 * np.ones((1, kdx.shape[1])), kdx), 0)
+        kdx[-1, 0] = nx
         for j in xrange(1, q+1):
             mdx[(jdx > kdx[j-1]) & (jdx <= kdx[j]),:] = j
         y[idx] = mdx
@@ -551,7 +553,7 @@ def covMissing(R):
 
 # Random functions ----------------------------------------------------------
 
-def shuffle(x, axis=0, rs=None):
+def shuffle(x, axis=0):
     """
     Shuffle the data inplace along the specified axis.
     

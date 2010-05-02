@@ -1,17 +1,15 @@
 "Labeled array class"
 
-import datetime
 from copy import deepcopy
 import csv
 
 import numpy as np
    
 from la.util.scipy import (nanmean, nanmedian, nanstd)
-from la.util.misc import (flattenlabel, isscalar, fromlists, list2index,
-                          fromlists)
-from la.afunc import (group_ranking, group_mean, group_median, covMissing,
+from la.util.misc import flattenlabel, isscalar, fromlists, fromlists
+from la.afunc import (group_ranking, group_mean, group_median, shuffle, nans,
                       push, quantile, ranking, lastrank, movingsum_forward,
-                      movingrank, movingsum, shuffle, nans)
+                      movingrank, movingsum)
 
 
 class larry(object):
@@ -533,7 +531,8 @@ class larry(object):
         return type(self)(x, label)
         
     def isinf(self):
-        """Returns a bool larry with -Inf and Inf replaced by True, others False.
+        """
+        Returns a bool larry with -Inf and Inf replaced by True, others False.
 
         Returns
         -------
@@ -602,7 +601,7 @@ class larry(object):
         """
         if self.dtype != bool:
             raise TypeError, 'Only larrys with bool dtype can be inverted.'
-        return larry(~self.x, self.copylabel())                                       
+        return larry(~self.x, self.copylabel())
         
     # Binary Functions ------------------------------------------------------- 
     
@@ -634,7 +633,7 @@ class larry(object):
         """
         if isinstance(other, larry):
             if self.label == other.label:
-            	x = self.x + other.x
+                x = self.x + other.x
                 label = self.copylabel()
                 return larry(x, label)                        
             else:       
@@ -672,7 +671,7 @@ class larry(object):
         """   
         if isinstance(other, larry):
             if self.label == other.label:
-            	x = self.x - other.x
+                x = self.x - other.x
                 label = self.copylabel()
                 return larry(x, label)                          
             else:          
@@ -713,7 +712,7 @@ class larry(object):
         """    
         if isinstance(other, larry):
             if self.label == other.label:
-            	x = self.x / other.x
+                x = self.x / other.x
                 label = self.copylabel()
                 return larry(x, label)                          
             else:          
@@ -727,7 +726,7 @@ class larry(object):
         raise TypeError, 'Input must be scalar, array, or larry.'
         
     def __rdiv__(self, other):
-        "Right divide a larry with a another larry, Numpy array, or scalar."                   
+        "Right divide a larry with a another larry, Numpy array, or scalar."
         if isinstance(other, larry):
             msg = 'I could not come up with a problem that used this code '
             msg += 'so I removed it. Send me your example and I will fix.'
@@ -762,7 +761,7 @@ class larry(object):
         """      
         if isinstance(other, larry):
             if self.label == other.label:
-            	x = self.x * other.x
+                x = self.x * other.x
                 label = self.copylabel()
                 return larry(x, label)                          
             else:           
@@ -805,13 +804,13 @@ class larry(object):
         """    
         if isinstance(other, larry):
             if self.label == other.label:
-            	x = np.logical_and(self.x, other.x)
+                x = np.logical_and(self.x, other.x)
                 label = self.copylabel()
                 return larry(x, label)                      
             else:          
-               x, y, label = self.__align(other)
-               x = np.logical_and(x, y)
-               return type(self)(x, label)
+                x, y, label = self.__align(other)
+                x = np.logical_and(x, y)
+                return type(self)(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):            
             x = np.logical_and(self.x, other)
             label = self.copylabel()
@@ -849,13 +848,13 @@ class larry(object):
         """     
         if isinstance(other, larry):
             if self.label == other.label:
-            	x = np.logical_or(self.x, other.x)
+                x = np.logical_or(self.x, other.x)
                 label = self.copylabel()
                 return larry(x, label)                      
             else:          
-               x, y, label = self.__align(other)
-               x = np.logical_or(x, y)
-               return type(self)(x, label)
+                x, y, label = self.__align(other)
+                x = np.logical_or(x, y)
+                return type(self)(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):            
             x = np.logical_or(self.x, other)
             label = self.copylabel()
@@ -902,7 +901,7 @@ class larry(object):
             y = other.x[np.ix_(*idxo)]
         return x, y, label
                   
-    # Reduce functions -------------------------------------------------------   
+    # Reduce functions -------------------------------------------------------
         
     def sum(self, axis=None):
         """
@@ -1241,7 +1240,7 @@ class larry(object):
             shape.pop(axis)   
             x = np.ones(shape, dtype=self.dtype) 
             x.fill(default)
-            if x.ndim==0 and x.size==1:
+            if (x.ndim == 0) and (x.size == 1):
                 return default
             else:
                 label = self.copylabel()
@@ -1423,9 +1422,9 @@ class larry(object):
         -1.0
                     
         """
-        return self.__reduce(lastrank, axis=axis, decay=decay)                                                    
+        return self.__reduce(lastrank, axis=axis, decay=decay)
         
-    # Comparision ------------------------------------------------------------                                              
+    # Comparision ------------------------------------------------------------
         
     def __eq__(self, other):
         "Element by element equality (==) comparison."
@@ -1468,7 +1467,7 @@ class larry(object):
                 y.x = y.x >= other           
             else:
                 raise ValueError, 'Unknown comparison operator'
-            return y                                                             
+            return y
         elif isinstance(other, larry):
             x, y, label = self.__align(other)
             if op == '==':
@@ -1542,9 +1541,10 @@ class larry(object):
                     elif typ is np.ndarray:
                         if idx.dtype.type == np.bool_:
                             try:
-                                lab = [self.label[ax][j] for j, z in enumerate(idx) if z]
+                                lab = [self.label[ax][j] for j, z in
+                                                          enumerate(idx) if z]
                             except IndexError:
-                                raise IndexError, 'index out of range'                            
+                                raise IndexError, 'index out of range'
                         else:
                             try:
                                 lab = [self.label[ax][z] for z in idx]
@@ -2073,7 +2073,7 @@ class larry(object):
         else:
             idx, label = zip(*idxlabel)
             y.label[axis] = list(label)
-            index = [slice(None,None,None)] * self.ndim
+            index = [slice(None, None, None)] * self.ndim
             index[axis] = list(idx)
             y.x = y.x[index]
             return y
@@ -2298,7 +2298,7 @@ class larry(object):
             y.label[axis] = map(func, y.label[axis])
         return y                    
             
-    # Calc -------------------------------------------------------------------                                            
+    # Calc -------------------------------------------------------------------
 
     def demean(self, axis=None):
         """
@@ -2466,7 +2466,7 @@ class larry(object):
         """
         y = self.copy()
         y.x = quantile(y.x, q, axis=axis)       
-        return y                                                                      
+        return y
         
     # Group calc -------------------------------------------------------------  
                  
@@ -2489,7 +2489,7 @@ class larry(object):
         """        
         y = self.copy() 
         aligned_group_list = y._group_align(group, axis=axis)
-        y.x = group_mean(y.x, aligned_group_list, axis=axis)                                         
+        y.x = group_mean(y.x, aligned_group_list, axis=axis)
         return y
         
     def group_median(self, group, axis=0):
@@ -2733,7 +2733,7 @@ class larry(object):
         y = self.copy()
         y.label[axis] = y.label[axis][nlag:]
         index = [slice(None)] * self.ndim
-        index[axis] = slice(0,-nlag)            
+        index[axis] = slice(0, -nlag)            
         y.x = y.x[index]
         return y
     
@@ -2942,7 +2942,7 @@ class larry(object):
         """
         if axis is None:
             for ax in range(self.ndim):
-               shuffle(self.x, ax) 
+                shuffle(self.x, ax) 
         else:
             shuffle(self.x, axis)
         
@@ -2985,7 +2985,7 @@ class larry(object):
         """
         if axis is None:
             for ax in range(self.ndim):
-               np.random.shuffle(self.label[ax]) 
+                np.random.shuffle(self.label[ax]) 
         else:
             np.random.shuffle(self.label[axis])
             
@@ -3019,8 +3019,7 @@ class larry(object):
             axes = range(ndim)
         else:
             axes = [range(ndim)[axis]]
-  
-        threshold = (1.0 - fraction) * np.array(y.shape)
+
         idxsl = []
         labsnew = []
         for ax in range(ndim):
@@ -3407,9 +3406,9 @@ class larry(object):
             
         if self.shape == (0,):            
             return larry([])
-        else:	    
-    	    # Determine labels, shape, and index into array	
-    	    if not isscalar(self.x.flat[0]):
+        else:
+            # Determine labels, shape, and index into array
+            if not isscalar(self.x.flat[0]):
                 msg = 'Only scalar dtype is currently supported.'
                 raise NotImplementedError, msg 
             labels = zip(*self.label[0])
@@ -3478,7 +3477,7 @@ class larry(object):
         lab.insert(ax, [label])
         return larry(x, lab)            
         
-    # Conversion -------------------------------------------------------------         
+    # Conversion -------------------------------------------------------------
 
     def totuples(self):
         """
@@ -3841,7 +3840,7 @@ class larry(object):
         fid.close()
         return larry.fromtuples(data) 
                
-    # Copy -------------------------------------------------------------------        
+    # Copy -------------------------------------------------------------------
           
     def copy(self):
         """
@@ -3890,7 +3889,7 @@ class larry(object):
         """
         return self.x.copy()    
         
-    # Print ------------------------------------------------------------------                
+    # Print ------------------------------------------------------------------
                 
     def __repr__(self):
 
@@ -3944,7 +3943,7 @@ class Getitemlabel(object):
         elif typ == slice:
             # Examples: lar.lix[['a']:], lar.lix[['a']:['b']],
             #           lar.lix[['a']:['b']:2], lar.lix[2:['b']] 
-            return y[slicemaker(index, y.labelindex, 0)]                                                           
+            return y[slicemaker(index, y.labelindex, 0)]
         elif typ == tuple:
             index2 = []
             label = []
@@ -3959,7 +3958,7 @@ class Getitemlabel(object):
                 if typ == list:
                     idx2 = labels2indices(y.label[ax], idx)
                     if len(idx) > 1:      
-                        label.append(idx)                                                                
+                        label.append(idx)
                     index2.append(idx2)
                 elif typ == slice: 
                     s = slicemaker(idx, y.labelindex, ax)
@@ -3986,7 +3985,7 @@ class Getitemlabel(object):
 def slicemaker(index, labelindex, axis): 
     "Convert a slice that may contain labels to a slice with indices."
     msg1 = 'The %s element of a slice must be a list or a scalar.'
-    msg2 = 'The %s element of the slice contains more than one item.'              
+    msg2 = 'The %s element of the slice contains more than one item.'
     if index.start is None:
         start = None
     elif type(index.start) is list:

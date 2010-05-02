@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from numpy.testing import assert_, assert_equal, assert_almost_equal
+from numpy.testing import assert_equal, assert_almost_equal
 
 from la import larry
 
@@ -162,7 +162,7 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
                 assert_almost_equal(actual.x, desired.x, decimal=13)
             else:
                 # No, so check for exactly equal
-               assert_equal(actual.x, desired.x)     
+                assert_equal(actual.x, desired.x)     
         except AssertionError, err:
             fail.append(heading('X DATA ARRAY') + str(err))
          
@@ -234,7 +234,7 @@ def assert_isview(larry1, larry2):
         raise AssertionError, msg  
 
 
-# Old-style testing functions -----------------------------------------------       
+# Old-style testing functions -----------------------------------------------
     
 def printfail(theory, practice, header=None):
     x = []
