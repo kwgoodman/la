@@ -1,5 +1,12 @@
 2010-05-02 Keith
 
+    * tests/afunc_arr_test.py: Converted entire module from old style unit
+      testing, which does not compare the shape of the actual and desired
+      arrays, to the new style, which does check the array shape. This is in
+      preparation for converting geometric_mean to a reducing function. If I
+      didn't make the change then actual=np.array([1, 1]) and
+      desired=np.array([1]) would pass the test.
+
     * afunc.py, deflarry.py, io.py, util/misc.py, util/testing.py: pylint
       cleaning.
 
