@@ -154,11 +154,6 @@ def geometric_mean(x, axis=-1, check_for_greater_than_zero=True):
     Return the geometric mean of matrix x along axis, ignore NaNs.
     
     Raise an exception if any element of x is zero or less.
-    
-    Notes
-    -----
-    The return array has the dimension so it can be broadcasted to 
-    the original array and not the reduced dimension of np.mean
      
     """
     if (x <= 0).any() and check_for_greater_than_zero:
@@ -170,7 +165,7 @@ def geometric_mean(x, axis=-1, check_for_greater_than_zero=True):
     m = np.asarray(~m, np.float64)
     m = m.sum(axis)
     x = np.log(x).sum(axis)
-    g = 1.0/m
+    g = 1.0 / m
     x = np.multiply(g, x)
     x = np.exp(x)
     idx = np.ones(x.shape)
@@ -180,7 +175,7 @@ def geometric_mean(x, axis=-1, check_for_greater_than_zero=True):
     else:
         idx[m == 0] = np.nan
     x = np.multiply(x, idx)
-    return np.expand_dims(x, axis) 
+    return x
 
 def movingsum(x, window, skip=0, axis=-1, norm=False):
     """Moving sum optionally normalized for missing (NaN) data."""

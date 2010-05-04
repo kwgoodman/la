@@ -443,51 +443,45 @@ class Test_geometric_mean(unittest.TestCase):
 
     def test_geometric_mean_1(self):
         "afunc.geometric_mean #1"
-        desired = np.array([[ 2.        ],
-                            [ 1.73205081],
-                            [ 1.73205081]])
+        desired = np.array([ 2.0, 1.73205081, 1.73205081])
         actual =  geometric_mean(self.x2, 1)
         assert_almost_equal(actual, desired)
 
     def test_geometric_mean_2(self):
         "afunc.geometric_mean #2"
-        desired = np.array([[ 2.        ],
-                            [ 1.73205081],
-                            [ 1.73205081]])
+        desired = np.array([ 2.0, 1.73205081, 1.73205081])
         actual = geometric_mean(self.x2)
         assert_almost_equal(actual, desired)   
 
     def test_geometric_mean_3(self):
         "afunc.geometric_mean #3"
-        desired = np.array([[ 1.81712059,  1.81712059]])
+        desired = np.array([ 1.81712059, 1.81712059])
         actual = geometric_mean(self.x2, 0)
         assert_almost_equal(actual, desired) 
 
     def test_geometric_mean_4(self):
         "afunc.geometric_mean #4"
-        desired = np.array([[   nan],
-                            [   nan]])
+        desired = np.array([nan, nan])
         actual = geometric_mean(self.xnan)
         assert_almost_equal(actual, desired)
         
     def test_geometric_mean_5(self):
         "afunc.geometric_mean #5"
-        desired = np.array([[ 3.1301691601465746],
-                            [ 2.6390158215457888]])
+        desired = np.array([ 3.1301691601465746, 2.6390158215457888])
         actual = geometric_mean(self.x, 1)
         assert_almost_equal(actual, desired)
 
     def test_geometric_mean_6(self):
         "afunc.geometric_mean #6"
-        desired = np.array([[ 1.4142135623730951, 4.0, 6.9282032302755088, 2.0,
-                                                         2.8284271247461903]])
+        desired = np.array([ 1.4142135623730951, 4.0, 6.9282032302755088, 2.0,
+                                                         2.8284271247461903])
         actual = geometric_mean(self.x, 0)
         assert_almost_equal(actual, desired)
         
     def test_geometric_mean_7(self):
         "afunc.geometric_mean #7"
         x = np.array([[1e200, 1e200]])
-        desired = np.array([[1e200]])
+        desired = 1e200
         actual = geometric_mean(x)
         msg = printfail(desired, actual)
         self.assert_((abs(desired - actual) < 1e187).all(), msg)         

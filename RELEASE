@@ -14,12 +14,13 @@ and documentation.
 Enhancements
 ------------
 - Improved documentation
-- Improved assert_larry_equal
+- Improved assert_larry_equal function
 
 API changes
 -----------
 - lastrank and lastrank_decay methods combined into one method: lastrank
 - Given shape (n,m) input, lastrank now returns shape (n,) instead of (n,1)
+- geometric_mean now reduces input in the same way as lastrank (see above)
 
 Bug fixes
 ---------

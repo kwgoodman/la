@@ -1,3 +1,10 @@
+2010-05-03 Keith
+
+    * afunc.py(geometric_mean), tests/afunc_arr_test.py, RELEASE: Given input
+      of shape (n, m) and axis=1, geometric_mean now returns output of
+      shape (n,) instead of (n, 1). So it now reduces in the same way as all
+      other reducing methods. Updated unit tests.
+
 2010-05-02 Keith
 
     * tests/afunc_arr_test.py: Converted entire module from old style unit
