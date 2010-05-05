@@ -163,6 +163,7 @@ def reduce_methods():
     r = [{'la': 'sum',      'np': 'sum', 'dflt': nan,   'kw': {}},
          {'la': 'prod',     'np': 'sum', 'dflt': nan,   'kw': {}},
          {'la': 'mean',     'np': 'sum', 'dflt': nan,   'kw': {}},
+         {'la': 'geometric_mean', 'np': 'sum', 'dflt': nan,   'kw': {}},
          {'la': 'median',   'np': 'sum', 'dflt': nan,   'kw': {}},
          {'la': 'max',      'np': 'sum', 'dflt': nan,   'kw': {}},
          {'la': 'min',      'np': 'sum', 'dflt': nan,   'kw': {}},

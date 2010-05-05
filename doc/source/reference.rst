@@ -159,6 +159,10 @@ axes thereby reducing the dimension of the larry.
              
 ------------
 
+.. automethod:: la.larry.geometric_mean
+             
+------------
+
 .. automethod:: la.larry.median
              
 ------------

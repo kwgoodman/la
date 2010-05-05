@@ -76,8 +76,6 @@ def test_3d():
         yield assert_almost_equal, res3d[resind], res2d, 14, msg
         
         # Test the corresponding larry methods
-        if funcname in ['geometric_mean']:
-            continue
         if funcname == 'nanmedian': funcname = 'median'
         if funcname == 'nanmean': funcname = 'mean'
         if funcname == 'nanstd': funcname = 'std'

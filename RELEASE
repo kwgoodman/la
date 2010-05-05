@@ -13,6 +13,7 @@ and documentation.
 
 Enhancements
 ------------
+- New larry method: geometric_mean (based on existing array function)
 - Improved documentation
 - Improved assert_larry_equal function
 

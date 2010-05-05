@@ -1337,7 +1337,33 @@ class Test_reduce(unittest.TestCase):
         p = self.l2.mean()
         msg = printfail(t, p, '')
         self.assert_(p == t, msg)
+        
+    def test_geometric_mean_1(self):
+        "larry.geometric_mean_1"
+        original = larry([1])
+        actual = original.geometric_mean()
+        desired = np.array(1.0)[()]
+        ale(actual, desired, original=original)       
 
+    def test_geometric_mean_2(self):
+        "larry.geometric_mean_2"
+        original = larry([0])
+        self.failUnlessRaises(ValueError, original.geometric_mean)
+        
+    def test_geometric_mean_3(self):
+        "larry.geometric_mean_3"
+        original = larry([5, 5])
+        actual = original.geometric_mean()
+        desired = np.array(5.0)[()]
+        ale(actual, desired, original=original)         
+
+    def test_geometric_mean_4(self):
+        "larry.geometric_mean_4"
+        original = larry([[5], [5]])
+        actual = original.geometric_mean(1)
+        desired = larry([5.0, 5.0])
+        ale(actual, desired, original=original)
+        
     def test_median_1(self):
         "larry.median_1"
         t = 1.0

@@ -1,3 +1,12 @@
+2010-05-05 Keith
+
+    * deflarry.py(geometric_mean), RELEASE, source/reference.rst: Add a
+      geometric_mean larry method.
+  
+    * tests/all_nan_test.py, tests/deflarry_test.py, tests/test_3d.py,
+      tests/empty_larry_test.py, tests/larry_axis_test.py,
+      doc/source/intro.rst: Add unit tests for the new geometric_mean method.
+
 2010-05-03 Keith
 
     * afunc.py(geometric_mean), tests/afunc_arr_test.py, RELEASE: Given input

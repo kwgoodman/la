@@ -9,7 +9,7 @@ from la.util.scipy import (nanmean, nanmedian, nanstd)
 from la.util.misc import flattenlabel, isscalar, fromlists, fromlists
 from la.afunc import (group_ranking, group_mean, group_median, shuffle, nans,
                       push, quantile, ranking, lastrank, movingsum_forward,
-                      movingrank, movingsum)
+                      movingrank, movingsum, geometric_mean)
 
 
 class larry(object):
@@ -954,7 +954,7 @@ class larry(object):
         d : {larry, scalar}
             Returns a larry or a scalar. When axis is None (default) the larry
             is flattened and a scalar, the product of all elements, is
-            returned; when larry is 1d and axis=0 a salar is returned.
+            returned; when larry is 1d and axis=0 a scalar is returned.
             
         See Also
         --------
@@ -1016,13 +1016,7 @@ class larry(object):
         Returns
         -------
         d : {larry, scalar}
-            When axis is an integer a larry is returned. When axis is None
-            (default) a scalar is returned (assuming larry contains scalars).
-            
-        Raises
-        ------
-        ValueError
-            If axis is not an integer or None.
+            The mean.
 
         Examples
         --------
@@ -1038,7 +1032,42 @@ class larry(object):
         array([ 3.,  3.])       
                     
         """
-        return self.__reduce(nanmean, axis=axis) 
+        return self.__reduce(nanmean, axis=axis)
+        
+    def geometric_mean(self, axis=None, check_for_greater_than_zero=True):
+        """
+        Geometric mean of values along axis, ignoring NaNs.
+
+        Parameters
+        ----------
+        axis : {None, integer}, optional
+            Axis to find the geometric mean along (integer) or the global
+            geometric mean (None, default).
+        check_for_greater_than_zero : bool
+            If True (default) an exception is raised if any element is zero or
+            less.    
+
+        Returns
+        -------
+        d : {larry, scalar}
+            The geometric mean.
+
+        Examples
+        --------
+        >>> from la import nan
+        >>> y = larry([[nan, 2], [3,  4]])
+        >>> y.geometric_mean()
+        2.8844991406148162
+        >>> y.geometric_mean(axis=0)
+        label_0
+            0
+            1
+        x
+        array([ 3.        ,  2.82842712])      
+                    
+        """
+        return self.__reduce(geometric_mean, axis=axis,
+                      check_for_greater_than_zero=check_for_greater_than_zero)
 
     def median(self, axis=None):
         """

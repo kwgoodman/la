@@ -14,7 +14,7 @@ def functions():
     # reduction: shape (n,m) imput become (n,1)
     f = {(): ['log', 'exp', 'sqrt', 'sign', 'abs', 'sum', 'prod', 'mean',
               'median', 'std', 'var', 'min', 'max', 'demean', 'demedian',
-              'zscore'],
+              'zscore', 'geometric_mean'],
          (0,): ['cumsum', 'cumprod', 'ranking'],
          (1,): ['power', 'movingsum', 'movingsum_forward'],
          (2,): ['movingrank', 'quantile']} 
