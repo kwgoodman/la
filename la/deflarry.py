@@ -2468,7 +2468,7 @@ class larry(object):
         zero for the '-1,1' and 'gaussian' normalizations and is set to 0.5
         (mean of 0 and 1) for the '0,N-1' normalization.
         
-        For '0,N-1' normalization, note that N is x.shape[axis] even in there
+        For '0,N-1' normalization, note that N is x.shape[axis] even if there
         are NaNs. That ensures that when ranking along the columns of a 2d
         array, for example, the output will have the same min and max along
         all columns.
@@ -2579,6 +2579,18 @@ class larry(object):
         IndexError
             axis is out of range.
             
+        Examples
+        --------
+        >>> y = larry([1, 2, 3], [['a', 'b', 'c']])
+        >>> y.morph(['b', 'ee', 'a', 'c'], axis=0)
+        label_0
+            b
+            ee
+            a
+            c
+        x
+        array([  2.,  NaN,   1.,   3.])                    
+            
         """
         if axis >= self.ndim:
             raise IndexError, 'axis out of range'
@@ -2624,11 +2636,35 @@ class larry(object):
         lar : larry
             A morphed larry that is aligned with the input larry.
             
-
         Raises
         ------
         IndexError
             If the larrys are not of the same dimension.                              
+
+        Examples
+        --------
+        Align y1 to y2:
+        
+        >>> y1 = larry([1, 2], [['a', 'b']])
+        >>> y2 = larry([3, 2, 1], [['c', 'b', 'a']])
+
+        >>> y1.morph_like(y2)
+        label_0
+            c
+            b
+            a
+        x
+        array([ NaN,   2.,   1.])
+
+
+        Align y2 to y1:
+       
+        >>> y2.morph_like(y1)
+        label_0
+            a
+            b
+        x
+        array([ 1.,  2.])
         
         """
         if self.ndim != lar.ndim:
@@ -2646,7 +2682,7 @@ class larry(object):
         ----------
         other : larry
             The larry to merge or to use to update the values. It must have
-            the same number of dimensions as as the existing larry.
+            the same number of dimensions as the existing larry.
         update : bool
             Raise a ValueError (default) if there is any overlap in the two
             larrys. An overlap is defined as a common label in both larrys
@@ -2663,6 +2699,19 @@ class larry(object):
         -----
         If either larry has dtype of object or np.string_ then both larrys
         must have the same dtype, otherwise a TypeError is raised.   
+
+        Examples
+        --------
+        >>> y1 = larry([1, 2], [['a', 'b']])
+        >>> y2 = larry([3, 4], [['c', 'd']])
+        >>> y1.merge(y2)
+        label_0
+            a
+            b
+            c
+            d
+        x
+        array([ 1.,  2.,  3.,  4.])
      
         """
 
@@ -2709,19 +2758,33 @@ class larry(object):
         
     def squeeze(self):
         """
-        Eliminate all length-1 dimensions and corresponding labels.
+        Remove all length-1 dimensions and corresponding labels.
         
         Note that a view (reference) is returned, not a copy.
-        
-        Parameters
-        ----------
-        No input
         
         Returns
         -------
         out : larry
             Returns a view with all length-1 dimensions and corresponding
-            labels removed. 
+            labels removed.
+            
+        Examples
+        --------
+        >>> y = larry([[1, 2]], [['row'], ['c1', 'c2']])
+        >>> y
+        label_0
+            row
+        label_1
+            c1
+            c2
+        x
+        array([[1, 2]])
+        >>> y.squeeze()
+        label_0
+            c1
+            c2
+        x
+        array([1, 2])             
         
         """
         idx = [i for i, z in enumerate(self.shape) if z != 1]
@@ -2752,7 +2815,17 @@ class larry(object):
         ValueError
             If nlag < 0.        
         IndexError
-            If the axis is None.   
+            If the axis is None. 
+            
+        Examples
+        --------
+        >>> y = larry([1, 2, 3, 4], [['a', 'b', 'c', 'd']])
+        >>> y.lag(2)
+        label_0
+            c
+            d
+        x
+        array([1, 2])                      
                         
         """
         if axis is None:

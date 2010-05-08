@@ -1,3 +1,8 @@
+2010-05-08 Keith
+
+    * deflarry.py, RELEASE, doc/source/reference.rst, doc/source/work.rst:
+      Doc work.
+
 2010-05-05 Keith
 
     * deflarry.py(geometric_mean), RELEASE, source/reference.rst: Add a

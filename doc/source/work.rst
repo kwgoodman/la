@@ -845,7 +845,7 @@ group2 contains labels 'b' and 'd':
     x
     array([ 2.,  3.,  2.,  3.])
 
-The group statistics always work along axis 0 and ``group`` must be 1d. Let
+The group statistics always work along axis 0 and ``group`` must be 1d. Let's
 find the group mean of a larry, *y*:
 ::
     >>> y = larry([[1, 2], [5, 6], [8, 9]])

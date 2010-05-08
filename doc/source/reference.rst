@@ -405,27 +405,7 @@ where group 1 is ('e', 'a'), group 2 is ('d', 'c'), and group 3 is ('b'):
 Alignment
 ---------
 
-There are several alignment methods. Here are two examples. The first example
-aligns *y1* to *y2*; the second example aligns *y2* to *y1*:
-::
-    >>> from la import larry
-    >>> y1 = larry([1, 2], [['a', 'b']])
-    >>> y2 = larry([3, 2, 1], [['c', 'b', 'a']])
-
-    >>> y1.morph_like(y2)
-    label_0
-        c
-        b
-        a
-    x
-    array([ NaN,   2.,   1.])
-
-    >>> y2.morph_like(y1)
-    label_0
-        a
-        b
-    x
-    array([ 1.,  2.])
+There are several alignment methods.
     
 ------------
 
