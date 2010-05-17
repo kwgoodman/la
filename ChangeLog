@@ -1,3 +1,7 @@
+2010-05-17 Keith
+
+    * deflarry.py: A module was imported twice.
+
 2010-05-08 Keith
 
     * deflarry.py, RELEASE, doc/source/reference.rst, doc/source/work.rst:

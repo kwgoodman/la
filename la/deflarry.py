@@ -6,7 +6,7 @@ import csv
 import numpy as np
    
 from la.util.scipy import (nanmean, nanmedian, nanstd)
-from la.util.misc import flattenlabel, isscalar, fromlists, fromlists
+from la.util.misc import flattenlabel, isscalar, fromlists
 from la.afunc import (group_ranking, group_mean, group_median, shuffle, nans,
                       push, quantile, ranking, lastrank, movingsum_forward,
                       movingrank, movingsum, geometric_mean)
