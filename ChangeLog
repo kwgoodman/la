@@ -1,3 +1,9 @@
+2010-05-19 Keith
+
+    * afunc.py(nans), tests/afunc_arr_test.py, RELEASE, doc/source/intro.rst:
+      Bug #582579: nans now fills with '' for str dtype and None for object
+      dtype. Doc string and unit tests added.
+
 2010-05-17 Keith
 
     * deflarry.py: A module was imported twice.

@@ -24,12 +24,13 @@ API changes
 
 Bug fixes
 ---------
-- #571813: Three larry methods crashed on 1d input
-- #571737: skiprows missing from parameters section of the fromcsv doc string
-- #571899: label indexing fails when larry is 3d and index is a tuple of len 2
-- #571830: prod, cumprod, and cumsum did not return NaN for all-NaN input
-- #572638: lastrank chokes on input with a shape tuple that contains zero
-- #573240: Reduce methods give wrong output with shapes that contain zero
+- #571813 Three larry methods crashed on 1d input
+- #571737 skiprows missing from parameters section of the fromcsv doc string
+- #571899 label indexing fails when larry is 3d and index is a tuple of len 2
+- #571830 prod, cumprod, and cumsum did not return NaN for all-NaN input
+- #572638 lastrank chokes on input with a shape tuple that contains zero
+- #573240 Reduce methods give wrong output with shapes that contain zero
+- #582579 la.afunc.nans: wrong output for str and object dtype
 
 
 la 0.2 (avocado)
