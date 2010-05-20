@@ -561,4 +561,22 @@ def test_conversion():
         yield ale, y1, y2, msg % ('csv', str(shape)), False                
         
                   
-                            
+# --------------------------------------------------------------------------
+
+# larry dtype test
+#
+# Make sure the optional dtype input works as expected
+
+def test_dtype():
+    "larry dtype test"
+    dtypes = [float, int, str, bool, complex, object, None]
+    data = [0, 1, 2]
+    msg = 'larry creation failed with dtype %s using a %s as input'
+    for dtype in dtypes:
+        lar1 = larry(list(data), dtype=dtype)           # larry does dtype
+        lar2 = larry(np.array(list(data), dtype=dtype)) # array does dtype
+        yield ale, lar1, lar2, msg % (dtype, 'list')
+        lar1 = larry(np.array(list(data)), dtype=dtype) # larry does dtype
+        lar2 = larry(np.array(list(data), dtype=dtype)) # array does dtype
+        yield ale, lar1, lar2, msg % (dtype, 'array')         
+                               

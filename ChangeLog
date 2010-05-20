@@ -1,3 +1,9 @@
+2010-05-20 Keith
+
+    * deflarry.py(__init__), tests/deflarry_nose_test.py(test_dtype), RELEASE,
+      doc/source/intro.rst, doc/source/work.rst: You can now use an optional
+      dtype when creating larrys. Added corresponding unit tests.
+
 2010-05-19 Keith
 
     * afunc.py(nans), tests/afunc_arr_test.py, RELEASE, doc/source/intro.rst:

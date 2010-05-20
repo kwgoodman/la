@@ -57,8 +57,8 @@ Here is a more formal way to create a larry:
     >>> import numpy as np
     >>> x = np.array([[1, 2], [3, 4]])
     >>> label = [['north', 'south'], ['east', 'west']]
-    
-    >>> larry(x, label)
+
+    >>> larry(x, label, dtype=float)
     label_0
         north
         south
@@ -66,8 +66,8 @@ Here is a more formal way to create a larry:
         east
         west
     x
-    array([[1, 2],
-           [3, 4]])
+    array([[ 1.,  2.],
+           [ 3.,  4.]])
 
 The labels, along any one axis, must be unique. Let's try to create a larry
 with labels that are not unique:

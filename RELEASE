@@ -13,6 +13,7 @@ and documentation.
 
 Enhancements
 ------------
+- You can now use an optional dtype when creating larrys
 - New larry method: geometric_mean (based on existing array function)
 - Documentation and unit tests
 

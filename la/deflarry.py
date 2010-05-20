@@ -15,7 +15,7 @@ from la.afunc import (group_ranking, group_mean, group_median, shuffle, nans,
 class larry(object):
     "Labeled array"
 
-    def __init__(self, x, label=None):
+    def __init__(self, x, label=None, dtype=None):
         """
         Meet larry, he's a labeled array.
         
@@ -30,6 +30,8 @@ class larry(object):
             should be a list that contain one list of names. If label is None
             (default) integers will be used to label the the row, columns,
             etc.
+        dtype : data-type, optional
+            The desired data type of the larry.         
             
         Raises
         ------
@@ -55,7 +57,7 @@ class larry(object):
         A more formal way to make a larry:
 
         >>> import numpy as np
-        >>> x = np.array([1,2,3])
+        >>> x = np.array([1, 2, 3])
         >>> label = [['one', 'two', 'three']]
         >>> larry(x, label)
         label_0
@@ -63,7 +65,17 @@ class larry(object):
             two
             three
         x
-        array([1, 2, 3])    
+        array([1, 2, 3])
+        
+        The dtype can be specified:
+        
+        >>> larry([0, 1, 2], dtype=bool)
+        label_0
+            0
+            1
+            2
+        x
+        array([False,  True,  True], dtype=bool)            
 
         """
         if type(x) is not np.ndarray:
@@ -72,9 +84,11 @@ class larry(object):
             # so any improvement in speed is good. That's why this entire
             # block of code is not replaced with x = np.asarray(x)
             try:
-                x = np.asarray(x)
+                x = np.asarray(x, dtype=dtype)
             except:
-                raise ValueError, "x must be array_like."    
+                raise ValueError, "x must be array_like."
+        elif dtype != None:
+            x = x.astype(dtype)            
         if label is None:
             label = [range(z) for z in x.shape]
         ndim = x.ndim
