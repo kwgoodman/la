@@ -155,11 +155,15 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
 
         # Data array, x
         try:
-            # Do both larrys have inexact dtype?
+            # Does one larrys have inexact dtype?
             if (issubclass(actual.x.dtype.type, np.inexact) or
                 issubclass(desired.x.dtype.type, np.inexact)): 
                 # Yes, so check for almost equal
-                assert_almost_equal(actual.x, desired.x, decimal=13)
+                try:
+                    assert_almost_equal(actual.x, desired.x, decimal=13)
+                except TypeError:
+                    # One of the larrys probably has a weird type like str
+                    assert_equal(actual.x, desired.x)     
             else:
                 # No, so check for exactly equal
                 assert_equal(actual.x, desired.x)     

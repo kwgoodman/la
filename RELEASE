@@ -32,6 +32,7 @@ Bug fixes
 - #572638 lastrank chokes on input with a shape tuple that contains zero
 - #573240 Reduce methods give wrong output with shapes that contain zero
 - #582579 la.afunc.nans: wrong output for str and object dtype
+- #583596 assert_larry_equal crashed when comparing float larry to str larry
 
 
 la 0.2 (avocado)

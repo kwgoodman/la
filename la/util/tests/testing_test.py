@@ -9,7 +9,7 @@ nan = np.nan
 
 
 class Test_Testing_Assert_Larry(object):
-    # Tests for assert_larry_equal
+    "Test assert_larry_equal"
     # No yields because of double list in assert_raises
     
     def setup(self):
@@ -106,4 +106,18 @@ class Test_Testing_Assert_Larry(object):
         ale(nan, nan, 'scalar #6') 
 
     def test_assert_larry_nonlarry_type(self):
-        assert_raises(AssertionError, ale, larry([1]), 1, 'nonlarry type #1')                                          
+        assert_raises(AssertionError, ale, larry([1]), 1, 'nonlarry type #1')
+        
+    def test_more_dtypes(self):
+        y1 = larry([1.0, 2.0, 3.0])
+        y2 = larry(['1', '2', '3'])        
+        msg = 'float, str should fail but there should be no error'
+        assert_raises(AssertionError, ale, y1, y2, msg) 
+        y1 = larry([ 1,   2,   3])
+        y2 = larry(['1', '2', '3'])        
+        msg = 'int, str should fail but there should be no error'
+        assert_raises(AssertionError, ale, y1, y2, msg)         
+        y1 = larry(['1', '2', '3'])
+        y2 = larry(['1', '2', '3'])        
+        msg = 'str, str failed'
+        ale(y1, y2)                                                      

@@ -1,5 +1,10 @@
 2010-05-20 Keith
 
+    * util/testing.py(assert_larry_equal), util/tests/testing_test.py, 
+      doc/source/work.rst, RELEASE: Bug #583596: Comparing a larry with dtype
+      float to a larry of dtype str now raises an AssertionError instead of
+      crashing. 
+
     * deflarry.py(__init__), tests/deflarry_nose_test.py(test_dtype), RELEASE,
       doc/source/intro.rst, doc/source/work.rst: You can now use an optional
       dtype when creating larrys. Added corresponding unit tests.
