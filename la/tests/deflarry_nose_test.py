@@ -595,4 +595,36 @@ def test_astype_dtype():
         lar1 = larry(list(data), dtype=dtype)    # larry does dtype
         lar2 = larry(list(data)).astype(dtype)   # astype does dtype
         yield ale, lar1, lar2, msg % dtype
+        
+# --------------------------------------------------------------------------
+
+# larry comparison (==, >, <=, !=, etc) test
+#
+# Make sure comparison works as expected when comparing a larry to a numpy
+# array, list, and tuple
+
+def test_comparison():
+    "larry comparison test"
+    def lhs():
+        return larry([1, 2])
+    def rhs():
+        values = ([1], (1,), np.array([1]))
+        for value in values:
+            yield value  
+    fncs = ['__eq__', '__ne__', '__lt__', '__gt__', '__le__', '__ge__']
+    msg = '%s failed with right-hand side %s'
+    for fnc in fncs:
+        comp = getattr(lhs(), fnc)
+        for right in rhs():
+            actual = comp(right)
+            desired = comp(1)
+            yield ale, actual, desired, msg % (fnc, right)
+             
+    
+    
+    
+    
+    
+    
+    
                                 

@@ -1861,11 +1861,6 @@ class Test_comparison(unittest.TestCase):
         self.assert_((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        
-    def test_ge_4(self):
-        "larry.__ge___4"
-        x = [1, 2]
-        self.failUnlessRaises(TypeError, self.l.__ge__, x)
 
         
 class Test_anyall(unittest.TestCase):

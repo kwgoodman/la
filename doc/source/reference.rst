@@ -221,6 +221,15 @@ and
         b
     x
     array([False], dtype=bool)
+    
+A larry can be compared with a scalar, NumPy array, list, tuple, and another
+larry.
+
+.. warning::
+
+    Do not compare a NumPy array on the left-hand side with a larry on the
+    right-hand side. You will get unexpected results. To compare a larry to
+    a NumPy array, put the array on the right-hand side. 
 
 ------------
 

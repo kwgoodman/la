@@ -1,5 +1,9 @@
 2010-05-21 Keith
 
+    * deflarry.py(__compare), tests/deflarry_nose_test.py, RELEASE,
+      tests/deflarry_test.py, doc/source/intro.rst, doc/source/reference.rst:
+      Add ability to compare (==, >, !=, etc) larrys with lists and tuples.
+
     * doc/source/reference.rst: Add new larry method astype.
 
     * deflarry.py(astype), tests/deflarry_nose_test.py, doc/source/intro.rst,

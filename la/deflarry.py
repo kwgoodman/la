@@ -1494,7 +1494,8 @@ class larry(object):
         return self.__compare(other, '>=') 
 
     def __compare(self, other, op):         
-        if np.isscalar(other) or isinstance(other, np.ndarray):
+        if (np.isscalar(other) or isinstance(other, np.ndarray) or
+            (type(other) == list) or (type(other) == tuple)):
             y = self.copy()
             if op == '==':
                 y.x = y.x == other
