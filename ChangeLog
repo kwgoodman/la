@@ -1,5 +1,7 @@
 2010-05-21 Keith
 
+    * doc/source/reference.rst: Add new larry method astype.
+
     * deflarry.py(astype), tests/deflarry_nose_test.py, doc/source/intro.rst,
       RELEASE, doc/source/work.rst: New larry method astype returns copy of
       larry cast to specified type.
