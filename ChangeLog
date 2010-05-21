@@ -1,3 +1,14 @@
+2010-05-21 Keith
+
+    * deflarry.py(astype), tests/deflarry_nose_test.py, doc/source/intro.rst,
+      RELEASE, doc/source/work.rst: New larry method astype returns copy of
+      larry cast to specified type.
+    
+    * LICENSE: New larry method astype uses a modified version of the
+      numpy.array.astype doc string, so I added the numpy license to la.
+      
+    * doc/source/intro.rst: Bumped numpy requirement from 1.4 to 1.4.1.     
+ 
 2010-05-20 Keith
 
     * util/testing.py(assert_larry_equal), util/tests/testing_test.py, 

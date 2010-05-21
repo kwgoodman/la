@@ -11,14 +11,18 @@ la 0.3 (banana)
 The focus of this release is stability: unit tests, bug fixes, API cleaning,
 and documentation.
 
+New larry methods
+-----------------
+- astype: Copy of larry cast to specified type
+- geometric_mean: new method based on existing array function
+
 Enhancements
 ------------
 - You can now use an optional dtype when creating larrys
-- New larry method: geometric_mean (based on existing array function)
 - Documentation and unit tests
 
-API changes
------------
+Breakage from la 0.2
+--------------------
 - lastrank and lastrank_decay methods combined into one method: lastrank
 - Given shape (n,m) input, lastrank now returns shape (n,) instead of (n,1)
 - geometric_mean now reduces input in the same way as lastrank (see above)

@@ -67,16 +67,17 @@ let's you use your existing array functions.
 License
 =======
 
-larry is distributed under a BSD license. Parts of Scipy and numpydoc, which
-both have BSD licenses, are included in larry. See the LICENSE file, which
-is distributed with the la package, for details.
+The ``la`` package is distributed under a Simplified BSD license. Parts of
+NumPy, Scipy, and numpydoc, which all have BSD licenses, are included in
+``la``. See the LICENSE file, which is distributed with the ``la`` package,
+for details.
 
 Installation
 ============
 
-The ``la`` package requires Python and Numpy. Numpy 1.4 or newer is
+The ``la`` package requires Python and Numpy. Numpy 1.4.1 or newer is
 recommended for its improved NaN handling. Also some of the unit tests in the
-``la`` package require Numpy 1.4 or newer and many require
+``la`` package require Numpy 1.4.1 or newer and many require
 `nose <http://somethingaboutorange.com/mrl/projects/nose>`_.
 
 To save and load larrys in HDF5 format, you need
@@ -102,9 +103,9 @@ After you have installed ``la``, run the suite of unit tests:
     >>> import la
     >>> la.test()
     <snip>
-    Ran 1547 tests in 1.021s
+    Ran 1553 tests in 1.021s
     OK
-    <nose.result.TextTestResult run=1547 errors=0 failures=0>       
+    <nose.result.TextTestResult run=1553 errors=0 failures=0>       
     
 URLs
 ====

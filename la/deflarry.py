@@ -3257,7 +3257,7 @@ class larry(object):
         y.x[np.isnan(y.x)] = replace_with
         return y                                     
 
-    # Size and shape ---------------------------------------------------------
+    # Size, shape, type ------------------------------------------------------
 
     @property
     def nx(self):
@@ -3305,7 +3305,8 @@ class larry(object):
         
     @property
     def ndim(self):
-        """Number of dimensions in the larry.
+        """
+        Number of dimensions in the larry.
         
         Examples
         --------   
@@ -3318,7 +3319,8 @@ class larry(object):
         
     @property
     def dtype(self):
-        """The dtype of the elements (not the labels) in the larry.
+        """
+        The dtype of the elements (not the labels) in the larry.
         
         Examples
         --------   
@@ -3328,6 +3330,48 @@ class larry(object):
         dtype('float64')         
         """
         return self.x.dtype
+        
+    def astype(self, dtype):
+        """
+        Copy of larry cast to specified type.
+        
+        Parameters
+        ----------
+        dtype: string or data-type
+            Typecode or data-type to which the larry is cast.
+            
+        Returns
+        -------
+        y : larry
+            A copy of the larry, cast to the specified type.
+            
+        Examples
+        --------
+        Create a larry with float dtype:
+        
+        >>> y = la.larry([1, 2, 2.5])
+        >>> y
+        label_0
+            0
+            1
+            2
+        x
+        array([ 1. ,  2. ,  2.5])
+        
+        Cast the float larry to int:
+        
+        >>> y.astype(int)
+        label_0
+            0
+            1
+            2
+        x
+        array([1, 2, 2])
+                
+        """
+        y = self.copy()
+        y.x = y.x.astype(dtype)    
+        return y
         
     @property
     def T(self):

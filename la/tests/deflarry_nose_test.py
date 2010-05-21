@@ -579,4 +579,20 @@ def test_dtype():
         lar1 = larry(np.array(list(data)), dtype=dtype) # larry does dtype
         lar2 = larry(np.array(list(data), dtype=dtype)) # array does dtype
         yield ale, lar1, lar2, msg % (dtype, 'array')         
-                               
+
+# --------------------------------------------------------------------------
+
+# larry astype test
+#
+# Make sure the astype input works as expected
+
+def test_astype_dtype():
+    "larry.astype test"
+    dtypes = [float, int, str, bool, complex, object]
+    data = [0, 1, 2]
+    msg = 'larry.astype failed on dtype %s'
+    for dtype in dtypes:
+        lar1 = larry(list(data), dtype=dtype)    # larry does dtype
+        lar2 = larry(list(data)).astype(dtype)   # astype does dtype
+        yield ale, lar1, lar2, msg % dtype
+                                

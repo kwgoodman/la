@@ -185,6 +185,16 @@ array:
     >>> y.dtype
     dtype('float64') 
     
+You can change the dtype of a larry by using the **astype** method:
+::
+    >>> y = larry([1.0, 2.5])
+    >>> y.astype(int)
+    label_0
+        0
+        1
+    x
+    array([1, 2])    
+    
 larry does not have a reshape method. A reshape would scramble all the labels.
 But larry does have a **flatten** method and an **insertaxis** method.
 
