@@ -118,3 +118,49 @@ URLs
  devel archive     https://lists.launchpad.net/larry-discuss/threads.html
 ===============   ========================================================
 
+``la`` at a glance
+==================
+
+**la package**
+
+======================================    ====================================
+package name                              ``la``
+web site                                  http://larry.sourceforge.net
+programming language                      Python
+required dependencies                     Python, NumPy
+optional dependencies                     h5py, HDF5, Scipy, Nose
+year started                              2008
+======================================    ====================================
+
+**larry**
+
+======================================    ====================================
+data object (main class)                  larry
+data object building blocks               NumPy array (data), list of lists (labels)
+data types                                homogenous: float, int, str, object,
+                                          etc., (not tested: complex)
+label types                               heterogenous, hashable                                           
+label restrictions                        hashable, unique along any one axis
+missing values                            float: NaN, int: no missing,
+                                          partial support for str: '',
+                                          object: None
+binary operations on two data objects     intersection of labels
+Number of dimensions supported            all dimensions except 0d
+IO                                        HDF5, partial support for CSV
+======================================    ====================================
+
+**Brief comparison to Numpy**
+
+======================================    ====================================
+Numpy                                     ``la``
+======================================    ====================================
+arr = np.array([[1, 2], [3, 4]])          lar = la.larry([[1, 2], [3, 4]]) Note (arr == lar.x).all() is True 
+np.nansum(arr)                            lar.sum()
+arr.shape, arr.dtype, arr.ndim, arr.T     lar.shape, lar.dtype, lar.ndim, lar.T
+arr.astype(float)                         lar.astype(float)
+arr1 + arr2                               lar1 + lar2
+arr[:,0]                                  lar[:,0]
+fancy indexing: arr[[0,1], [0,1]]         not supported
+not supported                             indexing by label: lar2.lix[:, ['a', 'b']]
+======================================    ====================================
+

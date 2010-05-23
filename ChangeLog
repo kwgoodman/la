@@ -1,5 +1,7 @@
 2010-05-23 Keith
 
+    * doc/source/intro.rst: Added a new section: la at a glance.
+
     * util/resample.py(cv), util/resample.py(cross_validation),
       util/resample.py(boot), util/resample.py(bootstrap), 
       util/tests/resample_test.py: Renamed cv to cross_validation and boot to
