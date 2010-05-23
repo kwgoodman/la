@@ -1,3 +1,9 @@
+2010-05-22 Keith
+
+    *  la/util/resample.py, util/tests/resample_test.py, doc/source/intro.rst,
+       RELEASE: New module of resample methods. Currently contains iterators
+       for the indices needed for cross validation and bootstrap.
+
 2010-05-21 Keith
 
     * deflarry.py(__compare), tests/deflarry_nose_test.py, RELEASE,

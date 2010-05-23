@@ -16,6 +16,11 @@ New larry methods
 - astype: Copy of larry cast to specified type
 - geometric_mean: new method based on existing array function
 
+New functions
+-------------
+- la.util.resample.cv: k-fold cross validation index iterator
+- la.util.resample.boot: bootstrap index iterator
+
 Enhancements
 ------------
 - You can now use an optional dtype when creating larrys
