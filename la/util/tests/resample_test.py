@@ -1,8 +1,9 @@
 "Unit tests of resample index iterators"
-        
+
+import numpy as np        
 from numpy.testing import assert_equal, assert_raises, assert_
 
-from la.util.resample import cv, boot
+from la.util.resample import cross_validation, bootstrap
       
         
 def cv_count_test():
@@ -20,7 +21,7 @@ def cv_count_test():
         for k in range(2, n+1):
             trains = []
             tests = []
-            for train, test in cv(n, k):
+            for train, test in cross_validation(n, k):
                 trains += train
                 tests += test
                 yield assert_, len(test) > 0, msg8 % (n, k)
@@ -37,18 +38,20 @@ def cv_count_test():
 def cv_repeatability_test():
     "cv index iterator test for repeatability"
     msg = "%s indices were not repeatable when n=%d and kfold=%d"
-    n = 4
+    n = 5
     k = 3
     train1 = []
     test1 = []
-    for train, test in cv(n, k):
+    shuffle = np.random.RandomState([1, 2, 3]).shuffle
+    for train, test in cross_validation(n, k, shuffle):
         train1 += train
         test1 += test
     train2 = []
     test2 = []
-    for train, test in cv(n, k):
+    shuffle = np.random.RandomState([1, 2, 3]).shuffle    
+    for train, test in cross_validation(n, k, shuffle):
         train2 += train
-        test2 += test        
+        test2 += test         
     yield assert_equal, train1, train2, msg % ('train', n, k)
 
 def boot_count_test():
@@ -63,7 +66,7 @@ def boot_count_test():
     msg6 = "Max index value is not 0 when n=%d and nboot=%d"
     for n in range(2, 8):
         for nboot in range(2, n+1):
-            for train, test in boot(n, nboot):
+            for train, test in bootstrap(n, nboot):
                 yield assert_equal, len(train), n, msg1 % (n, nboot) 
                 ncommon = len(set(train) & set(test))                               
                 yield assert_equal, ncommon, 0, msg2 % (n, nboot)
@@ -80,12 +83,14 @@ def boot_repeatability_test():
     nboot = 3
     train1 = []
     test1 = []
-    for train, test in boot(n, nboot):
+    randint = np.random.RandomState([1, 2, 3]).randint
+    for train, test in bootstrap(n, nboot, randint):
         train1 += train
         test1 += test
     train2 = []
     test2 = []
-    for train, test in boot(n, nboot):
+    randint = np.random.RandomState([1, 2, 3]).randint    
+    for train, test in bootstrap(n, nboot, randint):
         train2 += train
         test2 += test   
     yield assert_equal, train1, train2, msg % ('train', n, nboot)

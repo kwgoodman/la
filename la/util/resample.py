@@ -3,7 +3,7 @@
 import numpy as np
         
 
-def cv(n, kfold, shuffle=None):
+def cross_validation(n, kfold, shuffle=None):
     """
     K-fold cross validation iterator of training and testing indices.
     
@@ -18,7 +18,7 @@ def cv(n, kfold, shuffle=None):
     shuffle : function, optional
         A shuffle method that shuffles lists in place. If no shuffle function
         is given (default) then the following shuffle function will used:
-        np.random.RandomState([1, 2, 3]).shuffle 
+        np.random.shuffle 
         
     Returns
     -------
@@ -55,7 +55,7 @@ def cv(n, kfold, shuffle=None):
         raise ValueError, "`kfold` cannot be greater than `n`"
     index = range(n)
     if shuffle == None:
-        np.random.RandomState([1, 2, 3]).shuffle(index)
+        np.random.shuffle(index)
     else:
         shuffle(index)
     nperk = int(1.0 * n / kfold)   
@@ -69,7 +69,7 @@ def cv(n, kfold, shuffle=None):
         idx_train = index[:idx1] + index[idx2:]
         yield idx_train, idx_test
         
-def boot(n, nboot, randint=None):
+def bootstrap(n, nboot, randint=None):
     """
     Bootstrap iterator for training and testing indices.
     
@@ -82,7 +82,7 @@ def boot(n, nboot, randint=None):
     randint : function, optional
         A randint function that behaves like numpy.random.randint. If no
         randint function is given (default) then the following will be used:
-        np.random.RandomState([1, 2, 3]).randint
+        np.random.randint
         
     Returns
     -------
@@ -119,7 +119,7 @@ def boot(n, nboot, randint=None):
     if nboot < 1:
         raise ValueError, "`nboot` must be at least 1" 
     if randint == None:
-        randint2 = np.random.RandomState([1, 2, 3]).randint
+        randint2 = np.random.randint
     else:
         randint2 = randint                  
     nrange = set(range(n))

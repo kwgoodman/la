@@ -1,3 +1,11 @@
+2010-05-23 Keith
+
+    * util/resample.py(cv), util/resample.py(cross_validation),
+      util/resample.py(boot), util/resample.py(bootstrap), 
+      util/tests/resample_test.py: Renamed cv to cross_validation and boot to
+      bootstrap. Removed the default of setting the random number generator
+      to a fixed state.
+
 2010-05-22 Keith
 
     * util/resample.py(cv): Type in doc string.
