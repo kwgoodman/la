@@ -142,7 +142,7 @@ data types                                homogenous: float, int, str, object,
 label types                               heterogenous, hashable                                           
 label restrictions                        hashable, unique along any one axis
 missing values                            float: NaN, int: no missing,
-                                          partial support for str: '',
+                                          partial support for str: '' and
                                           object: None
 binary operations on two data objects     intersection of labels
 Number of dimensions supported            all dimensions except 0d
