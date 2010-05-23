@@ -1,6 +1,8 @@
 2010-05-22 Keith
 
-    *  la/util/resample.py, util/tests/resample_test.py, doc/source/intro.rst,
+    * util/resample.py(cv): Type in doc string.
+
+    *  util/resample.py, util/tests/resample_test.py, doc/source/intro.rst,
        RELEASE: New module of resample methods. Currently contains iterators
        for the indices needed for cross validation and bootstrap.
 

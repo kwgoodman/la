@@ -31,7 +31,7 @@ def cv(n, kfold, shuffle=None):
         
     Examples
     --------
-    K-fold cross validation indices for 5 elements and 3 folds:
+    K-fold cross validation indices for 5 elements and 2 folds:
      
     >>> from la.util.resample import cv
     >>> for train, test in cv(5,2):
