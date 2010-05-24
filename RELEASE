@@ -23,6 +23,8 @@ New functions
 
 Enhancements
 ------------
+- Faster binary operations (+, -, *, &, etc) between two large unaligned
+  larrys; For shape (10000,) the speed up is 80x; for (10,) slowdown is 2%
 - You can now use an optional dtype when creating larrys
 - Add ability to compare (==, >, !=, etc) larrys with lists and tuples
 - Documentation and unit tests

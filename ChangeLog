@@ -1,5 +1,9 @@
 2010-05-23 Keith
 
+    * deflarry.py(__align): 80x speed increase in binary operations (+, -,
+      etc) timed with two larrys of shape (1000,) with unaligned labels. The
+      cost is a 2% slowdown for shapes (10,).
+
     * doc/source/intro.rst: Tweak.
 
     * doc/source/intro.rst: Added a new section: la at a glance.

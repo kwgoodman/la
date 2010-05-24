@@ -2,6 +2,7 @@
 
 from copy import deepcopy
 import csv
+from itertools import izip
 
 import numpy as np
    
@@ -903,8 +904,10 @@ class larry(object):
                     if len(lab) == 0:
                         raise IndexError, 'A dimension has no matching labels'
                     lab.sort()
-                    ids = map(ls.index, lab)
-                    ido = map(lo.index, lab)
+                    lsmap = dict(izip(ls, range(len(ls))))
+                    lomap = dict(izip(lo, range(len(lo))))
+                    ids = [lsmap[i] for i in lab]
+                    ido = [lomap[i] for i in lab]
                 label.append(lab)
                 idxs.append(ids)
                 idxo.append(ido)
