@@ -1,6 +1,5 @@
 "Labeled array class"
 
-from copy import deepcopy
 import csv
 from itertools import izip
 
@@ -4022,7 +4021,7 @@ class larry(object):
         array([1, 2])
             
         """
-        label = deepcopy(self.label)
+        label = [list(z) for z in self.label]
         x = self.x.copy()
         return type(self)(x, label)
         
@@ -4038,7 +4037,7 @@ class larry(object):
         [['a', 'b']]
         
         """
-        return deepcopy(self.label)
+        return [list(z) for z in self.label]
         
     def copyx(self):
         """Return a copy of a larry's data as a Numpy array.

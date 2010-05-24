@@ -1,8 +1,15 @@
+2010-05-24 Keith
+
+    * deflarry.py(copylabel), deflarry.py(copy): Wes McKinney (thank you!)
+      spotted a speed bottleneck in binary operations of large larrys: labels
+      are copied with deepcopy which is very slow for large labels. I replaced
+      with a faster copy copy method.
+
 2010-05-23 Keith
 
-    * deflarry.py(__align): 80x speed increase in binary operations (+, -,
-      etc) timed with two larrys of shape (1000,) with unaligned labels. The
-      cost is a 2% slowdown for shapes (10,).
+    * deflarry.py(__align), RELEASE: 80x speed increase in binary operations
+      (+, -, *, &, etc) timed with two larrys of shape (1000,) with unaligned
+      labels. The cost is a 2% slowdown for shapes (10,).
 
     * doc/source/intro.rst: Tweak.
 
@@ -18,9 +25,9 @@
 
     * util/resample.py(cv): Type in doc string.
 
-    *  util/resample.py, util/tests/resample_test.py, doc/source/intro.rst,
-       RELEASE: New module of resample methods. Currently contains iterators
-       for the indices needed for cross validation and bootstrap.
+    * util/resample.py, util/tests/resample_test.py, doc/source/intro.rst,
+      RELEASE: New module of resample methods. Currently contains iterators
+      for the indices needed for cross validation and bootstrap.
 
 2010-05-21 Keith
 
