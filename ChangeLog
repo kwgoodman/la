@@ -1,3 +1,10 @@
+2010-05-25 Keith
+
+    * deflarry(morph): Big speed boost for medium to large larrys, small slow
+      down for small (1d, len 10) larrys. But this gets all the mapping to use
+      a common function (listmap) which can be optimized further. This change
+      also speeds up merge which used morph.
+
 2010-05-24 Keith
 
     * util/misc.py(listmap), util/tests/misc_test.py, doc/source/intro.rst,

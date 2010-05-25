@@ -2619,8 +2619,8 @@ class larry(object):
         else:
             x = nans(shape)       
         idx0 = tuple(set(self.label[axis]) & set(label))
-        idx1 = map(label.index, idx0)
-        idx2 = map(self.label[axis].index, idx0)
+        idx1 = listmap(label, idx0)
+        idx2 = listmap(self.label[axis], idx0)
         index1 = [slice(None)] * self.ndim
         index1[axis] = idx1
         index2 = [slice(None)] * self.ndim
