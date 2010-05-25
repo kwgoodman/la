@@ -1,11 +1,13 @@
 2010-05-25 Keith
 
+    * la/LICENSE, RELEASE: Update.
+
     * doc/source/intro.rst: Tweak.
 
     * deflarry(morph): Big speed boost for medium to large larrys, small slow
       down for small (1d, len 10) larrys. But this gets all the mapping to use
       a common function (listmap) which can be optimized further. This change
-      also speeds up merge which used morph.
+      also speeds up merge which uses morph.
 
 2010-05-24 Keith
 

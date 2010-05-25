@@ -8,9 +8,6 @@ la 0.3 (banana)
 
 *Release date: Not yet released, in development*
 
-The focus of this release is stability: unit tests, bug fixes, API cleaning,
-and documentation.
-
 New larry methods
 -----------------
 - astype: Copy of larry cast to specified type
@@ -18,13 +15,13 @@ New larry methods
 
 New functions
 -------------
-- la.util.resample.cv: k-fold cross validation index iterator
-- la.util.resample.boot: bootstrap index iterator
+- la.util.resample.cross_validation: k-fold cross validation index iterator
+- la.util.resample.bootstrap: bootstrap index iterator
 - la.util.misc.listmap: O(n) version of map(list1.index, list2)
 
 Enhancements
 ------------
-- Performance: Faster binary operations (+, *, etc) and faster larry methods
+- Major performance improvement in most larry methods!
 - You can now use an optional dtype when creating larrys
 - Add ability to compare (==, >, !=, etc) larrys with lists and tuples
 - Documentation and unit tests
