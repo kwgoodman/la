@@ -1,5 +1,8 @@
 2010-05-25 Keith
 
+    * deflarry(__align): 8% speed up in comparison operators (==, >, <=, !=,
+      etc).
+
     * la/LICENSE, RELEASE: Update.
 
     * doc/source/intro.rst: Tweak.

@@ -880,7 +880,7 @@ class larry(object):
         "Align larrys for binary operations."
         if self.label == other.label:
             # Labels are already aligned
-            x = self.copyx()
+            x = self.x
             y = other.x
             label = self.copylabel()
         else:  
