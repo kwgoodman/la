@@ -20,6 +20,7 @@ New functions
 -------------
 - la.util.resample.cv: k-fold cross validation index iterator
 - la.util.resample.boot: bootstrap index iterator
+- la.util.misc.listmap: O(n) version of map(list1.index, list2)
 
 Enhancements
 ------------

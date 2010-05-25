@@ -5,7 +5,7 @@ import unittest
 import numpy as np
 from numpy.testing import assert_equal
 
-from la.util.misc import randstring, isint, isfloat, isscalar
+from la.util.misc import randstring, isint, isfloat, isscalar, listmap
 
 
 class Test_misc(unittest.TestCase):
@@ -51,6 +51,23 @@ def run():
     
 if __name__ == '__main__':
     run()           
-        
-    
+
+# ---------------------------------------------------------------------------
+
+# listmap
+#
+# test to make sure listmap returns the same output as
+#
+#                     idx = map(list1.index, list2)        
+
+def listmap_test():
+    "listmap test"
+    list1 = range(6)
+    list2 = range(5)
+    msg = "listmap failed on list1=%s and list2=%s"
+    for i in range(100):
+        np.random.shuffle(list2)
+        idx1 = map(list1.index, list2)
+        idx2 = listmap(list1, list2)
+        yield assert_equal, idx1, idx2, msg % (list1, list2) 
           

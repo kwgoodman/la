@@ -2,6 +2,7 @@
 
 import random
 import string
+from itertools import izip
 
 import numpy as np
 
@@ -239,4 +240,17 @@ def fromlists(xs, labels):
         x.fill(np.nan)
         x[index] = xs 
     return x, label 
+
+def listmap(list1, list2):
+    """
+    list of indices idx such that [list1[i] for i in idx] is list2.
+    
+    This function is equivalent to idx = map(list1.index, list2) except that
+    it is O(n) instead of O(n^2).
+    
+    All elements in list2 must be in list1    
+    """
+    list1map = dict(izip(list1, range(len(list1))))
+    idx = [list1map[i] for i in list2]
+    return idx
 

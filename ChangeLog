@@ -1,16 +1,22 @@
 2010-05-24 Keith
 
+    * util/misc.py(listmap), util/tests/misc_test.py, doc/source/intro.rst,
+      RELEASE: New function that is an O(n) version of map(list1.index, list2)
+      which is O(n^2).
+
+    * deflarry.py(__align): Use listmap to simplify code.   
+
     * RELEASE: Update.
 
     * deflarry.py(copylabel), deflarry.py(copy): Wes McKinney (thank you!)
       spotted a speed bottleneck in binary operations of large larrys: labels
       are copied with deepcopy which is very slow for large labels. I replaced
-      with a faster copy copy method.
+      with a faster copy method.
 
 2010-05-23 Keith
 
     * deflarry.py(__align), RELEASE: 80x speed increase in binary operations
-      (+, -, *, &, etc) timed with two larrys of shape (1000,) with unaligned
+      (+, -, *, &, etc) timed with two larrys of shape (10000,) with unaligned
       labels. The cost is a 2% slowdown for shapes (10,).
 
     * doc/source/intro.rst: Tweak.

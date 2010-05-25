@@ -1,12 +1,11 @@
 "Labeled array class"
 
 import csv
-from itertools import izip
 
 import numpy as np
    
 from la.util.scipy import (nanmean, nanmedian, nanstd)
-from la.util.misc import flattenlabel, isscalar, fromlists
+from la.util.misc import flattenlabel, isscalar, fromlists, listmap
 from la.afunc import (group_ranking, group_mean, group_median, shuffle, nans,
                       push, quantile, ranking, lastrank, movingsum_forward,
                       movingrank, movingsum, geometric_mean)
@@ -903,10 +902,8 @@ class larry(object):
                     if len(lab) == 0:
                         raise IndexError, 'A dimension has no matching labels'
                     lab.sort()
-                    lsmap = dict(izip(ls, range(len(ls))))
-                    lomap = dict(izip(lo, range(len(lo))))
-                    ids = [lsmap[i] for i in lab]
-                    ido = [lomap[i] for i in lab]
+                    ids = listmap(ls, lab)
+                    ido = listmap(lo, lab)
                 label.append(lab)
                 idxs.append(ids)
                 idxo.append(ido)
