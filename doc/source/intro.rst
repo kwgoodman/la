@@ -126,26 +126,28 @@ URLs
 ======================================    ====================================
 package name                              ``la``
 web site                                  http://larry.sourceforge.net
+license                                   Simplified BSD
 programming language                      Python
 required dependencies                     Python, NumPy
-optional dependencies                     h5py, HDF5, Scipy, Nose
-year started                              2008
+optional dependencies                     h5py, Scipy, nose
+year started (open source)                2008 (2010)
 ======================================    ====================================
 
-**larry**
+**Data object**
 
 ======================================    ====================================
 data object (main class)                  larry
-data object building blocks               NumPy array (data), list of lists (labels)
-data types                                homogenous: float, int, str, object,
-                                          etc., (not tested: complex)
-label types                               heterogenous, hashable                                           
-label restrictions                        hashable, unique along any one axis
-missing values                            float: NaN, int: no missing,
-                                          partial support for str: '' and
-                                          object: None
+number of dimensions supported            nd > 0d
+data container                            Numpy array
+direct access to data container           yes
+data types                                homogenous: float, int, str, object
+label container                           list of lists
+direct access to label container          yes
+label types                               heterogenous, hashable    
+label constraints                         unique along any one axis, hashable
+missing values                            NaN (float),  partial: '' (str),
+                                          None (object)
 binary operations on two data objects     intersection of labels
-Number of dimensions supported            all dimensions except 0d
 IO                                        HDF5, partial support for CSV
 ======================================    ====================================
 
@@ -154,13 +156,14 @@ IO                                        HDF5, partial support for CSV
 ======================================    ====================================
 Numpy                                     ``la``
 ======================================    ====================================
-arr = np.array([[1, 2], [3, 4]])          lar = la.larry([[1, 2], [3, 4]]) Note (arr == lar.x).all() is True 
-np.nansum(arr)                            lar.sum()
-arr.shape, arr.dtype, arr.ndim, arr.T     lar.shape, lar.dtype, lar.ndim, lar.T
-arr.astype(float)                         lar.astype(float)
-arr1 + arr2                               lar1 + lar2
-arr[:,0]                                  lar[:,0]
-fancy indexing: arr[[0,1], [0,1]]         not supported
-not supported                             indexing by label: lar2.lix[:, ['a', 'b']]
+``arr = np.array([[1, 2], [3, 4]])``      ``lar = la.larry([[1, 2], [3, 4]])`` Note ``(arr == lar.x).all()`` is True 
+``np.nansum(arr)``                        ``lar.sum()``
+``arr.shape``, ``arr.dtype``,             ``lar.shape``, ``lar.dtype``
+``arr.ndim``, ``arr.T``                   ``lar.ndim``, ``lar.T``
+``arr.astype(float)``                     ``lar.astype(float)``
+``arr1 + arr2``                           ``lar1 + lar2``
+``arr[:,0]``                              ``lar[:,0]``
+fancy indexing: ``arr[[0,1], [0,1]]``     not supported
+not supported                             indexing by label: ``lar2.lix[:, ['a', 'b']]``
 ======================================    ====================================
 
