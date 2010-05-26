@@ -424,7 +424,7 @@ We can slice with index values or with labels:
     array([0, 2])   
 
 Be careful of the difference between indexing with indices and
-indexing with labels. In the first exmaple below 4 is an index; in
+indexing with labels. In the first example below 4 is an index; in
 the second example 4 is a label element:
 ::
     >>> y.lix[['a']:4]
@@ -470,7 +470,13 @@ behave. The corresponding example with a NumyPy array:
 ::
     >>> x = np.array([[1, 2], [3, 4]])
     >>> x[[0, 1], [0, 1]]
-    array([1, 4])       
+    array([1, 4])
+    
+To get rectangular indexing with Numpy arrays:
+::
+    >>> x[np.ix_([0,1], [0,1])]
+    array([[1, 2],
+           [3, 4]])           
 
 .. _misc_indexing:
 
