@@ -250,7 +250,7 @@ def listmap(list1, list2):
     
     All elements in list2 must be in list1    
     """
-    list1map = dict(izip(list1, range(len(list1))))
+    list1map = dict(izip(list1, xrange(len(list1))))
     idx = [list1map[i] for i in list2]
     return idx
 

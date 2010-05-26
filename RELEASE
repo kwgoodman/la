@@ -21,7 +21,7 @@ New functions
 
 Enhancements
 ------------
-- Major performance improvement in most larry methods!
+- Major performance increase in most larry methods!
 - You can now use an optional dtype when creating larrys
 - Add ability to compare (==, >, !=, etc) larrys with lists and tuples
 - Documentation and unit tests

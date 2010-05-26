@@ -1,5 +1,9 @@
 2010-05-25 Keith
 
+    * util/misc.py(listmap), RELEASE: Made listmap faster (range --> xrange)
+      which will in turn, for unaligned larrys, speed up the binary operators,
+      the comparison operators, merge, and morph.
+
     * deflarry(__align): 8% speed up in comparison operators (==, >, <=, !=,
       etc).
 
