@@ -68,6 +68,41 @@ Here is a more formal way to create a larry:
     x
     array([[ 1.,  2.],
            [ 3.,  4.]])
+           
+.. warning::
+
+    larry does not copy the data array if it is a Numpy array or if
+    np.asarray() does not make a copy such as when the data array is a
+    Numpy matrix. However, if you change the dtype of the data array (as in
+    the example above), a copy is made. Similarly the label is not copied.
+    
+larry does not copy the data array or the label list:
+::
+    >>> x = np.array([1, 2, 3])
+    >>> label = [['a', 'b', 'c']]
+    >>> lar = larry(x, label)
+    
+    >>> lar[0] = -9
+    >>> lar.label[0][0] = 'AA'
+ 
+    >>> x    
+    array([-9,  2,  3])
+    >>> label
+    [['AA', 'b', 'c']]
+
+Here's one way to make copies of the data array and label:
+:: 
+    >>> x = np.array([1, 2, 3])
+    >>> label = [['a', 'b', 'c']]
+    >>> lar = larry(x.copy(), [list(l) for l in label])
+     
+    >>> lar[0] = -9
+    >>> lar.label[0][0] = 'AA'
+    
+    >>> x
+    array([1, 2, 3])
+    >>> label
+    [['a', 'b', 'c']]              
 
 The labels, along any one axis, must be unique. Let's try to create a larry
 with labels that are not unique:

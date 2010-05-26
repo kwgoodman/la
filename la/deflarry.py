@@ -41,6 +41,13 @@ class larry(object):
             elements of label are not lists, or if the number of dimensions
             is zero.
             
+        Notes
+        -----
+        larry does not copy the data array if it is a Numpy array or if
+        np.asarray() does not make a copy such as when the data array is a
+        Numpy matrix. However, if you change the dtype of the data array, a
+        copy is made. Similarly the label is not copied.            
+            
         Examples
         --------
         The labels default to range(n):

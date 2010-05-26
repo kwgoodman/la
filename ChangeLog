@@ -1,5 +1,8 @@
 2010-05-26 Keith
 
+    * doc/source/work.rst, deflarry.py(__init__): Warn that larry does not
+      copy the data array or label.
+
     * deflarry.py(cumsum), deflarry.py(cumprod), tests/deflarry_test.py,
       RELEASE, doc/source/intro.rst: Bug #585694: cumsum and cumprod crashed
       on dtype=int.
