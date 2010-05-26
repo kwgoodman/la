@@ -333,7 +333,8 @@ class larry(object):
         idx = np.isnan(y.x)
         y[idx] = 0
         y.x.cumsum(axis, out=y.x)
-        y.x[idx] = np.nan
+        if idx.any():
+            y.x[idx] = np.nan
         return y        
 
     def cumprod(self, axis): 
@@ -398,7 +399,8 @@ class larry(object):
         idx = np.isnan(y.x)
         y[idx] = 1
         y.x.cumprod(axis, out=y.x)
-        y.x[idx] = np.nan
+        if idx.any():
+            y.x[idx] = np.nan
         return y
 
     def clip(self, lo, hi):

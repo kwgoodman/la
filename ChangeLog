@@ -1,3 +1,9 @@
+2010-05-26 Keith
+
+    * deflarry.py(cumsum), deflarry.py(cumprod), tests/deflarry_test.py,
+      RELEASE, doc/source/intro.rst: Bug #585694: cumsum and cumprod crashed
+      on dtype=int.
+
 2010-05-25 Keith
 
     * doc/source/work.rst: Indexing by label edits.

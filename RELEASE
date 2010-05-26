@@ -21,7 +21,7 @@ New functions
 
 Enhancements
 ------------
-- Major performance increase in most larry methods!
+- Major performance boost in most larry methods!
 - You can now use an optional dtype when creating larrys
 - Add ability to compare (==, >, !=, etc) larrys with lists and tuples
 - Documentation and unit tests
@@ -42,6 +42,11 @@ Bug fixes
 - #573240 Reduce methods give wrong output with shapes that contain zero
 - #582579 la.afunc.nans: wrong output for str and object dtype
 - #583596 assert_larry_equal crashed when comparing float larry to str larry
+- #585694 cumsum and cumprod crashed on dtype=int
+
+Details
+-------
+For further details see the change log in la/ChangeLog.
 
 
 la 0.2 (avocado)

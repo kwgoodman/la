@@ -105,7 +105,7 @@ After you have installed ``la``, run the suite of unit tests:
     <snip>
     Ran 2526 tests in 1.147s
     OK
-    <nose.result.TextTestResult run=2526 errors=0 failures=0>       
+    <nose.result.TextTestResult run=2528 errors=0 failures=0>       
     
 URLs
 ====

@@ -249,6 +249,14 @@ class Test_unary(unittest.TestCase):
                          [ nan, 5.0]])
         msg = 'cumsum with column of all nans'                 
         ale(actual, desired, msg=msg, original=original)
+        
+    def test_cumsum_7(self):
+        "larry.cumsum_7"
+        original = larry([1, 2])
+        actual = original.cumsum(axis=0)
+        desired = larry([1, 3])
+        msg = 'cumsum with dtype=int'                 
+        ale(actual, desired, msg=msg, original=original)        
 
     def test_cumprod_1(self):
         "larry.cumprod_1"       
@@ -323,6 +331,14 @@ class Test_unary(unittest.TestCase):
                          [ nan, 6.0]])
         msg = 'cumprod with column of all nans'                 
         ale(actual, desired, msg=msg, original=original)
+        
+    def test_cumprod_7(self):
+        "larry.cumprod_7"
+        original = larry([2, 2])
+        actual = original.cumprod(axis=0)
+        desired = larry([2, 4])
+        msg = 'cumprod with dtype=int'                 
+        ale(actual, desired, msg=msg, original=original)        
         
     def test_clip_1(self):
         "larry.clip_1"        
