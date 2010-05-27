@@ -1,5 +1,8 @@
 2010-05-27 Keith
 
+    * deflarry.py: Replace self(type) with larry throughout deflarry.py for
+      speed and ease of reading.
+
     * deflarry.py(__add__), deflarry.py(__mul__): Skip the integrity check
       when making a new larry. 
 

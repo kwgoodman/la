@@ -524,7 +524,7 @@ class larry(object):
         """
         label = self.copylabel()
         x = np.isnan(self.x)
-        return type(self)(x, label)                             
+        return larry(x, label)                             
 
     def isfinite(self):
         """
@@ -551,7 +551,7 @@ class larry(object):
         """    
         label = self.copylabel()
         x = np.isfinite(self.x)
-        return type(self)(x, label)
+        return larry(x, label)
         
     def isinf(self):
         """
@@ -578,7 +578,7 @@ class larry(object):
         """    
         label = self.copylabel()
         x = np.isinf(self.x)
-        return type(self)(x, label) 
+        return larry(x, label) 
         
     def __invert__(self):
         """
@@ -662,7 +662,7 @@ class larry(object):
             else:       
                 x, y, label = self.__align(other)
                 x = x + y
-                return type(self)(x, label, integrity=False)
+                return larry(x, label, integrity=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x + other
             label = self.copylabel()
@@ -700,7 +700,7 @@ class larry(object):
             else:          
                 x, y, label = self.__align(other)        
                 x = x - y
-                return type(self)(x, label)
+                return larry(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x - other
             label = self.copylabel()
@@ -741,7 +741,7 @@ class larry(object):
             else:          
                 x, y, label = self.__align(other)        
                 x = x / y
-                return type(self)(x, label)
+                return larry(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x / other
             label = self.copylabel()
@@ -790,7 +790,7 @@ class larry(object):
             else:           
                 x, y, label = self.__align(other)
                 x = x * y
-                return type(self)(x, label, integrity=False)
+                return larry(x, label, integrity=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x * other
             label = self.copylabel()
@@ -833,7 +833,7 @@ class larry(object):
             else:          
                 x, y, label = self.__align(other)
                 x = np.logical_and(x, y)
-                return type(self)(x, label)
+                return larry(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):            
             x = np.logical_and(self.x, other)
             label = self.copylabel()
@@ -877,7 +877,7 @@ class larry(object):
             else:          
                 x, y, label = self.__align(other)
                 x = np.logical_or(x, y)
-                return type(self)(x, label)
+                return larry(x, label)
         if np.isscalar(other) or isinstance(other, np.ndarray):            
             x = np.logical_or(self.x, other)
             label = self.copylabel()
@@ -1305,7 +1305,7 @@ class larry(object):
             else:    
                 label = self.copylabel()
                 label.pop(axis)
-                return type(self)(x, label)      
+                return larry(x, label)      
         elif axis is None:
             return op(self.x, **kwargs)
         else:
@@ -1537,7 +1537,7 @@ class larry(object):
                 x = x >= y                              
             else:
                 raise ValueError, 'Unknown comparison operator'              
-            return type(self)(x, label)
+            return larry(x, label)
         else:
             raise TypeError, 'Input must be scalar, numpy array, or larry.'
 
@@ -2036,7 +2036,7 @@ class larry(object):
         x = self.x[index]
         if x.shape == (1,):
             return x[0]
-        return type(self)(x, label)            
+        return larry(x, label)            
         
     def fill(self, fill_value):
         """
@@ -2638,7 +2638,7 @@ class larry(object):
         x[index1] = self.x[index2]
         lab = self.copylabel()
         lab[axis] = label
-        return type(self)(x, lab)       
+        return larry(x, lab)       
         
     def morph_like(self, lar):
         """
@@ -2816,7 +2816,7 @@ class larry(object):
         for i in idx:
             label.append(self.label[i])    
         x = self.x.squeeze()
-        return type(self)(x, label)
+        return larry(x, label)
 
     def lag(self, nlag, axis=-1):
         """
@@ -4030,7 +4030,7 @@ class larry(object):
         """
         label = [list(z) for z in self.label]
         x = self.x.copy()
-        return type(self)(x, label)
+        return larry(x, label)
         
     def copylabel(self):
         """
