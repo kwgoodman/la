@@ -658,15 +658,15 @@ class larry(object):
             if self.label == other.label:
                 x = self.x + other.x
                 label = self.copylabel()
-                return larry(x, label)                        
+                return larry(x, label, integrity=False)                        
             else:       
                 x, y, label = self.__align(other)
                 x = x + y
-                return type(self)(x, label)
+                return type(self)(x, label, integrity=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x + other
             label = self.copylabel()
-            return larry(x, label)                 
+            return larry(x, label, integrity=False)                 
         raise TypeError, 'Input must be scalar, array, or larry.' 
     
     __radd__ = __add__
@@ -790,7 +790,7 @@ class larry(object):
             else:           
                 x, y, label = self.__align(other)
                 x = x * y
-                return type(self)(x, label)
+                return type(self)(x, label, integrity=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x * other
             label = self.copylabel()
