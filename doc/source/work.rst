@@ -124,6 +124,17 @@ to create a larry whose data shape does not agree with the label shape:
         raise ValueError, msg % i
     ValueError: Length mismatch in label and x along axis 1
     
+The integrity checks (labels are unique, dimensions of data and label agree,
+etc.) take time. If you wish to skip the checks, then set integrity to False:
+::
+    >>> import numpy as np
+    >>> x = np.random.rand(10, 10)
+    
+    >>> timeit larry(x)
+    100000 loops, best of 3: 5.93 us per loop
+    >>> timeit larry(x, integrity=False)
+    100000 loops, best of 3: 2.42 us per loop
+    
 The following functions can also be used to create larrys:
 
 * **fromtuples**

@@ -23,6 +23,7 @@ Enhancements
 ------------
 - Major performance boost in most larry methods!
 - You can now use an optional dtype when creating larrys
+- You can now optionally skip the integrity test when creating a new larry
 - Add ability to compare (==, >, !=, etc) larrys with lists and tuples
 - Documentation and unit tests
 

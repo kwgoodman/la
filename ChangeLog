@@ -1,5 +1,8 @@
 2010-05-27 Keith
 
+    * deflarry.py, doc/source/work.rst, RELEASE: Skip the integrity check when
+      making a new larry for most all larry methods that create a larry. 
+
     * deflarry.py: Skip the integrity check when making a new larry for all
       the applicable unary methods and the copy method.
 
