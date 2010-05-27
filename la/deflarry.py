@@ -14,7 +14,7 @@ from la.afunc import (group_ranking, group_mean, group_median, shuffle, nans,
 class larry(object):
     "Labeled array"
 
-    def __init__(self, x, label=None, dtype=None):
+    def __init__(self, x, label=None, dtype=None, integrity=True):
         """
         Meet larry, he's a labeled array.
         
@@ -97,32 +97,33 @@ class larry(object):
             x = x.astype(dtype)            
         if label is None:
             label = [range(z) for z in x.shape]
-        ndim = x.ndim
-        if ndim != len(label):
-            raise ValueError, 'Exactly one label per dimension needed'
-        if ndim == 0:
-            # A 0d larry can be created if you comment out this ndim == 0
-            # test. The reason that 0d is not allowed is that not all methods
-            # support 0d larrys
-            raise ValueError, '0d larrys are not supported'
-        for i, l in enumerate(label):
-            nlabel = len(l)
-            if x.shape[i] != nlabel:
-                msg = 'Length mismatch in label and x along axis %d'
-                raise ValueError, msg % i
-            if len(frozenset(l)) != nlabel:
-                # We have duplicates in the label, give an example
-                count = {}
-                for li in l:
-                    count[li] = count.get(li, 0) + 1
-                for key, value in count.iteritems():
-                    if value > 1:
-                        break 
-                msg = "Elements of label not unique along axis %d. "
-                msg += "There are %d labels named `%s`."          
-                raise ValueError, msg % (i, value, key)
-            if type(l) is not list:
-                raise ValueError, 'label must be a list of lists'
+        if integrity: 
+            ndim = x.ndim
+            if ndim != len(label):
+                raise ValueError, 'Exactly one label per dimension needed'
+            if ndim == 0:
+                # A 0d larry can be created if you comment out this ndim == 0
+                # test. The reason that 0d is not allowed is that not all
+                # methods support 0d larrys
+                raise ValueError, '0d larrys are not supported'
+            for i, l in enumerate(label):
+                nlabel = len(l)
+                if x.shape[i] != nlabel:
+                    msg = 'Length mismatch in label and x along axis %d'
+                    raise ValueError, msg % i
+                if len(frozenset(l)) != nlabel:
+                    # We have duplicates in the label, give an example
+                    count = {}
+                    for li in l:
+                        count[li] = count.get(li, 0) + 1
+                    for key, value in count.iteritems():
+                        if value > 1:
+                            break 
+                    msg = "Elements of label not unique along axis %d. "
+                    msg += "There are %d labels named `%s`."          
+                    raise ValueError, msg % (i, value, key)
+                if type(l) is not list:
+                    raise ValueError, 'label must be a list of lists'          
         self.x = x
         self.label = label
 
@@ -785,7 +786,7 @@ class larry(object):
             if self.label == other.label:
                 x = self.x * other.x
                 label = self.copylabel()
-                return larry(x, label)                          
+                return larry(x, label, integrity=False)                          
             else:           
                 x, y, label = self.__align(other)
                 x = x * y
@@ -793,7 +794,7 @@ class larry(object):
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x * other
             label = self.copylabel()
-            return larry(x, label)   
+            return larry(x, label, integrity=False)   
         raise TypeError, 'Input must be scalar, array, or larry.'
 
     __rmul__ = __mul__

@@ -1,3 +1,9 @@
+2010-05-27 Keith
+
+    * deflarry.py(__init__): Make the integrity checks optional.
+    
+    * deflarry.py(__mul__): Skip the integrity check when making a new larry.        
+
 2010-05-26 Keith
 
     * doc/source/work.rst, deflarry.py(__init__): Warn that larry does not
