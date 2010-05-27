@@ -153,7 +153,7 @@ class larry(object):
         """
         x = np.log(self.x)
         label = self.copylabel()
-        return larry(x, label) 
+        return larry(x, label, integrity=False) 
 
     def exp(self):
         """
@@ -178,7 +178,7 @@ class larry(object):
         """
         x = np.exp(self.x)
         label = self.copylabel()
-        return larry(x, label)
+        return larry(x, label, integrity=False)
         
     def sqrt(self):
         """
@@ -203,7 +203,7 @@ class larry(object):
         """
         x = np.sqrt(self.x)
         label = self.copylabel()
-        return larry(x, label)
+        return larry(x, label, integrity=False)
 
     def sign(self):
         """
@@ -231,7 +231,7 @@ class larry(object):
         """
         x = np.sign(self.x)
         label = self.copylabel()
-        return larry(x, label)
+        return larry(x, label, integrity=False)
         
     def power(self, q):               
         """
@@ -261,7 +261,7 @@ class larry(object):
         """
         x = np.power(self.x, q)
         label = self.copylabel()
-        return larry(x, label)
+        return larry(x, label, integrity=False)
         
     def __pow__(self, q):
         """
@@ -524,7 +524,7 @@ class larry(object):
         """
         label = self.copylabel()
         x = np.isnan(self.x)
-        return larry(x, label)                             
+        return larry(x, label, integrity=False)                             
 
     def isfinite(self):
         """
@@ -551,7 +551,7 @@ class larry(object):
         """    
         label = self.copylabel()
         x = np.isfinite(self.x)
-        return larry(x, label)
+        return larry(x, label, integrity=False)
         
     def isinf(self):
         """
@@ -578,7 +578,7 @@ class larry(object):
         """    
         label = self.copylabel()
         x = np.isinf(self.x)
-        return larry(x, label) 
+        return larry(x, label, integrity=False) 
         
     def __invert__(self):
         """
@@ -624,7 +624,7 @@ class larry(object):
         """
         if self.dtype != bool:
             raise TypeError, 'Only larrys with bool dtype can be inverted.'
-        return larry(~self.x, self.copylabel())
+        return larry(~self.x, self.copylabel(), integrity=False)
         
     # Binary Functions ------------------------------------------------------- 
     
@@ -4030,7 +4030,7 @@ class larry(object):
         """
         label = [list(z) for z in self.label]
         x = self.x.copy()
-        return larry(x, label)
+        return larry(x, label, integrity=False)
         
     def copylabel(self):
         """
