@@ -129,11 +129,12 @@ etc.) take time. If you wish to skip the checks, then set integrity to False:
 ::
     >>> import numpy as np
     >>> x = np.random.rand(10, 10)
+    >>> label = [range(10), range(10)]
     
-    >>> timeit larry(x)
-    100000 loops, best of 3: 5.93 us per loop
-    >>> timeit larry(x, integrity=False)
-    100000 loops, best of 3: 2.42 us per loop
+    >>> timeit larry(x, label)
+    100000 loops, best of 3: 4.58 us per loop
+    >>> timeit larry(x, label, integrity=False)
+    1000000 loops, best of 3: 1.22 us per loop
     
 The following functions can also be used to create larrys:
 

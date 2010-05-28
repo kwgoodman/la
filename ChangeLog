@@ -1,5 +1,7 @@
 2010-05-28 Keith
 
+    * doc/source/work.rst: Tweak.
+
     * deflarry.py(morph), tests/deflarry_test.py: Add back integrity check.
       Add unit test.
       
