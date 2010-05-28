@@ -1,3 +1,8 @@
+2010-05-28 Keith
+
+    * deflarry.py(morph), tests/deflarry_test.py: Add back integrity check.
+      Add unit test.
+      
 2010-05-27 Keith
 
     * deflarry.py, doc/source/work.rst, RELEASE: Skip the integrity check when

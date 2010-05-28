@@ -2643,7 +2643,7 @@ class larry(object):
         x[index1] = self.x[index2]
         lab = self.copylabel()
         lab[axis] = label
-        return larry(x, lab, integrity=False)       
+        return larry(x, lab)       
         
     def morph_like(self, lar):
         """

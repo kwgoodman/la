@@ -3336,6 +3336,10 @@ class Test_alignment(unittest.TestCase):
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, l), 'Reference found')
         
+    def test_morph_7(self):
+        lar = larry([1, 2, 3])
+        self.failUnlessRaises(ValueError, lar.morph, [0, 0], 0)
+       
     def test_morph_like_1(self):
         "larry.morph_like_1"
         t = np.array([[ 4.0, 3.0],
