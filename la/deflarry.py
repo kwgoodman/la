@@ -906,7 +906,6 @@ class larry(object):
             idxs = []
             idxo = []
             label = []
-            shape = []
             for ls, lo in zip(self.copylabel(), other.label):
                 if ls == lo:
                     lab = ls
@@ -922,7 +921,6 @@ class larry(object):
                 label.append(lab)
                 idxs.append(ids)
                 idxo.append(ido)
-                shape.append(len(lab))
             x = self.x[np.ix_(*idxs)]
             y = other.x[np.ix_(*idxo)]
         return x, y, label

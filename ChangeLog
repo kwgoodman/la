@@ -1,5 +1,7 @@
 2010-05-29 Keith
 
+    * deflarry.py(__align): More speed.
+
     * deflarry.py(__align): More speed, especially for large larrys.
 
 2010-05-28 Keith
