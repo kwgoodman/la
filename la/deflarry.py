@@ -923,9 +923,7 @@ class larry(object):
                 idxs.append(ids)
                 idxo.append(ido)
                 shape.append(len(lab))
-            shape = tuple(shape)
-            x = np.zeros(shape, dtype=self.x.dtype)
-            x += self.x[np.ix_(*idxs)]
+            x = self.x[np.ix_(*idxs)]
             y = other.x[np.ix_(*idxo)]
         return x, y, label
                   
