@@ -6,8 +6,31 @@ from itertools import izip
 
 import numpy as np
 
+try:
+    # The c version is faster...
+    from la.util.clistmap import listmap
+except ImportError:
+    # ...but perhaps it did not compile when you built the la package? So
+    # we'll use the python version. If you are unsure which version you are
+    # using, the doc string will tell you.
+    def listmap(list1, list2):
+        """
+        list of indices idx such that [list1[i] for i in idx] is list2.
+        
+        This function is equivalent to idx = map(list1.index, list2) except
+        that it is O(n) instead of O(n^2).
+        
+        All elements in list2 must be in list1 
+        
+        NOTE: This is the slower python version of the function; there is a 
+        faster C version that setup.py will automatically try to compile at
+        build (setup.py) time.   
+        """
+        list1map = dict(izip(list1, xrange(len(list1))))
+        idx = [list1map[i] for i in list2]
+        return idx
+        
 C = string.letters + string.digits
-
 def randstring(n):
     "Random characters string selected from lower, upper letters and digits."
     s = []
@@ -240,17 +263,4 @@ def fromlists(xs, labels):
         x.fill(np.nan)
         x[index] = xs 
     return x, label 
-
-def listmap(list1, list2):
-    """
-    list of indices idx such that [list1[i] for i in idx] is list2.
-    
-    This function is equivalent to idx = map(list1.index, list2) except that
-    it is O(n) instead of O(n^2).
-    
-    All elements in list2 must be in list1    
-    """
-    list1map = dict(izip(list1, xrange(len(list1))))
-    idx = [list1map[i] for i in list2]
-    return idx
 

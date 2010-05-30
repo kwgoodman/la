@@ -2,6 +2,7 @@
 
 import os
 from distutils.core import setup
+from distutils.extension import Extension
 
 CLASSIFIERS = ["Development Status :: 3 - Alpha",
                "Intended Audience :: Science/Research",
@@ -50,27 +51,53 @@ MINOR               = VER[1]
 MICRO               = VER[2]
 ISRELEASED          = False
 VERSION             = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
-PACKAGES            = ["la", "la/tests", "la/util", "la/util/tests"]
-PACKAGE_DATA        = {'la': ['LICENSE']}
+PACKAGES            = ["la", "la/tests", "la/util", "la/util/tests", "la/src"]
+PACKAGE_DATA        = {'la': ['LICENSE'], 'la/src': ['clistmap.pyx',
+                                                     'clistmap.c']}
 REQUIRES            = ["numpy"]
 
 
-setup(name=NAME,
-      maintainer=MAINTAINER,
-      maintainer_email=MAINTAINER_EMAIL,
-      description=DESCRIPTION,
-      long_description=LONG_DESCRIPTION,
-      url=URL,
-      download_url=DOWNLOAD_URL,
-      license=LICENSE,
-      classifiers=CLASSIFIERS,
-      author=AUTHOR,
-      author_email=AUTHOR_EMAIL,
-      platforms=PLATFORMS,
-      version=VERSION,
-      packages=PACKAGES,
-      package_data=PACKAGE_DATA,
-      requires=REQUIRES,
-      zip_safe=False
-     )
-
+try:
+    # Try to compile clistmap.c
+    setup(name=NAME,
+          maintainer=MAINTAINER,
+          maintainer_email=MAINTAINER_EMAIL,
+          description=DESCRIPTION,
+          long_description=LONG_DESCRIPTION,
+          url=URL,
+          download_url=DOWNLOAD_URL,
+          license=LICENSE,
+          classifiers=CLASSIFIERS,
+          author=AUTHOR,
+          author_email=AUTHOR_EMAIL,
+          platforms=PLATFORMS,
+          version=VERSION,
+          packages=PACKAGES,
+          package_data=PACKAGE_DATA,
+          requires=REQUIRES,
+          zip_safe=False,
+          ext_modules = [Extension("la.util.clistmap", ["la/src/clistmap.c"])]          
+         )
+except SystemExit:
+    # Probably clistmap.c failed to compile, so use slower python version
+    msg = '\nLooks like clistmap.c failed to compile, so the slower python '
+    msg += 'version will be used instead.\n'  
+    print msg        
+    setup(name=NAME,
+          maintainer=MAINTAINER,
+          maintainer_email=MAINTAINER_EMAIL,
+          description=DESCRIPTION,
+          long_description=LONG_DESCRIPTION,
+          url=URL,
+          download_url=DOWNLOAD_URL,
+          license=LICENSE,
+          classifiers=CLASSIFIERS,
+          author=AUTHOR,
+          author_email=AUTHOR_EMAIL,
+          platforms=PLATFORMS,
+          version=VERSION,
+          packages=PACKAGES,
+          package_data=PACKAGE_DATA,
+          requires=REQUIRES,
+          zip_safe=False
+         )     
