@@ -903,14 +903,14 @@ class larry(object):
             if self.ndim != other.ndim:
                 msg = 'Binary operation on two larrys with different dimension'
                 raise IndexError, msg
-            idxs = []
-            idxo = []
             label = []
+            x = self.x
+            y = other.x 
+            ax = -1           
             for ls, lo in zip(self.copylabel(), other.label):
+                ax += 1
                 if ls == lo:
                     lab = ls
-                    ids = range(len(lab))
-                    ido = ids
                 else:
                     lab = list(frozenset(ls) & frozenset(lo))
                     if len(lab) == 0:
@@ -918,11 +918,9 @@ class larry(object):
                     lab.sort()
                     ids = listmap(ls, lab)
                     ido = listmap(lo, lab)
+                    x = np.take(x, ids, ax)
+                    y = np.take(y, ido, ax)    
                 label.append(lab)
-                idxs.append(ids)
-                idxo.append(ido)
-            x = self.x[np.ix_(*idxs)]
-            y = other.x[np.ix_(*idxo)]
         return x, y, label
                   
     # Reduce functions -------------------------------------------------------
@@ -2633,10 +2631,8 @@ class larry(object):
         idx1 = listmap(label, idx0)
         idx2 = listmap(self.label[axis], idx0)
         index1 = [slice(None)] * self.ndim
-        index1[axis] = idx1
-        index2 = [slice(None)] * self.ndim
-        index2[axis] = idx2        
-        x[index1] = self.x[index2]
+        index1[axis] = idx1       
+        x[index1] = np.take(self.x, idx2, axis)
         lab = self.copylabel()
         lab[axis] = label
         return larry(x, lab)       

@@ -1,3 +1,8 @@
+2010-05-30 Keith
+
+    * deflarry.py(__align), deflarry.py(morph): Huge speed increase from using
+      the amazing np.take().    
+
 2010-05-29 Keith
 
     * deflarry.py(__align): More speed.
