@@ -1,4 +1,4 @@
-from itertools import izip
+"Cython version of listmap in la/util/misc.py"
 
 def listmap(list list1, list list2):
     """

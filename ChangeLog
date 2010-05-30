@@ -1,5 +1,10 @@
 2010-05-30 Keith
 
+    * src/clistmap.pyx, src/clistmap.c: Tweaked clistmap.pyx.
+    
+    * deflarry.py(morph): Did I really make that last commit without running
+      the unit tests?
+
     * src, src/clistmap.pyx, src/clistmap.c, src/setup.py, util/misc.py,
       setup.py: Added the first C extension (cython converted to C) to the la
       package. setup.py will try to compile it (clistmap.c) at the build time

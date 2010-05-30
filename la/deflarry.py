@@ -2627,7 +2627,7 @@ class larry(object):
             x = np.zeros(shape, dtype=self.dtype)   
         else:
             x = nans(shape)       
-        idx0 = tuple(set(self.label[axis]) & set(label))
+        idx0 = list(set(self.label[axis]) & set(label))
         idx1 = listmap(label, idx0)
         idx2 = listmap(self.label[axis], idx0)
         index1 = [slice(None)] * self.ndim
