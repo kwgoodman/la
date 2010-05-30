@@ -1,5 +1,7 @@
 2010-05-30 Keith
 
+    * doc/source/intro.rst: Update for cython.
+
     * src/clistmap.pyx, src/clistmap.c: Tweaked clistmap.pyx.
     
     * deflarry.py(morph): Did I really make that last commit without running

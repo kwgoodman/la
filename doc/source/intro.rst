@@ -77,17 +77,13 @@ Installation
 
 The ``la`` package requires Python and Numpy. Numpy 1.4.1 or newer is
 recommended for its improved NaN handling. Also some of the unit tests in the
-``la`` package require Numpy 1.4.1 or newer and many require
+``la`` package require Numpy 1.4 or newer and many require
 `nose <http://somethingaboutorange.com/mrl/projects/nose>`_.
 
 To save and load larrys in HDF5 format, you need
 `h5py <http://h5py.alfven.org>`_ with HDF5 1.8.
-        
-The ``la`` package currently contains no extensions, just Python code, so
-there is nothing to compile. You can just save the ``la`` package and make
-sure Python can find it.
-    
-Atlernatively, you can install the traditional way:
+            
+To install ``la``:
 ::
     $ python setup.py build
     $ sudo python setup.py install
@@ -103,9 +99,19 @@ After you have installed ``la``, run the suite of unit tests:
     >>> import la
     >>> la.test()
     <snip>
-    Ran 2526 tests in 1.147s
+    Ran 2529 tests in 1.147s
     OK
-    <nose.result.TextTestResult run=2528 errors=0 failures=0>       
+    <nose.result.TextTestResult run=2529 errors=0 failures=0> 
+    
+The ``la`` package currently contains one C extension but if it doesn't
+compile there's an automatic fallback to a python version of the function. The
+doc string of the ``listmap`` function tells you which version (python or C)
+you are using. To import ``listmap``:
+::
+    >>> from la.util.misc import listmap
+    
+Since ``la`` can run in a pure python mode, you can use ``la`` by just saving
+it and making sure that python can find it.    
     
 URLs
 ====
@@ -127,9 +133,9 @@ URLs
 package name                              ``la``
 web site                                  http://larry.sourceforge.net
 license                                   Simplified BSD
-programming language                      Python
+programming languages                     Python, Cython
 required dependencies                     Python, NumPy
-optional dependencies                     h5py, Scipy, nose
+optional dependencies                     h5py, Scipy, nose, c-compiler
 year started (open source)                2008 (2010)
 ======================================    ====================================
 
@@ -163,7 +169,5 @@ Numpy                                     ``la``
 ``arr.astype(float)``                     ``lar.astype(float)``
 ``arr1 + arr2``                           ``lar1 + lar2``
 ``arr[:,0]``                              ``lar[:,0]``
-fancy indexing: ``arr[[0,1], [0,1]]``     not supported
-not supported                             indexing by label: ``lar2.lix[:, ['a', 'b']]``
 ======================================    ====================================
 
