@@ -1,5 +1,8 @@
 2010-05-30 Keith
 
+    * deflarry.py(__align), deflarry.py(morph): Use arr.take() instead of
+      np.take(arr,...).
+
     * deflarry.py(__align), deflarry.py(morph): Huge speed increase from using
       the amazing np.take().    
 

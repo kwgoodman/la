@@ -918,8 +918,8 @@ class larry(object):
                     lab.sort()
                     ids = listmap(ls, lab)
                     ido = listmap(lo, lab)
-                    x = np.take(x, ids, ax)
-                    y = np.take(y, ido, ax)    
+                    x = x.take(ids, ax)
+                    y = y.take(ido, ax)    
                 label.append(lab)
         return x, y, label
                   
@@ -2632,7 +2632,7 @@ class larry(object):
         idx2 = listmap(self.label[axis], idx0)
         index1 = [slice(None)] * self.ndim
         index1[axis] = idx1       
-        x[index1] = np.take(self.x, idx2, axis)
+        x[index1] = self.x.take(idx2, axis)
         lab = self.copylabel()
         lab[axis] = label
         return larry(x, lab)       
