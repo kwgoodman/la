@@ -18,6 +18,7 @@ New functions
 - la.util.resample.cross_validation: k-fold cross validation index iterator
 - la.util.resample.bootstrap: bootstrap index iterator
 - la.util.misc.listmap: O(n) version of map(list1.index, list2)
+- la/src/clistmap.pyx: Cython version of listmap with python fallback
 
 Enhancements
 ------------
