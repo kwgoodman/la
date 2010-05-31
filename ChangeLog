@@ -1,3 +1,8 @@
+2010-05-31 Keith
+
+    * sandbox, sandbox/autotimeit.py, sandbox/bench.py: Added a sandbox to la.
+      And in the sandbox added a proof of concept for a benchmark suite.
+
 2010-05-30 Keith
 
     * RELEASE: Update for cython.
