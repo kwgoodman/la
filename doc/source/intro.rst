@@ -11,8 +11,8 @@ Who's larry?
 ============
 
 The main class of the la package is a labeled array, larry. A larry consists
-of a data array and a label list. The data array is stored as a NumPy array
-and the label list as a list of lists.
+of data and labels. The data is stored as a NumPy array and the labels as a
+list of lists.
 
 Here's larry in schematic form:
 ::    
@@ -135,7 +135,7 @@ web site                                  http://larry.sourceforge.net
 license                                   Simplified BSD
 programming languages                     Python, Cython
 required dependencies                     Python, NumPy
-optional dependencies                     h5py, Scipy, nose, c-compiler
+optional dependencies                     h5py, Scipy, nose, C-compiler
 year started (open source)                2008 (2010)
 ======================================    ====================================
 
@@ -157,10 +157,10 @@ binary operations on two data objects     intersection of labels
 IO                                        HDF5, partial support for CSV
 ======================================    ====================================
 
-**Brief comparison to Numpy**
+**Similar to Numpy**
 
 ======================================    ====================================
-Numpy                                     ``la``
+Numpy array                               ``la`` larry
 ======================================    ====================================
 ``arr = np.array([[1, 2], [3, 4]])``      ``lar = la.larry([[1, 2], [3, 4]])`` Note ``(arr == lar.x).all()`` is True 
 ``np.nansum(arr)``                        ``lar.sum()``
