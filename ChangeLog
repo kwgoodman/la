@@ -1,5 +1,7 @@
 2010-06-02 Keith
 
+    * deflarry.py(__getitem__): Faster.
+
     * doc/source/intro.rst: Tweak.
 
 2010-05-31 Keith

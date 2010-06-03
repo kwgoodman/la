@@ -1620,7 +1620,7 @@ class larry(object):
         elif typidx is list:
             label = list(self.label)
             label[0] = [label[0][int(i)] for i in index]
-            x = self.x[index]                              
+            x = self.x.take(index, axis=0)                              
         else:        
             msg = 'Only slice, integer, and seq (list, tuple, 1d array)'
             msg = msg + ' indexing supported'
