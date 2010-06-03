@@ -1,3 +1,7 @@
+2010-06-03 Keith
+
+    * afunc.py(ranking), deflarry.py(ranking): Docstring tweak.
+
 2010-06-02 Keith
 
     * deflarry.py(__getitem__): Faster.

@@ -2467,11 +2467,14 @@ class larry(object):
         ----------
         axis : int, optional
             Axis to rank over. Default axis is 0.
-        norm: str
+        norm: str, optional
             A string that specifies the normalization:
-            '0,N-1'     Zero to N-1 ranking
-            '-1,1'      Scale zero to N-1 ranking to be between -1 and 1
-            'gaussian'  Rank data then scale to a Gaussian distribution
+                ==========  ================================================
+                '0,N-1'     Zero to N-1 ranking
+                '-1,1'      Scale zero to N-1 ranking to be between -1 and 1
+                'gaussian'  Rank data then scale to a Gaussian distribution
+                ==========  ================================================
+            The default ranking is '-1,1'.    
         ties: bool
             If two elements of `x` have the same value then they will be
             ranked by their order in the array (False). If `ties` is set to
