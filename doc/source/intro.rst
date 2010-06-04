@@ -117,11 +117,11 @@ URLs
 ====
 
 ===============   ========================================================
- code              https://launchpad.net/larry
  docs              http://larry.sourceforge.net
+ download          http://pypi.python.org/pypi/la
+ code              https://launchpad.net/larry
  list              http://groups.google.ca/group/pystatsmodels
  devel list        https://launchpad.net/~larry-discuss
- devel archive     https://lists.launchpad.net/larry-discuss/threads.html
 ===============   ========================================================
 
 ``la`` at a glance
