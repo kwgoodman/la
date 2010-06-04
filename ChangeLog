@@ -1,5 +1,9 @@
 2010-06-04 Keith
 
+    * RELEASE: Set release date to today!
+    
+    * doc/source/work.rst: doc tweak.
+
     * version.py, doc/source/conf.py: Bump version number to 0.3 in prep for
       release.
       

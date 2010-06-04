@@ -397,7 +397,7 @@ Indexing into a larry is similar to indexing into a Numpy array:
 The following types of indexing are not currently supported by larry (but they
 are supported when doing an assignment by indexing, see :ref:`assignment`):
 
-* Fancy indexing
+* Some forms of fancy indexing
 * Indexing with Ellipsis 
 
 .. _label_indexing:
