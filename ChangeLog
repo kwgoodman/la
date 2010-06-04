@@ -1,3 +1,10 @@
+2010-06-04 Keith
+
+    * version.py, doc/source/conf.py: Bump version number to 0.3 in prep for
+      release.
+      
+    * doc/launchpad.txt, doc/source/intro.rst: Doc tweak.
+
 2010-06-03 Keith
 
     * afunc.py(ranking), deflarry.py(ranking): Docstring tweak.

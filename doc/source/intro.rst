@@ -12,7 +12,7 @@ Who's larry?
 
 The main class of the la package is a labeled array, larry. A larry consists
 of data and labels. The data is stored as a NumPy array and the labels as a
-list of lists.
+list of lists (one list per dimension).
 
 Here's larry in schematic form:
 ::    

@@ -46,9 +46,9 @@ copyright = u'2010, Archipel Asset Management AB'
 # built documents.
 #
 # The short X.Y version.
-version = '0.2'
+version = '0.3'
 # The full version, including alpha/beta/rc tags.
-release = '0.2'
+release = '0.3'
 
 # JP: added from sphinxdocs
 #autosummary_generate = True

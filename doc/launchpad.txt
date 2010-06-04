@@ -1,8 +1,8 @@
 Label the rows, columns, any dimension, of your NumPy arrays.
 
 The main class of the la package is a labeled array, larry. A larry consists
-of a data array and a label list. The data array is stored as a NumPy array
-and the label list as a list of lists.
+of data and labels. The data is stored as a NumPy array and the labels as a
+list of lists (one list per dimension).
 
 Alignment by label is automatic when you add (or subtract, multiply, divide)
 two larrys.
@@ -16,8 +16,6 @@ dictionary-like interface.
     
 larry adds the convenience of labels, provides many built-in methods, and
 let's you use many of your existing NumPy array functions.
-
-Note: There's nothing to compile; la is pure Python.
 
 docs  http://larry.sourceforge.net
 code  https://code.launchpad.net/~kwgoodman/larry/trunk
