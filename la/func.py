@@ -322,7 +322,7 @@ def rand(*args, **kwargs):
     
     A shape (2, 2) random larry:
     
-    >>> la.rand(2,2)
+    >>> la.rand(2, 2)
     label_0
         0
         1

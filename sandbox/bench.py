@@ -24,8 +24,7 @@ def bench(verbose=True):
     return la.larry.fromtuples(results)                
 
 def fx(shape):
-    x = np.random.randn(*shape)
-    lar = la.larry(x)
+    lar = la.randn(*shape)
     lar.shufflelabel()
     return lar
     

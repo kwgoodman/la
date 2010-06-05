@@ -205,8 +205,8 @@ and delete the old archive.
 Before looking at the size of the archive, let's add some bigger larrys:
 ::
     >>> import numpy as np
-    >>> io['rand'] = la.larry(np.random.rand(1000, 1000))
-    >>> io['randn'] = la.larry(np.random.rand(1000, 1000))
+    >>> io['rand'] = la.rand(1000, 1000)
+    >>> io['randn'] = la.randn(1000, 1000)
     >>> io    
     larry  dtype    shape       
     ----------------------------

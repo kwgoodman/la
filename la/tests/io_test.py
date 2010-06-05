@@ -8,6 +8,7 @@ import datetime
 import numpy as np
 nan = np.nan
 
+import la
 from la import larry
 from la import (IO, archive_directory)
 from la.util.testing import assert_larry_equal
@@ -39,7 +40,7 @@ class Test_io(unittest.TestCase):
     def test_io_2(self):
         "io_repack"
         io = IO(self.filename)                
-        io['larry'] = larry(np.random.rand(100,100))
+        io['larry'] = la.rand(100, 100)
         fs1 = io.freespace
         sp1 = io.space
         del io['larry']

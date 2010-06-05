@@ -1,5 +1,8 @@
 2010-06-05 Keith
 
+    * doc/source/archive.rst, func.py, tests/io_test.py, sandbox/bench.py:
+      Use new rand and randn function.
+
     * func.py(rand), func.py(randn), doc/source/functions.rst, RELEASE,
       __init__.py, doc/source/work.rst: Added functions rand and randn both of
       which return larrys.
