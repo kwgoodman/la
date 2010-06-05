@@ -279,4 +279,202 @@ def cov(lar):
     y = lar.copy()
     y.label[1] = list(y.label[0])
     y.x = covMissing(y.x)
-    return y                
+    return y
+
+# Random -----------------------------------------------------------    
+    
+def rand(*args, **kwargs):
+    """
+    Random samples from a uniform distribution in a given shape.
+    
+    The random samples are from a uniform distribution over ``[0, 1)``.
+    
+    Parameters
+    ----------
+    args : `n` ints, optional
+        The dimensions of the returned larry, should be all positive. These
+        may be omitted if you pass in a label as a keyword argument.
+    kwargs : keyword arguments, optional
+        Keyword arguments to use in the construction of the larry such as
+        label and integrity. If a label is passed then its dimensions must
+        match the `n` integers passed in or, optionally, you can pass in the
+        label without the `n` shape integers. If rand is passed in then that
+        will be used to generate the random numbers. In that way you can set
+        the state of the random number generator outside of this function.  
+    
+    Returns
+    -------
+    Z : larry or float
+        A ``(d1, ..., dn)``-shaped larry of floating-point samples from
+        a uniform distribution, or a single such float if no parameters were
+        supplied.
+    
+    See Also
+    --------
+    la.func.randn : Random samples from the "standard normal" distribution.
+    
+    Examples
+    --------
+    A single random sample:
+    
+    >>> la.rand()
+    0.64323350463488804
+    
+    A shape (2, 2) random larry:
+    
+    >>> la.rand(2,2)
+    label_0
+        0
+        1
+    label_1
+        0
+        1
+    x
+    array([[ 0.09277439,  0.94194077],
+           [ 0.72887997,  0.41124147]])
+           
+    A shape (2, 2) random larry with given labels:
+           
+    >>> la.rand(label=[['row1', 'row2'], ['col1', 'col2']])
+    label_0
+        row1
+        row2
+    label_1
+        col1
+        col2
+    x
+    array([[ 0.3449072 ,  0.40397174],
+           [ 0.7791279 ,  0.86084403]])
+           
+    Results are repeatable if you set the state of the random number generator
+    outside of la.rand:
+           
+    >>> import numpy as np
+    >>> rs = np.random.RandomState([1, 2, 3])
+    >>> la.randn(randn=rs.randn)
+    0.89858244820995015
+    >>> la.randn(randn=rs.randn)
+    0.25528876596298244
+    >>> rs = np.random.RandomState([1, 2, 3])
+    >>> la.randn(randn=rs.randn)
+    0.89858244820995015
+    >>> la.randn(randn=rs.randn)
+    0.25528876596298244
+        
+    """
+    if 'rand' in kwargs:
+        randfunc = kwargs['rand']
+        kwargs = dict(kwargs)
+        del kwargs['rand']
+    else:
+        randfunc = np.random.rand   
+    if len(args) > 0:
+        return larry(randfunc(*args), **kwargs)
+    elif 'label' in kwargs:
+        n = [len(z) for z in kwargs['label']]
+        return larry(randfunc(*n), **kwargs)     
+    elif (len(args) == 0) and (len(kwargs) == 0):
+        return randfunc()
+    elif (len(args) == 0) and (len(kwargs) == 1) and ('rand' in kwargs):
+        return randfunc()    
+    else:
+        raise ValueError, 'Input parameters not recognized'
+    
+def randn(*args, **kwargs):
+    """
+    Random samples from the "standard normal" distribution in a given shape.
+    
+    The random samples are from a "normal" (Gaussian) distribution of mean 0
+    and variance 1.
+    
+    Parameters
+    ----------
+    args : `n` ints, optional
+        The dimensions of the returned larry, should be all positive. These
+        may be omitted if you pass in a label as a keyword argument.
+    kwargs : keyword arguments, optional
+        Keyword arguments to use in the construction of the larry such as
+        label and integrity. If a label is passed then its dimensions must
+        match the `n` integers passed in or, optionally, you can pass in the
+        label without the `n` shape integers. If randn is passed in then that
+        will be used to generate the random numbers. In that way you can set
+        the state of the random number generator outside of this function.  
+    
+    Returns
+    -------
+    Z : larry or float
+        A ``(d1, ..., dn)``-shaped larry of floating-point samples from
+        the standard normal distribution, or a single such float if
+        no parameters were supplied.
+    
+    See Also
+    --------
+    la.func.rand : Random values from a uniform distribution in a given shape.
+    
+    Examples
+    --------
+    A single random sample:    
+    
+    >>> la.randn()
+    0.33086946957034052
+    
+    A shape (2, 2) random larry:    
+    
+    >>> la.randn(2, 2)
+    label_0
+        0
+        1
+    label_1
+        0
+        1
+    x
+    array([[-0.08182341,  0.79768108],
+           [-0.23584547,  1.80118376]])
+           
+    A shape (2, 2) random larry with given labels:           
+           
+    >>> la.randn(label=[['row1', 'row2'], ['col1', 'col2']])
+    label_0
+        row1
+        row2
+    label_1
+        col1
+        col2
+    x
+    array([[ 0.10737701, -0.24947824],
+           [ 1.51021208,  1.00280387]])
+
+    Results are repeatable if you set the state of the random number generator
+    outside of la.rand:
+
+    >>> import numpy as np
+    >>> rs = np.random.RandomState([1, 2, 3])
+    >>> la.randn(randn=rs.randn)
+    0.89858244820995015
+    >>> la.randn(randn=rs.randn)
+    0.25528876596298244
+    >>> rs = np.random.RandomState([1, 2, 3])
+    >>> la.randn(randn=rs.randn)
+    0.89858244820995015
+    >>> la.randn(randn=rs.randn)
+    0.25528876596298244
+    
+    """
+    if 'randn' in kwargs:
+        randnfunc = kwargs['randn']
+        kwargs = dict(kwargs)
+        del kwargs['randn']        
+    else:
+        randnfunc = np.random.randn   
+    if len(args) > 0:
+        return larry(randnfunc(*args), **kwargs)
+    elif 'label' in kwargs:
+        n = [len(z) for z in kwargs['label']]
+        return larry(randnfunc(*n), **kwargs)     
+    elif (len(args) == 0) and (len(kwargs) == 0):
+        return randnfunc()
+    elif (len(args) == 0) and (len(kwargs) == 1) and ('randn' in kwargs):
+        return randnfunc()         
+    else:
+        raise ValueError, 'Input parameters not recognized'
+                            

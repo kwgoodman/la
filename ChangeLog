@@ -1,3 +1,11 @@
+2010-06-05 Keith
+
+    * func.py(rand), func.py(randn), doc/source/functions.rst, RELEASE,
+      __init__.py, doc/source/work.rst: Added functions rand and randn both of
+      which return larrys.
+  
+    * LICENSE: Started a list of what code was taken from where.
+
 2010-06-04 Keith
 
     * setup.py: Make it easier to upload to pypi.

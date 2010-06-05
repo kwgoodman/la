@@ -50,4 +50,11 @@ Miscellaneous functions that operate on larrys.
 
 .. autofunction:: la.func.cov
 
+------------
+
+.. autofunction:: la.func.rand
+
+------------
+
+.. autofunction:: la.func.randn
 

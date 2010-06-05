@@ -1,6 +1,15 @@
 larry is distributed under a Simplified BSD license. Parts of NumPy, Scipy and
 numpydoc, which all have BSD licenses, are included in larry.
 
+Numpy
+    la/deflarry.py(astype): Docstring
+    la/func.py(rand): Docstring
+    la/func.py(randn): Docstring
+Scipy
+    la/util/scipy.py: Functions and docstrings
+numpydoc
+    la/doc/shinxext/: Entire directory                
+
 ---------------------------------------------------------------------------
 la license:
 

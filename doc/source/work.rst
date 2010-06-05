@@ -135,7 +135,32 @@ etc.) take time. If you wish to skip the checks, then set integrity to False:
     100000 loops, best of 3: 4.58 us per loop
     >>> timeit larry(x, label, integrity=False)
     1000000 loops, best of 3: 1.22 us per loop
-    
+
+You can also create larrys, filled with random samples, using **rand** and
+**randn**:
+::
+    >>> la.rand(2,2)
+    label_0
+        0
+        1
+    label_1
+        0
+        1
+    x
+    array([[ 0.09277439,  0.94194077],
+           [ 0.72887997,  0.41124147]])
+           
+    >>> la.rand(label=[['row1', 'row2'], ['col1', 'col2']])
+    label_0
+        row1
+        row2
+    label_1
+        col1
+        col2
+    x
+    array([[ 0.3449072 ,  0.40397174],
+           [ 0.7791279 ,  0.86084403]])
+
 The following functions can also be used to create larrys:
 
 * **fromtuples**

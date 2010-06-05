@@ -3,6 +3,17 @@
 Release Notes
 =============
 
+la 0.4 (celery)
+===============
+
+*Release date: Not yet released, in development*
+
+New functions
+-------------
+- la.rand: Random samples from a uniform distribution.
+- la.randn: Random samples from a Gaussian distribution.
+
+
 la 0.3 (banana)
 ===============
 
