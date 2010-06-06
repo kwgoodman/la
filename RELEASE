@@ -13,6 +13,11 @@ New functions
 - la.rand: Random samples from a uniform distribution
 - la.randn: Random samples from a Gaussian distribution
 
+Enhancements
+------------
+- listmap now has option to ignore unmappable elements instead of KeyError
+- listmap.pyx now has option to ignore unmappable elements instead of KeyError
+
 Bug fixes
 ---------
 - #590270 Index with 1d array bug: lar[1darray,:] worked; lar[1darray] crashed

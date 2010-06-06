@@ -13,21 +13,70 @@ except ImportError:
     # ...but perhaps it did not compile when you built the la package? So
     # we'll use the python version. If you are unsure which version you are
     # using, the doc string will tell you.
-    def listmap(list1, list2):
+    def listmap(list1, list2, ignore_unmappable=False):
         """
-        list of indices idx such that [list1[i] for i in idx] is list2.
+        Indices that map one list onto another list.
         
-        This function is equivalent to idx = map(list1.index, list2) except
-        that it is O(n) instead of O(n^2).
+        Parameters
+        ----------
+        list1 : list
+            The list to map from.
+        list2 : list
+            The list to map to.
+        ignore_unmappable : bool, optional
+            If False (default) an element in `list2` that is not in `list1`
+            will raise a KeyError. If True the unmappable elements will be
+            ignored. The mapping is faster when `ignore_unmappable` is False.
         
-        All elements in list2 must be in list1 
+        Returns
+        -------
+        idx : list
+            If `ignore_unmappable` is False then returns a list of indices
+            `idx` such that [list1[i] for i in idx] is `list2`. If
+            `ignore_unmappable` is True then [list1[i] for i in idx] will not
+            give `list2` if there are items in `list2` that are not in
+            `list1`.
+
+        Notes
+        ----- 
+        This is the slower python version of the function; there is a faster
+        C version that setup.py will automatically try to compile at build
+        (setup.py) time of the la package. You can also compile it by hand.
         
-        NOTE: This is the slower python version of the function; there is a 
-        faster C version that setup.py will automatically try to compile at
-        build (setup.py) time.   
+        Examples
+        --------
+        A simple mapping:
+
+        >>> list1 = [1, 2, 3]
+        >>> list2 = [3, 1, 2]
+        >>> idx = listmap(list1, list2)
+        >>> idx
+        [2, 0, 1]
+        >>> [list1[i] for i in idx] == list2
+        True
+
+        A KeyError is raised if an element in the second list is not in the
+        first:
+
+        >>> listmap(['a', 'b'], ['a', 'b', 'unmappable element'])
+        Traceback (most recent call last):
+          File "<stdin>", line 1, in <module>
+          File "la/util/misc.py", line 55, in listmap
+            idx = [list1map[i] for i in list2]        
+        KeyError: 'unmappable element'
+        
+        If you wish to skip the unmappable element, then set
+        `ignore_unmappable` to True:
+        
+        >>> listmap(['a', 'b'], ['a', 'b', 'unmappable element'], ignore_unmappable=True)
+        [0, 1]
+                  
         """
         list1map = dict(izip(list1, xrange(len(list1))))
-        idx = [list1map[i] for i in list2]
+        if ignore_unmappable:
+            idx = [list1map[i] for i in list2 if i in list1map]
+        else:
+            idx = [list1map[i] for i in list2]        
         return idx
         
 C = string.letters + string.digits

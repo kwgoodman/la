@@ -1,3 +1,9 @@
+2010-06-06 Keith
+
+    * util/misc.py(listmap), src/clistmap.pyx(listmap), src/clistmap.c, 
+      util/tests/misc_test.py, RELEASE, doc/source/intro.rst: listmap now has
+      the option to ignore unmappable elements instead of raising a KeyError.
+
 2010-06-05 Keith
 
     * deflarry.py(__getitem__), tests/deflarry_test.py, doc/source/intro.rst,
