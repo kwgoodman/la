@@ -2048,11 +2048,10 @@ class Test_getset(unittest.TestCase):
         
     def test_getitem_7(self):
         "larry.__getitem___7"
-        t = np.array([[ 3.0, 4.0],
-                      [ 5.0, 6.0]])  
-        idx = self.l.x.sum(1) > 2
-        idx = np.where(idx)[0]
-        self.failUnlessRaises(IndexError, self.l.__getitem__, idx)
+        desired = larry([[ 3.0, 4.0],
+                         [ 5.0, 6.0]], [[1, 2], [0, 1]])
+        actual = self.l[np.array([1, 2])]
+        ale(actual, desired, original=self.l)
         
     def test_getitem_8(self):
         "larry.__getitem___8"
@@ -2160,7 +2159,20 @@ class Test_getset(unittest.TestCase):
         t = 4.0
         p = self.l[1.1,1.1]
         msg = printfail(t, p, 'x')      
-        self.assert_((abs(t - p) < self.tol).all(), msg)                
+        self.assert_((abs(t - p) < self.tol).all(), msg) 
+        
+    def test_getitem_20(self):
+        "larry.__getitem___20"
+        desired = larry([[ 3.0, 4.0],
+                         [ 5.0, 6.0]], [[1, 2], [0, 1]])
+        actual = self.l[np.array([1, 2]),:]
+        ale(actual, desired, original=self.l)                       
+
+    def test_getitem_21(self):
+        "larry.__getitem___21"
+        desired = larry([ 3.0, 5.0], [[1, 2]])
+        actual = self.l[np.array([1, 2]), 0]
+        ale(actual, desired, original=self.l) 
                 
     def test_setitem_1(self):
         "larry.__setitem___1"

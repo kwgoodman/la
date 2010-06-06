@@ -1,5 +1,12 @@
 2010-06-05 Keith
 
+    * deflarry.py(__getitem__), tests/deflarry_test.py, doc/source/intro.rst,
+      RELEASE: Bug #590270. Index with 1d array bug: lar[1darray,:] worked;
+      lar[1darray] crashed.
+      
+    * deflarry.py(__getitem__): Speed up. Removed copying of lists in two
+      places. A copy was not needed.  
+
     * doc/source/archive.rst, func.py, tests/io_test.py, sandbox/bench.py:
       Use new rand and randn function.
 

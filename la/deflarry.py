@@ -1588,9 +1588,12 @@ class larry(object):
                         try:
                             lab = [self.label[ax][z] for z in idx]
                         except IndexError:
-                            raise IndexError, 'index out of range' 
-                        lab = list(lab)                              
+                            raise IndexError, 'index out of range'                           
                     elif typ is np.ndarray:
+                        if idx.ndim != 1:
+                            msg = 'You can use a Numpy array for indexing, '
+                            msg += 'but it must be 1d.'
+                            raise IndexError, msg
                         if idx.dtype.type == np.bool_:
                             try:
                                 lab = [self.label[ax][j] for j, z in
@@ -1601,8 +1604,7 @@ class larry(object):
                             try:
                                 lab = [self.label[ax][z] for z in idx]
                             except IndexError:
-                                raise IndexError, 'index out of range' 
-                        lab = list(lab)                          
+                                raise IndexError, 'index out of range'                       
                     elif typ is slice:
                         lab = self.label[ax][idx] 
                     else:
@@ -1620,7 +1622,26 @@ class larry(object):
         elif typidx is list:
             label = list(self.label)
             label[0] = [label[0][int(i)] for i in index]
-            x = self.x.take(index, axis=0)                              
+            x = self.x.take(index, axis=0) 
+        elif typidx is np.ndarray:    
+            if index.ndim != 1:
+                msg = 'You can use a Numpy array for indexing, '
+                msg += 'but it must be 1d.'
+                raise IndexError, msg
+            if index.dtype.type == np.bool_:
+                try:
+                    lab = [self.label[0][j] for j, z in
+                                                enumerate(index) if z]
+                except IndexError:
+                    raise IndexError, 'index out of range'
+            else:
+                try:
+                    lab = [self.label[0][z] for z in index]
+                except IndexError:
+                    raise IndexError, 'index out of range' 
+            label = self.copylabel()
+            label[0] = lab        
+            x = self.x[index]                                 
         else:        
             msg = 'Only slice, integer, and seq (list, tuple, 1d array)'
             msg = msg + ' indexing supported'

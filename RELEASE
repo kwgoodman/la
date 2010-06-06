@@ -10,8 +10,12 @@ la 0.4 (celery)
 
 New functions
 -------------
-- la.rand: Random samples from a uniform distribution.
-- la.randn: Random samples from a Gaussian distribution.
+- la.rand: Random samples from a uniform distribution
+- la.randn: Random samples from a Gaussian distribution
+
+Bug fixes
+---------
+- #590270 Index with 1d array bug: lar[1darray,:] worked; lar[1darray] crashed
 
 
 la 0.3 (banana)
