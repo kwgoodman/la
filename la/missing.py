@@ -14,9 +14,10 @@ def nans(shape, dtype=float):
     ----------
     shape : {tuple, int}
         The desired shape pf the output
-    dtype : various
-        The desired dtype of output. Typically values are float, str, object.
-        Integer dtype is not allowed.
+    dtype : {float-like, str, object}, optional
+        The desired dtype of output. Typically values are float (default),
+        str, object. Other dtypes, such as int and bool, raise a
+        TypeErrorInteger.
         
     Returns
     -------
@@ -45,7 +46,9 @@ def nans(shape, dtype=float):
     # Check for str first since numpy considers str to be a scalar subtype.
     # No check for object dtype since empty already fills those with None
     if np.issubdtype(a.dtype, str):
-        a.fill('')      
+        a.fill('')
+    elif a.dtype == np.bool_:
+        a.fill(False)       
     elif np.issctype(a.dtype):
         if issubclass(a.dtype.type, np.inexact):
             a.fill(np.nan)

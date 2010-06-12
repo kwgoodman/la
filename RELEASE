@@ -21,6 +21,7 @@ Enhancements
 Bug fixes
 ---------
 - #590270 Index with 1d array bug: lar[1darray,:] worked; lar[1darray] crashed
+- #593179 nans crashed on dtype=bool
 
 
 la 0.3 (banana)

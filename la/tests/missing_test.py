@@ -66,6 +66,14 @@ class Test_nans(unittest.TestCase):
         dtype = int
         assert_raises(TypeError, nans, shape, dtype)
         
+    def test_nans_8(self):
+        "afunc.nans_8"
+        shape = (2,)
+        dtype = bool
+        actual = nans(shape, dtype)    
+        desired = np.zeros(shape, dtype=dtype)
+        assert_equal(actual, desired)         
+        
 
 # Unit tests ----------------------------------------------------------------        
     
