@@ -7,7 +7,7 @@ nan = np.nan
 from la.util.testing import printfail
 from la.util.scipy import nanstd
 from la.afunc import (covMissing, push, geometric_mean, lastrank,
-                      movingrank, movingsum, movingsum_forward, nans,
+                      movingrank, movingsum, movingsum_forward,
                       quantile, ranking, group_mean, group_median,
                       group_ranking, nanmedian)
 
