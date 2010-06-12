@@ -6,7 +6,8 @@ import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal, assert_raises
 nan = np.nan
 
-from la.missing import nans
+from la import larry
+from la.missing import nans, missing_marker
                                        
 
 class Test_nans(unittest.TestCase):
@@ -73,7 +74,31 @@ class Test_nans(unittest.TestCase):
         actual = nans(shape, dtype)    
         desired = np.zeros(shape, dtype=dtype)
         assert_equal(actual, desired)         
+
+class Test_missing_marker(unittest.TestCase):
+    "Test missing_marker"                 
+
+    def test_missing_marker_1(self):
+        "afunc.missing_marker_1"
+        assert_equal(missing_marker(larry([1])), NotImplemented) 
+
+    def test_missing_marker_2(self):
+        "afunc.missing_marker_2"
+        assert_equal(missing_marker(larry([1.0])), nan)
         
+    def test_missing_marker_3(self):
+        "afunc.missing_marker_3"
+        assert_equal(missing_marker(larry([True])), False)
+
+    def test_missing_marker_4(self):
+        "afunc.missing_marker_4"
+        assert_equal(missing_marker(larry(['a'])), '')                
+
+    def test_missing_marker_5(self):
+        "afunc.missing_marker_5"
+        import datetime
+        d = datetime.date(2011, 1, 1)
+        assert_equal(missing_marker(larry([d])), None) 
 
 # Unit tests ----------------------------------------------------------------        
     
@@ -81,7 +106,8 @@ def suite():
 
     unit = unittest.TestLoader().loadTestsFromTestCase
     s = []
-    s.append(unit(Test_nans))                 
+    s.append(unit(Test_nans)) 
+    s.append(unit(Test_missing_marker))                
     return unittest.TestSuite(s)
 
 def run():   

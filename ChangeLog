@@ -1,5 +1,12 @@
 2010-06-12 Keith
 
+    * missing.py(missing_marker), tests/missing_test.py, RELEASE, 
+      doc/source/intro.rst: New function that return missing value marker for
+      the given larry.
+
+    * missing.py(nans): Speed up the most common use case at the expense of
+      the less common use cases.
+
     * missing.py, tests/missing_test.py, doc/source/intro.rst, RELEASE:
       Bug #593179: nans crashed on dtype=bool.
 
