@@ -1,3 +1,9 @@
+2010-06-12 Keith
+
+    * flabel.py, tests/flabel_test.py, deflarry.py, func.py, util/misc.py,
+      util/tests/misc_test.py: Created a new module flabel.py for label
+      functions and moved the label functions from misc.py into flabel.py.
+
 2010-06-06 Keith
 
     * util/misc.py(listmap), src/clistmap.pyx(listmap), src/clistmap.c, 

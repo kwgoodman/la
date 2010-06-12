@@ -3,7 +3,7 @@
 import numpy as np
 
 from la.deflarry import larry
-from la.util.misc import flattenlabel
+from la.flabel import flattenlabel
 from la.afunc import covMissing
 
 
