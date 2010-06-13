@@ -5,7 +5,7 @@ from numpy.testing import assert_almost_equal
 nan = np.nan
 
 from la.util.testing import assert_larry_equal
-from la import afunc, larry
+from la import farray, larry
 
 def getfuncs(argint, argfrac, argsector):
     funcs = [('geometric_mean'        , (), ()),
@@ -45,7 +45,7 @@ def test_3d():
     argsectors = sectors
     funcs = getfuncs(argint, argfrac, argsectors)
     for funcname, funcargs, axisargs in funcs:
-        func = getattr(afunc, funcname)
+        func = getattr(farray, funcname)
         xc = x.copy()
         x2dc = x2d.copy()
         lar2dc = lar2d.copy()

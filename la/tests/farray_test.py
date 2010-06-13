@@ -7,9 +7,9 @@ from numpy.testing import assert_almost_equal, assert_equal, assert_raises
 nan = np.nan
 
 from la.util.testing import printfail
-from la.afunc import group_ranking, group_mean, group_median
-from la.afunc import (movingsum, movingrank, movingsum_forward, ranking, 
-                      geometric_mean, unique_group)
+from la.farray import group_ranking, group_mean, group_median
+from la.farray import (movingsum, movingrank, movingsum_forward, ranking, 
+                       geometric_mean, unique_group)
 
 # Sector functions ----------------------------------------------------------
 

@@ -6,7 +6,7 @@ import numpy as np
 nan = np.nan
 
 from la import larry
-from la.func import union, intersection, panel, stack, cov
+from la import union, intersection, panel, stack, cov
 from la.util.testing import assert_larry_equal as ale
 
 

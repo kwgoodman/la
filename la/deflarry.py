@@ -8,9 +8,9 @@ from la.missing import nans, ismissing
 from la.flabel import listmap, flattenlabel
 from la.util.scipy import nanmean, nanmedian, nanstd
 from la.util.misc import isscalar, fromlists
-from la.afunc import (group_ranking, group_mean, group_median, shuffle,
-                      push, quantile, ranking, lastrank, movingsum_forward,
-                      movingrank, movingsum, geometric_mean)
+from la.farray import (group_ranking, group_mean, group_median, shuffle,
+                       push, quantile, ranking, lastrank, movingsum_forward,
+                       movingrank, movingsum, geometric_mean)
 
 
 class larry(object):

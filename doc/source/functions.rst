@@ -40,21 +40,21 @@ Miscellaneous functions that operate on larrys.
 
 ------------
 
-.. autofunction:: la.func.stack
+.. autofunction:: la.stack
 
 ------------
 
-.. autofunction:: la.func.panel
+.. autofunction:: la.panel
 
 ------------
 
-.. autofunction:: la.func.cov
+.. autofunction:: la.cov
 
 ------------
 
-.. autofunction:: la.func.rand
+.. autofunction:: la.rand
 
 ------------
 
-.. autofunction:: la.func.randn
+.. autofunction:: la.randn
 

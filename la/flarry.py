@@ -4,7 +4,7 @@ import numpy as np
 
 from la.deflarry import larry
 from la.flabel import flattenlabel
-from la.afunc import covMissing
+from la.farray import covMissing
 
 
 # Labels --------------------------------------------------------------------
@@ -311,7 +311,7 @@ def rand(*args, **kwargs):
     
     See Also
     --------
-    la.func.randn : Random samples from the "standard normal" distribution.
+    la.randn : Random samples from the "standard normal" distribution.
     
     Examples
     --------
@@ -409,7 +409,7 @@ def randn(*args, **kwargs):
     
     See Also
     --------
-    la.func.rand : Random values from a uniform distribution in a given shape.
+    la.rand : Random values from a uniform distribution in a given shape.
     
     Examples
     --------
