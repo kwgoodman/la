@@ -4,7 +4,7 @@ import csv
 
 import numpy as np
    
-from la.missing import nans   
+from la.missing import nans, ismissing  
 from la.flabel import listmap, flattenlabel
 from la.util.scipy import nanmean, nanmedian, nanstd
 from la.util.misc import isscalar, fromlists
@@ -3139,6 +3139,67 @@ class larry(object):
             np.random.shuffle(self.label[axis])
             
     # Missing ----------------------------------------------------------------
+
+    def ismissing(self):
+        """
+        A bool larry with element-wise marking of missing values.
+            
+        Returns
+        -------
+        y : larry
+            Returns a bool larry that contains the value True if the
+            corresponding element of the larry is missing; otherwise False.
+
+        Examples
+        --------  
+        Floats:
+               
+        >>> larry([1.0, la.nan]).ismissing()
+        label_0
+            0
+            1
+        x
+        array([False,  True], dtype=bool)
+        
+        Strings:
+        
+        >>> larry(['string', '']).ismissing()
+        label_0
+            0
+            1
+        x
+        array([False,  True], dtype=bool)
+        
+        Objects:
+        
+        >>> larry(['', None], dtype=object).ismissing()
+        label_0
+            0
+            1
+        x
+        array([False,  True], dtype=bool)
+        
+        bool and int dtype do not support missing values so always return
+        False:
+        
+        >>> larry([0, 1]).ismissing()
+        label_0
+            0
+            1
+        x
+        array([False, False], dtype=bool)
+        .
+        >>> larry([True, False]).ismissing()
+        label_0
+            0
+            1
+        x
+        array([False, False], dtype=bool)        
+        
+        """   
+        label = self.copylabel()
+        x = ismissing(self)
+        return larry(x, label, integrity=False)
 
     def cut_missing(self, fraction, axis=None):
         """

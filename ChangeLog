@@ -1,5 +1,12 @@
 2010-06-12 Keith
 
+    * deflarry.py(ismissing), tests/deflarry_test.py, doc/source/intro.rst,
+      doc/source/reference.rst, doc/source/work.rst, RELEASE: New larry
+      method: ismissing.
+
+    * missing.py, tests/missing_test.py: Fixed bug introduced earlier today.
+      bool larrys do not support missing values.
+
     * missing.py(ismissing), tests/missing_test.py, doc/source/intro.rst:
       RELEASE: A new function (ismissing) that returns a bool Numpy array
       with element-wise marking of missing values in a larry.

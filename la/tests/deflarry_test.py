@@ -3240,7 +3240,35 @@ class Test_calc(unittest.TestCase):
         p[p.isnan()] = self.nancode               
         self.assert_((abs(t - p.x) < self.tol).all(), msg)
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l4), 'Reference found')             
+        self.assert_(noreference(p, self.l4), 'Reference found')
+
+    def test_ismissing_1(self):
+        "larry.ismissing_1"
+        original = larry([1.0, nan])
+        actual = original.ismissing()
+        desired = larry([False, True])
+        ale(actual, desired, 'larry.ismissing(float)', original=original)
+
+    def test_ismissing_2(self):
+        "larry.ismissing_2"
+        original = larry(['string', ''])
+        actual = original.ismissing()
+        desired = larry([False, True])
+        ale(actual, desired, 'larry.ismissing(str)', original=original)
+        
+    def test_ismissing_3(self):
+        "larry.ismissing_3"
+        original = larry(['', None], dtype=object)
+        actual = original.ismissing()
+        desired = larry([False, True])
+        ale(actual, desired, 'larry.ismissing(object)', original=original)
+
+    def test_ismissing_4(self):
+        "larry.ismissing_4"
+        original = larry([False, True])
+        actual = original.ismissing()
+        desired = larry([False, False])
+        ale(actual, desired, 'larry.ismissing(bool)', original=original)            
 
 
 class Test_alignment(unittest.TestCase):

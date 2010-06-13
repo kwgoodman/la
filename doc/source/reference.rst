@@ -469,7 +469,22 @@ NaNs are treated as missing data in larry:
     >>> import la
     >>> y = larry([1.0, la.nan])
     >>> y.sum()
-    1.0 
+    1.0
+    
+Missing value makers for various dtypes:
+
+============== ===============
+dtype           missing marker
+============== ===============
+float           NaN
+object          None
+str             ''
+int, bool, etc  Not supported
+============== ===============
+
+------------
+
+.. automethod:: la.larry.ismissing     
     
 ------------
 

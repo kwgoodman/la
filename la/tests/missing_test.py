@@ -69,11 +69,9 @@ class Test_nans(unittest.TestCase):
         
     def test_nans_8(self):
         "afunc.nans_8"
-        shape = (2,)
+        shape = 0
         dtype = bool
-        actual = nans(shape, dtype)    
-        desired = np.zeros(shape, dtype=dtype)
-        assert_equal(actual, desired)         
+        assert_raises(TypeError, nans, shape, dtype)        
 
 class Test_missing_marker(unittest.TestCase):
     "Test missing_marker"                 
@@ -88,7 +86,7 @@ class Test_missing_marker(unittest.TestCase):
         
     def test_missing_marker_3(self):
         "afunc.missing_marker_3"
-        assert_equal(missing_marker(larry([True])), False)
+        assert_equal(missing_marker(larry([True])), NotImplemented)
 
     def test_missing_marker_4(self):
         "afunc.missing_marker_4"
@@ -131,7 +129,15 @@ class Test_ismissing(unittest.TestCase):
         
     def test_ismissing_7(self):
         "afunc.ismissing_7"
-        assert_equal(ismissing(larry([nan, 1])), np.array([True, False]))    
+        assert_equal(ismissing(larry([nan, 1])), np.array([True, False])) 
+        
+    def test_ismissing_8(self):
+        "afunc.ismissing_8"
+        assert_equal(ismissing(larry([''])), np.array([True])) 
+        
+    def test_ismissing_9(self):
+        "afunc.ismissing_9"
+        assert_equal(ismissing(larry([True])), np.array([False]))                   
 
 # Unit tests ----------------------------------------------------------------        
     

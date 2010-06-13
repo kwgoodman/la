@@ -365,12 +365,33 @@ NaNs in the data array (not the label) are treated as missing values:
     >>> y = larry([1.0, la.nan, 3.0])
     >>> y.sum()
     4.0
-
+    
 Note that ``la.nan`` is the same as Numpy's NaN:
 ::
     >>> import numpy as np
     >>> la.nan is np.nan
-    True
+    True    
+    
+Missing values can be found with the **ismissing** method:
+::
+    >>> y.ismissing()
+    label_0
+        0
+        1
+        2
+    x
+    array([False,  True, False], dtype=bool)
+       
+Missing value makers for various dtypes:
+
+============== ===============
+dtype           missing marker
+============== ===============
+float           NaN
+object          None
+str             ''
+int, bool, etc  Not supported
+============== ===============    
     
 Missing values can be replaced:
 ::

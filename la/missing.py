@@ -16,7 +16,8 @@ def nans(shape, dtype=float):
         The desired shape pf the output
     dtype : {float-like, str, object}, optional
         The desired dtype of output. Typically values are float (default),
-        str, object. Other dtypes, such as int, raise a TypeErrorInteger.
+        str, object. Other dtypes, such as int and bool, raise a
+        TypeErrorInteger.
         
     Returns
     -------
@@ -50,8 +51,8 @@ def nans(shape, dtype=float):
             a.fill('')
             return a
         elif a.dtype == np.bool_:
-            a.fill(False)
-            return a
+            msg = 'Missing values are not supported for bool dtype.'
+            raise TypeError, msg            
         elif a.dtype == object:
             a.fill(None)
             return a       
@@ -82,7 +83,7 @@ def missing_marker(lar):
     >>> missing_marker(larry([1.0]))
     nan
     >>> missing_marker(larry([True]))
-    False
+    NotImplemented
     >>> missing_marker(larry(['a']))
     ''
     >>> import datetime
@@ -98,7 +99,7 @@ def missing_marker(lar):
         if np.issubdtype(dtype, str):
             return ''
         elif dtype == np.bool_:
-            return False      
+            return NotImplemented     
         elif dtype == object:
             return None
         else:              
