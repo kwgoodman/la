@@ -7,7 +7,7 @@ from numpy.testing import assert_almost_equal, assert_equal, assert_raises
 nan = np.nan
 
 from la import larry
-from la.missing import nans, missing_marker
+from la.missing import nans, missing_marker, ismissing
                                        
 
 class Test_nans(unittest.TestCase):
@@ -99,6 +99,39 @@ class Test_missing_marker(unittest.TestCase):
         import datetime
         d = datetime.date(2011, 1, 1)
         assert_equal(missing_marker(larry([d])), None) 
+        
+class Test_ismissing(unittest.TestCase):
+    "Test ismissing"                 
+
+    def test_ismissing_1(self):
+        "afunc.ismissing_1"
+        assert_equal(ismissing(larry([1])), np.array([False])) 
+
+    def test_ismissing_2(self):
+        "afunc.ismissing_2"
+        assert_equal(ismissing(larry([1.0])), np.array([False]))
+        
+    def test_ismissing_3(self):
+        "afunc.ismissing_3"
+        assert_equal(ismissing(larry(['str'])), np.array([False]))
+
+    def test_ismissing_4(self):
+        "afunc.ismissing_4"
+        assert_equal(ismissing(larry([None])), np.array([True]))               
+
+    def test_ismissing_5(self):
+        "afunc.ismissing_5"
+        import datetime
+        d = datetime.date(2011, 1, 1)
+        assert_equal(ismissing(larry([d])), np.array([False])) 
+
+    def test_ismissing_6(self):
+        "afunc.ismissing_6"
+        assert_equal(ismissing(larry([nan])), np.array([True]))
+        
+    def test_ismissing_7(self):
+        "afunc.ismissing_7"
+        assert_equal(ismissing(larry([nan, 1])), np.array([True, False]))    
 
 # Unit tests ----------------------------------------------------------------        
     
@@ -107,7 +140,8 @@ def suite():
     unit = unittest.TestLoader().loadTestsFromTestCase
     s = []
     s.append(unit(Test_nans)) 
-    s.append(unit(Test_missing_marker))                
+    s.append(unit(Test_missing_marker))
+    s.append(unit(Test_ismissing))             
     return unittest.TestSuite(s)
 
 def run():   

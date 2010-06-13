@@ -13,6 +13,7 @@ New functions
 - la.rand: Random samples from a uniform distribution
 - la.randn: Random samples from a Gaussian distribution
 - missing_marker: Return missing value marker for the given larry
+- ismissing: A bool Numpy array with element-wise marking of missing values
 
 Enhancements
 ------------

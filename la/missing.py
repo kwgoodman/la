@@ -103,4 +103,49 @@ def missing_marker(lar):
             return None
         else:              
             return NotImplemented
-                
+
+def ismissing(lar):
+    """
+    A bool Numpy array with element-wise marking of missing values in a larry.
+    
+    Parameters
+    ----------
+    lar : larry
+        Input larry.
+        
+    Returns
+    -------
+    arr : Numpy ndarray
+        The result is a bool Numpy array that contains the value True if the
+        corresponding element in `lar` is missing; otherwise False. The shape
+        of `arr` is the same as `lar`.
+
+    Examples
+    --------         
+    >>> ismissing(la.larry([1]))
+    array([False], dtype=bool)
+    >>> ismissing(la.larry([1.0]))
+    array([False], dtype=bool)
+    >>> ismissing(la.larry(['str']))
+    array([False], dtype=bool)
+    >>> ismissing(la.larry([None]))
+    array([ True], dtype=bool)
+    >>> import datetime
+    >>> ismissing(la.larry([datetime.date(2011,1,1)]))
+    array([False], dtype=bool)
+    >>> ismissing(la.larry([la.nan]))
+    array([ True], dtype=bool)
+    >>> ismissing(la.larry([la.nan, 1.0]))
+    array([ True, False], dtype=bool)
+    
+    """
+    mm = missing_marker(lar)
+    if mm == NotImplemented:
+        arr = np.empty(lar.shape, dtype=bool)
+        arr.fill(False)
+        return arr
+    else:
+        if mm != mm:
+            return np.isnan(lar.x)
+        else:
+            return lar.x == [mm]                    

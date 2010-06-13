@@ -1,5 +1,9 @@
 2010-06-12 Keith
 
+    * missing.py(ismissing), tests/missing_test.py, doc/source/intro.rst:
+      RELEASE: A new function (ismissing) that returns a bool Numpy array
+      with element-wise marking of missing values in a larry.
+
     * missing.py(missing_marker), tests/missing_test.py, RELEASE, 
       doc/source/intro.rst: New function that return missing value marker for
       the given larry.
