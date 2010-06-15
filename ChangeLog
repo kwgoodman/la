@@ -1,3 +1,9 @@
+2010-06-15 Keith
+
+    * farray.py(correlation), tests/farray_test.py, doc/source/intro.rst,
+      RELEASE: New function that finds the correlation between two Numpy
+      arrays along the specifies axis.
+
 2010-06-13 Keith
 
     * afunc.py => array.py, tests/afunc_arr_test.py => tests/farray_test.py

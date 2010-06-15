@@ -4,12 +4,13 @@ import unittest
 
 import numpy as np
 from numpy.testing import assert_almost_equal, assert_equal, assert_raises
+aae = assert_almost_equal
 nan = np.nan
 
 from la.util.testing import printfail
 from la.farray import group_ranking, group_mean, group_median
 from la.farray import (movingsum, movingrank, movingsum_forward, ranking, 
-                       geometric_mean, unique_group)
+                       geometric_mean, unique_group, correlation)
 
 # Sector functions ----------------------------------------------------------
 
@@ -638,7 +639,137 @@ class Test_movingrank(unittest.TestCase):
                            [nan, -1.0]])
         actual = movingrank(self.x2, self.window)
         assert_almost_equal(actual, desired)
+        
+class Test_correlation(unittest.TestCase):
+    "Test afunc.correlation"
+    
+    def setUp(self):
+        self.a1 = np.array([[1, 1, 1],
+                            [1, 2, 3],
+                            [1, 2, 3],
+                            [2, 2, 1]])
+        self.a2 = np.array([[1, 1, 1],
+                            [2, 3, 4],
+                            [4, 3, 2],
+                            [1, 2, 2]])
+        self.b1 = np.array([[nan, 1,    1,   1],
+                            [1,   nan,  2,   3],
+                            [1,   2,    nan, 3],
+                            [2,   2,    1,   nan]])
+        self.b2 = np.array([[nan, 1,    1,   1],
+                            [2,   nan,  3,   4],
+                            [4,   3,    nan, 2],
+                            [1,   2,    2,   nan]])
+                                                          
+    def test_correlation_1(self):
+        "farray.correlation_1"
+        x = np.array([])
+        y = np.array([])
+        corr = correlation(x, y) 
+        aae(corr, np.nan, err_msg="Empty correlation should be NaN")
+        
+    def test_correlation_2(self):
+        "farray.correlation_2"        
+        x = np.array([nan, nan])
+        y = np.array([nan, nan])
+        corr = correlation(x, y) 
+        aae(corr, np.nan, err_msg="All NaN correlation should be NaN")
+        
+    def test_correlation_3(self):
+        "farray.correlation_3"
+        x = self.a1[0,:]
+        y = self.a2[0,:]
+        corr = correlation(x, y) 
+        aae(corr, np.nan, err_msg="Correlation undefined")
+        x = self.b1[0,:]
+        y = self.b2[0,:]
+        corr = correlation(x, y) 
+        aae(corr, np.nan, err_msg="Correlation undefined")        
 
+    def test_correlation_4(self):
+        "farray.correlation_4"
+        x = self.a1[1,:]
+        y = self.a2[1,:]
+        corr = correlation(x, y) 
+        aae(corr, 1, err_msg="Perfect +1 correation")
+        x = self.b1[1,:]
+        y = self.b2[1,:]
+        corr = correlation(x, y) 
+        aae(corr, 1, err_msg="Perfect +1 correation")
+
+    def test_correlation_5(self):
+        "farray.correlation_5"
+        x = self.a1[2,:]
+        y = self.a2[2,:]
+        corr = correlation(x, y) 
+        aae(corr, -1, err_msg="Perfect -1 correation")
+        x = self.b1[2,:]
+        y = self.b2[2,:]
+        corr = correlation(x, y) 
+        aae(corr, -1, err_msg="Perfect -1 correation")
+
+    def test_correlation_6(self):
+        "farray.correlation_6"
+        x = self.a1[3,:]
+        y = self.a2[3,:]
+        corr = correlation(x, y) 
+        aae(corr, -0.5, err_msg="-0.5 correation")
+        x = self.b1[3,:]
+        y = self.b2[3,:]
+        corr = correlation(x, y) 
+        aae(corr, -0.5, err_msg="-0.5 correation")
+
+    def test_correlation_7(self):
+        "farray.correlation_7"
+        x = self.a1
+        y = self.a2
+        corr = correlation(x, y, axis=1)
+        desired = np.array([nan, 1, -1, -0.5]) 
+        aae(corr, desired, err_msg="aggregate of 1d tests")
+        x = self.b1
+        y = self.b2
+        corr = correlation(x, y, axis=1)
+        desired = np.array([nan, 1, -1, -0.5]) 
+        aae(corr, desired, err_msg="aggregate of 1d tests")
+
+    def test_correlation_8(self):
+        "farray.correlation_8"
+        x = self.a1.T
+        y = self.a2.T
+        corr = correlation(x, y, axis=0)
+        desired = np.array([nan, 1, -1, -0.5]) 
+        aae(corr, desired, err_msg="aggregate of 1d tests")
+        x = self.b1.T
+        y = self.b2.T
+        corr = correlation(x, y, axis=0)
+        desired = np.array([nan, 1, -1, -0.5]) 
+        aae(corr, desired, err_msg="aggregate of 1d tests")
+
+    def test_correlation_9(self):
+        "farray.correlation_9"
+        x = self.a1
+        y = self.a2
+        x2 = np.empty((2, x.shape[0], x.shape[1]))
+        x2[0] = x
+        x2[1] = x
+        y2 = np.empty((2, y.shape[0], y.shape[1]))
+        y2[0] = y
+        y2[1] = y        
+        corr = correlation(x, y, axis=-1)
+        desired = np.array([nan, 1, -1, -0.5]) 
+        aae(corr, desired, err_msg="aggregate of 1d tests")
+        x = self.b1
+        y = self.b2
+        x2 = np.empty((2, x.shape[0], x.shape[1]))
+        x2[0] = x
+        x2[1] = x
+        y2 = np.empty((2, y.shape[0], y.shape[1]))
+        y2[0] = y
+        y2[1] = y        
+        corr = correlation(x, y, axis=-1)
+        desired = np.array([nan, 1, -1, -0.5]) 
+        aae(corr, desired, err_msg="aggregate of 1d tests")
+        
 # Unit tests ----------------------------------------------------------------        
     
 def suite():
@@ -656,10 +787,10 @@ def suite():
     s.append(unit(Test_geometric_mean))
     s.append(unit(Test_movingsum))
     s.append(unit(Test_movingsum_forward))
-    s.append(unit(Test_movingrank)) 
+    s.append(unit(Test_movingrank))
     
-    # NaN functions
-    s.append(unit(Test_nans))          
+    # Calc function
+    s.append(unit(Test_correlation))              
          
     return unittest.TestSuite(s)
 

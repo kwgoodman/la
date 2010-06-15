@@ -18,6 +18,7 @@ New functions
 - la.randn: Random samples from a Gaussian distribution
 - missing_marker: Return missing value marker for the given larry
 - ismissing: A bool Numpy array with element-wise marking of missing values
+- correlation: Correlation of two Numpy arrays along the specifies axis
 
 Enhancements
 ------------

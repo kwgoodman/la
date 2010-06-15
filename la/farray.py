@@ -517,6 +517,105 @@ def quantile(x, q, axis=0):
    
 # Calc functions -----------------------------------------------------------
 
+def correlation(arr1, arr2, axis=None):
+    """
+    Correlation between two Numpy arrays along the specifies axis.
+    
+    This is not a cross correlation function. If the two input arrays have
+    shape (n, m), for example, then the output will have shape (m,) if axis
+    is 0 and shape (n,) if axis is 1.
+    
+    Parameters
+    ----------
+    arr1 : Numpy ndarray
+        Input array.
+    arr2 : Numpy ndarray
+        Input array.        
+    axis : {int, None}, optional
+        The axis along which to measure the correlation. The default, axis
+        None, flattens the input arrays before finding the correlation and
+        returning it as a scalar.
+    
+    Returns
+    -------
+    corr : Numpy ndarray, scalar
+        The correlation between `arr1` and `arr2` along the specified axis.
+        
+    Examples
+    -------- 
+    Make two Numpy arrays:
+       
+    >>> a1 = np.array([[1, 2], [3, 4]])
+    >>> a2 = np.array([[2, 1], [4, 3]])
+    >>> a1
+    array([[1, 2],
+           [3, 4]])
+    >>> a2
+    array([[2, 1],
+           [4, 3]])
+           
+    Find the correlation between the two arrays along various axes:       
+    
+    >>> correlation(a1, a2)
+    0.59999999999999998
+    >>> correlation(a1, a2, axis=0)
+    array([ 1.,  1.])
+    >>> correlation(a1, a2, axis=1)
+    array([-1., -1.])
+
+    """
+    mask = np.logical_or(np.isnan(arr1), np.isnan(arr2))
+    if mask.any():
+        # arr1 and/or arr2 contain NaNs, so use slower NaN functions if needed
+        if axis == None:
+            x1 = arr1.flatten()
+            x2 = arr2.flatten()
+            idx = ~mask.flatten()
+            x1 = x1[idx]
+            x2 = x2[idx]
+            x1 = x1 - x1.mean()
+            x2 = x2 - x2.mean()        
+            num = (x1 * x2).sum()
+            den = np.sqrt((x1 * x1).sum() * (x2 * x2).sum()) 
+        else:
+            x1 = arr1.copy()
+            x2 = arr2.copy()
+            x1[mask] = np.nan
+            x2[mask] = np.nan 
+            if axis == 0:
+                x1 = x1 - nanmean(x1, axis)
+                x2 = x2 - nanmean(x2, axis)              
+            else:
+                idx = [slice(None)] * x1.ndim
+                idx[axis] = None
+                x1 = x1 - nanmean(x1, axis)[idx]
+                x2 = x2 - nanmean(x2, axis)[idx]           
+            num = np.nansum(x1 * x2, axis)
+            den = np.sqrt(np.nansum(x1 * x1, axis) * np.nansum(x2 * x2, axis))
+    else:
+        # Neither arr1 or arr2 contains nans, so use faster non-nan functions
+        if axis == None:
+            x1 = arr1.flatten()
+            x2 = arr2.flatten()
+            x1 = x1 - x1.mean()
+            x2 = x2 - x2.mean()        
+            num = (x1 * x2).sum()
+            den = np.sqrt((x1 * x1).sum() * (x2 * x2).sum()) 
+        else:
+            x1 = arr1
+            x2 = arr2
+            if axis == 0:
+                x1 = x1 - x1.mean(axis)
+                x2 = x2 - x2.mean(axis)              
+            else:
+                idx = [slice(None)] * x1.ndim
+                idx[axis] = None   
+                x1 = x1 - x1.mean(axis)[idx]
+                x2 = x2 - x2.mean(axis)[idx]           
+            num = np.sum(x1 * x2, axis)
+            den = np.sqrt(np.sum(x1 * x1, axis) * np.sum(x2 * x2, axis))                
+    return num / den 
+
 def covMissing(R):
     """
     Covariance matrix adjusted for missing returns.
