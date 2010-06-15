@@ -519,7 +519,7 @@ def quantile(x, q, axis=0):
 
 def correlation(arr1, arr2, axis=None):
     """
-    Correlation between two Numpy arrays along the specifies axis.
+    Correlation between two Numpy arrays along the specified axis.
     
     This is not a cross correlation function. If the two input arrays have
     shape (n, m), for example, then the output will have shape (m,) if axis
