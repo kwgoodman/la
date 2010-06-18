@@ -119,7 +119,7 @@ URLs
 ===============   ========================================================
  docs              http://larry.sourceforge.net
  download          http://pypi.python.org/pypi/la
- code              https://launchpad.net/larry
+ code              http://github.com/kwgoodman/la
  list              http://groups.google.ca/group/pystatsmodels
  devel list        https://launchpad.net/~larry-discuss
 ===============   ========================================================
