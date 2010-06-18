@@ -1,12 +1,3 @@
-
-============
-Introduction
-============
-
-larry is a labeled Numpy array. In this part of the manual I'll try to give
-you a sense of what larry can do and then talk about the license and
-installation. 
-
 Who's larry?
 ============
 
@@ -162,7 +153,7 @@ IO                                        HDF5, partial support for CSV
 ======================================    ====================================
 Numpy array                               ``la`` larry
 ======================================    ====================================
-``arr = np.array([[1, 2], [3, 4]])``      ``lar = la.larry([[1, 2], [3, 4]])`` Note ``(arr == lar.x).all()`` is True 
+``arr = np.array([[1, 2], [3, 4]])``      ``lar = la.larry([[1, 2], [3, 4]])``
 ``np.nansum(arr)``                        ``lar.sum()``
 ``arr.shape``, ``arr.dtype``,             ``lar.shape``, ``lar.dtype``
 ``arr.ndim``, ``arr.T``                   ``lar.ndim``, ``lar.T``
