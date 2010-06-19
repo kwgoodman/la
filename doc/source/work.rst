@@ -440,6 +440,21 @@ Indexing into a larry is similar to indexing into a Numpy array:
     x
     array([2, 4, 6])
     
+Another similarity to Numpy arrays is the **take** method:  
+::
+    >>> y = la.rand(2,10)
+    >>> y.take([0, 2, 3], axis=1)
+    label_0
+        0
+        1
+    label_1
+        0
+        2
+        3
+    x
+    array([[ 0.67481574,  0.89324137,  0.63388184],
+           [ 0.71205393,  0.15894335,  0.01778499]])
+ 
 The following types of indexing are not currently supported by larry (but they
 are supported when doing an assignment by indexing, see :ref:`assignment`):
 
