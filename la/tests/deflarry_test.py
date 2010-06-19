@@ -8,6 +8,7 @@ nan = np.nan
 from numpy.testing import (assert_, assert_almost_equal, assert_raises,
                            assert_equal)
 
+import la
 from la import larry
 from la.util.testing import printfail, noreference, nocopy
 from la.util.testing import assert_larry_equal as ale
@@ -4025,4 +4026,24 @@ def run():
     
 if __name__ == '__main__':
     run()   
-     
+
+# take test -----------------------------------------------------------------
+
+# Make sure larry.take gives the same result as larry.__getitem__.
+
+def take_test():
+    "Test of larry.take"
+    shapes = [(2,), (2,2), (2,2,2), (2,2,2,2)]
+    msg = "Fail with shape %s, axis %s, index %s"
+    for shape in shapes:
+        y = la.rand(*shape)
+        for axis in range(y.ndim):
+            for i in range(1, y.shape[axis]):
+                idx = range(i)[::-1]
+                ytake = y.take(idx, axis=axis)
+                index = [slice(None)] * y.ndim
+                index[axis] = idx
+                ygetitem = y[tuple(index)]
+                arg = (str(shape), str(axis), str(idx))
+                yield ale, ytake, ygetitem, msg % arg
+

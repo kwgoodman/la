@@ -1652,6 +1652,75 @@ class larry(object):
             return x                                
         return larry(x, label)
 
+    def take(self, indices, axis):
+        """
+        A copy of the specified elements of a larry along an axis.
+        
+        This method does the same thing as "fancy" indexing (indexing larrys
+        using lists or Numpy arrays); however, it can be easier to use if you
+        need elements along a given axis. It is also faster in many
+        situations.
+        
+        Parameters
+        ----------
+        indices : sequence
+            The indices of the values to extract. You can use a list, tuple,
+            1d Numpy array or any other iterable object.
+        axis : int
+            The axis over which to select values.
+        
+        Returns
+        -------
+        lar : larry
+            A copy of the specified elements of a larry along the specifed
+            axis.
+        
+        Examples
+        --------
+        Take elements at index 0 and 2 from a 1d larry:
+        
+        >>> y = larry([1, 2, 3])
+        >>> y.take([0, 2], axis=0)
+        label_0
+            0
+            2
+        x
+        array([1, 3])
+        
+        Take columns 0 and 2 from a 2d larry:
+
+        >>> y = la.rand(2, 3)
+        >>> y.take([0, 2], axis=1)
+        label_0
+            0
+            1
+        label_1
+            0
+            2
+        x
+        array([[ 0.07887698,  0.44490303],
+               [ 0.75024392,  0.92896999]])
+
+        The above is equivalent to (but faster than):
+ 
+        >>> y[:, [0, 2]]
+        label_0
+            0
+            1
+        label_1
+            0
+            2
+        x
+        array([[ 0.07887698,  0.44490303],
+               [ 0.75024392,  0.92896999]])
+       
+        """
+        label = self.copylabel()
+        labelaxis = label[axis]
+        label[axis] = [labelaxis[idx] for idx in indices]
+        x = self.x.take(indices, axis)
+        return larry(x, label)
+
     @property    
     def lix(self):
         """

@@ -268,6 +268,10 @@ assign values to a subset of a larry.
 
 ------------
 
+.. automethod:: la.larry.take
+
+------------
+
 .. automethod:: la.larry.lix
 
 ------------

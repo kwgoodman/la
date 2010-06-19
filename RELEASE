@@ -11,6 +11,7 @@ la 0.4 (celery)
 New larry methods
 -----------------
 - ismissing: A bool larry with element-wise marking of missing values
+- take: A copy of the specified elements of a larry along an axis
 
 New functions
 -------------
