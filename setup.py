@@ -83,7 +83,7 @@ larry adds the convenience of labels, provides many built-in methods, and
 let's you use your existing array functions.
 
 ===============   ========================================================
- code              https://launchpad.net/larry
+ code              http://github.com/kwgoodman/la
  docs              http://larry.sourceforge.net
  list              http://groups.google.ca/group/pystatsmodels
  devel list        https://launchpad.net/~larry-discuss
