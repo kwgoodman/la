@@ -3,7 +3,9 @@
 import numpy as np        
 from numpy.testing import assert_equal, assert_raises, assert_
 
-from la.util.resample import cross_validation, bootstrap
+import la
+from la.util.testing import assert_larry_equal
+from la.util.resample import cross_validation, bootstrap, split
       
         
 def cv_count_test():
@@ -94,4 +96,17 @@ def boot_repeatability_test():
         train2 += train
         test2 += test   
     yield assert_equal, train1, train2, msg % ('train', n, nboot)
-                                      
+
+def split_test():
+    "split test"
+    ys = [la.rand(3), la.rand(3,4), la.rand(2,3,4)]
+    msg = 'Failed on shape %s, axis %s'
+    for y in ys:
+        for axis in range(y.ndim):
+            cv = cross_validation(y.shape[axis], y.shape[axis])
+            for idx_train, idx_test in cv:
+                ytrain, ytest = split(y, idx_train, idx_test, axis)
+                y2 = ytrain.merge(ytest)
+                errmsg = msg % (str(y.shape), str(axis))
+                yield assert_larry_equal, y, y2, errmsg, y
+                                              

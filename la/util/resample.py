@@ -133,3 +133,99 @@ def bootstrap(n, nboot, randint=None):
         if count >= nboot:
             break            
 
+def split(data, idx_train, idx_test, axis):
+    """
+    Split into train and test data along give axis.
+    
+    Parameters
+    ----------
+    data : larry, Numpy array
+        The data to split into train and test data. `data` can be any object
+        that has a take method similar to numpy.ndarray.take().
+    idx_train : array_like
+        The indices of the training data.
+    idx_test : array_like
+        The indices of the testing data.
+    axis : int
+        The axis along which the data is split.
+        
+    Returns
+    -------
+    train : larry, Numpy array
+        The training data.
+    test : larry, Numpy array
+        The testing data.                        
+    
+    Examples
+    --------
+    Create train and test larrys for leave-one-out cross validation from a
+    1d larry of length 4:
+    
+    >>> from la.util.resample import cross_validation, split
+    >>> y = la.larry([1, 2, 3, 4])
+    >>> n = 4
+    >>> kfold = 4
+    >>> cv = cross_validation(n, kfold)
+    >>> for idx_train, idx_test in cv:
+    ...     print '-' * 10
+    ...     print 'ytrain:'
+    ...     print ytrain
+    ...     print 'ytest:'
+    ...     print ytest
+    ... 
+    ----------
+    ytrain:
+    label_0
+        0
+        3
+        2
+    x
+    array([1, 4, 3])
+    ytest:
+    label_0
+        1
+    x
+    array([2])
+    ----------
+    ytrain:
+    label_0
+        0
+        3
+        2
+    x
+    array([1, 4, 3])
+    ytest:
+    label_0
+        1
+    x
+    array([2])
+    ----------
+    ytrain:
+    label_0
+        0
+        3
+        2
+    x
+    array([1, 4, 3])
+    ytest:
+    label_0
+        1
+    x
+    array([2])
+    ----------
+    ytrain:
+    label_0
+        0
+        3
+        2
+    x
+    array([1, 4, 3])
+    ytest:
+    label_0
+        1
+    x
+    array([2])
+    
+    """
+    return data.take(idx_train, axis), data.take(idx_test, axis)
+    

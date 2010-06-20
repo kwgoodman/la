@@ -15,16 +15,21 @@ New larry methods
 
 New functions
 -------------
-- la.rand: Random samples from a uniform distribution
-- la.randn: Random samples from a Gaussian distribution
+- rand: Random samples from a uniform distribution
+- randn: Random samples from a Gaussian distribution
 - missing_marker: Return missing value marker for the given larry
 - ismissing: A bool Numpy array with element-wise marking of missing values
 - correlation: Correlation of two Numpy arrays along the specified axis
+- split : Split into train and test data along given axis
 
 Enhancements
 ------------
 - listmap now has option to ignore unmappable elements instead of KeyError
 - listmap.pyx now has option to ignore unmappable elements instead of KeyError
+
+Breakage from la 0.3
+--------------------
+- Development moved from launchpad to github
 
 Bug fixes
 ---------
