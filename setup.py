@@ -120,8 +120,7 @@ MICRO               = VER[2]
 ISRELEASED          = False
 VERSION             = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 PACKAGES            = ["la", "la/tests", "la/util", "la/util/tests", "la/src"]
-PACKAGE_DATA        = {'la': ['LICENSE'], 'la/src': ['clistmap.pyx',
-                                                     'clistmap.c']}
+PACKAGE_DATA        = {'la': ['LICENSE'], 'la/src': ['cflabel.pyx', 'cflabel.c']}
 REQUIRES            = ["numpy"]
 
 
@@ -144,7 +143,7 @@ try:
           package_data=PACKAGE_DATA,
           requires=REQUIRES,
           zip_safe=False,
-          ext_modules = [Extension("la.util.clistmap", ["la/src/clistmap.c"])]          
+          ext_modules = [Extension("la.util.cflabel", ["la/src/cflabel.c"])]          
          )
 except SystemExit:
     # Probably clistmap.c failed to compile, so use slower python version
