@@ -20,7 +20,9 @@ New functions
 - missing_marker: Return missing value marker for the given larry
 - ismissing: A bool Numpy array with element-wise marking of missing values
 - correlation: Correlation of two Numpy arrays along the specified axis
-- split : Split into train and test data along given axis
+- split: Split into train and test data along given axis
+- listmap_fill: Index map a list onto another and index of unmappable elements
+- align: Align two larrys using one of five join methods
 
 Enhancements
 ------------
@@ -30,6 +32,8 @@ Enhancements
 Breakage from la 0.3
 --------------------
 - Development moved from launchpad to github
+- func.py and afunc.py renamed flarry.py and farray.py to match new flabel.py
+    Broke: "from la.func import stack"; Did not break: "from la import stack"
 
 Bug fixes
 ---------

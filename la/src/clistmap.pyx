@@ -24,6 +24,10 @@ def listmap(list list1, list list2, bool ignore_unmappable=False):
         give `list2` if there are items in `list2` that are not in
         `list1`.
 
+    See Also
+    --------
+    la.flable.listmap_nofill: Indices that map one list onto another list
+
     Notes
     ----- 
     This is the C version of the function.

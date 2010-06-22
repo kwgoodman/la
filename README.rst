@@ -90,9 +90,9 @@ After you have installed ``la``, run the suite of unit tests:
     >>> import la
     >>> la.test()
     <snip>
-    Ran 2788 tests in 1.210s
+    Ran 2914 tests in 1.351s
     OK
-    <nose.result.TextTestResult run=2788 errors=0 failures=0> 
+    <nose.result.TextTestResult run=2914 errors=0 failures=0> 
     
 The ``la`` package currently contains one C extension but if it doesn't
 compile there's an automatic fallback to a python version of the function. The

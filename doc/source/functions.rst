@@ -18,11 +18,14 @@ The reference guide for the larry methods, as opposed to functions, can be
 found in :ref:`reference`.
 
 
-Labels
-------
+Alignment
+---------
 
-The label functions can be used to find the union and intersection of the
-labels.
+The alignment functions help you align one of more larrys.
+
+------------
+             
+.. autofunction:: la.align
 
 ------------
              
