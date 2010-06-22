@@ -3380,6 +3380,34 @@ class Test_alignment(unittest.TestCase):
     def test_morph_7(self):
         lar = larry([1, 2, 3])
         self.failUnlessRaises(ValueError, lar.morph, [0, 0], 0)
+
+    def test_morph_8(self):
+        "larry.morph_8"
+        original = la.larry([1, 2])
+        actual = original.morph([1, 0], axis=0)
+        desired = la.larry([2, 1], [[1, 0]])
+        ale(actual, desired, "int morph", original=original)
+
+    def test_morph_9(self):
+        "larry.morph_9"
+        original = la.larry([1, 2])
+        actual = original.morph([10, 0], axis=0)
+        desired = la.larry([nan, 1.0], [[10, 0]])
+        ale(actual, desired, "int morph unmappable", original=original)
+
+    def test_morph_10(self):
+        "larry.morph_10"
+        original = la.larry([True, False])
+        actual = original.morph([1, 0], axis=0)
+        desired = la.larry([False, True], [[1, 0]])
+        ale(actual, desired, "bool morph", original=original)
+
+    def test_morph_11(self):
+        "larry.morph_11"
+        original = la.larry([True, False])
+        actual = original.morph([10, 0], axis=0)
+        desired = la.larry([nan, 1.0], [[10, 0]])
+        ale(actual, desired, "bool morph unmappable", original=original)
        
     def test_morph_like_1(self):
         "larry.morph_like_1"

@@ -4,8 +4,8 @@ import csv
 
 import numpy as np
    
-from la.missing import nans, ismissing  
-from la.flabel import listmap, flattenlabel
+from la.missing import nans, ismissing, missing_marker  
+from la.flabel import listmap, listmap_fill, flattenlabel
 from la.util.scipy import nanmean, nanmedian, nanstd
 from la.util.misc import isscalar, fromlists
 from la.farray import (group_ranking, group_mean, group_median, shuffle,
@@ -2667,24 +2667,23 @@ class larry(object):
         return g 
                                                                  
 
-    # Alignment --------------------------------------------------------------
+    # Alignment --------------------------------------------------------------     
 
     def morph(self, label, axis):
         """
-        Reorder the elements along a specified axis.
+        Reorder the elements along the specified axis.
         
         If an element in `label` does not exist in the larry, NaNs will be
-        used for numeric dtype, None will be used for object dtype, and ''
-        will be used for string (np.string_) dtype.
-        
-        Since NaNs are used to mark missing scalar data, integer input is
-        converted to floats.
+        used for float dtype, None will be used for object dtype, and ''
+        will be used for string (np.string_) dtype. All other dtype, such as
+        int and bool, will be cast to float if there are any elements in
+        `label` does not exist in the larry.
         
         Parameters
         ----------
         label : list
             Desired ordering of elements along specified axis.
-        axis : integer
+        axis : int
             axis along which to perform the reordering.
         
         Returns
@@ -2692,10 +2691,12 @@ class larry(object):
         out : larry
             A reordered copy.       
         
-        Raises
-        ------
-        IndexError
-            axis is out of range.
+        See Also
+        --------
+        la.larry.morph_like: Morph along all axes to align with given larry.
+        la.larry.merge: Merge, or optionally update, a larry with a second
+                        larry.
+        la.align: Align two larrys using one of five join methods.
             
         Examples
         --------
@@ -2712,35 +2713,29 @@ class larry(object):
         """
         if axis >= self.ndim:
             raise IndexError, 'axis out of range'
-        label = list(label)    
-        shape = list(self.shape)
-        shape[axis] = len(label)
-        if self.dtype == object:
-            x = np.empty(shape, dtype=object)
-            x.fill(None)
-        elif self.dtype.type == np.string_:
-            x = np.zeros(shape, dtype=self.dtype)   
-        else:
-            x = nans(shape)       
-        idx0 = list(set(self.label[axis]) & set(label))
-        idx1 = listmap(label, idx0)
-        idx2 = listmap(self.label[axis], idx0)
-        index1 = [slice(None)] * self.ndim
-        index1[axis] = idx1       
-        x[index1] = self.x.take(idx2, axis)
-        lab = self.copylabel()
-        lab[axis] = label
-        return larry(x, lab)       
+        if self.label[axis] == label:
+            return self.copy()
+        else:    
+            idx, idx_miss = listmap_fill(self.label[axis], label)           
+            x = self.x.take(idx, axis)
+            if len(idx_miss) > 0:
+                index = [slice(None)] * self.ndim
+                index[axis] = idx_miss
+                miss = missing_marker(x)
+                if miss == NotImplemented:
+                    x = x.astype(float)
+                    miss = missing_marker(x)      
+                x[index] = miss      
+            lab = self.copylabel()
+            lab[axis] = list(label)
+            return larry(x, lab)
         
     def morph_like(self, lar):
         """
-        Morph to line up with the specified larry.
+        Morph along all axes to align with given larry.
 
-        If some elements in the list do not exist in the larry, NaNs will be
-        used.
-        
-        Since NaNs are used to mark missing data, if the input larry uses
-        integers then the output will uses floats.
+        If label elements in `lar` do not exist in the larry, then a fill
+        value is used to mark the missing values. See `morph` for details.
         
         Parameters
         ---------- 
@@ -2750,12 +2745,14 @@ class larry(object):
         Returns
         -------
         lar : larry
-            A morphed larry that is aligned with the input larry.
+            A morphed larry that is aligned with the input larry, `lar`.
             
-        Raises
-        ------
-        IndexError
-            If the larrys are not of the same dimension.                              
+        See Also
+        --------
+        la.larry.morph: Reorder the elements along the specified axis.
+        la.larry.merge: Merge, or optionally update, a larry with a second
+                        larry.
+        la.align: Align two larrys using one of five join methods.                            
 
         Examples
         --------
@@ -2771,7 +2768,6 @@ class larry(object):
             a
         x
         array([ NaN,   2.,   1.])
-
 
         Align y2 to y1:
        
@@ -3691,7 +3687,8 @@ class larry(object):
                     
         See also
         --------
-        la.larry.flatten : Return a copy of the larry collapsed into one dimension.
+        la.larry.flatten : Return a copy of the larry collapsed into one
+                           dimension.
         
         Examples
         --------

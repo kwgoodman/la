@@ -28,6 +28,7 @@ Enhancements
 ------------
 - listmap now has option to ignore unmappable elements instead of KeyError
 - listmap.pyx now has option to ignore unmappable elements instead of KeyError
+- larry.morph() is much faster as are methods, such as merge, that use it
 
 Breakage from la 0.3
 --------------------

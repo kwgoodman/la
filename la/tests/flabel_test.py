@@ -42,7 +42,7 @@ def listmap_unmappable_test():
 
 # ---------------------------------------------------------------------------
 
-# listmap_nofill       
+# listmap_fill unit tests    
 
 def listmap_fill_test():
     "listmap_fill test"
