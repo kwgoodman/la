@@ -104,11 +104,11 @@ After you have installed ``la``, run the suite of unit tests:
     <nose.result.TextTestResult run=2918 errors=0 failures=0> 
     
 The ``la`` package currently contains one C extension but if it doesn't
-compile there's an automatic fallback to a python version of the function. The
-doc string of the ``listmap`` function tells you which version (python or C)
-you are using. To import ``listmap``:
+compile there's an automatic fallback to a python version of the functions.
+The doc strings of the ``listmap`` and ``listmap_fill`` functions tells you
+which version (python or C) you are using. To import the functions:
 ::
-    >>> from la.util.misc import listmap
+    >>> from la.util.misc import listmap, listmap_fill
     
 Since ``la`` can run in a pure python mode, you can use ``la`` by just saving
 it and making sure that python can find it.    

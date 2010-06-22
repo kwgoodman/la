@@ -22,6 +22,7 @@ New functions
 - correlation: Correlation of two Numpy arrays along the specified axis
 - split: Split into train and test data along given axis
 - listmap_fill: Index map a list onto another and index of unmappable elements
+- listmap_fill: Cython version of listmap_fill
 - align: Align two larrys using one of five join methods
 
 Enhancements
