@@ -106,9 +106,9 @@ def align(lar1, lar2, join='inner', fill='default', cast=True):
         raise TypeError, "`join` must be a string or a list."
         
     # Find missing markers                
-    miss1 = missing_marker(lar1)
-    miss2 = missing_marker(lar2)
     if fill == 'default':
+        miss1 = missing_marker(lar1)
+        miss2 = missing_marker(lar2)
         if (miss1 == NotImplemented) and cast:
             lar1 = lar1.astype(float)
             miss1 = missing_marker(lar1)   
@@ -125,6 +125,8 @@ def align(lar1, lar2, join='inner', fill='default', cast=True):
     x2 = lar2.x
     label1 = lar1.label
     label2 = lar2.label
+    x1isview = True
+    x2isview = True
     
     # Loop: align one axis at a time      
     for ax in range(ndim):    
@@ -140,7 +142,9 @@ def align(lar1, lar2, join='inner', fill='default', cast=True):
                 idx1 = listmap(list1, list3)
                 idx2 = listmap(list2, list3)
                 x1 = x1.take(idx1, ax)
-                x2 = x2.take(idx2, ax)        
+                x2 = x2.take(idx2, ax)
+                x1isview = False
+                x2isview = False   
         elif joinax == 'outer':
             if list1 == list2:
                 list3 = list(list1)
@@ -160,7 +164,9 @@ def align(lar1, lar2, join='inner', fill='default', cast=True):
                     x2[index2] = miss2
                 except TypeError:
                     msg = "`fill` type not compatible with larry dtype"
-                    raise TypeError, msg  
+                    raise TypeError, msg
+                x1isview = False
+                x2isview = False                     
         elif joinax == 'left':
             list3 = list(list1)
             if list1 != list2:
@@ -172,7 +178,8 @@ def align(lar1, lar2, join='inner', fill='default', cast=True):
                     x2[index2] = miss2                
                 except TypeError:
                     msg = "`fill` type not compatible with larry dtype"
-                    raise TypeError, msg 
+                    raise TypeError, msg
+                x2isview = False                    
         elif joinax == 'right':
             list3 = list(list2)
             if list1 != list2:            
@@ -184,14 +191,19 @@ def align(lar1, lar2, join='inner', fill='default', cast=True):
                     x1[index1] = miss1
                 except TypeError:
                     msg = "`fill` type not compatible with larry dtype"
-                    raise TypeError, msg              
+                    raise TypeError, msg
+                x1isview = False                                 
         else:
             raise ValueError, 'join type not recognized'  
         label.append(list3)
     
-    # Make output larrys    
-    lar3 = larry(x1, label)
+    # Make output larrys
+    if x1isview:    
+        x1 = x1.copy()
+    lar3 = larry(x1, label)        
     label = [list(lab) for lab in label]
+    if x2isview:    
+        x2 = x2.copy()
     lar4 = larry(x2, label)
     
     return lar3, lar4

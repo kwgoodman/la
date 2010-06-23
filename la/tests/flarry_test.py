@@ -113,8 +113,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([1, 2], dtype=float)
         d2 = larry([1, 2], dtype=float)
         msg = "align 1d #1 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')            
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)            
 
     def test_1d2(self):
         "align 1d test #2"
@@ -124,8 +124,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([1, 2], dtype=float)
         d2 = larry([1, 2], dtype=float)
         msg = "align 1d #2 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right') 
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2) 
 
     def test_1d3(self):
         "align 1d test #3"
@@ -135,8 +135,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([1, 2])
         d2 = larry([1, 2])
         msg = "align 1d #3 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right') 
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2) 
 
     def test_1d4(self):
         "align 1d test #4"
@@ -146,8 +146,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([1, 2, nan], dtype=float)
         d2 = larry([1, 2, 3], dtype=float)
         msg = "align 1d #4 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)
         
     def test_1d5(self):
         "align 1d test #5"
@@ -157,8 +157,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([1, 2, 0])
         d2 = larry([1, 2, 3])
         msg = "align 1d #5 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')        
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)        
 
     def test_1d6(self):
         "align 1d test #6"
@@ -168,8 +168,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([1, 2], dtype=float)
         d2 = larry([1, 2], dtype=float)
         msg = "align 1d #6 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)
 
     def test_1d7(self):
         "align 1d test #7"
@@ -179,8 +179,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([1, 2, nan], dtype=float)
         d2 = larry([1, 2, 3], dtype=float)
         msg = "align 1d #7 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)
         
     def test_1d8(self):
         "align 1d test #8"
@@ -190,8 +190,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([1, 2, nan], dtype=float)
         d2 = larry([1, 2, 3], dtype=float)
         msg = "align 1d #8 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')        
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)        
 
     def test_1d9(self):
         "align 1d test #9"
@@ -201,8 +201,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([])
         d2 = larry([])
         msg = "align 1d #9 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')            
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)            
 
     def test_1d10(self):
         "align 1d test #10"
@@ -212,8 +212,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([])
         d2 = larry([])
         msg = "align 1d #10 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right') 
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2) 
 
     def test_1d11(self):
         "align 1d test #11"
@@ -223,8 +223,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([], dtype=int)
         d2 = larry([], dtype=int)
         msg = "align 1d #11 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right') 
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2) 
 
     def test_1d12(self):
         "align 1d test #12"
@@ -234,8 +234,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([1,   2,   nan, nan], [[0, 1, 'a', 'b']], dtype=float)
         d2 = larry([nan, nan, 1,   2],   [[0, 1, 'a', 'b']], dtype=float)
         msg = "align 1d #12 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)
         
     def test_1d13(self):
         "align 1d test #13"
@@ -245,8 +245,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([1, 2, 0, 0], [[0, 1, 'a', 'b']])
         d2 = larry([0, 0, 1, 2], [[0, 1, 'a', 'b']])
         msg = "align 1d #13 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)
 
     def test_1d14(self):
         "align 1d test #14"
@@ -256,8 +256,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([1, 2], dtype=float)
         d2 = larry([nan, nan])
         msg = "align 1d #14 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right') 
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2) 
 
     def test_1d15(self):
         "align 1d test #15"
@@ -267,8 +267,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([nan, nan], [['a', 'b']], dtype=float)
         d2 = larry([1,   2], [['a', 'b']], dtype=float)
         msg = "align 1d #15 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)
         
     def test_1d16(self):
         "align 1d test #16"
@@ -278,8 +278,8 @@ class Test_align_1d(unittest.TestCase):
         d1 = larry([1, 2], dtype=float)
         d2 = larry([nan, nan])
         msg = "align 1d #16 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)
         
     def test_1d17(self):
         "align 1d test #17"
@@ -287,6 +287,17 @@ class Test_align_1d(unittest.TestCase):
         y2 = larry([1, 2], [['a', 'b']])        
         self.failUnlessRaises(TypeError, align, y1, y2, 'outer', 'default',
                                                                        False)          
+
+    def test_1d18(self):
+        "align 1d test #18"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2])
+        a1, a2 = align(y1, y2, cast=False)
+        d1 = larry([1, 2])
+        d2 = larry([1, 2])
+        msg = "align 1d #18 fail on %s larry"
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)
 
 class Test_align_2d(unittest.TestCase):
     "Test 2d alignment of larrys"   
@@ -299,8 +310,8 @@ class Test_align_2d(unittest.TestCase):
         d1 = larry([[1, 2], [3, 4]], dtype=float)
         d2 = larry([[1, 2], [3, 4]], dtype=float)
         msg = "align 2d #1 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')            
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)            
 
     def test_2d2(self):
         "align 2d test #2"
@@ -310,8 +321,8 @@ class Test_align_2d(unittest.TestCase):
         d1 = larry([[1, 2], [3, 4]], dtype=float)
         d2 = larry([[1, 2], [3, 4]], dtype=float)
         msg = "align 2d #2 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right') 
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2) 
 
     def test_2d3(self):
         "align 2d test #3"
@@ -321,8 +332,8 @@ class Test_align_2d(unittest.TestCase):
         d1 = larry([[1, 2], [3, 4]])
         d2 = larry([[1, 2], [3, 4]])
         msg = "align 2d #3 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)
 
     def test_2d4(self):
         "align 2d test #4"
@@ -332,8 +343,8 @@ class Test_align_2d(unittest.TestCase):
         d1 = larry([[1, 2, nan], [3, 4, nan]], dtype=float)
         d2 = larry([[1, 2, 5],   [3, 4,   6]], dtype=float)
         msg = "align 2d #4 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)
 
     def test_2d5(self):
         "align 2d test #5"
@@ -343,8 +354,8 @@ class Test_align_2d(unittest.TestCase):
         d1 = larry([[1, 2, 0], [3, 4, 0]])
         d2 = larry([[1, 2, 5], [3, 4, 6]])
         msg = "align 2d #5 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')       
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)       
 
     def test_2d6(self):
         "align 2d test #6"
@@ -354,8 +365,8 @@ class Test_align_2d(unittest.TestCase):
         d1 = larry([[1, 2, 0], [3, 4, 0]])
         d2 = larry([[1, 2, 5], [3, 4, 6]])
         msg = "align 2d #6 fail on %s larry"
-        ale(a1, d1, msg % 'left')
-        ale(a2, d2, msg % 'right')
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)
 
     def test_2d7(self):
         "align 2d test #7"
@@ -363,7 +374,17 @@ class Test_align_2d(unittest.TestCase):
         y2 = larry([[1, 2, 5], [3, 4, 6]])
         j = ['outer', 'inner', 'left']
         self.failUnlessRaises(ValueError, align, y1, y2, j, 'default', False)
-        
+
+    def test_2d8(self):
+        "align 2d test #8"
+        y1 = larry([[1, 2], [3, 4]])
+        y2 = larry([[1, 2], [3, 4]])
+        a1, a2 = align(y1, y2, cast=False)
+        d1 = larry([[1, 2], [3, 4]])
+        d2 = larry([[1, 2], [3, 4]])
+        msg = "align 2d #8 fail on %s larry"
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)        
                
 def suite():
     s = []
