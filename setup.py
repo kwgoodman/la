@@ -100,7 +100,6 @@ VER = VER.split("= ")
 VER = VER[1].strip()
 VER = VER.strip("\"")
 VER = VER.split('.')
-VER = [int(z) for z in VER]
 
 NAME                = 'la'
 MAINTAINER          = "Keith Goodman"
@@ -118,7 +117,7 @@ MAJOR               = VER[0]
 MINOR               = VER[1]
 MICRO               = VER[2]
 ISRELEASED          = False
-VERSION             = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
+VERSION             = '%s.%s.%s' % (MAJOR, MINOR, MICRO)
 PACKAGES            = ["la", "la/tests", "la/util", "la/util/tests", "la/src"]
 PACKAGE_DATA        = {'la': ['LICENSE'], 'la/src': ['cflabel.pyx', 'cflabel.c']}
 REQUIRES            = ["numpy"]
