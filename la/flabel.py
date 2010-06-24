@@ -6,7 +6,7 @@ import numpy as np
 
 try:
     # The c version is faster...
-    from la.util.cflabel import listmap
+    from la.cflabel import listmap
 except ImportError:
     # ...but perhaps it did not compile when you built the la package? So
     # we'll use the python version. If you are unsure which version you are
@@ -83,7 +83,7 @@ except ImportError:
 
 try:
     # The c version is faster...
-    from la.util.cflabel import listmap_fill
+    from la.cflabel import listmap_fill
 except ImportError:
     # ...but perhaps it did not compile when you built the la package? So
     # we'll use the python version. If you are unsure which version you are

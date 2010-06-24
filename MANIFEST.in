@@ -1,3 +1,4 @@
 include ChangeLog LICENSE README.rst RELEASE.rst la/LICENSE
+include la/src/setup.py la/src/cflabel.pyx
 recursive-include doc *
 recursive-exclude doc/build *
