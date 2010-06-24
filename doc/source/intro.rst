@@ -103,12 +103,18 @@ After you have installed ``la``, run the suite of unit tests:
     OK
     <nose.result.TextTestResult run=2920 errors=0 failures=0> 
     
-The ``la`` package currently contains one C extension but if it doesn't
-compile there's an automatic fallback to a python version of the functions.
-The doc strings of the ``listmap`` and ``listmap_fill`` functions tells you
-which version (python or C) you are using. To import the functions:
+The ``la`` package contains a C extension module. The functions in the module
+speed up common alignment operations such as adding two unaligned larrys. If
+the module doesn't compile when you build ``la`` then there's an automatic
+fallback to a python version of the functions. To see whether you are using
+the C version or the Python versions:
 ::
-    >>> from la.util.misc import listmap, listmap_fill
+    >>> la.info()
+    la version      0.4.0           
+    la file         /usr/local/lib/python2.6/dist-packages/la/__init__.pyc 
+    HDF5 archiving  Available       
+    listmap         Faster C version
+    listmap_fill    Faster C version 
     
 Since ``la`` can run in a pure python mode, you can use ``la`` by just saving
 it and making sure that python can find it.    

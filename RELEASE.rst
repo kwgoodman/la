@@ -24,6 +24,7 @@ New functions
 - listmap_fill: Index map a list onto another and index of unmappable elements
 - listmap_fill: Cython version of listmap_fill
 - align: Align two larrys using one of five join methods
+- info: la package information such as version number and HDF5 availability
 
 Enhancements
 ------------

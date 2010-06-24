@@ -6,13 +6,15 @@ from la.deflarry import larry
 try:
     from la.io import (IO, save, load, repack, is_archived_larry,
                        archive_directory)
-except (ImportError, ValueError):
-    print "Cannot import h5py; no archiving available."        
+except:
+    # Cannot import h5py; no archiving available.
+    pass        
 
 from numpy import nan, inf
 
 from la.flarry import (union, intersection, stack, panel, cov, rand, randn,
                        align)
+from la.util.report import info                     
 from la.version import __version__
 from la.util import testing
 
