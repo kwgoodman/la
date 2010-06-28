@@ -10,7 +10,7 @@ from la.missing import missing_marker
 
 # Alignment -----------------------------------------------------------------
 
-def align(lar1, lar2, join='inner', fill='default', cast=True):    
+def align(lar1, lar2, join='inner', cast=True):    
     """
     Align two larrys using one of five join methods.
     
@@ -29,18 +29,14 @@ def align(lar1, lar2, join='inner', fill='default', cast=True):
         same as the number of dimensions of the two larrys. The first element
         in the list is the join method for axis=0, the second element is the
         join method for axis=1, and so on.
-    fill : fill value, optional
-        Some join methods can introduce new rows, columns, etc. to the input
-        larrys. The new rows, columns, etc. are filled with the `fill` value.
-        By default ('default') the fill value is determined by the function
-        la.missing.missing_marker().
     cast : bool, optional
-        Only float, str, and object dtypes have default fill values (la.nan,
+        Only float, str, and object dtypes have missing value markers (la.nan,
         '', and None, respectively). Other dtypes, such as int and bool, do
         not have a missing value marker. If `cast` is set to True (default),
         then int and bool dtypes, for example, will be cast to float. If cast
         is set to False, then a TypeError will be raised for int and bool
-        input. If `fill` is not 'default' then `cast` is ignored.
+        input if the join introduces new rows, columns, etc. An inner join
+        will never introduce new rows, columns, etc.
         
     Returns
     -------
@@ -53,38 +49,43 @@ def align(lar1, lar2, join='inner', fill='default', cast=True):
     --------
     Create two larrys:
     
-    >>> lar1 = larry([1,   2, nan], [['a', 'b', 'c']])
-    >>> lar2 = larry([1, nan, nan], [['a', 'b', 'dd']])
-    
-    The default is an inner join:
-    
-    >>> binaryop(np.add, lar1, lar2)
-    >>> label_0
-            a
-            b
-        x
-        array([2., NaN])
-        
-    If one data element is missing in one larry but not in the other, then you
-    can replace the missing value with `one_missing` (here 0):     
-        
-    >>> binaryop(np.add, lar1, lar2, one_missing=0)
-    >>> label_0
-            a
-            b
-        x
-        array([2., 2.])
-        
-    An outer join with single and double missing values replaced by zero:    
-        
-    >>> binaryop(np.add, lar1, lar2, join='outer', one_missing=0, two_missing=0)
-    >>> label_0
-            a
-            b
-            c
-            dd
-        x
-        array([2., 2.0, 0.0, 0.0])                               
+    >>> y1 = larry([1, 2])
+    >>> y2 = larry([1, 2, 3])
+
+    The default join method is an inner join:
+
+    >>> lar3, lar4 = la.align(y1, y2)
+    >>> lar3
+    label_0
+        0
+        1
+    x
+    array([1, 2])
+    >>> lar4
+    label_0
+        0
+        1
+    x
+    array([1, 2])
+
+    An outer join adds a missing value (NaN) to lar1, therefore the the dtype
+    of lar1 is changed from int to float:
+
+    >>> lar3, lar4 = la.align(y1, y2, join='outer')
+    >>> lar3
+    label_0
+        0
+        1
+        2
+    x
+    array([  1.,   2.,  NaN])
+    >>> lar4
+    label_0
+        0
+        1
+        2
+    x
+    array([1, 2, 3])                              
 
     """
     
@@ -106,18 +107,8 @@ def align(lar1, lar2, join='inner', fill='default', cast=True):
         raise TypeError, "`join` must be a string or a list."
         
     # Find missing markers                
-    if fill == 'default':
-        miss1 = missing_marker(lar1)
-        miss2 = missing_marker(lar2)
-        if (miss1 == NotImplemented) and cast:
-            lar1 = lar1.astype(float)
-            miss1 = missing_marker(lar1)   
-        if (miss2 == NotImplemented) and cast:
-            lar2 = lar2.astype(float)
-            miss2 = missing_marker(lar2)
-    else:
-        miss1 = fill
-        miss2 = fill
+    miss1 = missing_marker(lar1)
+    miss2 = missing_marker(lar2)
         
     # For loop initialization                         
     label = []
@@ -128,7 +119,8 @@ def align(lar1, lar2, join='inner', fill='default', cast=True):
     x1isview = True
     x2isview = True
     
-    # Loop: align one axis at a time      
+    # Loop: align one axis at a time 
+    msg = "`fill` type not compatible with larry dtype"     
     for ax in range(ndim):    
         list1 = label1[ax]
         list2 = label2[ax]
@@ -159,12 +151,22 @@ def align(lar1, lar2, join='inner', fill='default', cast=True):
                 index2 = [slice(None)] * ndim
                 index1[ax] = idx1_miss
                 index2[ax] = idx2_miss
-                try:
-                    x1[index1] = miss1
+                if len(idx1_miss) > 0:
+                    if miss1 == NotImplemented:
+                        if cast:
+                            x1 = x1.astype(float)
+                            miss1 = missing_marker(x1)   
+                        else:                         
+                            raise TypeError, msg
+                    x1[index1] = miss1                                        
+                if len(idx2_miss) > 0:
+                    if miss2 == NotImplemented:
+                        if cast:
+                            x2 = x2.astype(float)
+                            miss2 = missing_marker(x2)   
+                        else:
+                            raise TypeError, msg
                     x2[index2] = miss2
-                except TypeError:
-                    msg = "`fill` type not compatible with larry dtype"
-                    raise TypeError, msg
                 x1isview = False
                 x2isview = False                     
         elif joinax == 'left':
@@ -174,11 +176,14 @@ def align(lar1, lar2, join='inner', fill='default', cast=True):
                 x2 = x2.take(idx2, ax) 
                 index2 = [slice(None)] * ndim
                 index2[ax] = idx2_miss
-                try:
-                    x2[index2] = miss2                
-                except TypeError:
-                    msg = "`fill` type not compatible with larry dtype"
-                    raise TypeError, msg
+                if len(idx2_miss) > 0:
+                    if miss2 == NotImplemented:
+                        if cast:
+                            x2 = x2.astype(float)
+                            miss2 = missing_marker(x2)   
+                        else:
+                            raise TypeError, msg
+                    x2[index2] = miss2
                 x2isview = False                    
         elif joinax == 'right':
             list3 = list(list2)
@@ -187,11 +192,14 @@ def align(lar1, lar2, join='inner', fill='default', cast=True):
                 x1 = x1.take(idx1, ax) 
                 index1 = [slice(None)] * ndim
                 index1[ax] = idx1_miss
-                try:
-                    x1[index1] = miss1
-                except TypeError:
-                    msg = "`fill` type not compatible with larry dtype"
-                    raise TypeError, msg
+                if len(idx1_miss) > 0:
+                    if miss1 == NotImplemented:
+                        if cast:
+                            x1 = x1.astype(float)
+                            miss1 = missing_marker(x1)   
+                        else:
+                            raise TypeError, msg
+                    x1[index1] = miss1 
                 x1isview = False                                 
         else:
             raise ValueError, 'join type not recognized'  
