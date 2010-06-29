@@ -7,7 +7,7 @@ import numpy as np
 nan = np.nan
 
 from la import larry
-from la import union, intersection, panel, stack, cov, align
+from la import union, intersection, panel, stack, cov, align, binaryop
 from la.util.testing import assert_larry_equal as ale
 
 
@@ -392,14 +392,242 @@ class Test_align_2d(unittest.TestCase):
         d2 = larry([[1, 2], [3, 4]])
         msg = "align 2d fail on %s larry"
         ale(a1, d1, msg % 'left', original=y1)
-        ale(a2, d2, msg % 'right', original=y2)        
-               
+        ale(a2, d2, msg % 'right', original=y2)
+        
+class Test_binaryop(unittest.TestCase):
+    "Test la.binaryop()"   
+
+    def test_binaryop_01(self):
+        "binaryop test #01"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2)
+        desired = larry([2, 4])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)           
+
+    def test_binaryop_02(self):
+        "binaryop test #02"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2, join='inner')
+        desired = larry([2, 4])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+        
+    def test_binaryop_03(self):
+        "binaryop test #03"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2, join='inner', missone=0)
+        desired = larry([2, 4])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+                  
+    def test_binaryop_04(self):
+        "binaryop test #04"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2, join='inner', missone=0, misstwo=0)
+        desired = larry([2, 4])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+
+    def test_binaryop_05(self):
+        "binaryop test #05"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2, misstwo=0)
+        desired = larry([2, 4])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+
+    def test_binaryop_06(self):
+        "binaryop test #06"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2, join='outer')
+        desired = larry([2, 4, nan])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+        
+    def test_binaryop_07(self):
+        "binaryop test #07"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2, join='outer', missone=0)
+        desired = larry([2, 4, 3], dtype=float)
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+                  
+    def test_binaryop_08(self):
+        "binaryop test #08"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2, join='outer', missone=0, misstwo=0)
+        desired = larry([2, 4, 3], dtype=float)
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+
+    def test_binaryop_09(self):
+        "binaryop test #09"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2, join='outer', misstwo=0)
+        desired = larry([2, 4, nan])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+        
+    def test_binaryop_10(self):
+        "binaryop test #10"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2, join='left')
+        desired = larry([2, 4])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+        
+    def test_binaryop_11(self):
+        "binaryop test #11"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2, join='left', missone=0)
+        desired = larry([2, 4])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+                  
+    def test_binaryop_12(self):
+        "binaryop test #12"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2, join='left', missone=0, misstwo=0)
+        desired = larry([2, 4])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)       
+
+    def test_binaryop_13(self):
+        "binaryop test #13"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2, join='right')
+        desired = larry([2, 4, nan])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+        
+    def test_binaryop_14(self):
+        "binaryop test #14"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2, join='right', missone=0)
+        desired = larry([2, 4, 3], dtype=float)
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+                  
+    def test_binaryop_15(self):
+        "binaryop test #15"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2, join='right', missone=0, misstwo=0)
+        desired = larry([2, 4, 3], dtype=float)
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+
+    def test_binaryop_16(self):
+        "binaryop test #16"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = binaryop(np.add, y1, y2, join='right', misstwo=0)
+        desired = larry([2, 4, nan])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+        
+    def test_binaryop_17(self):
+        "binaryop test #17"
+        y1 = larry([1, nan, nan, 1])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        actual = binaryop(np.add, y1, y2)
+        desired = larry([2, nan, nan], [[0, 1, 2]])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+
+    def test_binaryop_18(self):
+        "binaryop test #18"
+        y1 = larry([1, nan, nan, 1])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        actual = binaryop(np.add, y1, y2, join='outer')
+        desired = larry([2, nan, nan, nan, nan], [[0, 1, 2, 3, 'a']])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+
+    def test_binaryop_19(self):
+        "binaryop test #19"
+        y1 = larry([1, nan, nan, 1])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        actual = binaryop(np.add, y1, y2, join='outer', missone=0)
+        desired = larry([2, 1, nan, 1, 1], [[0, 1, 2, 3, 'a']])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+                                        
+    def test_binaryop_20(self):
+        "binaryop test #20"
+        y1 = larry([1, nan, nan, 1])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        actual = binaryop(np.add, y1, y2, join='outer', missone=0, misstwo=0)
+        desired = larry([2, 1, 0, 1, 1], [[0, 1, 2, 3, 'a']], dtype=float)
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+
+    def test_binaryop_21(self):
+        "binaryop test #21"
+        y1 = larry([True, True])
+        y2 = larry([True, False, True])
+        actual = binaryop(np.logical_and, y1, y2)
+        desired = larry([True, False])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2) 
+
+    def test_binaryop_22(self):
+        "binaryop test #22"
+        # This is a corner case. The binaryop function uses the align_raw
+        # function which converts the bool larrys to float since it must
+        # fill in a missing value. And then logical_and(nan, True) returns
+        # True.
+        y1 = larry([True, True])
+        y2 = larry([True, False, True])
+        actual = binaryop(np.logical_and, y1, y2, join='outer')
+        desired = larry([True, False, True])
+        msg = "binaryop failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2) 
+                       
 def suite():
     s = []
     u = unittest.TestLoader().loadTestsFromTestCase
     s.append(u(Test_func)) 
     s.append(u(Test_align_1d)) 
-    s.append(u(Test_align_2d))  
+    s.append(u(Test_align_2d))
+    s.append(u(Test_binaryop))  
     return unittest.TestSuite(s)
 
 def run():   

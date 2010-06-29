@@ -29,6 +29,10 @@ The alignment functions help you align one of more larrys.
 
 ------------
              
+.. autofunction:: la.binaryop
+
+------------
+             
 .. autofunction:: la.union
 
 ------------

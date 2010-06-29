@@ -1,6 +1,7 @@
 "Missing value utilities"
 
 import numpy as np
+import la
 
 
 def nans(shape, dtype=float):
@@ -61,14 +62,14 @@ def nans(shape, dtype=float):
     msg += 'fill value.'
     raise TypeError, msg
 
-def missing_marker(lar):
+def missing_marker(data):
     """
-    Missing value marker, which is based on dtype, for the given larry.
+    Missing value marker, which is based on dtype, for the given data.
     
     Parameters
     ----------
-    lar : larry
-        The input larry.
+    lar : {larry, ndarray}
+        Input data can be a larry or a Numpy array.
         
     Returns
     -------
@@ -92,7 +93,7 @@ def missing_marker(lar):
     True
             
     """
-    dtype = lar.dtype
+    dtype = data.dtype
     if issubclass(dtype.type, np.inexact):
         return np.nan
     else:
@@ -105,14 +106,14 @@ def missing_marker(lar):
         else:              
             return NotImplemented
 
-def ismissing(lar):
+def ismissing(data):
     """
-    A bool Numpy array with element-wise marking of missing values in a larry.
+    A bool Numpy array with element-wise marking of missing values.
     
     Parameters
     ----------
-    lar : larry
-        Input larry.
+    lar : {larry, ndarray}
+        Input data can be a larry or a Numpy array.
         
     Returns
     -------
@@ -140,13 +141,17 @@ def ismissing(lar):
     array([ True, False], dtype=bool)
     
     """
-    mm = missing_marker(lar)
+    mm = missing_marker(data)
     if mm == NotImplemented:
-        arr = np.empty(lar.shape, dtype=bool)
+        arr = np.empty(data.shape, dtype=bool)
         arr.fill(False)
         return arr
     else:
-        if mm != mm:
-            return np.isnan(lar.x)
+        if isinstance(data, la.larry):
+            x = data.x
         else:
-            return lar.x == [mm]                    
+            x = data        
+        if mm != mm:
+            return np.isnan(x)
+        else:
+            return x == [mm]                    

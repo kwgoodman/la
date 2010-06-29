@@ -25,6 +25,7 @@ New functions
 - listmap_fill: Cython version of listmap_fill
 - align: Align two larrys using one of five join methods
 - info: la package information such as version number and HDF5 availability
+- binaryop: Binary operation on two larrys with given function and join method
 
 Enhancements
 ------------
@@ -36,7 +37,7 @@ Breakage from la 0.3
 --------------------
 - Development moved from launchpad to github
 - func.py and afunc.py renamed flarry.py and farray.py to match new flabel.py
-    Broke: "from la.func import stack"; Did not break: "from la import stack"
+  Broke: "from la.func import stack"; Did not break: "from la import stack"
 
 Bug fixes
 ---------

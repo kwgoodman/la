@@ -96,7 +96,29 @@ class Test_missing_marker(unittest.TestCase):
         "afunc.missing_marker_5"
         import datetime
         d = datetime.date(2011, 1, 1)
-        assert_equal(missing_marker(larry([d])), None) 
+        assert_equal(missing_marker(larry([d])), None)
+        
+    def test_missing_marker_1a(self):
+        "afunc.missing_marker_1a"
+        assert_equal(missing_marker(np.array([1])), NotImplemented) 
+
+    def test_missing_marker_2a(self):
+        "afunc.missing_marker_2a"
+        assert_equal(missing_marker(np.array([1.0])), nan)
+        
+    def test_missing_marker_3a(self):
+        "afunc.missing_marker_3a"
+        assert_equal(missing_marker(np.array([True])), NotImplemented)
+
+    def test_missing_marker_4a(self):
+        "afunc.missing_marker_4a"
+        assert_equal(missing_marker(np.array(['a'])), '')                
+
+    def test_missing_marker_5a(self):
+        "afunc.missing_marker_5a"
+        import datetime
+        d = datetime.date(2011, 1, 1)
+        assert_equal(missing_marker(np.array([d])), None)         
         
 class Test_ismissing(unittest.TestCase):
     "Test ismissing"                 
@@ -138,6 +160,44 @@ class Test_ismissing(unittest.TestCase):
     def test_ismissing_9(self):
         "afunc.ismissing_9"
         assert_equal(ismissing(larry([True])), np.array([False]))                   
+
+    def test_ismissing_1a(self):
+        "afunc.ismissing_1a"
+        assert_equal(ismissing(np.array([1])), np.array([False])) 
+
+    def test_ismissing_2a(self):
+        "afunc.ismissing_2a"
+        assert_equal(ismissing(np.array([1.0])), np.array([False]))
+        
+    def test_ismissing_3a(self):
+        "afunc.ismissing_3a"
+        assert_equal(ismissing(np.array(['str'])), np.array([False]))
+
+    def test_ismissing_4a(self):
+        "afunc.ismissing_4a"
+        assert_equal(ismissing(np.array([None])), np.array([True]))               
+
+    def test_ismissing_5a(self):
+        "afunc.ismissing_5a"
+        import datetime
+        d = datetime.date(2011, 1, 1)
+        assert_equal(ismissing(np.array([d])), np.array([False])) 
+
+    def test_ismissing_6a(self):
+        "afunc.ismissing_6a"
+        assert_equal(ismissing(np.array([nan])), np.array([True]))
+        
+    def test_ismissing_7a(self):
+        "afunc.ismissing_7a"
+        assert_equal(ismissing(np.array([nan, 1])), np.array([True, False])) 
+        
+    def test_ismissing_8a(self):
+        "afunc.ismissing_8a"
+        assert_equal(ismissing(np.array([''])), np.array([True])) 
+        
+    def test_ismissing_9a(self):
+        "afunc.ismissing_9a"
+        assert_equal(ismissing(np.array([True])), np.array([False])) 
 
 # Unit tests ----------------------------------------------------------------        
     

@@ -5,7 +5,7 @@ import numpy as np
 from la.deflarry import larry
 from la.flabel import flattenlabel, listmap, listmap_fill
 from la.farray import covMissing
-from la.missing import missing_marker
+from la.missing import missing_marker, ismissing
 
 
 # Alignment -----------------------------------------------------------------
@@ -25,36 +25,37 @@ def align(lar1, lar2, join='inner', cast=True):
     join : {'inner', 'outer', 'left', 'right', list}, optional
         The join method used to align the two larrys. The default join method
         along each axis is 'inner', i.e., the intersection of the labels. If
-        `join` is a list of strings then the length of the list must be the 
+        `join` is a list of strings then the length of the list should be the 
         same as the number of dimensions of the two larrys. The first element
         in the list is the join method for axis=0, the second element is the
         join method for axis=1, and so on.
     cast : bool, optional
         Only float, str, and object dtypes have missing value markers (la.nan,
         '', and None, respectively). Other dtypes, such as int and bool, do
-        not have a missing value marker. If `cast` is set to True (default),
-        then int and bool dtypes, for example, will be cast to float. If cast
-        is set to False, then a TypeError will be raised for int and bool
-        input if the join introduces new rows, columns, etc. An inner join
-        will never introduce new rows, columns, etc.
+        not have a missing value marker. If `cast` is set to True (default)
+        then int and bool dtypes, for example, will be cast to float if any
+        new rows, columns, etc are created. If cast is set to False, then a
+        TypeError will be raised for int and bool dtype input if the join
+        introduces new rows, columns, etc. An inner join will never introduce
+        new rows, columns, etc.
         
     Returns
     -------
     lar3 : larry
-        The aligned version of `lar1`.
+        A copy of the aligned version of `lar1`.
     lar4 : larry
-        The aligned version of `lar2`.        
+        A copy of the aligned version of `lar2`.                     
         
     Examples
     --------
     Create two larrys:
     
-    >>> y1 = larry([1, 2])
-    >>> y2 = larry([1, 2, 3])
+    >>> lar1 = larry([1, 2])
+    >>> lar2 = larry([1, 2, 3])
 
     The default join method is an inner join:
 
-    >>> lar3, lar4 = la.align(y1, y2)
+    >>> lar3, lar4 = la.align(lar1, lar2)
     >>> lar3
     label_0
         0
@@ -71,7 +72,7 @@ def align(lar1, lar2, join='inner', cast=True):
     An outer join adds a missing value (NaN) to lar1, therefore the the dtype
     of lar1 is changed from int to float:
 
-    >>> lar3, lar4 = la.align(y1, y2, join='outer')
+    >>> lar3, lar4 = la.align(lar1, lar2, join='outer')
     >>> lar3
     label_0
         0
@@ -86,6 +87,126 @@ def align(lar1, lar2, join='inner', cast=True):
         2
     x
     array([1, 2, 3])                              
+
+    """
+    x1, x2, label, x1isview, x2isview = align_raw(lar1, lar2, join=join,
+                                                   cast=cast)
+    if x1isview:    
+        x1 = x1.copy()
+    lar3 = larry(x1, label, integrity=False)        
+    label = [list(lab) for lab in label]
+    if x2isview:    
+        x2 = x2.copy()
+    lar4 = larry(x2, label, integrity=False)    
+    return lar3, lar4
+
+def align_raw(lar1, lar2, join='inner', cast=True):    
+    """
+    Align two larrys but return Numpy arrays and label instead of larrys.
+    
+    This function is the same as la.align() except that instead of returning
+    two larrys, the components of the two larrys are returned (two Numpy
+    arrays, a label, and flags for whether the two Numpy arrays are views of
+    the data arrays of the corresponding input larrys).
+    
+    Parameters
+    ----------
+    lar1 : larry
+        One of the input larrys. Must have the same number of dimensions as
+        `lar2`.
+    lar2 : larry
+        One of the input larrys. Must have the same number of dimensions as
+        `lar1`.
+    join : {'inner', 'outer', 'left', 'right', list}, optional
+        The join method used to align the two larrys. The default join method
+        along each axis is 'inner', i.e., the intersection of the labels. If
+        `join` is a list of strings then the length of the list should be the 
+        same as the number of dimensions of the two larrys. The first element
+        in the list is the join method for axis=0, the second element is the
+        join method for axis=1, and so on.
+    cast : bool, optional
+        Only float, str, and object dtypes have missing value markers (la.nan,
+        '', and None, respectively). Other dtypes, such as int and bool, do
+        not have a missing value marker. If `cast` is set to True (default)
+        then int and bool dtypes, for example, will be cast to float if any
+        new rows, columns, etc are created. If cast is set to False, then a
+        TypeError will be raised for int and bool dtype input if the join
+        introduces new rows, columns, etc. An inner join will never introduce
+        new rows, columns, etc.
+        
+    Returns
+    -------
+    x1 : ndarray
+        The aligned version of `lar1`.
+    x2 : ndarray
+        The aligned version of `lar2`.
+    label : list of lists
+        The label of the joined larrys.
+    x1isview : bool
+        True if x1 is a view of lar1.x; False otherwise. A view of lar1.x is
+        retuned if the labels of `lar1` and `lar2` are the same along all
+        axes; otherwise a copy is returned.
+    x2isview : bool           
+        True if x2 is a view of lar2.x; False otherwise.  A view of lar2.x is
+        retuned if the labels of `lar1` and `lar2` are the same along all
+        axes; otherwise a copy is returned.
+        
+    See Also
+    --------
+    la.align: Align two larrys using one of five join methods.   
+        
+    Notes
+    -----
+    The returned Numpy arrays are views of the corresponding input larrys if
+    the labels of the two input larrys are the same along all axes. If the
+    labels are not the same along any axis then a copy is returned.     
+       
+    Examples
+    --------
+    Create two larrys:
+    
+    >>> y1 = larry([1, 2])
+    >>> y2 = larry([1, 2, 3])
+
+    The default join method is an inner join:
+
+    >>> x1, x2, label, x1isview, x2isview = la.flarry._align_raw(lar1, lar2)
+    >>> x1
+    array([1, 2])
+    >>> x2
+    array([1, 2])
+    >>> label
+    [[0, 1]]
+    >>> x1isview
+    False
+    >>> x2isview
+    False
+
+    An outer join adds a missing value (NaN) to lar1, therefore the the dtype
+    of lar1 is changed from int to float:
+
+    >>> x1, x2, label, x1isview, x2isview = la.flarry._align_raw(lar1, lar2, join='outer')
+    >>> x1
+    array([  1.,   2.,  NaN])
+    >>> x2
+    array([1, 2, 3])
+    >>> label
+    [[0, 1, 2]]
+    >>> x1isview
+    False
+    >>> x2isview
+    False
+    
+    If the labels are already aligned, then a view of the data array is
+    returned:
+    
+    >>> lar1 = larry([1, 2])
+    >>> lar2 = larry([3, 4])
+    >>> x1, x2, label, x1isview, x2isview = la.flarry._align_raw(lar1, lar2)
+    >>> x1isview
+    True
+    >>> x2isview
+    True                                 
 
     """
     
@@ -106,9 +227,11 @@ def align(lar1, lar2, join='inner', cast=True):
     else:
         raise TypeError, "`join` must be a string or a list."
         
-    # Find missing markers                
-    miss1 = missing_marker(lar1)
-    miss2 = missing_marker(lar2)
+    # Initialize missing markers, set value later (in loop) only if needed.
+    # The weird initialization value ensures a user would never pick the same                
+    undefined = 'aB!@12#E~=-'
+    miss1 = undefined
+    miss2 = undefined
         
     # For loop initialization                         
     label = []
@@ -147,25 +270,29 @@ def align(lar1, lar2, join='inner', cast=True):
                 idx2, idx2_miss = listmap_fill(list2, list3, fill=0)
                 x1 = x1.take(idx1, ax)
                 x2 = x2.take(idx2, ax) 
-                index1 = [slice(None)] * ndim
-                index2 = [slice(None)] * ndim
-                index1[ax] = idx1_miss
-                index2[ax] = idx2_miss
                 if len(idx1_miss) > 0:
+                    if miss1 == undefined:
+                        miss1 = missing_marker(lar1)
                     if miss1 == NotImplemented:
                         if cast:
                             x1 = x1.astype(float)
                             miss1 = missing_marker(x1)   
                         else:                         
                             raise TypeError, msg
+                    index1 = [slice(None)] * ndim
+                    index1[ax] = idx1_miss      
                     x1[index1] = miss1                                        
                 if len(idx2_miss) > 0:
+                    if miss2 == undefined:
+                        miss2 = missing_marker(lar2)
                     if miss2 == NotImplemented:
                         if cast:
                             x2 = x2.astype(float)
                             miss2 = missing_marker(x2)   
                         else:
                             raise TypeError, msg
+                    index2 = [slice(None)] * ndim
+                    index2[ax] = idx2_miss                             
                     x2[index2] = miss2
                 x1isview = False
                 x2isview = False                     
@@ -174,15 +301,21 @@ def align(lar1, lar2, join='inner', cast=True):
             if list1 != list2:
                 idx2, idx2_miss = listmap_fill(list2, list3, fill=0)
                 x2 = x2.take(idx2, ax) 
-                index2 = [slice(None)] * ndim
-                index2[ax] = idx2_miss
                 if len(idx2_miss) > 0:
+                    if miss2 == undefined:
+                        miss2 = missing_marker(lar2)
                     if miss2 == NotImplemented:
+                        if miss2 is None:
+                            miss2 = missing_marker(lar2)
+                        if miss2 is None:
+                            miss2 = missing_marker(lar2)
                         if cast:
                             x2 = x2.astype(float)
                             miss2 = missing_marker(x2)   
                         else:
                             raise TypeError, msg
+                    index2 = [slice(None)] * ndim
+                    index2[ax] = idx2_miss        
                     x2[index2] = miss2
                 x2isview = False                    
         elif joinax == 'right':
@@ -190,31 +323,159 @@ def align(lar1, lar2, join='inner', cast=True):
             if list1 != list2:            
                 idx1, idx1_miss = listmap_fill(list1, list3, fill=0)
                 x1 = x1.take(idx1, ax) 
-                index1 = [slice(None)] * ndim
-                index1[ax] = idx1_miss
                 if len(idx1_miss) > 0:
+                    if miss1 == undefined:
+                        miss1 = missing_marker(lar1)
                     if miss1 == NotImplemented:
                         if cast:
                             x1 = x1.astype(float)
                             miss1 = missing_marker(x1)   
                         else:
                             raise TypeError, msg
+                    index1 = [slice(None)] * ndim
+                    index1[ax] = idx1_miss                            
                     x1[index1] = miss1 
                 x1isview = False                                 
         else:
             raise ValueError, 'join type not recognized'  
         label.append(list3)
     
-    # Make output larrys
-    if x1isview:    
-        x1 = x1.copy()
-    lar3 = larry(x1, label)        
-    label = [list(lab) for lab in label]
-    if x2isview:    
-        x2 = x2.copy()
-    lar4 = larry(x2, label)
+    return x1, x2, label, x1isview, x2isview
+
+def binaryop(func, lar1, lar2, join='inner', cast=True, missone='ignore',
+             misstwo='ignore', **kwargs):
+    """
+    Binary operation on two larrys using given function and join method.
     
-    return lar3, lar4
+    Parameters
+    ----------
+    func : function
+        A function that takes two Numpy arrays as input and returns a Numpy
+        array as output. For example: np.add. You can also pass keyword
+        arguments to the function; see `**kwargs`.
+    lar1 : larry
+        The larry on the left-hand side of the binary operation. Must have
+        the same number of dimensions as `lar2`.
+    lar2 : larry
+        The larry on the right-hand side of the binary operation. Must have
+        the same number of dimensions as `lar1`.
+    join : {'inner', 'outer', 'left', 'right', list}, optional
+        The method used to join the two larrys. The default join method along
+        all axes is 'inner', i.e., the intersection of the labels. If `join`
+        is a list of strings then the length of the list should be the number
+        of dimensions of the two larrys. The first element in the list is the
+        join method for axis=0, the second element is the join method for
+        axis=1, and so on.
+    cast : bool, optional
+        Only float, str, and object dtypes have missing value markers (la.nan,
+        '', and None, respectively). Other dtypes, such as int and bool, do
+        not have a missing value marker. If `cast` is set to True (default)
+        then int and bool dtypes, for example, will be cast to float if any
+        new rows, columns, etc are created. If cast is set to False, then a
+        TypeError will be raised for int and bool dtype input if the join
+        introduces new rows, columns, etc. An inner join will never introduce
+        new rows, columns, etc.   
+    missone : {scalar, 'ignore'}, optional
+        By default ('ignore') no special treatment of missing values is made.
+        If, however, `missone` is set to something other than 'ignore', such
+        as 0, then all elements that are missing in one larry but not missing
+        in the other larry are replaced by `missone`. For example, if an
+        element is in one larry but missing in the other larry then you may
+        want to set the missing value to zero when summing two larrys.
+    misstwo : {scalar, 'ignore'}, optional
+        By default ('ignore') no special treatment of missing values is made.
+        If, however, `misstwo` is set to something other than 'ignore', such
+        as 0, then all elements that are missing in both larrys are replaced
+        by `misstwo`.  
+    **kwargs : Keyword arguments, optional
+        Keyword arguments to pass to `func`. The keyword arguments passed to
+        `func` cannot have the following keys: join, cast, missone, misstwo.
+        
+    Returns
+    -------
+    lar3 : larry
+        The result of the binary operation.
+        
+    See Also
+    --------
+    la.align: Align two larrys using one of five join methods.  
+        
+    Examples
+    --------
+    Create two larrys:
+    
+    >>> from la import nan
+    >>> lar1 = larry([1,   2, nan], [['a', 'b', 'c']])
+    >>> lar2 = larry([1, nan, nan], [['a', 'b', 'dd']])
+    
+    The default is an inner join (note that lar1 and lar2 have two labels in
+    common):
+    
+    >>> la.binaryop(np.add, lar1, lar2)
+    label_0
+        a
+        b
+    x
+    array([  2.,  NaN])
+        
+    If one data element is missing in one larry but not in the other, then you
+    can replace the missing value with `missone` (here 0):     
+        
+    >>> la.binaryop(np.add, lar1, lar2, missone=0)
+    label_0
+        a
+        b
+    x
+    array([ 2.,  2.])
+        
+    An outer join: 
+    
+    >>> la.binaryop(np.add, lar1, lar2, join='outer')
+    label_0
+        a
+        b
+        c
+        dd
+    x
+    array([  2.,  NaN,  NaN,  NaN])
+    
+    An outer join with single and double missing values replaced by zero:       
+        
+    >>> la.binaryop(np.add, lar1, lar2, join='outer', missone=0, misstwo=0)
+    label_0
+        a
+        b
+        c
+        dd
+    x
+    array([ 2.,  2.,  0.,  0.])                               
+
+    """
+    
+    # Align
+    x1, x2, label, ign1, ign2 = align_raw(lar1, lar2, join=join, cast=cast)
+    
+    # Replacing missing values is slow, so only do if requested
+    if missone != 'ignore' or misstwo != 'ignore':
+        miss1 = ismissing(x1)
+        miss2 = ismissing(x2)
+    if missone != 'ignore':    
+        missone1 = miss1 & ~miss2
+        if missone1.any():
+            x1[missone1] = missone
+        missone2 = miss2 & ~miss1    
+        if missone2.any():
+            x2[missone2] = missone
+    if misstwo != 'ignore':            
+        misstwo12 = miss1 & miss2    
+        if misstwo12.any():
+            x1[misstwo12] = misstwo
+            x2[misstwo12] = misstwo           
+            
+    # Binary function
+    x = func(x1, x2, **kwargs)
+    
+    return larry(x, label, integrity=False)
     
 def union(axis, *args):
     """
