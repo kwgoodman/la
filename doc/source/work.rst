@@ -136,8 +136,8 @@ etc.) take time. If you wish to skip the checks, then set integrity to False:
     >>> timeit larry(x, label, integrity=False)
     1000000 loops, best of 3: 1.22 us per loop
 
-You can also create larrys, filled with random samples, using **rand** and
-**randn**:
+You can also create larrys, filled with random samples, using
+:func:`la.rand` and :func:`la.randn`.
 ::
     >>> la.rand(2,2)
     label_0
@@ -163,12 +163,12 @@ You can also create larrys, filled with random samples, using **rand** and
 
 The following functions can also be used to create larrys:
 
-* **fromtuples**
-* **fromdict**
-* **fromlist**
-* **fromcsv**
+* :meth:`fromtuples <la.larry.fromtuples>`
+* :meth:`fromdict <la.larry.fromdict>`
+* :meth:`fromlist <la.larry.fromlist>`
+* :meth:`fromcsv <la.larry.fromcsv>`
 
-Here's how to create a larry using **fromtuples**:
+Here's how to create a larry using :meth:`fromtuples <la.larry.fromtuples>`:
 ::
     >>> data = [('a', 'a', 1), ('a', 'b', 2), ('b', 'a', 3), ('b', 'b', 4)]
     >>> larry.fromtuples(data)
@@ -182,10 +182,10 @@ Here's how to create a larry using **fromtuples**:
     array([[ 1.,  2.],
            [ 3.,  4.]])
            
-Note that **fromtuples** changed the data type from integer to float. That
-allows for the possibility of missing data (because NaN is represented as a
-float). Let's throw out the last data point in the example above (note the
-NaN):
+Note that :meth:`fromtuples <la.larry.fromtuples>` changed the data type from
+integer to float. That allows for the possibility of missing data (because NaN
+is represented as a float). Let's throw out the last data point in the example
+above (note the NaN):
 ::
     >>> data = [('a', 'a', 1), ('a', 'b', 2), ('b', 'a', 3)]
     >>> larry.fromtuples(data)
@@ -199,7 +199,8 @@ NaN):
     array([[  1.,   2.],
            [  3.,  NaN]])
             
-Here are examples of **fromdict** and **fromlist**:
+Here are examples of :meth:`fromdict <la.larry.fromdict>` and
+:meth:`fromlist <la.larry.fromlist>`:
 ::
     >>> data = {('a', 'c'): 1, ('a', 'd'): 2, ('b', 'c'): 3, ('b', 'd'): 4}
     >>> larry.fromdict(data)
@@ -237,8 +238,9 @@ And an example of creating a larry from a csv file:
     x
     array([ 1.,  2.,  3.])                    
 
-See :ref:`conversion` for a discussion of the corresponding methods,
-**totuples, todict, tolist**. 
+See :ref:`conversion` for a discussion of the corresponding methods:
+:meth:`totuples <la.larry.totuples>`, :meth:`todict <la.larry.todict>`,
+:meth:`tolist <la.larry.tolist>`, :meth:`tocsv <la.larry.tocsv>`.
 
 
 Shape, size, type
@@ -257,7 +259,8 @@ array:
     >>> y.dtype
     dtype('float64') 
     
-You can change the dtype of a larry by using the **astype** method:
+You can change the dtype of a larry by using the
+:meth:`astype <la.larry.astype>` method:
 ::
     >>> y = larry([1.0, 2.5])
     >>> y.astype(int)
@@ -268,9 +271,10 @@ You can change the dtype of a larry by using the **astype** method:
     array([1, 2])    
     
 larry does not have a reshape method. A reshape would scramble all the labels.
-But larry does have a **flatten** method and an **insertaxis** method.
+But larry does have a :meth:`flatten <la.larry.flatten>` method and an
+:meth:`insertaxis <la.larry.insertaxis>` method.
 
-Here's the **flatten** method:
+Here's the :meth:`flatten <la.larry.flatten>` method:
 ::
     >>> y = larry([[1.0, 2.0], [3.0, 4.0]], [['r0', 'r1'], ['c0', 'c1']])
     
@@ -306,7 +310,7 @@ Flattened larrys can be unflattened:
     array([[ 1.,  2.],
            [ 3.,  4.]])
            
-To insert a new axis use **insertaxis**:
+To insert a new axis use :meth:`insertaxis <la.larry.insertaxis>`:
 ::
     >>> y = larry([1, 2], [['a', 'b']])
     
@@ -372,7 +376,8 @@ Note that ``la.nan`` is the same as Numpy's NaN:
     >>> la.nan is np.nan
     True    
     
-Missing values can be found with the **ismissing** method:
+Missing values can be found with the :meth:`ismissing <la.larry.ismissing>`
+method:
 ::
     >>> y.ismissing()
     label_0
@@ -440,7 +445,7 @@ Indexing into a larry is similar to indexing into a Numpy array:
     x
     array([2, 4, 6])
     
-Another similarity to Numpy arrays is the **take** method:  
+Another similarity to Numpy arrays is the :meth:`take <la.larry.take>` method:  
 ::
     >>> y = la.rand(2,10)
     >>> y.take([0, 2, 3], axis=1)
@@ -596,7 +601,7 @@ There are several other, miscellaneous ways to index by label name.
 Let's look at several different ways to pull row 'a' (the first row) from a
 larry *y*.
 
-We can use **labelindex**:
+We can use :meth:`labelindex <la.larry.labelindex>`:
 ::
     >>> y = larry([[1.0, 2.0], [3.0, 4.0]], [['a', 'b'], [11, 13]])
     >>> idx = y.labelindex('a', axis=0)
@@ -607,7 +612,7 @@ We can use **labelindex**:
     x
     array([ 1.,  2.])
 
-or **morph**:
+or :meth:`morph <la.larry.morph>`:
 ::
     >>> y.morph(['a'], axis=0)
     label_0
@@ -618,7 +623,7 @@ or **morph**:
     x
     array([[ 1.,  2.]])
 
-or **pull**:    
+or :meth:`pull <la.larry.pull>`:    
 ::
     >>> y.pull('a', axis=0)
     label_0
@@ -713,8 +718,8 @@ Assignment by indexing is the same as with Numpy arrays:
     array([[22,  2],
            [33,  4]])           
 
-You can also assign values by updating them with the **merge** method. See
-:ref:`merge` for details.
+You can also assign values by updating them with the
+:meth:`merge <la.larry.merge>` method. See :ref:`merge` for details.
 
 Alignment
 ---------
@@ -765,7 +770,8 @@ Let's make a third larry that can be added to *z1*:
 Note that the only overlap between *z1* and *z3* is the second element of *z1*
 (labeled 'b') with the first element of *z3* (also labeled 'b').
 
-Although we cannot sum *z1* and *z2*, we can merge them:
+Although we cannot sum *z1* and *z2*, we can :meth:`merge <la.larry.merge>`
+them:
 ::
     >>> z1.merge(z2)
     label_0
@@ -779,7 +785,7 @@ Although we cannot sum *z1* and *z2*, we can merge them:
 (See :ref:`merge` for more details.)    
        
 It is often convenient to pre-align larrys. To align two larrys we use
-**morph_like**:
+:meth:`morph_like <la.larry.morph_like>`:
 ::
     >>> y1 = larry([1, 2, 3], [['a', 'b', 'c']])
     >>> y2 = larry([6, 4, 5], [['c', 'a', 'b']])
@@ -846,7 +852,8 @@ In the example above, axis 0 in ``y1`` and ``y2`` is not aligned, therefore
 axis 0 in the output larry is aligned in ascending order. However, axis 1,
 which is already aligned is left in descending order.
 
-If you want to change the ordering of the labels, you can use **sortaxis**:
+If you want to change the ordering of the labels, you can use
+:meth:`sortaxis <la.larry.sortaxis>`:
 ::           
     >>> y2.sortaxis()
     label_0
@@ -881,7 +888,8 @@ If you want to change the ordering of the labels, you can use **sortaxis**:
     array([[1, 2],
            [3, 4]])
 
-You can also change the ordering of the axis with **flipaxis**:
+You can also change the ordering of the axis with
+:meth:`flipaxis <la.larry.flipaxis>`:
 ::
     >>> y2.flipaxis(axis=0)
     label_0
@@ -918,7 +926,8 @@ In the example above there is no overlap between *y1* and *y2*: there are
 no data in *y1* with labels 'c' or 'd' and there are no data in *y2* with
 labels 'a' or 'b'.
 
-Let's try to merge two larrys that have an overlap (label 'b' along axis 0):
+Let's try to :meth:`merge <la.larry.merge>` two larrys that have an overlap
+(label 'b' along axis 0):
 ::
     >>> y1 = larry([1, 2], [['a', 'b']])
     >>> y2 = larry([3, 4], [['b', 'c']])
@@ -950,9 +959,9 @@ Groups
 
 larry has several methods for calculating group statistics:
 
-* **group_mean**
-* **group_median**
-* **group_ranking**
+* :meth:`group_mean <la.larry.group_mean>`
+* :meth:`group_median <la.larry.group_median>`
+* :meth:`group_ranking <la.larry.group_ranking>`
 
 Let's start with an example where group1 contains labels 'a' and 'c' and
 group2 contains labels 'b' and 'd':
@@ -1017,10 +1026,11 @@ Conversion
 A larry can be converted to various other formats using the following
 conversion methods:
 
-* **totuples**
-* **tolist**
-* **todict**
-* **tocsv**
+* :meth:`totuples <la.larry.totuples>`
+* :meth:`todict <la.larry.todict>`
+* :meth:`tolist <la.larry.tolist>`
+* :meth:`tocsv <la.larry.tocsv>`.
+
 
 Some examples:
 ::
@@ -1037,8 +1047,13 @@ Some examples:
     
     >>> y.tocsv('/tmp/lar.csv')   
 
-The corresponding methods **fromtuples, fromlist, fromdict, and fromcsv** are
-discused in :ref:`creation`.
+The corresponding methods
+:meth:`fromtuples <la.larry.fromtuples>`,
+:meth:`fromdict <la.larry.fromdict>`,
+:meth:`fromlist <la.larry.fromlist>`,
+:meth:`fromcsv <la.larry.fromcsv>`
+are discused in :ref:`creation`.
+
 
 Archiving
 ---------

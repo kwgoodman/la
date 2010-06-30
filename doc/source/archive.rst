@@ -5,11 +5,11 @@
 I/O
 ===
 
-The ``la`` package provides two ways to archive larrys: using archive functions
-such as **save** and **load** and using the dictionary-like interface of the
-**IO** class. Both I/O methods store larrys in
-`HDF5 <http://www.hdfgroup.org/>`_ 1.8 format and require
-`h5py <http://h5py.alfven.org>`_.
+The ``la`` package provides two ways to archive larrys: using archive
+functions such as :func:`save <la.io.save>` and :func:`load <la.io.load>` and
+using the dictionary-like interface of the :class:`IO <la.IO>` class. Both
+I/O methods store larrys in `HDF5 <http://www.hdfgroup.org/>`_ 1.8 format and
+require `h5py <http://h5py.alfven.org>`_.
 
 .. contents::
 
@@ -25,19 +25,20 @@ Archive functions
 One method to archive larrys is to use the archive functions (see
 :ref:`ioclass` for a second, more powerful method):
 
-* **save**
-* **load**
-* **delete**
-* **archive_directory**
-* **is_archived_larry**
-* **repack**
+* :func:`save <la.io.save>`
+* :func:`load <la.io.load>`
+* :func:`delete <la.io.delete>`
+* :func:`archive_directory <la.io.archive_directory>`
+* :func:`is_archived_larry <la.io.is_archived_larry>`
+* :func:`repack <la.io.repack>`
 
 To demonstrate, let's start by creating a larry:
 ::
     >>> import la
     >>> y = la.larry([1, 2, 3])
 
-Next let's save the larry, *y*, in an archive using the **save** function:
+Next let's save the larry, *y*, in an archive using the
+:func:`save <la.io.save>` function:
 ::
     >>> la.save('/tmp/data.hdf5', y, 'y')
     
@@ -46,17 +47,17 @@ The contents of the archive:
     >>> la.archive_directory('/tmp/data.hdf5')
     ['y']      
     
-To load the larry we use the **load** function:
+To load the larry we use the :func:`load <la.io.load>` function:
 ::
     >>> z = la.load('/tmp/data.hdf5', 'y')
     
-The entire larry is loaded from the archive. The **load** function does not
-have an option to load parts of a larry, such as a slice. (To load parts of
-a larrys from the archive, see :ref:`ioclass`.)    
+The entire larry is loaded from the archive. The :func:`load <la.io.load>`
+function does not have an option to load parts of a larry, such as a slice.
+(To load parts of a larrys from the archive, see :ref:`ioclass`.)    
 
-The name of the larry in **save** and **load** statements (and in all the
-other archive functions) must be a string. But the string may contain one or
-more forward slashes ('/'), which is to say that larrys can be archived in a
+The name of the larry in save and load statements (and in all the other
+archive functions) must be a string. But the string may contain one or more
+forward slashes ('/'), which is to say that larrys can be archived in a
 hierarchical structure:
 ::
     >>> la.save('/tmp/data/hdf5', y, '/experiment/2/y')
@@ -97,7 +98,8 @@ For further information on the archive functions see :ref:`archive_functions`.
 IO class
 ========
 
-The **IO** class provides a dictionary-like interface to the archive.
+The :class:`IO <la.IO>` class provides a dictionary-like interface to the
+archive.
 
 To demonstrate, let's start by creating two larrys, *a* and *b*:
 ::
@@ -105,7 +107,7 @@ To demonstrate, let's start by creating two larrys, *a* and *b*:
     >>> a = la.larry([1.0, 2.0, 3.0, 4.0])
     >>> b = la.larry([[1, 2],[3, 4]])
 
-To work with an archive you need to create an **IO** object:
+To work with an archive you need to create an :class:`IO <la.IO>` object:
 ::
     >>> io = la.IO('/tmp/data.hdf5')
     
@@ -146,8 +148,8 @@ Are the larrys *a* (yes) and *c* (no) in the archive?
     >>> list(set(io) & set(['a', 'c']))
     ['a']                   
         
-When we load data from the archive using an **IO** object, we get a lara not
-a larry:
+When we load data from the archive using an :class:`IO <la.IO>` object, we get
+a lara not a larry:
 ::
     >>> z = io['a']        
     >>> type(z)
@@ -155,8 +157,8 @@ a larry:
         
 Whereas larry stores his data in a numpy array and a list (labels), lara
 stores her data in a h5py Dataset object and a list (labels). The reason that
-an **IO** object returns a lara instead of a larry is that you may want to
-extract only part of a larry, such as a slice, from the archive.
+an :class:`IO <la.IO>` object returns a lara instead of a larry is that you
+may want to extract only part of a larry, such as a slice, from the archive.
 
 To convert a lara object into a larry, just index into the lara (the indexing
 below is the slice ``[:2]``):
@@ -247,13 +249,14 @@ reused and when it is not?)
 
 The *IO* class takes an optional argument that can be used to automatically
 repack the archive when the freespace after deleting a larry exceeds a
-specified amount. The following **IO** object will repack the archive
-everytime a delete causes the freespace in the archive to exceed 100 MB:
+specified amount. The following :class:`IO <la.IO>` object will repack the
+archive everytime a delete causes the freespace in the archive to exceed 100
+MB:
 ::
     >>> io = la.IO('/tmp/data.hdf5', max_freespace=100e6)  
     
 You can iterate through the keys or the values or the (key, value) pairs of
-an **IO** object:
+an :class:`IO <la.IO>` object:
 ::
     >>> for key, value in io.iteritems():
     ...     print key, value.shape
@@ -261,9 +264,9 @@ an **IO** object:
     a (4,)
     rand (1000, 1000)
     
-The keys (larrys) in an **IO** object (archive) must be strings. But the
-string may contain one or more forward slashes ('/'), which is to say that
-larrys can be archived in a hierarchical structure:
+The keys (larrys) in an :class:`IO <la.IO>` object (archive) must be strings.
+But the string may contain one or more forward slashes ('/'), which is to say
+that larrys can be archived in a hierarchical structure:
 ::
     >>> io['/experiment/2/y'] = la.larry([1, 2, 3])
     >>> z = io['/experiment/2/y']

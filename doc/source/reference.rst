@@ -418,7 +418,8 @@ where group 1 is ('e', 'a'), group 2 is ('d', 'c'), and group 3 is ('b'):
 Alignment
 ---------
 
-There are several alignment methods.
+There are several alignment methods. See also the :func:`align <la.align>`
+function.
     
 ------------
 
