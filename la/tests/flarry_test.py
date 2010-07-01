@@ -7,7 +7,7 @@ import numpy as np
 nan = np.nan
 
 from la import larry
-from la import union, intersection, panel, stack, cov, align, binaryop
+from la import (union, intersection, panel, stack, cov, align, binaryop, add)
 from la.util.testing import assert_larry_equal as ale
 
 
@@ -620,6 +620,210 @@ class Test_binaryop(unittest.TestCase):
         msg = "binaryop failed"
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2) 
+
+class Test_add(unittest.TestCase):
+    "Test la.add()"   
+
+    def test_add_01(self):
+        "add test #01"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2)
+        desired = larry([2, 4])
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)           
+
+    def test_add_02(self):
+        "add test #02"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2, join='inner')
+        desired = larry([2, 4])
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+        
+    def test_add_03(self):
+        "add test #03"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2, join='inner', missone=0)
+        desired = larry([2, 4])
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+                  
+    def test_add_04(self):
+        "add test #04"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2, join='inner', missone=0, misstwo=0)
+        desired = larry([2, 4])
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+
+    def test_add_05(self):
+        "add test #05"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2, misstwo=0)
+        desired = larry([2, 4])
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+
+    def test_add_06(self):
+        "add test #06"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2, join='outer')
+        desired = larry([2, 4, nan])
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+        
+    def test_add_07(self):
+        "add test #07"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2, join='outer', missone=0)
+        desired = larry([2, 4, 3], dtype=float)
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+                  
+    def test_add_08(self):
+        "add test #08"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2, join='outer', missone=0, misstwo=0)
+        desired = larry([2, 4, 3], dtype=float)
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+
+    def test_add_09(self):
+        "add test #09"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2, join='outer', misstwo=0)
+        desired = larry([2, 4, nan])
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+        
+    def test_add_10(self):
+        "add test #10"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2, join='left')
+        desired = larry([2, 4])
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+        
+    def test_add_11(self):
+        "add test #11"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2, join='left', missone=0)
+        desired = larry([2, 4])
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+                  
+    def test_add_12(self):
+        "add test #12"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2, join='left', missone=0, misstwo=0)
+        desired = larry([2, 4])
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)       
+
+    def test_add_13(self):
+        "add test #13"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2, join='right')
+        desired = larry([2, 4, nan])
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+        
+    def test_add_14(self):
+        "add test #14"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2, join='right', missone=0)
+        desired = larry([2, 4, 3], dtype=float)
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+                  
+    def test_add_15(self):
+        "add test #15"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2, join='right', missone=0, misstwo=0)
+        desired = larry([2, 4, 3], dtype=float)
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+
+    def test_add_16(self):
+        "add test #16"
+        y1 = larry([1, 2])
+        y2 = larry([1, 2, 3])
+        actual = add(y1, y2, join='right', misstwo=0)
+        desired = larry([2, 4, nan])
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+        
+    def test_add_17(self):
+        "add test #17"
+        y1 = larry([1, nan, nan, 1])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        actual = add(y1, y2)
+        desired = larry([2, nan, nan], [[0, 1, 2]])
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+
+    def test_add_18(self):
+        "add test #18"
+        y1 = larry([1, nan, nan, 1])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        actual = add(y1, y2, join='outer')
+        desired = larry([2, nan, nan, nan, nan], [[0, 1, 2, 3, 'a']])
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+
+    def test_add_19(self):
+        "add test #19"
+        y1 = larry([1, nan, nan, 1])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        actual = add(y1, y2, join='outer', missone=0)
+        desired = larry([2, 1, nan, 1, 1], [[0, 1, 2, 3, 'a']])
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+                                        
+    def test_add_20(self):
+        "add test #20"
+        y1 = larry([1, nan, nan, 1])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        actual = add(y1, y2, join='outer', missone=0, misstwo=0)
+        desired = larry([2, 1, 0, 1, 1], [[0, 1, 2, 3, 'a']], dtype=float)
+        msg = "add failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+ 
                        
 def suite():
     s = []
@@ -627,7 +831,8 @@ def suite():
     s.append(u(Test_func)) 
     s.append(u(Test_align_1d)) 
     s.append(u(Test_align_2d))
-    s.append(u(Test_binaryop))  
+    s.append(u(Test_binaryop))
+    s.append(u(Test_add))  
     return unittest.TestSuite(s)
 
 def run():   

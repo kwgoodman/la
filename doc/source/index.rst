@@ -12,6 +12,8 @@ Meet larry, he's a labeled array:
    archive
    reference
    functions
+   release
+   license
 
 Indices and tables
 ==================

@@ -29,7 +29,7 @@ The alignment functions help you align one of more larrys.
 
 ------------
              
-.. autofunction:: la.binaryop
+.. autofunction:: la.align_raw
 
 ------------
              
@@ -38,6 +38,34 @@ The alignment functions help you align one of more larrys.
 ------------
 
 .. autofunction:: la.intersection
+
+
+Binary
+------
+
+The binary functions combine two larrys into one.
+
+------------
+             
+.. autofunction:: la.binaryop
+
+------------
+             
+.. autofunction:: la.add
+
+
+Random
+------
+
+Functions that return larrys containing random samples.
+
+------------
+
+.. autofunction:: la.rand
+
+------------
+
+.. autofunction:: la.randn
 
 
 Misc
@@ -57,11 +85,4 @@ Miscellaneous functions that operate on larrys.
 
 .. autofunction:: la.cov
 
-------------
-
-.. autofunction:: la.rand
-
-------------
-
-.. autofunction:: la.randn
 

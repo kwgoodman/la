@@ -641,7 +641,15 @@ class larry(object):
     __array_priority__ = 10                      
         
     def __add__(self, other):
-        """Sum a larry with another larry, Numpy array, or scalar.
+        """
+        Sum a larry with another larry, Numpy array, or scalar.
+        
+        If two larrys are added then the larrys are joined with an inner join
+        (i.e., the intersection of the labels).
+        
+        See Also
+        --------
+        la.add: Sum of two larrys using given join method and fill method.
         
         Examples
         --------
@@ -719,7 +727,8 @@ class larry(object):
         return -self.__sub__(other)       
 
     def __div__(self, other):
-        """Divide a larry with a another larry, Numpy array, or scalar.
+        """
+        Divide a larry with a another larry, Numpy array, or scalar.
         
         Examples
         -------- 
@@ -807,7 +816,8 @@ class larry(object):
     __rmul__ = __mul__
 
     def __and__(self, other):
-        """Logical and a larry with a another larry, Numpy array, or scalar.
+        """
+        Logical and a larry with a another larry, Numpy array, or scalar.
         
         Notes
         -----

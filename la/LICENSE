@@ -1,18 +1,28 @@
-larry is distributed under a Simplified BSD license. Parts of NumPy, Scipy and
-numpydoc, which all have BSD licenses, are included in larry.
+=======
+License
+=======
 
-Numpy
-    la/deflarry.py(astype): Docstring
-    la/deflarry.py(take): Docstring
-    la/flarry.py(rand): Docstring
-    la/flarry.py(randn): Docstring
-Scipy
-    la/util/scipy.py: Functions and docstrings
-numpydoc
-    la/doc/shinxext/: Entire directory                
+The ``la`` package is distributed under a Simplified BSD license. Parts of
+NumPy, Scipy and numpydoc, which all have BSD licenses, are included in larry.
 
----------------------------------------------------------------------------
-la license:
+*Numpy*
+
+- la/deflarry.py(astype): Docstring
+- la/deflarry.py(take): Docstring
+- la/flarry.py(rand): Docstring
+- la/flarry.py(randn): Docstring
+
+*Scipy*
+
+- la/util/scipy.py: Functions and docstrings
+
+*numpydoc*
+
+- la/doc/shinxext/: Entire directory                
+
+
+la license
+----------
 
 Copyright (c) 2008, 2009, 2010, Archipel Asset Management AB.
 All rights reserved.
@@ -39,8 +49,9 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
----------------------------------------------------------------------------
-NumPy license:
+
+NumPy license
+-------------
 
 Copyright (c) 2005-2009, NumPy Developers.
 All rights reserved.
@@ -50,16 +61,16 @@ modification, are permitted provided that the following conditions are
 met:
 
     * Redistributions of source code must retain the above copyright
-       notice, this list of conditions and the following disclaimer.
+      notice, this list of conditions and the following disclaimer.
 
     * Redistributions in binary form must reproduce the above
-       copyright notice, this list of conditions and the following
-       disclaimer in the documentation and/or other materials provided
-       with the distribution.
+      copyright notice, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
 
     * Neither the name of the NumPy Developers nor the names of any
-       contributors may be used to endorse or promote products derived
-       from this software without specific prior written permission.
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -73,8 +84,9 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
----------------------------------------------------------------------------
-SciPy license:
+
+SciPy license
+-------------
 
 Copyright (c) 2001, 2002 Enthought, Inc.
 All rights reserved.
@@ -107,8 +119,9 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 DAMAGE.
 
----------------------------------------------------------------------------
-numpydoc license:
+
+numpydoc license
+----------------
 
 The numpydoc license is in la/doc/sphinxext/LICENSE.txt
 
