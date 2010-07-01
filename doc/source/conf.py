@@ -41,14 +41,23 @@ master_doc = 'index'
 project = u'la'
 copyright = u'2010, Archipel Asset Management AB'
 
+# Grab version from la/version.py
+ver_file = os.path.join('..', '..', 'la', 'version.py')
+fid = file(ver_file, 'r')
+VER = fid.read()
+fid.close()
+VER = VER.split("= ")
+VER = VER[1].strip()
+VER = VER.strip('"')
+
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = '0.4dev'
+version = VER
 # The full version, including alpha/beta/rc tags.
-release = '0.4dev'
+release = VER
 
 # JP: added from sphinxdocs
 #autosummary_generate = True
