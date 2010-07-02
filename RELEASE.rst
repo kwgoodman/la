@@ -37,6 +37,7 @@ la.align(), which aligns two larrys, were also added.
 - binaryop: Binary operation on two larrys with given function and join method
 - add: Sum of two larrys using given join and fill methods
 - subtract: Difference of two larrys using given join and fill methods
+- multiply: Multiply two larrys element-wise using given join and fill methods
 
 **Enhancements**
 

@@ -735,7 +735,7 @@ class larry(object):
 
     def __div__(self, other):
         """
-        Divide a larry with a another larry, Numpy array, or scalar.
+        Divide a larry with another larry, Numpy array, or scalar.
         
         Examples
         -------- 
@@ -785,7 +785,14 @@ class larry(object):
         
     def __mul__(self, other): 
         """
-        Multiply a larry with a another larry, Numpy array, or scalar.
+        Multiply a larry with another larry, Numpy array, or scalar.
+
+        If two larrys are multiplied then the larrys are joined with an inner
+        join (i.e., the intersection of the labels).
+        
+        See Also
+        --------
+        la.multiply: Multiply two larrys element-wise using given join method.
         
         Examples
         --------
@@ -824,7 +831,7 @@ class larry(object):
 
     def __and__(self, other):
         """
-        Logical and a larry with a another larry, Numpy array, or scalar.
+        Logical and a larry with another larry, Numpy array, or scalar.
         
         Notes
         -----
@@ -868,7 +875,7 @@ class larry(object):
 
     def __or__(self, other):
         """
-        Logical or a larry with a another larry, Numpy array, or scalar.
+        Logical or a larry with another larry, Numpy array, or scalar.
         
         Notes
         -----

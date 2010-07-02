@@ -801,6 +801,126 @@ def subtract(lar1, lar2, join='inner', cast=True, missone='ignore',
     """    
     return binaryop(np.subtract, lar1, lar2, join=join, cast=cast,
                     missone=missone, misstwo=misstwo)
+                    
+def multiply(lar1, lar2, join='inner', cast=True, missone='ignore',
+             misstwo='ignore'):
+    """
+    Multiply two larrys element-wise using given join and fill methods.
+    
+    Parameters
+    ----------
+    lar1 : larry
+        The larry on the left-hand side of the product. Must have the same
+        number of dimensions as `lar2`.
+    lar2 : larry
+        The larry on the right-hand side of the product. Must have the same
+        number of dimensions as `lar1`.
+    join : {'inner', 'outer', 'left', 'right', list}, optional
+        The method used to join the two larrys. The default join method along
+        all axes is 'inner', i.e., the intersection of the labels. If `join`
+        is a list of strings then the length of the list should be the number
+        of dimensions of the two larrys. The first element in the list is the
+        join method for axis=0, the second element is the join method for
+        axis=1, and so on.
+    cast : bool, optional
+        Only float, str, and object dtypes have missing value markers (la.nan,
+        '', and None, respectively). Other dtypes, such as int and bool, do
+        not have missing value markers. If `cast` is set to True (default)
+        then int and bool dtypes, for example, will be cast to float if any
+        new rows, columns, etc are created. If cast is set to False, then a
+        TypeError will be raised for int and bool dtype input if the join
+        introduces new rows, columns, etc. An inner join will never introduce
+        new rows, columns, etc.   
+    missone : {scalar, 'ignore'}, optional
+        By default ('ignore') no special treatment of missing values is made.
+        If, however, `missone` is set to something other than 'ignore', such
+        as 0, then all elements that are missing in one larry but not missing
+        in the other larry are replaced by `missone`. For example, if an
+        element is in one larry but missing in the other larry then you may
+        want to set the missing value to one when multiplying two larrys.
+    misstwo : {scalar, 'ignore'}, optional
+        By default ('ignore') no special treatment of missing values is made.
+        If, however, `misstwo` is set to something other than 'ignore', such
+        as 0, then all elements that are missing in both larrys are replaced
+        by `misstwo`.
+               
+    Returns
+    -------
+    y : larry
+        The element-wise product of the two larrys, `lar1` and `lar2`.
+        
+    See Also
+    --------
+    la.larry.__mul__: Multiply a larry with another larry, array, or scalar.
+    la.binaryop: Binary operation on two larrys using given function.
+    
+    Notes
+    -----
+    This is a convenience function that calls la.binaryop() with `func` set
+    to numpy.multiply.  
+        
+    Examples
+    --------
+    Create two larrys:
+    
+    >>> from la import nan
+    >>> lar1 = larry([1,   2, nan], [['a', 'b', 'c']])
+    >>> lar2 = larry([1, nan, nan], [['a', 'b', 'dd']])
+    
+    The default is an inner join (note that lar1 and lar2 have two labels in
+    common):
+    
+    >>> la.multiply(lar1, lar2)
+    label_0
+        a
+        b
+    x
+    array([  1.,  NaN])
+    
+    which is the same result you get with lar1 * lar2:
+
+    >>> lar1 * lar2
+    label_0
+        a
+        b
+    x
+    array([  1.,  NaN])
+      
+    If one data element is missing in one larry but not in the other, then you
+    can replace the missing value with `missone` (here 1):     
+        
+    >>> la.multiply(lar1, lar2, missone=1)
+    label_0
+        a
+        b
+    x
+    array([ 1.,  2.])
+        
+    An outer join: 
+    
+    >>> la.multiply(lar1, lar2, join='outer')
+    label_0
+        a
+        b
+        c
+        dd
+    x
+    array([  1.,  NaN,  NaN,  NaN])
+    
+    An outer join with single and double missing values replaced by zero:       
+        
+    >>> la.multiply(lar1, lar2, join='outer', missone=1, misstwo=1)
+    label_0
+        a
+        b
+        c
+        dd
+    x
+    array([ 1.,  2.,  1.,  1.])                               
+
+    """    
+    return binaryop(np.multiply, lar1, lar2, join=join, cast=cast,
+                    missone=missone, misstwo=misstwo)                    
 
 # Concatenating -------------------------------------------------------------
     

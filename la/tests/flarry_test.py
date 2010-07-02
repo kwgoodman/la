@@ -8,7 +8,7 @@ nan = np.nan
 
 from la import larry
 from la import (union, intersection, panel, stack, cov, align, binaryop, add,
-                subtract)
+                subtract, multiply)
 from la.util.testing import assert_larry_equal as ale
 
 
@@ -867,23 +867,18 @@ class Test_subtract(unittest.TestCase):
         msg = "subtract failed"
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)              
- 
-                       
-def suite():
-    s = []
-    u = unittest.TestLoader().loadTestsFromTestCase
-    s.append(u(Test_func)) 
-    s.append(u(Test_align_1d)) 
-    s.append(u(Test_align_2d))
-    s.append(u(Test_binaryop))
-    s.append(u(Test_add)) 
-    s.append(u(Test_subtract)) 
-    return unittest.TestSuite(s)
 
-def run():   
-    suite = testsuite()
-    unittest.TextTestRunner(verbosity=2).run(suite)
-    
-if __name__ == '__main__':
-    run()   
+class Test_multiply(unittest.TestCase):
+    "Test la.multiply()"   
+
+    def test_multiply_01(self):
+        "multiply test #01"
+        y1 = larry([1,   2, nan], [['a', 'b', 'c']])
+        y2 = larry([1, nan, nan], [['a', 'b', 'dd']])
+        actual = multiply(y1, y2, join='outer', missone=1, misstwo=2)
+        desired = larry([1, 2, 4, 4], [['a', 'b', 'c', 'dd']], dtype=float)
+        msg = "multiply failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+ 
              
