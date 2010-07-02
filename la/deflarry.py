@@ -649,7 +649,7 @@ class larry(object):
         
         See Also
         --------
-        la.add: Sum of two larrys using given join method and fill method.
+        la.add: Sum of two larrys using given join and fill methods.
         
         Examples
         --------
@@ -689,6 +689,13 @@ class larry(object):
     def __sub__(self, other):
         """
         Subtract a larry from another larry, Numpy array, or scalar.
+        
+        If two larrys are subtracted then the larrys are joined with an inner
+        join (i.e., the intersection of the labels).
+        
+        See Also
+        --------
+        la.subtract: Difference of two larrys using given join and fill methods.
         
         Examples
         --------

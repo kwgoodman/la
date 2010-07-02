@@ -7,7 +7,8 @@ import numpy as np
 nan = np.nan
 
 from la import larry
-from la import (union, intersection, panel, stack, cov, align, binaryop, add)
+from la import (union, intersection, panel, stack, cov, align, binaryop, add,
+                subtract)
 from la.util.testing import assert_larry_equal as ale
 
 
@@ -823,6 +824,49 @@ class Test_add(unittest.TestCase):
         msg = "add failed"
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)
+
+class Test_subtract(unittest.TestCase):
+    "Test la.subtract()"   
+
+    def test_subtract_01(self):
+        "subtract test #01"
+        y1 = larry([1,   2, nan], [['a', 'b', 'c']])
+        y2 = larry([1, nan, nan], [['a', 'b', 'dd']])
+        actual = subtract(y1, y2)
+        desired = larry([0, nan], [['a', 'b']])
+        msg = "subtract failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+
+    def test_subtract_02(self):
+        "subtract test #02"
+        y1 = larry([1,   2, nan], [['a', 'b', 'c']])
+        y2 = larry([1, nan, nan], [['a', 'b', 'dd']])
+        actual = subtract(y1, y2, missone=0)
+        desired = larry([0, 2], [['a', 'b']], dtype=float)
+        msg = "subtract failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2) 
+        
+    def test_subtract_03(self):
+        "subtract test #03"
+        y1 = larry([1,   2, nan], [['a', 'b', 'c']])
+        y2 = larry([1, nan, nan], [['a', 'b', 'dd']])
+        actual = subtract(y1, y2, join='outer')
+        desired = larry([0, nan, nan, nan], [['a', 'b', 'c', 'dd']])
+        msg = "subtract failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)         
+
+    def test_subtract_04(self):
+        "subtract test #04"
+        y1 = larry([1,   2, nan], [['a', 'b', 'c']])
+        y2 = larry([1, nan, nan], [['a', 'b', 'dd']])
+        actual = subtract(y1, y2, join='outer', missone=0, misstwo=0)
+        desired = larry([0, 2, 0, 0], [['a', 'b', 'c', 'dd']], dtype=float)
+        msg = "subtract failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)              
  
                        
 def suite():
@@ -832,7 +876,8 @@ def suite():
     s.append(u(Test_align_1d)) 
     s.append(u(Test_align_2d))
     s.append(u(Test_binaryop))
-    s.append(u(Test_add))  
+    s.append(u(Test_add)) 
+    s.append(u(Test_subtract)) 
     return unittest.TestSuite(s)
 
 def run():   

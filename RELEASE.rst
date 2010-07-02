@@ -35,7 +35,8 @@ la.align(), which aligns two larrys, were also added.
 - align: Align two larrys using one of five join methods
 - info: la package information such as version number and HDF5 availability
 - binaryop: Binary operation on two larrys with given function and join method
-- la.add: Sum of two larrys using given join method and fill method
+- add: Sum of two larrys using given join and fill methods
+- subtract: Difference of two larrys using given join and fill methods
 
 **Enhancements**
 

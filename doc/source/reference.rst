@@ -108,11 +108,13 @@ and do not change its shape or ordering.
 .. automethod:: la.larry.__invert__
 
              
-Binary
-------
+Binary methods
+--------------
 
 The binary methods (such as +, -, / and *) combine a larry with a scalar,
-Numpy array, or another larry.
+Numpy array, or another larry. More general binary functions, that give you
+control of the join method and the fill method can be found in
+:ref:`binaryfunc`.
 
 ------------ 
              

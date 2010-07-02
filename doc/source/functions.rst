@@ -40,8 +40,10 @@ The alignment functions help you align one of more larrys.
 .. autofunction:: la.intersection
 
 
-Binary
-------
+.. _binaryfunc:
+
+Binary functions
+----------------
 
 The binary functions combine two larrys into one.
 
@@ -52,6 +54,10 @@ The binary functions combine two larrys into one.
 ------------
              
 .. autofunction:: la.add
+
+------------
+             
+.. autofunction:: la.subtract
 
 
 Random
