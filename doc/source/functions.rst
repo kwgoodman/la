@@ -59,6 +59,10 @@ The binary functions combine two larrys into one.
              
 .. autofunction:: la.subtract
 
+------------
+             
+.. autofunction:: la.multiply
+
 
 Random
 ------
