@@ -1,4 +1,4 @@
 "la version"
 
-# Format expected by the la setup.py file is a string of form "X.X.X"
+# Format expected by setup.py and doc/source/conf.py: string of form "X.Y.Z"
 __version__ = "0.4.0dev"

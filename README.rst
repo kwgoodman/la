@@ -94,11 +94,11 @@ After you have installed ``la``, run the suite of unit tests:
     OK
     <nose.result.TextTestResult run=2978 errors=0 failures=0> 
     
-The ``la`` package contains a C extension module. The functions in the module
-speed up common alignment operations such as adding two unaligned larrys. If
-the module doesn't compile when you build ``la`` then there's an automatic
-fallback to a python version of the functions. To see whether you are using
-the C version or the Python versions:
+The ``la`` package contains C extensions that speed up common alignment
+operations such as adding two unaligned larrys. If the C extensions don't
+compile when you build ``la`` then there's an automatic fallback to python
+versions of the functions. To see whether you are using the C functions or the
+Python functions:
 ::
     >>> la.info()
     la version      0.4.0           
