@@ -3,8 +3,8 @@
 Release Notes
 =============
 
-These are the major changes made in each release. For detailed changes see
-http://github.com/kwgoodman/la
+These are the major changes made in each release. For details of the changes
+see http://github.com/kwgoodman/la
 
 la 0.4 (celery)
 ===============
@@ -38,6 +38,7 @@ la.align(), which aligns two larrys, were also added.
 - add: Sum of two larrys using given join and fill methods
 - subtract: Difference of two larrys using given join and fill methods
 - multiply: Multiply two larrys element-wise using given join and fill methods
+- divide: Divide two larrys element-wise using given join and fill methods
 
 **Enhancements**
 

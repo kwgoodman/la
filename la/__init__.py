@@ -13,7 +13,8 @@ except:
 from numpy import nan, inf
 
 from la.flarry import (union, intersection, stack, panel, cov, rand, randn,
-                       align, align_raw, binaryop, add, subtract, multiply)
+                       align, align_raw, binaryop, add, subtract, multiply,
+                       divide)
 from la.util.report import info                     
 from la.version import __version__
 from la.util import testing

@@ -8,7 +8,7 @@ nan = np.nan
 
 from la import larry
 from la import (union, intersection, panel, stack, cov, align, binaryop, add,
-                subtract, multiply)
+                subtract, multiply, divide)
 from la.util.testing import assert_larry_equal as ale
 
 
@@ -881,4 +881,16 @@ class Test_multiply(unittest.TestCase):
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)
  
-             
+class Test_divide(unittest.TestCase):
+    "Test la.divide()"   
+
+    def test_divide_01(self):
+        "divide test #01"
+        y1 = larry([1,   2, nan], [['a', 'b', 'c']])
+        y2 = larry([1, nan, nan], [['a', 'b', 'dd']])
+        actual = divide(y1, y2, join='outer', missone=1, misstwo=2)
+        desired = larry([1, 2, 1, 1], [['a', 'b', 'c', 'dd']], dtype=float)
+        msg = "divide failed"
+        ale(actual, desired, msg, original=y1)
+        ale(actual, desired, msg, original=y2)
+                    

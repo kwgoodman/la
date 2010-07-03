@@ -737,6 +737,13 @@ class larry(object):
         """
         Divide a larry with another larry, Numpy array, or scalar.
         
+        If two larrys are divided then the larrys are joined with an inner
+        join (i.e., the intersection of the labels).
+        
+        See Also
+        --------
+        la.divide: divide two larrys element-wise using given join method.        
+        
         Examples
         -------- 
         
