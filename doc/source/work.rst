@@ -739,92 +739,114 @@ What is ``y1 + y2``?
         z
     x
     array([3, 3])
-
-Let's look at a more complicated example:
-::
-    >>> z1 = larry([1, 2], [['a', 'b']])
-    >>> z2 = larry([3, 4], [['c', 'd']])
-
-    >>> z1 + z2
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-      File "la/la/deflarry.py", line 494, in __add__
-        x, y, label = self.__align(other)
-      File "la/la/deflarry.py", line 731, in __align
-        raise IndexError, 'A dimension has no matching labels'
-    IndexError: A dimension has no matching labels
     
-Why did we get an index error when we tried to sum *z1* and *z2*? We got an
-error because *z1* and *z2* have no overlap: there are no labels 'a' and 'b'
-in *z2* to add to those in *z1*.
-
-Let's make a third larry that can be added to *z1*:
+By default, binary operations between two larrys use an inner join of the
+labels (the intersection of the labels):
 ::
-    >>> z3 = larry([3, 4], [['b', 'c']])
-    >>> z1 + z3
+    >>> lar1 = larry([1, 2])
+    >>> lar2 = larry([1, 2, 3])
+    >>> lar1 + lar2
     label_0
-        b
+        0
+        1
     x
-    array([5])
-    
-Note that the only overlap between *z1* and *z3* is the second element of *z1*
-(labeled 'b') with the first element of *z3* (also labeled 'b').
+    array([2, 4])
 
-Although we cannot sum *z1* and *z2*, we can :meth:`merge <la.larry.merge>`
-them:
-::
-    >>> z1.merge(z2)
-    label_0
-        a
-        b
-        c
-        d
-    x
-    array([ 1.,  2.,  3.,  4.])
-    
-(See :ref:`merge` for more details.)    
-       
-It is often convenient to pre-align larrys. To align two larrys we use
-:meth:`morph_like <la.larry.morph_like>`:
-::
-    >>> y1 = larry([1, 2, 3], [['a', 'b', 'c']])
-    >>> y2 = larry([6, 4, 5], [['c', 'a', 'b']])
+To control the join method (as well as the fill method) use the general
+binary function :func:`la.binaryop`. Or use the convenience functions
+:func:`la.add`, :func:`la.subtract`, :func:`la.multiply`, :func:`la.divide`.
 
-    >>> y2.morph_like(y1)
+The sum of two larrys using an outer join (union of the labels):
+::
+    >>> la.add(lar1, lar2, join='outer')
     label_0
-        a
-        b
-        c
+        0
+        1
+        2
     x
-    array([ 4.,  5.,  6.])
+    array([  2.,   4.,  NaN])
     
-Alternatively, when we only want to align the larry along one axis (the
-example above only contains one axis):    
+The available join methods are inner, outer, left, right, and list. If the
+join method is specified as a list then the first element in the list is the
+join method for axis=0, the second element is the join method for axis=1, and
+so on. 
+    
+The fill method can also be specified (see :func:`la.add` for details):    
 ::    
-    >>> y2.morph(y1.getlabel(axis=0), axis=0)
+    >>> la.add(lar1, lar2, join='outer', missone=0)
     label_0
-        a
-        b
-        c
+        0
+        1
+        2
     x
-    array([ 4.,  5.,  6.])
+    array([ 2.,  4.,  3.])
     
-We can also morph an array with labels that do not yet exist ('d' and 'e' in
-the following example):
+It is often useful to align two larrys. Once the labels are aligned then you
+can use the underlying numpy arrays directly without worrying about alignment.
+To align two larrys:
 ::
-    >>> lar.morph(['a', 'b', 'c', 'd', 'e'], axis=0)
+    >>> lar3, lar4 = la.align(lar1, lar2)
+    >>> lar3
     label_0
-        a
-        b
-        c
-        d
-        e
+        0
+        1
     x
-    array([  1.,   2.,   3.,  NaN,  NaN])
+    array([1, 2])
+    >>> lar4
+    label_0
+        0
+        1
+    x
+    array([1, 2])
+
+    >>> lar3, lar4 = la.align(lar1, lar2, join='outer')
+    >>> lar3
+    label_0
+        0
+        1
+        2
+    x
+    array([  1.,   2.,  NaN])
+    >>> lar4
+    label_0
+        0
+        1
+        2
+    x
+    array([1, 2, 3])
     
-As we've seen above, binary operations such as ``+``, ``-``, ``*`` , and
-``/`` may return a larry whose label ordering is different from the two input
-larrys.
+Sometimes you only want to align a larry along one axis. To align a larry
+along one axis use :meth:`morph <la.larry.morph>`:    
+::
+    >>> y = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
+    >>> y.morph(['r2', 'r1'], axis=0)
+    label_0
+        r2
+        r1
+    label_1
+        c1
+        c2
+    x
+    array([[3, 4],
+           [1, 2]])
+
+You may want to align with labels that don't exist in the larry:
+::
+    >>> y.morph(['r2', 'r1', 'r99'], axis=0)
+    label_0
+        r2
+        r1
+        r99
+    label_1
+        c1
+        c2
+    x
+    array([[  3.,   4.],
+           [  1.,   2.],
+           [ NaN,  NaN]])
+    
+Binary operations such as ``+``, ``-``, ``*`` , and ``/`` may return a larry
+whose label ordering is different from the two input larrys.
 
 Along any axis where the two input larrys of a binary operation are not
 aligned, the labels in the output larry will be sorted (in ascending order).
@@ -1069,6 +1091,35 @@ Known issues
 The are currently no unit tests for complex numbers in larry. Therefore, the
 extent of support for complex numbers is unknown. Be aware that even if a
 function or method runs with complex input, the output might be wrong.
+
+**Comparing with Numpy arrays**
+
+Do not compare (==, !=, >, <, >=, <=, |, &) a NumPy array on the left-hand
+side with a larry on the right-hand side. You will get unexpected results. To
+compare a larry to a NumPy array, put the Numpy array on the right-hand side.
+
+This works:
+::
+    >>> [2, 2, 4] == larry([1, 2, 3])
+    label_0
+        0
+        1
+        2
+    x
+    array([False,  True, False], dtype=bool)
+
+    >>> larry([1, 2, 3]) == np.array([2, 2, 4])
+    label_0
+        0
+        1
+        2
+    x
+    array([False,  True, False], dtype=bool)
+    
+But this doesn't work:
+::
+    >>> np.array([2, 2, 4]) == larry([1, 2, 3])
+    array([ True,  True,  True], dtype=bool)    
 
 
 
