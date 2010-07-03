@@ -10,12 +10,10 @@ def lar():
     return larry([nan, nan, nan])
 
 def functions():
-    # last_rank and lastrank_decay are not included because they do a partial
-    # reduction: shape (n,m) imput become (n,1)
     f = {(): ['log', 'exp', 'sqrt', 'sign', 'abs', 'sum', 'prod', 'mean',
               'median', 'std', 'var', 'min', 'max', 'demean', 'demedian',
               'zscore', 'geometric_mean'],
-         (0,): ['cumsum', 'cumprod', 'ranking'],
+         (0,): ['cumsum', 'cumprod', 'ranking', 'lastrank'],
          (1,): ['power', 'movingsum', 'movingsum_forward'],
          (2,): ['movingrank', 'quantile']} 
     return f                   
