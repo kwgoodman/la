@@ -85,8 +85,8 @@ let's you use your existing array functions.
 ===============   ========================================================
  code              http://github.com/kwgoodman/la
  docs              http://larry.sourceforge.net
- list              http://groups.google.ca/group/pystatsmodels
- devel list        https://launchpad.net/~larry-discuss
+ list 1            http://groups.google.ca/group/pystatsmodels
+ list 2            http://groups.google.com/group/labeled-array
 ===============   ========================================================
 
 """
