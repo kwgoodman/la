@@ -51,6 +51,8 @@ la.align(), which aligns two larrys, were also added.
 - Development moved from launchpad to github
 - func.py and afunc.py renamed flarry.py and farray.py to match new flabel.py.
   Broke: "from la.func import stack"; Did not break: "from la import stack"
+- Default binary operators (+, -, ...) no longer raise an error when no labels
+  overlap 
 
 **Bug fixes**
 

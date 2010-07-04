@@ -737,6 +737,14 @@ class Test_binary(unittest.TestCase):
         self.assert_(noreference(p, self.l1), 'Reference found')   
         self.assert_(noreference(p, self.l2), 'Reference found')
 
+    def test___add___10(self):
+        "larry.__add___10"
+        y1 = larry([[1, 2], [3, 4]])
+        y2 = larry([[1, 2], [3, 4]], [[0, 1], ['a', 'b']])
+        actual = y1 + y2
+        desired = larry(np.zeros((2,0)), [[0, 1],[]], dtype=int)
+        ale(actual, desired, '__add__ without no overlap', original=y1)
+        ale(actual, desired, '__add__ without no overlap', original=y2)
 
     def test___sub___1(self):
         "larry.__sub___1"

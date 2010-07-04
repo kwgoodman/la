@@ -946,8 +946,6 @@ class larry(object):
                     lab = ls
                 else:
                     lab = list(frozenset(ls) & frozenset(lo))
-                    if len(lab) == 0:
-                        raise IndexError, 'A dimension has no matching labels'
                     lab.sort()
                     ids = listmap(ls, lab)
                     ido = listmap(lo, lab)
