@@ -9,7 +9,7 @@ see http://github.com/kwgoodman/la
 la 0.4 (celery)
 ===============
 
-*Release date: Not yet released, in development*
+*Release date: 2010-07-06*
 
 The focus of this release was binary operations between unaligned larrys with
 user control of the join method (five available) and the fill method. A
