@@ -20,7 +20,7 @@ def info():
     try:
         from la import IO
         io = "Available"
-    except IMportError:
+    except ImportError:
         io = "Not available"    
     
     # Make and print report

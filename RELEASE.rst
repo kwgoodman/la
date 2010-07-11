@@ -6,6 +6,16 @@ Release Notes
 These are the major changes made in each release. For details of the changes
 see http://github.com/kwgoodman/la
 
+la 0.5 (daikon)
+===============
+
+*Release date: Not yet released, in development*
+
+**Bugs fixes**
+
+- #1 Due to a typo, la.info() crashed if h5py could not be imported
+
+
 la 0.4 (celery)
 ===============
 
