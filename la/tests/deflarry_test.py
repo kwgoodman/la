@@ -3542,6 +3542,14 @@ class Test_alignment(unittest.TestCase):
         desired = larry([[3, 4], [1, 2]], [['b', 'a'], ['c', 'd']]) 
         ale(actual, desired, 'sortaxis_1', original=original)
         
+    def test_sortaxis_5(self):
+        "larry.sortaxis_5"
+        # Regression test: sortaxis was dropping singleton dimensions
+        original = larry([[2, 1]], [[9], ['b', 'a']]) 
+        actual = original.sortaxis()
+        desired = larry([[1, 2]], [[9], ['a', 'b']])
+        ale(actual, desired, 'sortaxis_5', original=original)        
+        
     def test_flipaxis_1(self):
         "larry.flipaxis_1"
         original = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']]) 

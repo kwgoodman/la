@@ -3059,12 +3059,13 @@ class larry(object):
             axes = range(self.ndim)
         else:
             axes = [axis]
-        index = [slice(None)] * self.ndim
+        y = self.copy()    
         shape = self.shape    
         for ax in axes:
-            if shape[ax] > 0:        
-                index[ax] = sorted(self.label[ax], reverse=reverse)        
-        return self.lix[tuple(index)]
+            if shape[ax] > 1:        
+                index = sorted(self.label[ax], reverse=reverse)
+                y = y.morph(index, ax)        
+        return y
         
     def flipaxis(self, axis=None, copy=True):
         """

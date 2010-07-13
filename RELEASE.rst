@@ -14,6 +14,7 @@ la 0.5 (daikon)
 **Bugs fixes**
 
 - #1 Due to a typo, la.info() crashed if h5py could not be imported
+- #2 larry.sortaxis(None) chopped off singleton dimensions
 
 
 la 0.4 (celery)
