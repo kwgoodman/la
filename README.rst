@@ -114,7 +114,7 @@ URLs
 ====
 
 ===============   ========================================================
- docs              http://larry.sourceforge.net
+ docs              http://berkeleyanalytics.com/la
  download          http://pypi.python.org/pypi/la
  code              http://github.com/kwgoodman/la
  list 1            http://groups.google.ca/group/pystatsmodels
@@ -128,7 +128,7 @@ URLs
 
 ======================================    ====================================
 package name                              ``la``
-web site                                  http://larry.sourceforge.net
+web site                                  http://berkeleyanalytics.com/la
 license                                   Simplified BSD
 programming languages                     Python, Cython
 required dependencies                     Python, NumPy
