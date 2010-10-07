@@ -228,7 +228,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
         raise TypeError, "`join` must be a string or a list."
         
     # Initialize missing markers, set value later (in loop) only if needed.
-    # The weird initialization value ensures a user would never pick the same                
+    # The weird initialization value ensures a user would never pick the same 
     undefined = 'aB!@12#E~=-'
     miss1 = undefined
     miss2 = undefined
@@ -524,7 +524,7 @@ def binaryop(func, lar1, lar2, join='inner', cast=True, missone='ignore',
     x
     array([  2.,  NaN,  NaN,  NaN])
     
-    An outer join with single and double missing values replaced by zero:       
+    An outer join with single and double missing values replaced by zero:
         
     >>> la.binaryop(np.add, lar1, lar2, join='outer', missone=0, misstwo=0)
     label_0
@@ -667,7 +667,7 @@ def add(lar1, lar2, join='inner', cast=True, missone='ignore',
     x
     array([  2.,  NaN,  NaN,  NaN])
     
-    An outer join with single and double missing values replaced by zero:       
+    An outer join with single and double missing values replaced by zero:
         
     >>> la.add(lar1, lar2, join='outer', missone=0, misstwo=0)
     label_0
@@ -787,7 +787,7 @@ def subtract(lar1, lar2, join='inner', cast=True, missone='ignore',
     x
     array([  0.,  NaN,  NaN,  NaN])
     
-    An outer join with single and double missing values replaced by zero:       
+    An outer join with single and double missing values replaced by zero:
         
     >>> la.subtract(lar1, lar2, join='outer', missone=0, misstwo=0)
     label_0
@@ -1042,8 +1042,75 @@ def divide(lar1, lar2, join='inner', cast=True, missone='ignore',
     return binaryop(np.divide, lar1, lar2, join=join, cast=cast,
                     missone=missone, misstwo=misstwo)
 
-# Concatenating -------------------------------------------------------------
+# Misc ----------------------------------------------------------------------
+
+def unique(lar, return_index=False, return_inverse=False):
+    """
+    Find the unique elements of a larry.
     
+    Returns the sorted unique elements of a larry as a Numpy array. There are
+    two optional outputs in addition to the unique elements: the indices of the
+    input larry that give the unique values, and the indices of the unique array
+    that reconstruct the input array.
+    
+    Parameters
+    ----------
+    ar : larry
+        Input larry. This will be flattened if it is not already 1-D.
+    return_index : bool, optional
+        If True, also return the indices of `lar` that result in the unique
+        larry.
+    return_inverse : bool, optional
+        If True, also return the indices of the unique larry that can be used
+        to reconstruct `lar`.
+    
+    Returns
+    -------
+    unique : ndarray
+        The sorted unique values.
+    unique_indices : ndarray, optional
+        The indices of the unique values in the (flattened) original larry.
+        Only provided if `return_index` is True.
+    unique_inverse : ndarray, optional
+        The indices to reconstruct the (flattened) original larry from the
+        unique array. Only provided if `return_inverse` is True.
+    
+    Examples
+    --------
+    >>> la.unique(larry([1, 1, 2, 2, 3, 3]))
+    array([1, 2, 3])
+    >>> lar = larry([[1, 1], [2, 3]])
+    >>> la.unique(lar)
+    array([1, 2, 3])
+    
+    Return the indices of the original larry that give the unique values:
+    
+    >>> lar = larry(['a', 'b', 'b', 'c', 'a'])
+    >>> u, indices = la.unique(lar, return_index=True)
+    >>> u
+    array(['a', 'b', 'c'],
+           dtype='|S1')
+    >>> indices
+    array([0, 1, 3])
+    >>> lar[indices]
+    array(['a', 'b', 'c'],
+           dtype='|S1')
+    
+    Reconstruct the input array (the data portion of the larry, not the label
+    portion) from the unique values:
+    
+    >>> lar = larry([1, 2, 6, 4, 2, 3, 2])
+    >>> u, indices = la.unique(lar, return_inverse=True)
+    >>> u
+    array([1, 2, 3, 4, 6])
+    >>> indices
+    array([0, 1, 4, 3, 1, 2, 1])
+    >>> u[indices]
+    array([1, 2, 6, 4, 2, 3, 2])
+
+    """
+    return np.unique(lar.x, return_index, return_inverse)
+
 def stack(mode, **kwargs):
     """Stack 2d larrys to make a 3d larry.
     
@@ -1195,8 +1262,6 @@ def panel(lar):
     y.x = y.x.T.reshape(-1, y.shape[0])
     return y
 
-# Calc -------------------------------------------------------------
-        
 def cov(lar):
     """
     Covariance matrix adjusted for missing (NaN) values.

@@ -89,6 +89,10 @@ Miscellaneous functions that operate on larrys.
 
 ------------
 
+.. autofunction:: la.unique
+
+------------
+
 .. autofunction:: la.stack
 
 ------------

@@ -11,6 +11,10 @@ la 0.5 (daikon)
 
 *Release date: Not yet released, in development*
 
+**New functions**
+
+- unique: Find the unique elements of a larry
+
 **Bugs fixes**
 
 - #1 Due to a typo, la.info() crashed if h5py could not be imported

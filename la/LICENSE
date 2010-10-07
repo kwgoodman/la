@@ -7,10 +7,8 @@ NumPy, Scipy and numpydoc, which all have BSD licenses, are included in larry.
 
 *Numpy*
 
-- la/deflarry.py(astype): Docstring
-- la/deflarry.py(take): Docstring
-- la/flarry.py(rand): Docstring
-- la/flarry.py(randn): Docstring
+- la/deflarry.py(astype, take): Docstrings
+- la/flarry.py(rand, randn, unique): Docstrings
 
 *Scipy*
 

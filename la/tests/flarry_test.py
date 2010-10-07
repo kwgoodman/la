@@ -5,10 +5,11 @@ import datetime
 
 import numpy as np
 nan = np.nan
+from numpy.testing import assert_array_equal
 
 from la import larry
 from la import (union, intersection, panel, stack, cov, align, binaryop, add,
-                subtract, multiply, divide)
+                subtract, multiply, divide, unique)
 from la.util.testing import assert_larry_equal as ale
 
 
@@ -79,7 +80,7 @@ class Test_func(unittest.TestCase):
                        [ 3.,  4.]]]) 
         label = [['othername', 'name1'], [0, 1], [0, 1]]
         desired = larry(x, label)
-        ale(actual, desired, msg='stack test #1')                                           
+        ale(actual, desired, msg='stack test #1')              
         
     def test_cov_1(self):
         "func.cov_1" 
@@ -89,7 +90,7 @@ class Test_func(unittest.TestCase):
         original = original.demean(axis=1)      
         desired = larry([[ 0.5,   0.25,  0.  ],
                          [ 0.25,  0.5,   0.  ],
-                         [ 0.,    0.,    0.  ]])                                   
+                         [ 0.,    0.,    0.  ]])     
         actual = cov(original)
         ale(actual, desired, msg='cov test #1', original=original)       
 
@@ -99,10 +100,32 @@ class Test_func(unittest.TestCase):
                           [2.0, 3.0, 1.0],
                           [4.0, 1.0, 1.0]])  
         original = original.demean(1)        
-        desired = larry(np.ma.cov(np.ma.fix_invalid(original.x), bias=1).data)                                            
+        desired = larry(np.ma.cov(np.ma.fix_invalid(original.x), bias=1).data)
         actual = cov(original)
         ale(actual, desired, msg='cov test #2', original=original) 
 
+    def test_unique_1(self):
+        arr = unique(larry([1, 1, 2, 2, 3, 3]))
+        assert_array_equal(arr, np.array([1, 2, 3]), "la.unique failed")
+
+    def test_unique_2(self):
+        lar = larry([[1, 1], [2, 3]])
+        arr = unique(lar)
+        assert_array_equal(arr, np.array([1, 2, 3]), "la.unique failed")
+    
+    def test_unique_3(self):
+        lar = larry(['a', 'b', 'b', 'c', 'a'])
+        u, indices = unique(lar, return_index=True)
+        assert_array_equal(u, np.array(['a', 'b', 'c'], dtype='|S1'))
+        assert_array_equal(indices, np.array([0, 1, 3]))
+        assert_array_equal(lar[indices], np.array(['a','b','c'], dtype='|S1'))
+    
+    def test_unique_4(self):
+        lar = larry([1, 2, 6, 4, 2, 3, 2])
+        u, indices = unique(lar, return_inverse=True)
+        assert_array_equal(u, np.array([1, 2, 3, 4, 6]))
+        assert_array_equal(indices, np.array([0, 1, 4, 3, 1, 2, 1]))
+        assert_array_equal(u[indices], np.array([1, 2, 6, 4, 2, 3, 2]))
 
 class Test_align_1d(unittest.TestCase):
     "Test 1d alignment of larrys"   
@@ -277,7 +300,7 @@ class Test_align_1d(unittest.TestCase):
         "align 1d test #17"
         y1 = larry([1, 2])
         y2 = larry([1, 2], [['a', 'b']])        
-        self.failUnlessRaises(TypeError, align, y1, y2, 'outer', False)          
+        self.failUnlessRaises(TypeError, align, y1, y2, 'outer', False) 
 
     def test_1d18(self):
         "align 1d test #18"
