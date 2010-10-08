@@ -3,6 +3,7 @@
 import numpy as np
 
 from la.util.scipy import nanmedian, rankdata, nanstd, nanmean
+from la.missing import nans
 
 
 # Group functions ----------------------------------------------------------

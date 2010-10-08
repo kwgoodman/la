@@ -4,7 +4,7 @@ import csv
 
 import numpy as np
    
-from la.missing import nans, ismissing, missing_marker  
+from la.missing import ismissing, missing_marker  
 from la.flabel import listmap, listmap_fill, flattenlabel
 from la.util.scipy import nanmean, nanmedian, nanstd
 from la.util.misc import isscalar, fromlists
