@@ -32,23 +32,23 @@ One method to archive larrys is to use the archive functions (see
 * :func:`is_archived_larry <la.io.is_archived_larry>`
 * :func:`repack <la.io.repack>`
 
-To demonstrate, let's start by creating a larry:
-::
+To demonstrate, let's start by creating a larry::
+
     >>> import la
     >>> y = la.larry([1, 2, 3])
 
 Next let's save the larry, *y*, in an archive using the
-:func:`save <la.io.save>` function:
-::
+:func:`save <la.io.save>` function::
+
     >>> la.save('/tmp/data.hdf5', y, 'y')
     
-The contents of the archive:
-::
+The contents of the archive::
+
     >>> la.archive_directory('/tmp/data.hdf5')
     ['y']      
     
-To load the larry we use the :func:`load <la.io.load>` function:
-::
+To load the larry we use the :func:`load <la.io.load>` function::
+
     >>> z = la.load('/tmp/data.hdf5', 'y')
     
 The entire larry is loaded from the archive. The :func:`load <la.io.load>`
@@ -58,24 +58,24 @@ function does not have an option to load parts of a larry, such as a slice.
 The name of the larry in save and load statements (and in all the other
 archive functions) must be a string. But the string may contain one or more
 forward slashes ('/'), which is to say that larrys can be archived in a
-hierarchical structure:
-::
+hierarchical structure::
+
     >>> la.save('/tmp/data/hdf5', y, '/experiment/2/y')
     >>> z = la.load('/tmp/data/hdf5', '/experiment/2/y')
     
 Instead of passing a filename to the archive functions you can optionally
-pass a `h5py <http://h5py.alfven.org/>`_ File object:
-::
+pass a `h5py <http://h5py.alfven.org/>`_ File object::
+
     >>> import h5py
     >>> f = h5py.File('/tmp/data.hdf5')
     >>> z = la.load(f, 'y') 
 
-To check if a larry is in the archive:
-::
+To check if a larry is in the archive::
+
     >>> la.is_archived_larry(f, 'y')    
     True
     
-To delete a larry from the archive:
+To delete a larry from the archive::
 
     >>> la.delete(f, 'y')
     >>> la.is_archived_larry(f, 'y')    
@@ -84,8 +84,8 @@ To delete a larry from the archive:
 HDF5 does not keep track of the freespace in an archive across opening and
 closing of the archive. After repeatedly opening, closing and deleting larrys
 from the archive, the unused space in the archive may grow. The only way to
-reclaim the freespace is to repack the archive:
-::
+reclaim the freespace is to repack the archive::
+
     >>> la.repack(f)
     
 To see how much space the archive takes on disk and to see how much freespace
@@ -101,21 +101,21 @@ IO class
 The :class:`IO <la.IO>` class provides a dictionary-like interface to the
 archive.
 
-To demonstrate, let's start by creating two larrys, *a* and *b*:
-::
+To demonstrate, let's start by creating two larrys, *a* and *b*::
+
     >>> import la
     >>> a = la.larry([1.0, 2.0, 3.0, 4.0])
     >>> b = la.larry([[1, 2],[3, 4]])
 
-To work with an archive you need to create an :class:`IO <la.IO>` object:
-::
+To work with an archive you need to create an :class:`IO <la.IO>` object::
+
     >>> io = la.IO('/tmp/data.hdf5')
     
 where ``/tmp/data.hdf5`` is the path to the archive used in this example.   
     
 Let's add (save) two larrys, *a* and *b*, to the archive and then list the
-contents of the archive:
-::
+contents of the archive::
+
     >>> io['a'] = a
     >>> io['b'] = b
     >>> io
@@ -125,8 +125,8 @@ contents of the archive:
     a      float64  (4,)  
     b      int64    (2, 2)  
 
-We can get a list of the keys (larrys) in the archive:
-::
+We can get a list of the keys (larrys) in the archive::
+
     >>> io.keys()
         ['a', 'b']
         
@@ -138,8 +138,8 @@ We can get a list of the keys (larrys) in the archive:
     >>> len(io)
     2  
     
-Are the larrys *a* (yes) and *c* (no) in the archive?
-::
+Are the larrys *a* (yes) and *c* (no) in the archive? ::
+
     >>> 'a' in io
     True 
     >>> 'c' in io
@@ -149,8 +149,8 @@ Are the larrys *a* (yes) and *c* (no) in the archive?
     ['a']                   
         
 When we load data from the archive using an :class:`IO <la.IO>` object, we get
-a lara not a larry:
-::
+a lara not a larry::
+
     >>> z = io['a']        
     >>> type(z)
         <class 'la.io.lara'>
@@ -161,8 +161,8 @@ an :class:`IO <la.IO>` object returns a lara instead of a larry is that you
 may want to extract only part of a larry, such as a slice, from the archive.
 
 To convert a lara object into a larry, just index into the lara (the indexing
-below is the slice ``[:2]``):
-::
+below is the slice ``[:2]``)::
+
     >>> z = io['a'][:2]
     >>> type(z)
     <class 'la.deflarry.larry'>
@@ -180,8 +180,8 @@ of a large larry.
 
 Although the data from a larry is not loaded until you index into the lara,
 the entire label is always loaded. That allows you to use the labels right
-away:
-::
+away::
+
     >>> z = io['a']
     >>> type(z)
     <class 'la.io.lara'>
@@ -190,22 +190,22 @@ away:
     >>> type(z[:idx])
     <class 'la.deflarry.larry'>
     
-To delete the larry *b* from the archive:
-::
+To delete the larry *b* from the archive::
+
     >>> del io['b']   
 
 HDF5 does not keep track of the freespace in an archive across opening and
 closing of the archive. After repeatedly opening, closing and deleting larrys
 from the archive, the unused space in the archive may grow. The only way to
-reclaim the freespace is to repack the archive:
-::
+reclaim the freespace is to repack the archive::
+
     >>> io.repack()
     
 Repack means to transfer all the larrys to a new archive (with the same name)
 and delete the old archive.
     
-Before looking at the size of the archive, let's add some bigger larrys:
-::
+Before looking at the size of the archive, let's add some bigger larrys::
+
     >>> import numpy as np
     >>> io['rand'] = la.rand(1000, 1000)
     >>> io['randn'] = la.randn(1000, 1000)
@@ -216,18 +216,18 @@ Before looking at the size of the archive, let's add some bigger larrys:
     rand   float64  (1000, 1000)
     randn  float64  (1000, 1000)
     
-How many MB does the archive occupy on disk?
-::
+How many MB does the archive occupy on disk? ::
+
     >>> io.space / 1e6    
     16.038903999999999  # MB
     
-How much freespace is there?
-::
+How much freespace is there? ::
+
     >>> io.freespace / 1e6 
     0.0068399999999999997  # MB
 
-Let's delete *randn* from the archive and look at the space and freespace:
-::
+Let's delete *randn* from the archive and look at the space and freespace::
+
     >>> del io['randn']
     >>> io.space / 1e6
     16.038903999999999  # MB
@@ -235,8 +235,8 @@ Let's delete *randn* from the archive and look at the space and freespace:
     8.0228400000000004  # MB
     
 So deleting a larry from the the archive does not reduce the size of the
-archive unless you repack:
-::
+archive unless you repack::
+
     >>> io.repack()
     >>> io.space / 1e6
     8.02224  # MB
@@ -251,13 +251,13 @@ The *IO* class takes an optional argument that can be used to automatically
 repack the archive when the freespace after deleting a larry exceeds a
 specified amount. The following :class:`IO <la.IO>` object will repack the
 archive everytime a delete causes the freespace in the archive to exceed 100
-MB:
-::
+MB::
+
     >>> io = la.IO('/tmp/data.hdf5', max_freespace=100e6)  
     
 You can iterate through the keys or the values or the (key, value) pairs of
-an :class:`IO <la.IO>` object:
-::
+an :class:`IO <la.IO>` object::
+
     >>> for key, value in io.iteritems():
     ...     print key, value.shape
     ... 
@@ -266,13 +266,13 @@ an :class:`IO <la.IO>` object:
     
 The keys (larrys) in an :class:`IO <la.IO>` object (archive) must be strings.
 But the string may contain one or more forward slashes ('/'), which is to say
-that larrys can be archived in a hierarchical structure:
-::
+that larrys can be archived in a hierarchical structure::
+
     >>> io['/experiment/2/y'] = la.larry([1, 2, 3])
     >>> z = io['/experiment/2/y']
           
-What filename is associated with the archive?
-::
+What filename is associated with the archive? ::
+
     >>> io.filename
     '/tmp/data.hdf5'
     

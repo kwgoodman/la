@@ -9,8 +9,8 @@ The larry methods can be divided into the following broad categories:
 .. contents:: Methods and examples
 
 Below you'll find the methods in each category along with examples. All
-of the examples assume that you have already imported larry:
-::
+of the examples assume that you have already imported larry::
+
     >>> from la import larry
     
 The reference guide for the larry functions, as opposed to methods, can be
@@ -79,6 +79,7 @@ and do not change its shape or ordering.
 ------------
 
 .. automethod:: la.larry.cumprod
+
 ------------
 
 .. automethod:: la.larry.clip
@@ -200,8 +201,8 @@ Comparison
 -----------
 
 The comparison methods, such as ==, >, and !=, perform an element-by-element
-comparison and return a bool larry. For example:
-::
+comparison and return a bool larry. For example::
+
     >>> y1 = larry([1, 2, 3, 4])
     >>> y2 = larry([1, 9, 3, 9])
     >>> y1 == y2
@@ -213,8 +214,8 @@ comparison and return a bool larry. For example:
     x
     array([ True, False,  True, False], dtype=bool)
 
-and
-::
+and ::
+
     >>> from la import larry
     >>> y1 = larry([1, 2], [['a', 'b']])
     >>> y2 = larry([1, 2], [['b', 'c']])
@@ -299,6 +300,7 @@ assign values to a subset of a larry.
 ------------
 
 .. automethod:: la.larry.getlabel
+
 ------------
 
 .. automethod:: la.larry.fill
@@ -382,8 +384,8 @@ Group
 
 The group methods allow you to calculate the group mean (or median or ranking)
 along axis=0 of a larry. For example, let's calculate the group mean of *y*
-where group 1 is ('e', 'a'), group 2 is ('d', 'c'), and group 3 is ('b'):
-::
+where group 1 is ('e', 'a'), group 2 is ('d', 'c'), and group 3 is ('b')::
+
     >>> from la import larry
     >>> y  = larry([[1], [2], [3], [4], [5]], [['a', 'b', 'c', 'd', 'e'], [0]])
     >>> group = larry([1, 1, 2, 2, 3], [['e', 'a', 'd', 'c', 'b']])
@@ -471,8 +473,8 @@ The data and the labels of larrys can be randomly shuffled in-place.
 Missing data
 ------------
 
-NaNs are treated as missing data in larry:
-::
+NaNs are treated as missing data in larry::
+
     >>> import la
     >>> y = larry([1.0, la.nan])
     >>> y.sum()
