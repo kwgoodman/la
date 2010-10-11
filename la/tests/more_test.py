@@ -5,11 +5,10 @@ from numpy.testing import assert_  # could look for nose
 nan = np.nan
 
 from la.util.testing import printfail
-from la.util.scipy import nanstd
 from la.farray import (covMissing, push, geometric_mean, lastrank,
                        movingrank, movingsum, movingsum_forward,
                        quantile, ranking, group_mean, group_median,
-                       group_ranking, nanmedian)
+                       group_ranking, nanmedian, nanstd)
 
 # Functions to test
 funcs_one = [geometric_mean, lastrank, nanstd, ranking, nanmedian]
@@ -35,7 +34,7 @@ def test_return_array():
                   [2.0, 2.0, 9.0, nan, 1.0, nan],
                   [3.0, 9.0, 2.0, nan, nan, nan],
                   [4.0, 4.0, 3.0, 9.0, 2.0, nan],
-                  [5.0, 5.0, 4.0, 4.0, nan, nan]])          
+                  [5.0, 5.0, 4.0, 4.0, nan, nan]])
     sectors = ['a', 'b', 'a', 'b', 'a', 'c']
     
     for func in funcs_one:

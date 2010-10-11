@@ -6,7 +6,7 @@ import numpy as np
    
 from la.missing import ismissing, missing_marker  
 from la.flabel import listmap, listmap_fill, flattenlabel
-from la.util.scipy import nanmean, nanmedian, nanstd
+from la.farray import nanmean, nanmedian, nanstd
 from la.util.misc import isscalar, fromlists
 from la.farray import (group_ranking, group_mean, group_median, shuffle,
                        push, quantile, ranking, lastrank, movingsum_forward,

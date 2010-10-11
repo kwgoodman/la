@@ -12,7 +12,7 @@ Some modifications were made.
 import numpy as np
 from numpy.testing import *
 
-from la.util.scipy import (nanmean, nanmedian, nanstd, rankdata)
+from la.external.scipy import (nanmean, nanmedian, nanstd, rankdata)
 
 
 X = np.array([1,2,3,4,5,6,7,8,9],float)

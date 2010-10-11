@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from la.util.scipy import nanmedian, rankdata, nanstd, nanmean
+from la.external.scipy import nanmedian, rankdata, nanstd, nanmean
 from la.missing import nans
 
 

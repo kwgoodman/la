@@ -5,7 +5,7 @@ import datetime
 
 import numpy as np
 import h5py
-from la.util.prettytable import indent
+from la.external.prettytable import indent
 from la.util.misc import randstring
 
 from la import larry

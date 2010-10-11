@@ -1,6 +1,6 @@
 "Information about your particular installation of the la package."
 
-from la.util.prettytable import indent
+from la.external.prettytable import indent
     
 def info():
     "la package information such as version number and HDF5 availability."
