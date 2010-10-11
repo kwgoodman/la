@@ -13,6 +13,8 @@ la 0.5 (daikon)
 
 **New functions**
 
+- la.data.yahoo.quotes: Given a ticker sequence, return historical Yahoo!
+  quotes as a 3d larry
 - unique: Find the unique elements of a larry
 
 **Bugs fixes**

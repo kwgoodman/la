@@ -10,6 +10,7 @@ Meet larry, he's a labeled array:
    intro
    work
    archive
+   data
    reference
    functions
    release

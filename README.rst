@@ -60,8 +60,8 @@ License
 
 The ``la`` package is distributed under a Simplified BSD license. Parts of
 NumPy, Scipy, and numpydoc, which all have BSD licenses, are included in
-``la``. See the LICENSE file, which is distributed with the ``la`` package,
-for details.
+``la``. Parts of matplotlib are also included. See the LICENSE file, which
+is distributed with the ``la`` package, for details.
 
 Installation
 ============
