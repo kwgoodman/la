@@ -5,7 +5,7 @@ import la
 from la.external.matplotlib import quotes_historical_yahoo
 
 
-def quotes(tickers, date1=None, date2=None, verbose=False):
+def quotes(tickers, date1=None, date2=None, adjust=True, verbose=False):
     """
     Given a ticker sequence, return historical Yahoo! quotes as a 3d larry.
 
@@ -22,6 +22,12 @@ def quotes(tickers, date1=None, date2=None, verbose=False):
         The last date to grab historical quotes on. For example:
         datetime.date(2010, 12, 31) or (2010, 12, 31). By default the last 
         date is 10 days beyond today's date.
+    adjust : bool, optional
+        Adjust (default) the open, close, high, and low prices and the volume.
+        The adjustment takes splits and dividends into account such that the
+        corresponding returns are correct. The adjustment is not correct for
+        volume, but at least price * volume remains unchanged after the
+        adjustment.
     verbose : bool, optional
         Print the ticker currently being loaded. By default the tickers are
         not printed.
@@ -29,12 +35,14 @@ def quotes(tickers, date1=None, date2=None, verbose=False):
     Returns
     -------
     lar : larry
-        A 3d larry is returned. In order, the axes contain: tickers, item,
-        and dates, where items are
+        A 3d larry is returned. In order, the three axes contain: tickers,
+        item, and dates. The elements along the item axis depend on the value
+        of `adjust`. When `adjust` is False, the items are
         
         ['open', 'close', 'high', 'low', 'volume', 'adjclose']
 
-        and dates are datetime.date objects.
+        When adjust is true (default), the adjusted close ('adjclose') is
+        not included. The dates are datetime.date objects.
  
     Examples
     --------
@@ -50,7 +58,6 @@ def quotes(tickers, date1=None, date2=None, verbose=False):
         high
         low
         volume
-        adjclose
     label_2
         2010-10-01
         2010-10-04
@@ -60,16 +67,14 @@ def quotes(tickers, date1=None, date2=None, verbose=False):
             [  2.82520000e+02,   2.78640000e+02,   2.88940000e+02],
             [  2.86580000e+02,   2.82900000e+02,   2.89450000e+02],
             [  2.81350000e+02,   2.77770000e+02,   2.81820000e+02],
-            [  1.60051000e+07,   1.55256000e+07,   1.78743000e+07],
-            [  2.82520000e+02,   2.78640000e+02,   2.88940000e+02]],
-           . 
+            [  1.60051000e+07,   1.55256000e+07,   1.78743000e+07]],
+            .
            [[  2.47700000e+01,   2.39600000e+01,   2.40600000e+01],
             [  2.43800000e+01,   2.39100000e+01,   2.43500000e+01],
             [  2.48200000e+01,   2.39900000e+01,   2.44500000e+01],
             [  2.43000000e+01,   2.37800000e+01,   2.39100000e+01],
-            [  6.26236000e+07,   9.80868000e+07,   7.80329000e+07],
-            [  2.43800000e+01,   2.39100000e+01,   2.43500000e+01]]])
-    
+            [  6.26236000e+07,   9.80868000e+07,   7.80329000e+07]]])
+
     >>> close = lar.lix[:,['close']]
     >>> close
     label_0
@@ -82,7 +87,7 @@ def quotes(tickers, date1=None, date2=None, verbose=False):
     x
     array([[ 282.52,  278.64,  288.94],
            [  24.38,   23.91,   24.35]])
-
+        
     """
     if date1 is None:
         date1 = datetime.date(1900, 1, 1)
@@ -103,4 +108,13 @@ def quotes(tickers, date1=None, date2=None, verbose=False):
             lar = qlar
         else:
             lar = lar.merge(qlar)
-    return lar.sortaxis(-1)        
+    lar = lar.sortaxis(-1) 
+    if adjust:
+        scale = lar.x[:,-1] / lar.x[:,1]
+        lar.x[:,0] *= scale
+        lar.x[:,1] = lar.x[:,-1]
+        lar.x[:,2] *= scale
+        lar.x[:,3] *= scale
+        lar.x[:,4] /= scale
+        lar = lar[:,:-1]
+    return lar    
