@@ -23,11 +23,10 @@ def quotes(tickers, date1=None, date2=None, adjust=True, verbose=False):
         datetime.date(2010, 12, 31) or (2010, 12, 31). By default the last 
         date is 10 days beyond today's date.
     adjust : bool, optional
-        Adjust (default) the open, close, high, and low prices and the volume.
-        The adjustment takes splits and dividends into account such that the
-        corresponding returns are correct. The adjustment is not correct for
-        volume, but at least price * volume remains unchanged after the
-        adjustment.
+        Adjust (default) the open, close, high, and low prices. The
+        adjustment takes splits and dividends into account such that the
+        corresponding returns are correct. Volume is already split adjusted
+        by Yahoo so it is not changed by the value of `adjust`.
     verbose : bool, optional
         Print the ticker currently being loaded. By default the tickers are
         not printed.
@@ -130,6 +129,5 @@ def quotes(tickers, date1=None, date2=None, adjust=True, verbose=False):
         lar.x[:,1] = lar.x[:,-1]
         lar.x[:,2] *= scale
         lar.x[:,3] *= scale
-        lar.x[:,4] /= scale
         lar = lar[:,:-1]
     return lar    
