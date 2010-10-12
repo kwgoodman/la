@@ -87,6 +87,21 @@ def quotes(tickers, date1=None, date2=None, adjust=True, verbose=False):
     x
     array([[ 282.52,  278.64,  288.94],
            [  24.38,   23.91,   24.35]])
+    
+    Calculate the log return from the close prices:
+
+    >>> ret = close / close.lag(1, axis=-1)
+    >>> ret = ret.log()
+    >>> ret
+    label_0
+        aapl
+        msft
+    label_1
+        2010-10-04
+        2010-10-05
+    x
+    array([[-0.01382872,  0.03629843],
+           [-0.01946634,  0.01823507]])
         
     """
     if date1 is None:

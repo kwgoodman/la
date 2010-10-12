@@ -13,7 +13,6 @@
 #   - Remove year, month, day, d (date number); just return datetime.date
 #   - Remove rearrays and asobject parameter; always return lists of tuples
 #   - Don't adjust prices or volume, leave that for the la package
-#   - Don't reverse order of data
 #   - parse_historical_yahoo now returns dates and data separately
 #   - quotes_historical_yahoo now returns dates and data separately
 #   - parse_historical_yahoo no longer reverses data order
