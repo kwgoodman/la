@@ -1051,8 +1051,8 @@ conversion methods:
 * :meth:`totuples <la.larry.totuples>`
 * :meth:`todict <la.larry.todict>`
 * :meth:`tolist <la.larry.tolist>`
-* :meth:`tocsv <la.larry.tocsv>`.
-
+* :meth:`tocsv <la.larry.tocsv>`
+* :meth:`tofile <la.larry.tofile>`
 
 Some examples::
 
@@ -1067,7 +1067,15 @@ Some examples::
     >>> y.todict()
     {('r0', 'c1'): 2, ('r1', 'c1'): 4, ('r0', 'c0'): 1, ('r1', 'c0'): 3}
     
-    >>> y.tocsv('/tmp/lar.csv')   
+    >>> y.tocsv('/tmp/lar.csv') 
+
+    >>> import StringIO
+    >>> f = StringIO.StringIO()
+    >>> lar.tofile(f)
+    >>> print f.getvalue()
+    ,c0,c1
+    r0,1,2
+    r1,3,4
 
 The corresponding methods
 :meth:`fromtuples <la.larry.fromtuples>`,

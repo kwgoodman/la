@@ -586,6 +586,9 @@ methods, see :ref:`creation`.
 
 .. automethod:: la.larry.tocsv         
 
+------------
+
+.. automethod:: la.larry.tofile         
 
 
 Copy

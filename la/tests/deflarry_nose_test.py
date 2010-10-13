@@ -1,8 +1,8 @@
 
-import unittest
 import os
 import tempfile
 from copy import deepcopy
+from StringIO import StringIO
 
 import numpy as np
 nan = np.nan
@@ -261,12 +261,12 @@ class est_calc(object):
     def test_morph_3(self):
         "larry.morph 3d" 
         t = self.tmorph
-        label = self.labelmorph
+        label = self.label
         label[1] = [0,3,2]
         p = self.lar.morph([0,3,2],axis=1)
         self.check_function(t, label, p, self.lar, view='copy')
 
-    def test_morph_3(self):
+    def test_morph_3b(self):
         "larry.morph 3d" 
         t = self.tmorph
         label = self.label3
@@ -560,7 +560,29 @@ def test_conversion():
         os.unlink(filename)
         yield ale, y1, y2, msg % ('csv', str(shape)), False                
         
-                  
+# tofile does not yet have a from file, so it cannot be tested with the
+# roundtrip method above. (Besides it only supports 1d and 2d larrys).
+# Test separately:
+
+def test_tofile():
+    "Test lar.tofile()"
+    
+    # 1d
+    f = StringIO()
+    lar = larry([1, 2], [['r1', 'r2']])
+    lar.tofile(f)
+    actual = f.getvalue()
+    desired = 'r1,1\nr2,2\n'
+    yield assert_equal, actual, desired, "tofile failed on 1d input"
+
+    # 2d
+    f = StringIO()
+    lar = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
+    lar.tofile(f)
+    actual = f.getvalue()
+    desired = ',c1,c2\nr1,1,2\nr2,3,4\n'
+    yield assert_equal, actual, desired, "tofile failed on 2d input"
+
 # --------------------------------------------------------------------------
 
 # larry dtype test
@@ -620,11 +642,3 @@ def test_comparison():
             desired = comp(1)
             yield ale, actual, desired, msg % (fnc, right)
              
-    
-    
-    
-    
-    
-    
-    
-                                

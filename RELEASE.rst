@@ -11,6 +11,10 @@ la 0.5 (daikon)
 
 *Release date: Not yet released, in development*
 
+**New larry methods**
+
+- tofile: Save 1d or 2d larry to text file
+
 **New functions**
 
 - la.data.yahoo.quotes: Given a ticker sequence, return historical Yahoo!

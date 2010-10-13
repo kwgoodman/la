@@ -3839,6 +3839,7 @@ class larry(object):
         la.larry.tolist : Convert to a flattened list.
         la.larry.todict : Convert to a dictionary.
         la.larry.tocsv : Save larry to a csv file.
+        la.larry.tofile : Save 1d or 2d larry to text file.
         
         Examples
         --------
@@ -3935,6 +3936,7 @@ class larry(object):
         la.larry.totuples : Convert to a flattened list of tuples.
         la.larry.todict : Convert to a dictionary.
         la.larry.tocsv : Save larry to a csv file.
+        la.larry.tofile : Save 1d or 2d larry to text file.
         
         Examples
         --------
@@ -4008,6 +4010,7 @@ class larry(object):
         la.larry.totuples : Convert to a flattened list of tuples.
         la.larry.tolist : Convert to a flattened list.
         la.larry.tocsv : Save larry to a csv file.
+        la.larry.tofile : Save 1d or 2d larry to text file.
         
         Examples
         --------
@@ -4096,6 +4099,7 @@ class larry(object):
         See Also
         --------
         la.larry.fromcsv : Load a larry from a csv file.
+        la.larry.tofile : Save 1d or 2d larry to text file.
         la.IO: Save and load larrys in HDF5 format using a dictionary-like
                interface.         
         la.larry.totuples : Convert to a flattened list of tuples.
@@ -4189,6 +4193,107 @@ class larry(object):
         data = [row for row in reader]
         fid.close()
         return larry.fromtuples(data) 
+    
+    def tofile(self, file, delimiter=','):
+        """
+        Save 1d or 2d larry to text file (overwrites file if already exists).
+        
+        Parameters
+        ----------
+        file : {str, file object}
+            A file name (str) or file object. If file object, then it will
+            not be closed.
+        delimiter : str
+            The delimiter used to separate the elements in the file.
+
+        See Also
+        --------
+        la.IO: Save and load larrys in HDF5 format using a dictionary-like
+               interface.         
+        la.larry.tocsv : Save larry to a csv file.
+        la.larry.totuples : Convert to a flattened list of tuples.
+        la.larry.tolist : Convert to a flattened list.
+        la.larry.todict : Convert to a dictionary.
+            
+        Examples
+        --------
+        Create a larry:
+
+        >>> lar = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
+
+        Pick a file name or file object or string buffer. Let's use a string
+        buffer:
+
+        >>> import StringIO
+        >>> f = StringIO.StringIO()
+
+        Write to file:
+
+        >>> lar.tofile(f)
+
+        Display file (or in this case, string buffer):
+
+        >>> print f.getvalue()
+        ,c1,c2
+        r1,1,2
+        r2,3,4
+
+        """
+        
+        # Check number of dimensions in larry
+        ndim = self.ndim
+        if ndim not in (1, 2):
+            msg = "Only 1d and 2d larrys supported; "
+            msg +="try the IO function or tocsv method."
+            raise ValueError, msg
+
+        # Open file if needed
+        if type(file) == str:
+            f = open(file, 'w')
+            opened = True
+        else:
+            f = file
+            opened = False
+
+        # Write data
+        if ndim == 1:
+
+            for i in range(self.size):
+                line = [str(self.label[0][i]), str(self.x[i]) + '\n']
+                line = delimiter.join(line)
+                f.write(line)
+
+        elif ndim == 2:
+            
+            # Column labels
+            f.write(delimiter)
+            line = []
+            for i in range(self.shape[1]):
+                line.append(str(self.label[1][i]))
+            line = delimiter.join(line)
+            line += '\n'
+            f.write(line)
+            
+            # Row labels and array data
+            for i in range(self.shape[0]):
+                line = [str(self.label[0][i])]
+                for j in range(self.shape[1]):
+                    line.append(str(self.x[i,j]))
+                line = delimiter.join(line)
+                line += '\n'
+                f.write(line)
+        
+        else:
+
+            if opened:
+                f.close()
+            msg = "Please report this bug; the code should never reach here."
+            raise RuntimeError, msg
+
+        # Close file if opened (i.e., if file was a str)
+        if opened:
+            f.close()
+
                
     # Copy -------------------------------------------------------------------
           
