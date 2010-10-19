@@ -385,7 +385,7 @@ def union(axis, *args):
 
 def intersection(axis, *args):
     """
-    Intersection of labels along specified axis.
+    Sorted list containing the intersection of labels along specified axis.
     
     Parameters
     ----------
@@ -397,7 +397,7 @@ def intersection(axis, *args):
     Returns
     -------
     out : list
-        A list containing the intersection of the labels.
+        A sorted list containing the intersection of the labels.
         
     See Also
     --------
