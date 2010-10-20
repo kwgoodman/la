@@ -10,7 +10,8 @@ from la.farray import nanmean, nanmedian, nanstd
 from la.util.misc import isscalar, fromlists
 from la.farray import (group_ranking, group_mean, group_median, shuffle,
                        push, quantile, ranking, lastrank, movingsum_forward,
-                       movingrank, movingsum, geometric_mean)
+                       movingrank, movingsum, geometric_mean, demean,
+                       demedian, zscore)
 
 
 class larry(object):
@@ -2475,14 +2476,19 @@ class larry(object):
 
     def demean(self, axis=None):
         """
-        Subtract the mean along the the specified axis.
+        Subtract the mean along the specified axis.
         
         Parameters
         ----------
         axis : {int, None}, optional
             The axis along which to remove the mean. The default (None) is
             to subtract the mean of the flattened larry.
-        
+
+        Returns
+        -------
+        y : larry
+            A copy with the mean along the specified axis removed.
+
         Examples
         --------
         >>> y = larry([1, 2, 3, 4])
@@ -2496,24 +2502,22 @@ class larry(object):
         array([-1.5, -0.5,  0.5,  1.5])
             
         """
-        # Adapted from pylab.demean
-        if axis != 0 and not axis is None:
-            ind = [slice(None)] * self.ndim
-            ind[axis] = np.newaxis
-            x = self.x - nanmean(self.x, axis)[ind]
-        else:
-            x = self.x - nanmean(self.x, axis)   
-        return larry(x, self.copylabel(), integrity=False)
+        return larry(demean(self.x, axis), self.copylabel(), integrity=False)
 
     def demedian(self, axis=None):
         """
-        Subtract the median along the the specified axis.
+        Subtract the median along the specified axis.
         
         Parameters
         ----------
         axis : {int, None}, optional
             The axis along which to remove the median. The default (None) is
             to subtract the median of the flattened larry.
+        
+        Returns
+        -------
+        y : larry
+            A copy with the median along the specified axis removed.
         
         Examples
         --------
@@ -2528,14 +2532,7 @@ class larry(object):
         array([-1.5, -0.5,  0.5,  1.5])
             
         """
-        # Adapted from pylab.demean
-        if axis != 0 and not axis is None:
-            ind = [slice(None)] * self.ndim
-            ind[axis] = np.newaxis
-            x = self.x - nanmedian(self.x, axis)[ind]
-        else:
-            x = self.x - nanmedian(self.x, axis)   
-        return larry(x, self.copylabel(), integrity=False)
+        return larry(demedian(self.x, axis), self.copylabel(), integrity=False)
         
     def zscore(self, axis=None):
         """
@@ -2546,6 +2543,11 @@ class larry(object):
         axis : {int, None}, optional
             The axis along which to take the z-score. The default (None) is
             to find the z-score of the flattened larry.
+        
+        Returns
+        -------
+        y : larry
+            A copy normalized with the Z-score along the specified axis.
         
         Examples
         --------
@@ -2559,14 +2561,7 @@ class larry(object):
         array([-1.22474487,  0.        ,  1.22474487])
             
         """
-        y = self.demean(axis)
-        if axis != 0 and not axis is None:
-            ind = [slice(None)] * self.ndim
-            ind[axis] = np.newaxis
-            y.x /= nanstd(y.x, axis)[ind]
-        else:
-            y.x /= nanstd(y.x, axis)   
-        return y             
+        return larry(zscore(self.x, axis), self.copylabel(), integrity=False)
             
     def movingsum(self, window, axis=-1, norm=False):
         """Moving sum, NaNs treated as 0, optionally normalized for NaNs."""

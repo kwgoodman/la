@@ -515,6 +515,104 @@ def quantile(x, q, axis=0):
     y = 2.0 * (y - 0.5)
     return y 
 
+def demean(arr, axis=None):
+    """
+    Subtract the mean along the specified axis.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    axis : {int, None}, optional
+        The axis along which to remove the mean. The default (None) is
+        to subtract the mean of the flattened array.
+
+    Returns
+    -------
+    y : ndarray
+        A copy with the mean along the specified axis removed.
+
+    Examples
+    --------
+    >>> arr = np.array([1, np.nan, 2, 3])
+    >>> demean(arr)
+    array([ -1.,  NaN,   0.,   1.])
+ 
+    """
+    # Adapted from pylab.demean
+    if axis != 0 and not axis is None:
+        ind = [slice(None)] * arr.ndim
+        ind[axis] = np.newaxis
+        arr = arr - nanmean(arr, axis)[ind]
+    else:
+        arr = arr - nanmean(arr, axis)   
+    return arr
+
+def demedian(arr, axis=None):
+    """
+    Subtract the median along the specified axis.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    axis : {int, None}, optional
+        The axis along which to remove the median. The default (None) is
+        to subtract the median of the flattened array.
+    
+    Returns
+    -------
+    y : ndarray
+        A copy with the median along the specified axis removed.
+    
+    Examples
+    --------
+    >>> arr = np.array([1, np.nan, 2, 10])
+    >>> demedian(arr)
+    array([ -1.,  NaN,   0.,   8.])        
+    
+    """
+    # Adapted from pylab.demean
+    if axis != 0 and not axis is None:
+        ind = [slice(None)] * arr.ndim
+        ind[axis] = np.newaxis
+        arr = arr - nanmedian(arr, axis)[ind]
+    else:
+        arr = arr - nanmedian(arr, axis)   
+    return arr
+    
+def zscore(arr, axis=None):
+    """
+    Z-score along the specified axis.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    axis : {int, None}, optional
+        The axis along which to take the z-score. The default (None) is
+        to find the z-score of the flattened array.
+    
+    Returns
+    -------
+    y : ndarray
+        A copy normalized with the Z-score along the specified axis.
+    
+    Examples
+    --------
+    >>> arr = np.array([1, np.nan, 2, 3])
+    >>> zscore(arr)
+    array([-1.22474487,         NaN,  0.        ,  1.22474487])
+        
+    """
+    arr = demean(arr, axis)
+    if axis != 0 and not axis is None:
+        ind = [slice(None)] * arr.ndim
+        ind[axis] = np.newaxis
+        arr /= nanstd(arr, axis)[ind]
+    else:
+        arr /= nanstd(arr, axis)   
+    return arr             
    
 # Calc functions -----------------------------------------------------------
 

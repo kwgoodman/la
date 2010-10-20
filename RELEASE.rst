@@ -20,6 +20,7 @@ la 0.5 (daikon)
 - la.data.yahoo.quotes: Given a ticker sequence, return historical Yahoo!
   quotes as a 3d larry
 - unique: Find the unique elements of a larry
+- New NaN-aware ndarray functions: demean, demedian, and zscore.
 
 **Bugs fixes**
 
