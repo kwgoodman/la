@@ -138,7 +138,7 @@ year started (open source)                2008 (2010)
 
 **Data object**
 
-======================================    ====================================
+=======================================   =====================================
 data object (main class)                  larry
 number of dimensions supported            nd > 0d
 data container                            Numpy array
@@ -152,7 +152,7 @@ missing values                            NaN (float),  partial: '' (str),
                                           None (object)
 default for binary operations (+,*,...)   intersection of labels
 IO                                        HDF5, partial support for CSV
-======================================    ====================================
+=======================================   =====================================
 
 **Similar to Numpy**
 
