@@ -150,7 +150,7 @@ label types                               heterogenous, hashable
 label constraints                         unique along any one axis, hashable
 missing values                            NaN (float),  partial: '' (str),
                                           None (object)
-binary operations on two data objects     intersection of labels
+default for binary operations (+,*,...)   intersection of labels
 IO                                        HDF5, partial support for CSV
 ======================================    ====================================
 
