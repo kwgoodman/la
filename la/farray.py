@@ -500,16 +500,46 @@ def quantile(x, q, axis=0):
     
     Parameters
     ----------
-    x : array_like, 1d or 2d
+    x : ndarray
+        Input array.
     q : int
-        quantile between 2 and number of elements in first axis (x.shape[0])
+        The number of bins into which to quantize the data. Must be at
+        least 1 but less than the number of elements along the specified
+        axis.
+    axis : {int, None}, optional
+        The axis along which to quantize the elements. The default is
+        axis 0.
+
+    Returns
+    -------
+    y : ndarray
+        A quantized copy of the array.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, 3, 4, 5, 6])
+    >>> la.farray.quantile(arr, 3)
+    array([-1., -1.,  0.,  0.,  1.,  1.])
+
     """
-    if q <= 1:
-        raise ValueError, 'q must be greater than one.'
-    if q > x.shape[axis]:
-        msg = 'q must be less than or equal to the number of rows in x.'
-        raise ValueError, msg
-    y = np.apply_along_axis(_quantileraw1d, axis, x, q)
+    if q < 1:
+        raise ValueError, 'q must be one or greater.'
+    elif q == 1:
+        y = np.zeros(x.shape)
+        y[np.isnan(x)] = np.nan
+        return y
+    if axis == None:
+        if q > x.size:
+            msg = 'q must be less than or equal to the number of elements '
+            msg += 'in x.'
+            raise ValueError, msg
+        y = np.apply_along_axis(_quantileraw1d, 0, x.flat, q)
+        y = y.reshape(x.shape)
+    else:        
+        if q > x.shape[axis]:
+            msg = 'q must be less than or equal to the number of rows in x.'
+            raise ValueError, msg
+        y = np.apply_along_axis(_quantileraw1d, axis, x, q)
     y = y - 1.0
     y = 1.0 * y / (q - 1.0)
     y = 2.0 * (y - 0.5)

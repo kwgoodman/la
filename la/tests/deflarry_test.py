@@ -10,7 +10,7 @@ from numpy.testing import (assert_, assert_almost_equal, assert_raises,
 
 import la
 from la import larry
-from la.util.testing import printfail, noreference, nocopy
+from la.util.testing import printfail, noreference
 from la.util.testing import assert_larry_equal as ale
 
 
@@ -3167,31 +3167,48 @@ class Test_calc(unittest.TestCase):
         
     def test_quantile_1(self):
         "larry.quantile_1"    
-        t = np.array([[-1., -1.,  1., -1.],
+        a = np.array([[-1., -1.,  1., -1.],
                       [ 1.,  1., -1., -1.],
                       [-1., -1., -1.,  1.]])
-        label = [range(3), range(4)]                                    
-        p = self.l1.quantile(2)
-        msg = printfail(t, p.x, 'x')  
-        t[np.isnan(t)] = self.nancode
-        p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l1), 'Reference found')                 
-
+        desired = larry(a, [range(3), range(4)])
+        actual = self.l1.quantile(2)
+        ale(actual, desired, "quantile", original=self.l1)
+    
     def test_quantile_2(self):
         "larry.quantile_2"    
-        t = np.array([[ 0.,  0.,  1., -1.],
+        a = np.array([[ 0.,  0.,  1., -1.],
                       [ 1.,  1.,  0.,  0.],
                       [-1., -1., -1.,  1.]])
-        label = [range(3), range(4)]                                    
-        p = self.l1.quantile(3)
-        msg = printfail(t, p.x, 'x')  
-        t[np.isnan(t)] = self.nancode
-        p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l1), 'Reference found') 
+        desired = larry(a, [range(3), range(4)])
+        actual = self.l1.quantile(3)
+        ale(actual, desired, "quantile", original=self.l1)
+    
+    def test_quantile_3(self):
+        "larry.quantile_3"    
+        a = np.array([[ 0.,  0.,  1., -1.],
+                      [ 1.,  1.,  1., -1.],
+                      [-1., -1.,  0.,  0.]])
+        desired = larry(a, [range(3), range(4)])
+        actual = self.l1.quantile(3, axis=None)
+        ale(actual, desired, "quantile", original=self.l1)
+    
+    def test_quantile_4(self):
+        "larry.quantile_4"    
+        a = np.zeros(self.l1.shape)
+        desired = larry(a)
+        actual = self.l1.quantile(1)
+        ale(actual, desired, "quantile q=1", original=self.l1)
+
+    def test_quantile_5(self):
+        "larry.quantile_5"
+        original = larry([[1, 2, 3, 1],
+                          [2, 3, 1, 2],
+                          [3, 1, 2, 3]])
+        desired = larry([[-1,  0,  1, -1],
+                         [ 0,  1, -1,  0],
+                         [ 1, -1,  0,  1]], dtype=float)
+        actual = original.quantile(3, axis=None)
+        ale(actual, desired, "quantile axis None", original=original)
 
     def test_cut_missing_1(self):
         "larry.cut_missing_1" 

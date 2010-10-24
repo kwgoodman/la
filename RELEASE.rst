@@ -26,8 +26,8 @@ la 0.5 (daikon)
 
 - #1 Due to a typo, la.info() crashed if h5py could not be imported
 - #2 larry.sortaxis(None) chopped off singleton dimensions
-- #5 la.farray.lastrank choked on empty array input
-
+- #5 la.farray.lastrank() choked on empty array input
+- #7 larry.quantile() choked on axis=None
 
 la 0.4 (celery)
 ===============

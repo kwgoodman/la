@@ -2632,8 +2632,40 @@ class larry(object):
         return y
         
     def quantile(self, q, axis=0):
-        """Convert elements in each column to integers between 1 and q; then
-        normalize to to -1, 1
+        """
+        Assign elements along specified axis into q bins, where smallest
+        elements are in bin 1, next smallest in bin 2, ..., largest elements
+        are in bin q; then normalize output be between [-1, 1].
+
+        Parameters
+        ----------
+        q : int
+            The number of bins into which to quantize the data. Must be at
+            least 1 but less than the number of elements along the specified
+            axis.
+        axis : {int, None}, optional
+            The axis along which to quantize the elements. The default is
+            axis 0.
+
+        Returns
+        -------
+        lar : larry
+           A quantized copy of the larry.
+
+        Examples
+        --------
+        >>> lar = larry([1, 2, 3, 4, 5, 6])
+        >>> lar.quantile(3)
+        label_0
+            0
+            1
+            2
+            3
+            4
+            5
+        x
+        array([-1., -1.,  0.,  0.,  1.,  1.])
+            
         """
         y = self.copy()
         y.x = quantile(y.x, q, axis=axis)       
