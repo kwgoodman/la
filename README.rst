@@ -114,11 +114,11 @@ URLs
 ====
 
 ===============   ========================================================
- docs              http://berkeleyanalytics.com/la
  download          http://pypi.python.org/pypi/la
+ docs              http://berkeleyanalytics.com/la
  code              http://github.com/kwgoodman/la
- list 1            http://groups.google.ca/group/pystatsmodels
- list 2            http://groups.google.com/group/labeled-array
+ issues, bugs      http://github.com/kwgoodman/la/issues 
+ mailing list      http://groups.google.com/group/labeled-array
 ===============   ========================================================
 
 ``la`` at a glance

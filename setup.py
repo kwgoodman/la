@@ -22,9 +22,7 @@ The main class of the la package is a labeled array, larry. A larry consists
 of data and labels. The data is stored as a NumPy array and the labels as a
 list of lists (one list per dimension).
 
-Here's larry in schematic form:
-
-::
+Here's larry in schematic form::
     
                          date1    date2    date3
                 'AAPL'   209.19   207.87   210.11
@@ -32,9 +30,7 @@ Here's larry in schematic form:
                 'DELL'    14.82    15.11    14.94
                 
 The larry above is stored internally as a `Numpy <http://www.numpy.org>`_
-array and a list of lists:
-
-::
+array and a list of lists::
     
         y.label = [['AAPL', 'IBM', 'DELL'], [date1, date2, date3]]
         y.x = np.array([[209.19, 207.87, 210.11],
@@ -42,9 +38,7 @@ array and a list of lists:
                         [ 14.82,  15.11,  14.94]])               
     
 A larry can have any number of dimensions except zero. Here, for example, is
-one way to create a one-dimensional larry:
-
-::
+one way to create a one-dimensional larry::
 
     >>> import la
     >>> y = la.larry([1, 2, 3])
@@ -60,9 +54,7 @@ Alignment by label is automatic when you add (or subtract, multiply, divide)
 two larrys.
     
 You can archive larrys in HDF5 format using **save** and **load** or using a
-dictionary-like interface:
-
-::
+dictionary-like interface::
     
     >>> io = la.IO('/tmp/dataset.hdf5')
     >>> io['y'] = y   # <--- save
@@ -73,9 +65,7 @@ For the most part larry acts like a Numpy array. And, whenever you want,
 you have direct access to the Numpy array that holds your data. For
 example if you have a function, *myfunc*, that works on Numpy arrays and
 doesn't change the shape or ordering of the array, then you can use it on a
-larry, *y*, like this:
-
-::
+larry, *y*, like this::
     
                            y.x = myfunc(y.x)
     
@@ -83,10 +73,10 @@ larry adds the convenience of labels, provides many built-in methods, and
 let's you use your existing array functions.
 
 ===============   ========================================================
+ docs              http://berkeleyanalytics.com/la
  code              http://github.com/kwgoodman/la
- docs              http://larry.sourceforge.net
- list 1            http://groups.google.ca/group/pystatsmodels
- list 2            http://groups.google.com/group/labeled-array
+ issues, bugs      http://github.com/kwgoodman/la/issues 
+ mailing list      http://groups.google.com/group/labeled-array
 ===============   ========================================================
 
 """
