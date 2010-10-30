@@ -37,7 +37,9 @@ la 0.5 (daikon)
 - #2 larry.sortaxis(None) chopped off singleton dimensions
 - #5 la.farray.lastrank() choked on empty array input
 - #7 larry.quantile() choked on axis=None
-
+- #8 demean, demedian, zscore choked on 1d input when axis=-1 
+  
+  
 la 0.4 (celery)
 ===============
 

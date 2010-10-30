@@ -624,14 +624,12 @@ def demean(arr, axis=None):
     array([ -1.,  NaN,   0.,   1.])
  
     """
-    # Adapted from pylab.demean
-    if axis != 0 and not axis is None:
+    marr = nanmean(arr, axis) 
+    if (axis != 0) and (not axis is None) and (not np.isscalar(marr)):
         ind = [slice(None)] * arr.ndim
         ind[axis] = np.newaxis
-        arr = arr - nanmean(arr, axis)[ind]
-    else:
-        arr = arr - nanmean(arr, axis)   
-    return arr
+        marr =  marr[ind]
+    return arr - marr   
 
 def demedian(arr, axis=None):
     """
@@ -657,14 +655,12 @@ def demedian(arr, axis=None):
     array([ -1.,  NaN,   0.,   8.])        
     
     """
-    # Adapted from pylab.demean
-    if axis != 0 and not axis is None:
+    marr = nanmedian(arr, axis) 
+    if (axis != 0) and (not axis is None) and (not np.isscalar(marr)):
         ind = [slice(None)] * arr.ndim
         ind[axis] = np.newaxis
-        arr = arr - nanmedian(arr, axis)[ind]
-    else:
-        arr = arr - nanmedian(arr, axis)   
-    return arr
+        marr =  marr[ind]
+    return arr - marr   
     
 def zscore(arr, axis=None):
     """
@@ -691,13 +687,13 @@ def zscore(arr, axis=None):
         
     """
     arr = demean(arr, axis)
-    if axis != 0 and not axis is None:
+    norm = nanstd(arr, axis) 
+    if (axis != 0) and (not axis is None) and (not np.isscalar(norm)):
         ind = [slice(None)] * arr.ndim
         ind[axis] = np.newaxis
-        arr /= nanstd(arr, axis)[ind]
-    else:
-        arr /= nanstd(arr, axis)   
-    return arr             
+        norm = norm[ind]
+    arr /= norm
+    return arr
    
 # Calc functions -----------------------------------------------------------
 

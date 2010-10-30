@@ -2607,6 +2607,13 @@ class Test_calc(unittest.TestCase):
         self.assert_((abs(t - p.x) < self.tol).all(), msg)
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
 
+    def test_demean_5(self):
+        "larry.demean_5"
+        original = larry([1, 2, 3])
+        actual = original.demean(axis=-1)
+        desired = original.demean()
+        ale(actual, desired, "negative axis", original)
+
     def test_demedian_1(self):
         "larry.demedian_1"
         t = np.array([[ 0.5, 0.5, nan, 0.0],
@@ -2653,6 +2660,13 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')            
         self.assert_((abs(t - p.x) < self.tol).all(), msg)
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
+    
+    def test_demedian_5(self):
+        "larry.demedian_5"
+        original = larry([1, 2, 3])
+        actual = original.demedian(axis=-1)
+        desired = original.demedian()
+        ale(actual, desired, "negative axis", original)
 
     def test_zscore_1(self):
         "larry.zscore_1"
@@ -2695,6 +2709,13 @@ class Test_calc(unittest.TestCase):
         self.assert_((abs(t - p.x) < self.tol).all(), msg)
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l3), 'Reference found')
+    
+    def test_zscore_4(self):
+        "larry.zscore_4"
+        original = larry([1, 2, 3])
+        actual = original.zscore(axis=-1)
+        desired = original.zscore()
+        ale(actual, desired, "negative axis", original)
 
     def test_push_1(self):
         "larry.push_1"
