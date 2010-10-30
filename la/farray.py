@@ -225,40 +225,52 @@ def mov_sum(arr, window, skip=0, axis=-1, norm=False):
     array([ NaN,   3.,   4.,   8.,   9.])    
     
     """
+
+    # Check input
     if window < 1:  
         raise ValueError, 'window must be at least 1'
     if window > arr.shape[axis]:
         raise ValueError, 'Window is too big.'      
     if skip > arr.shape[axis]:
         raise IndexError, 'Your skip is too large.'
+    
+    # Set missing values to 0
     m = ismissing(arr) 
-    arr = 1.0 * arr
+    arr = arr.astype(float)
     arr[m] = 0
+
+    # Cumsum
     csx = arr.cumsum(axis)
+
+    # Set up indexes
     index1 = [slice(None)] * arr.ndim 
-    index1[axis] = slice(window - 1, None)
-    index2 = [slice(None)] * arr.ndim 
-    index2[axis] = slice(None, -window) 
-    msx = csx[index1]
-    index3 = [slice(None)] * arr.ndim
+    index2 = list(index1) 
+    index3 = list(index1)
+    index4 = list(index1)
+    index1[axis] = slice(window - 1, -skip or None)
+    index2[axis] = slice(None, -window-skip) 
     index3[axis] = slice(1, None)
+    index4[axis] = slice(skip + window - 1, None)
+
+    # Make moving sum
+    msx = csx[index1]
     msx[index3] = msx[index3] - csx[index2] 
     csm = (~m).cumsum(axis)     
     msm = csm[index1]
     msm[index3] = msm[index3] - csm[index2]  
+    
+    # Normalize
     if norm:
         ms = 1.0 * window * msx / msm
     else:
         ms = msx
         ms[msm == 0] = np.nan
-    initshape = list(arr.shape)  
-    initshape[axis] = skip + window - 1
-    #Note: skip could be included in starting window
-    cutslice = [slice(None)] * arr.ndim   
-    cutslice[axis] = slice(None, -skip or None, None)
-    pad = np.nan * np.zeros(initshape)
-    ms = np.concatenate((pad, ms[cutslice]), axis) 
-    return ms
+    
+    # Pad to get back to original shape
+    y = nans(arr.shape)
+    y[index4] = ms
+
+    return y
 
 def movingsum_forward(x, window, skip=0, axis=-1, norm=False):
     """Movingsum in the forward direction skipping skip dates."""

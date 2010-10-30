@@ -22,7 +22,12 @@ la 0.5 (daikon)
 - unique: Find the unique elements of a larry
 - NaN-aware ndarray functions: demean, demedian, and zscore
 
+**Enhancements**
+
+- mov_sum is faster
+
 **Breakage from la 0.4**
+
 - movingsum() deprecated; use mov_sum
 - mov_sum no longer treats Inf and -Inf as missing values
 
