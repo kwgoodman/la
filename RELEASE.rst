@@ -24,6 +24,7 @@ la 0.5 (daikon)
 
 **Breakage from la 0.4**
 - movingsum() deprecated; use mov_sum
+- mov_sum no longer treats Inf and -Inf as missing values
 
 **Bugs fixes**
 

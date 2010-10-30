@@ -3,7 +3,7 @@
 import numpy as np
 
 from la.external.scipy import nanmedian, rankdata, nanstd, nanmean
-from la.missing import nans
+from la.missing import nans, ismissing
 
 
 # Group functions ----------------------------------------------------------
@@ -231,9 +231,9 @@ def mov_sum(arr, window, skip=0, axis=-1, norm=False):
         raise ValueError, 'Window is too big.'      
     if skip > arr.shape[axis]:
         raise IndexError, 'Your skip is too large.'
-    m = np.isfinite(arr) 
+    m = ismissing(arr) 
     arr = 1.0 * arr
-    arr[m == 0] = 0
+    arr[m] = 0
     csx = arr.cumsum(axis)
     index1 = [slice(None)] * arr.ndim 
     index1[axis] = slice(window - 1, None)
@@ -243,7 +243,7 @@ def mov_sum(arr, window, skip=0, axis=-1, norm=False):
     index3 = [slice(None)] * arr.ndim
     index3[axis] = slice(1, None)
     msx[index3] = msx[index3] - csx[index2] 
-    csm = m.cumsum(axis)     
+    csm = (~m).cumsum(axis)     
     msm = csm[index1]
     msm[index3] = msm[index3] - csm[index2]  
     if norm:

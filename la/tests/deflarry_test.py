@@ -2877,6 +2877,11 @@ class Test_calc(unittest.TestCase):
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l3), 'Reference found')        
 
+    def test_mov_sum_10(self):
+        "larry.mov_sum_10"
+        msg = "Inf is not a missing value" 
+        assert_equal(larry([np.inf]).mov_sum(1)[0], np.inf, msg) 
+
     def test_movingsum_forward_1(self):
         "larry.movingsum_forward_1"    
         t = np.array([[2.0, 12.0, 6.0, 8.0, nan],
