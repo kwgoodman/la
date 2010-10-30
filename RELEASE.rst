@@ -22,6 +22,9 @@ la 0.5 (daikon)
 - unique: Find the unique elements of a larry
 - NaN-aware ndarray functions: demean, demedian, and zscore
 
+**Breakage from la 0.4**
+- movingsum() deprecated; use mov_sum
+
 **Bugs fixes**
 
 - #1 Due to a typo, la.info() crashed if h5py could not be imported

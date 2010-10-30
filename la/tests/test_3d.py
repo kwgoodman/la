@@ -15,7 +15,7 @@ def getfuncs(argint, argfrac, argsector):
              ('nanmean'               , (), ()),
              ('nanstd'                , (), ()),
              ('movingrank'            , (argint,), ()),
-             ('movingsum'             , (argint,), ()),
+             ('mov_sum'               , (argint,), ()),
              ('movingsum_forward'     , (argint,), ()),
              ('quantile'              , (argint,), ()),
              ('push'                  , (argint,), ()),

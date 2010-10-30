@@ -14,7 +14,7 @@ def functions():
               'median', 'std', 'var', 'min', 'max', 'demean', 'demedian',
               'zscore', 'geometric_mean'],
          (0,): ['cumsum', 'cumprod', 'ranking', 'lastrank'],
-         (1,): ['power', 'movingsum', 'movingsum_forward'],
+         (1,): ['power', 'mov_sum', 'movingsum_forward'],
          (2,): ['movingrank', 'quantile']} 
     return f                   
                         

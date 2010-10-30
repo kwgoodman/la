@@ -9,7 +9,7 @@ nan = np.nan
 
 from la.util.testing import printfail
 from la.farray import group_ranking, group_mean, group_median
-from la.farray import (movingsum, movingrank, movingsum_forward, ranking, 
+from la.farray import (mov_sum, movingrank, movingsum_forward, ranking, 
                        geometric_mean, unique_group, correlation, lastrank)
 
 # Sector functions ----------------------------------------------------------
@@ -487,8 +487,8 @@ class Test_geometric_mean(unittest.TestCase):
         msg = printfail(desired, actual)
         self.assert_((abs(desired - actual) < 1e187).all(), msg)         
         
-class Test_movingsum(unittest.TestCase):
-    "Test farray.movingsum"       
+class Test_mov_sum(unittest.TestCase):
+    "Test farray.mov_sum"       
 
     def setUp(self):
         self.x = np.array([[1.0, nan, 6.0, 0.0, 8.0],
@@ -500,52 +500,52 @@ class Test_movingsum(unittest.TestCase):
                             [ 1.0,  3.0],
                             [ 3.0,  1.0]]) 
 
-    def test_movingsum_1(self):
-        "farray.movingsum #1"  
+    def test_mov_sum_1(self):
+        "farray.mov_sum #1"  
         desired = self.xnan 
-        actual = movingsum(self.xnan, self.window, norm=True)
+        actual = mov_sum(self.xnan, self.window, norm=True)
         assert_almost_equal(actual, desired)             
 
-    def test_movingsum_2(self):
-        "farray.movingsum #2"    
+    def test_mov_sum_2(self):
+        "farray.mov_sum #2"    
         desired = self.xnan
-        actual = movingsum(self.xnan, self.window, norm=False)
+        actual = mov_sum(self.xnan, self.window, norm=False)
         assert_almost_equal(actual, desired)   
 
-    def test_movingsum_3(self):
-        "farray.movingsum #3"    
+    def test_mov_sum_3(self):
+        "farray.mov_sum #3"    
         desired = np.array([[  nan, 2.0, 12.0, 6.0, 8.0],
                             [  nan, 6.0, 12.0, 8.0,-1.0]])   
-        actual = movingsum(self.x, self.window, norm=True)
+        actual = mov_sum(self.x, self.window, norm=True)
         assert_almost_equal(actual, desired) 
 
-    def test_movingsum_4(self):
-        "farray.movingsum #4"   
+    def test_mov_sum_4(self):
+        "farray.mov_sum #4"   
         desired = np.array([[  nan, 1.0,  6.0, 6.0, 8.0],
                             [  nan, 6.0, 12.0, 8.0,-1.0]])
-        actual = movingsum(self.x, self.window, norm=False)
+        actual = mov_sum(self.x, self.window, norm=False)
         assert_almost_equal(actual, desired) 
 
-    def test_movingsum_5(self):
-        "farray.movingsum #5"    
+    def test_mov_sum_5(self):
+        "farray.mov_sum #5"    
         desired = np.array([[nan,  nan,  nan,  nan,  nan],
                             [3.0,  8.0,  14.0, 0.0,  7.0]])
-        actual = movingsum(self.x, self.window, axis=0, norm=True)
+        actual = mov_sum(self.x, self.window, axis=0, norm=True)
         assert_almost_equal(actual, desired) 
 
-    def test_movingsum_6(self):
-        "farray.movingsum #6"    
+    def test_mov_sum_6(self):
+        "farray.mov_sum #6"    
         desired = np.array([[nan,  nan,  nan,  nan,  nan],
                             [3.0,  4.0,  14.0, 0.0,  7.0]])
-        actual = movingsum(self.x, self.window, axis=0, norm=False)
+        actual = mov_sum(self.x, self.window, axis=0, norm=False)
         assert_almost_equal(actual, desired) 
         
-    def test_movingsum_7(self):
-        "farray.movingsum #7"  
+    def test_mov_sum_7(self):
+        "farray.mov_sum #7"  
         desired = np.array([[nan, 4.0],
                             [nan, 4.0],
                             [nan, 4.0]])
-        actual = movingsum(self.x2, self.window)
+        actual = mov_sum(self.x2, self.window)
         assert_almost_equal(actual, desired) 
 
 class Test_movingsum_forward(unittest.TestCase):

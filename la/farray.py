@@ -178,40 +178,83 @@ def geometric_mean(x, axis=-1, check_for_greater_than_zero=True):
     x = np.multiply(x, idx)
     return x
 
+@np.deprecate(new_name='mov_sum')
 def movingsum(x, window, skip=0, axis=-1, norm=False):
     """Moving sum optionally normalized for missing (NaN) data."""
+    return mov_sum(x, window, skip=skip, axis=axis, norm=norm)
+
+def mov_sum(arr, window, skip=0, axis=-1, norm=False):
+    """
+    Moving sum ignoring NaNs, optionally normalized for missing (NaN) data.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    skip : int, optional
+        By default (skip=0) the movingsum at element *i* is the sum over the
+        slice of elements from *i + 1 - window* to *i + 1* (so the last element
+        in the sum is *i*). With nonzero `skip` the sum is over the slice from
+        *i + 1 window - skip* to *i + 1 - skip*.
+    axis : int, optional
+        The axis over which to perform the moving sum. By default the moving
+        sum is taken over the last axis (-1).
+    norm : bool, optional
+        Whether or not to normalize the sum. The default is not to normalize.
+        If there are 3 missing elements in a window, for example, then the
+        normalization would be to multiply the sum in that window by
+        *window / (window - 3)*.
+
+    Returns
+    -------
+    y : ndarray
+        The moving sum of the input array along the specified axis.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, 3, 4, 5])
+    >>> mov_sum(arr, 2)
+    array([ NaN,   3.,   5.,   7.,   9.])
+
+    >>> arr = np.array([1, 2, np.nan, 4, 5])
+    >>> mov_sum(arr, 2)
+    array([ NaN,   3.,   2.,   4.,   9.])
+    >>> mov_sum(arr, 2, norm=True)
+    array([ NaN,   3.,   4.,   8.,   9.])    
+    
+    """
     if window < 1:  
         raise ValueError, 'window must be at least 1'
-    if window > x.shape[axis]:
+    if window > arr.shape[axis]:
         raise ValueError, 'Window is too big.'      
-    if skip > x.shape[axis]:
+    if skip > arr.shape[axis]:
         raise IndexError, 'Your skip is too large.'
-    m = np.isfinite(x) 
-    x = 1.0 * x 
-    x[m == 0] = 0
-    csx = x.cumsum(axis)
-    index1 = [slice(None)] * x.ndim 
+    m = np.isfinite(arr) 
+    arr = 1.0 * arr
+    arr[m == 0] = 0
+    csx = arr.cumsum(axis)
+    index1 = [slice(None)] * arr.ndim 
     index1[axis] = slice(window - 1, None)
-    index2 = [slice(None)] * x.ndim 
+    index2 = [slice(None)] * arr.ndim 
     index2[axis] = slice(None, -window) 
     msx = csx[index1]
-    index3 = [slice(None)] * x.ndim
+    index3 = [slice(None)] * arr.ndim
     index3[axis] = slice(1, None)
     msx[index3] = msx[index3] - csx[index2] 
     csm = m.cumsum(axis)     
     msm = csm[index1]
     msm[index3] = msm[index3] - csm[index2]  
-    
     if norm:
         ms = 1.0 * window * msx / msm
     else:
         ms = msx
         ms[msm == 0] = np.nan
-
-    initshape = list(x.shape)  
+    initshape = list(arr.shape)  
     initshape[axis] = skip + window - 1
     #Note: skip could be included in starting window
-    cutslice = [slice(None)] * x.ndim   
+    cutslice = [slice(None)] * arr.ndim   
     cutslice[axis] = slice(None, -skip or None, None)
     pad = np.nan * np.zeros(initshape)
     ms = np.concatenate((pad, ms[cutslice]), axis) 

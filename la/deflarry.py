@@ -3,14 +3,14 @@
 import csv
 
 import numpy as np
-   
+
 from la.missing import ismissing, missing_marker  
 from la.flabel import listmap, listmap_fill, flattenlabel
 from la.farray import nanmean, nanmedian, nanstd
 from la.util.misc import isscalar, fromlists
 from la.farray import (group_ranking, group_mean, group_median, shuffle,
                        push, quantile, ranking, lastrank, movingsum_forward,
-                       movingrank, movingsum, geometric_mean, demean,
+                       movingrank, mov_sum, geometric_mean, demean,
                        demedian, zscore)
 
 
@@ -2562,11 +2562,70 @@ class larry(object):
             
         """
         return larry(zscore(self.x, axis), self.copylabel(), integrity=False)
-            
+    
+    @np.deprecate(new_name='mov_sum')
     def movingsum(self, window, axis=-1, norm=False):
-        """Moving sum, NaNs treated as 0, optionally normalized for NaNs."""
+        return self.mov_sum(window, axis=axis, norm=norm)
+        
+    def mov_sum(self, window, axis=-1, norm=False):
+        """
+        Moving sum ignoring NaNs, optionally normalized for missing (NaN) data.
+        
+        Parameters
+        ----------
+        window : int
+            The number of elements in the moving window.
+        axis : int, optional
+            The axis over which to perform the moving sum. By default the
+            moving sum is taken over the last axis (-1).
+        norm : bool, optional
+            Whether or not to normalize the sum. The default is not to
+            normalize. If there are 3 missing elements in a window, for
+            example, then the normalization would be to multiply the sum in
+            that window by *window / (window - 3)*.
+
+        Returns
+        -------
+        y : larry
+            The moving sum along the specified axis.
+
+        Examples
+        --------
+        >>> lar = larry([1, 2, 3, 4, 5])
+        >>> lar.mov_sum(2) 
+        label_0
+            0
+            1
+            2
+            3
+            4
+        x
+        array([ NaN,   3.,   5.,   7.,   9.])
+        
+        >>> lar = larry([1, 2, la.nan, 4, 5])
+        >>> lar.mov_sum(2)   
+        label_0
+            0
+            1
+            2
+            3
+            4
+        x
+        array([ NaN,   3.,   2.,   4.,   9.])
+        
+        >>> lar.mov_sum(2, norm=True)   
+        label_0
+            0
+            1
+            2
+            3
+            4
+        x
+        array([ NaN,   3.,   4.,   8.,   9.])
+        
+        """ 
         y = self.copy()
-        y.x = movingsum(y.x, window, axis=axis, norm=norm)
+        y.x = mov_sum(y.x, window, axis=axis, norm=norm)
         return y 
         
     def movingsum_forward(self, window, skip=0, axis=-1, norm=False):    

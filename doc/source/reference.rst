@@ -364,6 +364,10 @@ The calculation methods transform the larry.
 
 ------------
 
+.. automethod:: la.larry.mov_sum
+
+------------
+
 .. automethod:: la.larry.movingsum_forward
 
 ------------
