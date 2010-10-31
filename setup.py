@@ -74,8 +74,7 @@ let's you use your existing array functions.
 
 ===============   ========================================================
  docs              http://berkeleyanalytics.com/la
- code              http://github.com/kwgoodman/la
- issues, bugs      http://github.com/kwgoodman/la/issues 
+ code              http://gitorious.org/labeled-array
  mailing list      http://groups.google.com/group/labeled-array
 ===============   ========================================================
 

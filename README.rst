@@ -116,8 +116,7 @@ URLs
 ===============   ========================================================
  download          http://pypi.python.org/pypi/la
  docs              http://berkeleyanalytics.com/la
- code              http://github.com/kwgoodman/la
- issues, bugs      http://github.com/kwgoodman/la/issues 
+ code              http://gitorious.org/labeled-array 
  mailing list      http://groups.google.com/group/labeled-array
 ===============   ========================================================
 
