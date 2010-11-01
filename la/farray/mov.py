@@ -27,7 +27,7 @@ def mov_sum(arr, window, skip=0, axis=-1, norm=False):
         By default (skip=0) the movingsum at element *i* is the sum over the
         slice of elements from *i + 1 - window* to *i + 1* (so the last element
         in the sum is *i*). With nonzero `skip` the sum is over the slice from
-        *i + 1 window - skip* to *i + 1 - skip*.
+        *i + 1 window - skip* to *i + 1 - skip*. `skip` cannot be negative.
     axis : int, optional
         The axis over which to perform the moving sum. By default the moving
         sum is taken over the last axis (-1).
@@ -97,10 +97,10 @@ def mov_sum(arr, window, skip=0, axis=-1, norm=False):
         ms[msm == 0] = np.nan
     
     # Pad to get back to original shape
-    y = nans(arr.shape)
-    y[index4] = ms
+    arr.fill(np.nan) 
+    arr[index4] = ms
 
-    return y
+    return arr
 
 def movingsum_forward(x, window, skip=0, axis=-1, norm=False):
     """Movingsum in the forward direction skipping skip dates."""
