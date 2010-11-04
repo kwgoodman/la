@@ -4,12 +4,14 @@ Release Notes
 =============
 
 These are the major changes made in each release. For details of the changes
-see http://github.com/kwgoodman/la
+see the commit log at http://gitorious.org/labeled-array/la
 
 la 0.5 (daikon)
 ===============
 
 *Release date: Not yet released, in development*
+
+Moving (rolling) summary statistics were the focus of this release.
 
 **New larry methods**
 
@@ -22,14 +24,10 @@ la 0.5 (daikon)
 - unique: Find the unique elements of a larry
 - NaN-aware ndarray functions: demean, demedian, and zscore
 
-**Enhancements**
-
-- mov_sum is faster
-
 **Breakage from la 0.4**
 
-- movingsum() deprecated; use mov_sum
-- mov_sum no longer treats Inf and -Inf as missing values
+- Scipy is now a dependency of la
+- movingsum no longer treats Inf and -Inf as missing values
 
 **Bugs fixes**
 

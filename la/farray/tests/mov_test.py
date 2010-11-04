@@ -4,8 +4,10 @@ import numpy as np
 from numpy.testing import assert_array_almost_equal
 nan = np.nan
 
-from la.farray import (mov_sum, mov_nansum, mov_max, mov_nanmax,
-                       mov_func_loop, mov_func_strides)
+from la.farray import (mov_sum, mov_nansum, mov_mean, mov_nanmean,
+                       mov_min, mov_nanmin, mov_max, mov_nanmax,
+                       mov_func_loop, mov_func_strides,
+                       nanmean)
 
 
 def mov_unit_maker(func, arrfunc, methods):
@@ -36,24 +38,46 @@ def mov_unit_maker(func, arrfunc, methods):
                     assert_array_almost_equal(actual, d, 8, err_msg)
 
 def test_mov_sum():
-    "Test mov_sum on 2d array input."
+    "Test mov_sum."
     methods = ('filter', 'strides', 'func_loop', 'func_strides') 
     yield mov_unit_maker, mov_sum, np.sum, methods 
 
 def test_mov_nansum():
-    "Test mov_nansum on 2d array input."
+    "Test mov_nansum."
     methods = ('cumsum', 'filter', 'strides', 'func_loop', 'func_strides') 
     yield mov_unit_maker, mov_nansum, np.nansum, methods 
 
+def test_mov_mean():
+    "Test mov_mean."
+    methods = ('filter', 'strides', 'func_loop', 'func_strides') 
+    yield mov_unit_maker, mov_mean, np.mean, methods 
+
+def test_mov_nanmean():
+    "Test mov_nanmean."
+    methods = ('cumsum', 'filter', 'strides', 'func_loop', 'func_strides') 
+    yield mov_unit_maker, mov_nanmean, nanmean, methods 
+
 def test_mov_max():
-    "Test mov_max on 2d array input."
+    "Test mov_max."
     # The 'filter' method is not tested since it doesn't give the same
     # output as the other methods when there are nans
     methods = ('strides', 'func_loop', 'func_strides') 
     yield mov_unit_maker, mov_max, np.max, methods 
 
 def test_mov_nanmax():
-    "Test mov_nanmax on 2d array input."
+    "Test mov_nanmax."
     methods = ('filter', 'strides', 'func_loop', 'func_strides') 
     yield mov_unit_maker, mov_nanmax, np.nanmax, methods 
+
+def test_mov_min():
+    "Test mov_min."
+    # The 'filter' method is not tested since it doesn't give the same
+    # output as the other methods when there are nans
+    methods = ('strides', 'func_loop', 'func_strides') 
+    yield mov_unit_maker, mov_min, np.min, methods 
+
+def test_mov_nanmin():
+    "Test mov_nanmax on 2d array input."
+    methods = ('filter', 'strides', 'func_loop', 'func_strides') 
+    yield mov_unit_maker, mov_nanmin, np.nanmin, methods 
     

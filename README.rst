@@ -66,7 +66,7 @@ is distributed with the ``la`` package, for details.
 Installation
 ============
 
-The ``la`` package requires Python and Numpy. Numpy 1.4.1 or newer is
+The ``la`` package requires Python, Numpy, and Scipy. Numpy 1.4.1 or newer is
 recommended for its improved NaN handling. Also some of the unit tests in the
 ``la`` package require Numpy 1.4 or newer and many require
 `nose <http://somethingaboutorange.com/mrl/projects/nose>`_.
@@ -90,7 +90,7 @@ After you have installed ``la``, run the suite of unit tests::
     >>> import la
     >>> la.test()
     <snip>
-    Ran 3009 tests in 1.387s
+    Ran 3013 tests in 1.387s
     OK
     <nose.result.TextTestResult run=2988 errors=0 failures=0> 
     
