@@ -3,18 +3,19 @@
 import numpy as np
 
 from la.missing import nans, ismissing
-from la.farray import nanmean, lastrank
+from la.farray import nanmean, nanstd, lastrank
 from scipy.ndimage import convolve1d, maximum_filter1d, minimum_filter1d
 
 __all__ = ['mov_sum', 'mov_nansum', 'mov_mean', 'mov_nanmean',
-           'mov_min', 'mov_nanmin', 'mov_max', 'mov_nanmax',
+           'mov_var', 'mov_nanvar', 'mov_min', 'mov_nanmin',
+           'mov_max', 'mov_nanmax',
            'mov_func_strides', 'mov_func_loop',
            'movingsum', 'movingsum_forward', 'movingrank'] #Last row deprecated
 
 # Functions to add:
 #
-# mov_mean, mov_var, mov_std, mov_zscore
-# mov_median, mov_prod, mov_percentile, mov_count
+# mov_std, mov_zscore
+# mov_median, mov_prod, mov_percentile, mov_isnan
 # mov_ranking, mov_gmean, mov_all?, mov_any?
 
 # SUM -----------------------------------------------------------------------
@@ -271,6 +272,155 @@ def mov_nanmean_cumsum(arr, window, axis=-1):
 
     return arr
 
+# VAR -----------------------------------------------------------------------
+
+def mov_var(arr, window, axis=-1, method='filter'):
+    if method == 'filter':
+        y = mov_var_filter(arr, window, axis=axis)
+    elif method == 'strides':
+        y = mov_func_strides(np.var, arr, window, axis=axis)
+    elif method == 'loop':
+        y = mov_func_loop(np.var, arr, window, axis=axis)
+    else:
+        msg = "`method` must be 'filter', 'cumsum', 'strides', or 'loop'."
+        raise ValueError, msg
+    return y
+
+def mov_nanvar(arr, window, axis=-1, method='filter'):
+    if method == 'filter':
+        y = mov_nanvar_filter(arr, window, axis=axis)
+    elif method == 'cumsum':
+        y = mov_nanvar_cumsum(arr, window, axis=axis)
+    elif method == 'strides':
+        y = mov_func_strides(nanvar, arr, window, axis=axis)
+    elif method == 'loop':
+        y = mov_func_loop(nanvar, arr, window, axis=axis)
+    else:
+        msg = "`method` must be 'filter', 'cumsum', 'strides', or 'loop'."
+        raise ValueError, msg
+    return y
+
+def mov_var_filter(arr, window, axis=-1):
+    if axis == None:
+        raise ValueError, "An `axis` value of None is not supported."
+    if window < 1:  
+        raise ValueError, "`window` must be at least 1."
+    if window > arr.shape[axis]:
+        raise ValueError, "`window` is too long."  
+    arr = arr.astype(float)
+    w = np.empty(window)
+    w.fill(1.0 / window)
+    x0 = (1 - window) // 2
+    y = convolve1d(arr, w, axis=axis, mode='constant', cval=np.nan, origin=x0)
+    y *= y
+    arr *= arr
+    convolve1d(arr, w, axis=axis, mode='constant', cval=np.nan, origin=x0,
+               output=arr)
+    arr -= y 
+    return arr
+
+def mov_nanvar_filter(arr, window, axis=-1):
+    if axis == None:
+        raise ValueError, "An `axis` value of None is not supported."
+    if window < 1:  
+        raise ValueError, "`window` must be at least 1."
+    if window > arr.shape[axis]:
+        raise ValueError, "`window` is too long."  
+    arr = arr.astype(float)
+    nrr = np.isnan(arr)
+    arr[nrr] = 0
+    nrr = nrr.astype(int)
+    w = np.ones(window, dtype=int)
+    x0 = (1 - window) // 2
+    convolve1d(nrr, w, axis=axis, mode='constant', cval=0, origin=x0,
+               output=nrr)
+    y = convolve1d(arr, w, axis=axis, mode='constant', cval=np.nan, origin=x0)
+    y /= (window - nrr)
+    y *= y
+    arr *= arr
+    convolve1d(arr, w, axis=axis, mode='constant', cval=np.nan, origin=x0,
+               output=arr)
+    arr /= (window - nrr)
+    arr -= y
+    arr[nrr == window] = np.nan
+    return arr
+
+def mov_nanvar_cumsum(arr, window, axis=-1):
+    """
+    A moving window variance along the specified axis, ignoring NaNs.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to find the moving variance. By default the moving
+        variance is taken over the last axis (-1).
+
+    Returns
+    -------
+    y : ndarray
+        The moving variance of the input array along the specified axis. The
+        output has the same shape as the input.
+
+    Examples
+    --------
+    TODO: examples  
+    
+    """
+
+    # Check input
+    if window < 1:  
+        raise ValueError, 'window must be at least 1.'
+    if window > arr.shape[axis]:
+        raise ValueError, 'Window is too big.'      
+    
+    # Set missing values to 0
+    m = ismissing(arr) 
+    arr = arr.astype(float)
+    arr[m] = 0
+
+    # Cumsum
+    csx = arr.cumsum(axis)
+    arr *= arr
+    csx2 = arr.cumsum(axis)
+
+    # Set up indexes
+    index1 = [slice(None)] * arr.ndim 
+    index2 = list(index1) 
+    index3 = list(index1)
+    index1[axis] = slice(window - 1, None)
+    index2[axis] = slice(None, -window) 
+    index3[axis] = slice(1, None)
+
+    # Make moving sum
+    msx = csx[index1]
+    msx[index3] = msx[index3] - csx[index2] 
+    csm = (~m).cumsum(axis)     
+    msm = csm[index1]
+    msm[index3] = msm[index3] - csm[index2]  
+    
+    # Fill in windows with all missing values
+    msx[msm == 0] = np.nan
+
+    # Make moving sum
+    msx2 = csx2[index1]
+    msx2[index3] = msx2[index3] - csx2[index2] 
+
+    # Calc
+    msx *= msx
+    msx /= msm
+    msx2 -= msx
+    msx2 /= msm
+
+    # Pad to get back to original shape
+    arr.fill(np.nan) 
+    arr[index1] = msx2
+
+    return arr
+
 # MIN -----------------------------------------------------------------------
 
 def mov_min(arr, window, axis=-1, method='filter'):
@@ -514,6 +664,13 @@ def mov_func_strides(func, arr, window, axis=-1, *args, **kwargs):
     index[axis] = slice(window - 1, None)
     ynan[index] = y
     return ynan
+
+# UTILITIES -----------------------------------------------------------------
+
+def nanvar(x, axis):
+    y = nanstd(x, axis)
+    y *= y
+    return y
 
 # DEPRECATED ----------------------------------------------------------------
 

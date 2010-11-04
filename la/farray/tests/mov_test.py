@@ -5,9 +5,11 @@ from numpy.testing import assert_array_almost_equal
 nan = np.nan
 
 from la.farray import (mov_sum, mov_nansum, mov_mean, mov_nanmean,
-                       mov_min, mov_nanmin, mov_max, mov_nanmax,
+                       mov_var, mov_nanvar, mov_min, mov_nanmin,
+                       mov_max, mov_nanmax,
                        mov_func_loop, mov_func_strides,
                        nanmean)
+from la.farray.mov import nanvar
 
 
 def mov_unit_maker(func, arrfunc, methods):
@@ -57,6 +59,16 @@ def test_mov_nanmean():
     methods = ('cumsum', 'filter', 'strides', 'func_loop', 'func_strides') 
     yield mov_unit_maker, mov_nanmean, nanmean, methods 
 
+def test_mov_var():
+    "Test mov_var."
+    methods = ('filter', 'strides', 'func_loop', 'func_strides') 
+    yield mov_unit_maker, mov_var, np.var, methods 
+
+def test_mov_nanvar():
+    "Test mov_nanvar."
+    methods = ('cumsum', 'filter', 'strides', 'func_loop', 'func_strides') 
+    yield mov_unit_maker, mov_nanvar, nanvar, methods 
+
 def test_mov_max():
     "Test mov_max."
     # The 'filter' method is not tested since it doesn't give the same
@@ -77,7 +89,7 @@ def test_mov_min():
     yield mov_unit_maker, mov_min, np.min, methods 
 
 def test_mov_nanmin():
-    "Test mov_nanmax on 2d array input."
+    "Test mov_nanmin."
     methods = ('filter', 'strides', 'func_loop', 'func_strides') 
     yield mov_unit_maker, mov_nanmin, np.nanmin, methods 
     
