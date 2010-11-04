@@ -10,7 +10,7 @@ from la.farray import nanmean, nanmedian, nanstd
 from la.util.misc import isscalar, fromlists
 from la.farray import (group_ranking, group_mean, group_median, shuffle,
                        push, quantile, ranking, lastrank, movingsum_forward,
-                       movingrank, mov_sum, geometric_mean, demean,
+                       movingrank, movingsum, geometric_mean, demean,
                        demedian, zscore)
 
 
@@ -2625,7 +2625,7 @@ class larry(object):
         
         """ 
         y = self.copy()
-        y.x = mov_sum(y.x, window, axis=axis, norm=norm)
+        y.x = movingsum(y.x, window, axis=axis, norm=norm)
         return y 
         
     def movingsum_forward(self, window, skip=0, axis=-1, norm=False):    
