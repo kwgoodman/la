@@ -7,14 +7,14 @@ from la.farray import nanmean, nanstd, lastrank
 from scipy.ndimage import convolve1d, maximum_filter1d, minimum_filter1d
 
 __all__ = ['mov_sum', 'mov_nansum', 'mov_mean', 'mov_nanmean',
-           'mov_var', 'mov_nanvar', 'mov_min', 'mov_nanmin',
-           'mov_max', 'mov_nanmax',
+           'mov_var', 'mov_nanvar', 'mov_std', 'mov_nanstd',
+           'mov_min', 'mov_nanmin', 'mov_max', 'mov_nanmax',
            'mov_func_strides', 'mov_func_loop',
            'movingsum', 'movingsum_forward', 'movingrank'] #Last row deprecated
 
 # Functions to add:
 #
-# mov_std, mov_zscore
+# mov_zscore
 # mov_median, mov_prod, mov_percentile, mov_isnan
 # mov_ranking, mov_gmean, mov_all?, mov_any?
 
@@ -414,12 +414,92 @@ def mov_nanvar_cumsum(arr, window, axis=-1):
     msx /= msm
     msx2 -= msx
     msx2 /= msm
+    msx2[msx2 < 0] = 0
 
     # Pad to get back to original shape
     arr.fill(np.nan) 
     arr[index1] = msx2
-
+    
     return arr
+
+# STD -----------------------------------------------------------------------
+
+def mov_std(arr, window, axis=-1, method='filter'):
+    if method == 'filter':
+        y = mov_std_filter(arr, window, axis=axis)
+    elif method == 'strides':
+        y = mov_func_strides(np.std, arr, window, axis=axis)
+    elif method == 'loop':
+        y = mov_func_loop(np.std, arr, window, axis=axis)
+    else:
+        msg = "`method` must be 'filter', 'cumsum', 'strides', or 'loop'."
+        raise ValueError, msg
+    return y
+
+def mov_nanstd(arr, window, axis=-1, method='filter'):
+    if method == 'filter':
+        y = mov_nanstd_filter(arr, window, axis=axis)
+    elif method == 'cumsum':
+        y = mov_nanstd_cumsum(arr, window, axis=axis)
+    elif method == 'strides':
+        y = mov_func_strides(nanstd, arr, window, axis=axis)
+    elif method == 'loop':
+        y = mov_func_loop(nanstd, arr, window, axis=axis)
+    else:
+        msg = "`method` must be 'filter', 'cumsum', 'strides', or 'loop'."
+        raise ValueError, msg
+    return y
+
+def mov_std_filter(arr, window, axis=-1):
+    if axis == None:
+        raise ValueError, "An `axis` value of None is not supported."
+    if window < 1:  
+        raise ValueError, "`window` must be at least 1."
+    if window > arr.shape[axis]:
+        raise ValueError, "`window` is too long."  
+    y = mov_var_filter(arr, window, axis=axis)
+    np.sqrt(y, y)
+    return y
+
+def mov_nanstd_filter(arr, window, axis=-1):
+    if axis == None:
+        raise ValueError, "An `axis` value of None is not supported."
+    if window < 1:  
+        raise ValueError, "`window` must be at least 1."
+    if window > arr.shape[axis]:
+        raise ValueError, "`window` is too long."  
+    y = mov_nanvar_filter(arr, window, axis=axis)
+    np.sqrt(y, y)
+    return y
+
+def mov_nanstd_cumsum(arr, window, axis=-1):
+    """
+    Moving window standard deviation along the specified axis, ignoring NaNs.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to find the moving standard deviation. By default
+        the moving standard deviation is taken over the last axis (-1).
+
+    Returns
+    -------
+    y : ndarray
+        The moving standard deviation of the input array along the specified
+        axis. The output has the same shape as the input.
+
+    Examples
+    --------
+    TODO: examples  
+    
+    """
+    y = mov_nanvar_cumsum(arr, window, axis=axis)
+    np.sqrt(y, y)
+    return y
 
 # MIN -----------------------------------------------------------------------
 

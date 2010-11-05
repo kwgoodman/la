@@ -5,10 +5,10 @@ from numpy.testing import assert_array_almost_equal
 nan = np.nan
 
 from la.farray import (mov_sum, mov_nansum, mov_mean, mov_nanmean,
-                       mov_var, mov_nanvar, mov_min, mov_nanmin,
-                       mov_max, mov_nanmax,
+                       mov_var, mov_nanvar, mov_std, mov_nanstd,
+                       mov_min, mov_nanmin, mov_max, mov_nanmax,
                        mov_func_loop, mov_func_strides,
-                       nanmean)
+                       nanmean, nanstd)
 from la.farray.mov import nanvar
 
 
@@ -37,7 +37,7 @@ def mov_unit_maker(func, arrfunc, methods):
                     else:
                         d = func(arr, window=w, axis=axis, method=method) 
                     err_msg = msg % (func.__name__, method, arr.ndim, w, axis)
-                    assert_array_almost_equal(actual, d, 8, err_msg)
+                    assert_array_almost_equal(actual, d, 7, err_msg)
 
 def test_mov_sum():
     "Test mov_sum."
@@ -68,6 +68,16 @@ def test_mov_nanvar():
     "Test mov_nanvar."
     methods = ('cumsum', 'filter', 'strides', 'func_loop', 'func_strides') 
     yield mov_unit_maker, mov_nanvar, nanvar, methods 
+
+def test_mov_std():
+    "Test mov_std."
+    methods = ('filter', 'strides', 'func_loop', 'func_strides') 
+    yield mov_unit_maker, mov_std, np.std, methods 
+
+def test_mov_nanstd():
+    "Test mov_nanstd."
+    methods = ('cumsum', 'filter', 'strides', 'func_loop', 'func_strides') 
+    yield mov_unit_maker, mov_nanstd, nanstd, methods 
 
 def test_mov_max():
     "Test mov_max."
