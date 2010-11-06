@@ -1,4 +1,4 @@
-"Moving (rolling) statistics functions that work with numpy arrays."
+"Moving (rolling) statistics on numpy arrays."
 
 import numpy as np
 
@@ -9,14 +9,13 @@ from scipy.ndimage import convolve1d, maximum_filter1d, minimum_filter1d
 __all__ = ['mov_sum', 'mov_nansum', 'mov_mean', 'mov_nanmean',
            'mov_var', 'mov_nanvar', 'mov_std', 'mov_nanstd',
            'mov_min', 'mov_nanmin', 'mov_max', 'mov_nanmax',
+           'mov_nanranking', 'mov_count',
            'mov_func_strides', 'mov_func_loop',
            'movingsum', 'movingsum_forward', 'movingrank'] #Last row deprecated
 
 # Functions to add:
 #
-# mov_zscore
-# mov_median, mov_prod, mov_percentile, mov_isnan
-# mov_ranking, mov_gmean, mov_all?, mov_any?
+# mov_zscore, mov_median, mov_percentile
 
 # SUM -----------------------------------------------------------------------
 
@@ -567,6 +566,32 @@ def mov_nanmax_strides(arr, window, axis=-1):
     y = mov_func_strides(np.max, arr, window, axis=axis)
     m = mov_func_strides(np.sum, nrr.astype(int), window, axis=axis)
     y[m == window] = np.nan
+    return y
+
+# RANKING -------------------------------------------------------------------
+
+def mov_nanranking(arr, window, axis=-1, method='strides'):
+    if method == 'strides':
+        y = mov_func_strides(lastrank, arr, window, axis=axis)
+    elif method == 'loop':
+        y = mov_func_loop(lastrank, arr, window, axis=axis)
+    else:
+        msg = "`method` must be 'strides' or 'loop'."
+        raise ValueError, msg
+    return y
+
+# COUNT MISSING -------------------------------------------------------------
+
+def mov_count(arr, window, axis=-1, method='filter'):
+    if method == 'filter':
+        y = mov_sum_filter(ismissing(arr), window, axis=axis)
+    elif method == 'strides':
+        y = mov_func_strides(np.sum, ismissing(arr), window, axis=axis)
+    elif method == 'loop':
+        y = mov_func_loop(np.sum, ismissing(arr), window, axis=axis)
+    else:
+        msg = "`method` must be 'filter', 'strides', or 'loop'."
+        raise ValueError, msg
     return y
 
 # GENERAL --------------------------------------------------------------------

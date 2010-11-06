@@ -7,9 +7,11 @@ nan = np.nan
 from la.farray import (mov_sum, mov_nansum, mov_mean, mov_nanmean,
                        mov_var, mov_nanvar, mov_std, mov_nanstd,
                        mov_min, mov_nanmin, mov_max, mov_nanmax,
+                       mov_nanranking, mov_count,
                        mov_func_loop, mov_func_strides,
-                       nanmean, nanstd)
+                       nanmean, nanstd, lastrank)
 from la.farray.mov import nanvar
+from la.missing import ismissing
 
 
 def mov_unit_maker(func, arrfunc, methods):
@@ -102,4 +104,20 @@ def test_mov_nanmin():
     "Test mov_nanmin."
     methods = ('filter', 'strides', 'func_loop', 'func_strides') 
     yield mov_unit_maker, mov_nanmin, np.nanmin, methods 
+
+def test_mov_nanranking():
+    "Test mov_nanranking."
+    methods = ('strides', 'func_loop', 'func_strides') 
+    yield mov_unit_maker, mov_nanranking, lastrank, methods 
+
+def test_mov_count():
+    "Test mov_count."
+    methods = ('filter', 'strides', 'func_loop', 'func_strides') 
+    yield mov_unit_maker, mov_count, counter, methods
+
+# Utility -------------------------------------------------------------------
+
+def counter(arr, axis):
+    return ismissing(arr).sum(axis=axis)
+
     
