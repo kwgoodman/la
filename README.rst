@@ -73,6 +73,9 @@ recommended for its improved NaN handling. Also some of the unit tests in the
 
 To save and load larrys in HDF5 format, you need
 `h5py <http://h5py.alfven.org>`_ with HDF5 1.8.
+
+You can download the `latest version of la from the Python Package Index
+<http://pypi.python.org/pypi/la>`_.
             
 To install ``la``::
 
@@ -101,7 +104,7 @@ versions of the functions. To see whether you are using the C functions or the
 Python functions::
 
     >>> la.info()
-    la version      0.4.0           
+    la version      0.5.0           
     la file         /usr/local/lib/python2.6/dist-packages/la/__init__.pyc 
     HDF5 archiving  Available       
     listmap         Faster C version

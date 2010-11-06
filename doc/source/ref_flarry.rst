@@ -1,8 +1,8 @@
 .. _functions:
 
-========================
-Larry function reference
-========================
+===============
+larry functions
+===============
 
 The functions that operate on larry can be divided into the following broad
 categories:

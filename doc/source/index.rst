@@ -12,7 +12,6 @@ Meet larry, he's a labeled array:
    archive
    data
    reference
-   functions
    release
    license
 

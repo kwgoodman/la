@@ -17,6 +17,39 @@ __all__ = ['mov_sum', 'mov_nansum', 'mov_mean', 'mov_nanmean',
 # SUM -----------------------------------------------------------------------
 
 def mov_sum(arr, window, axis=-1, method='filter'):
+    """
+    Moving window sum along the specified axis.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving sum. By default the moving
+        sum is taken over the last axis (-1).
+    method : str, optional
+        Three calculations methods are available:
+            ==========  =====================================
+            'filter'    scipy.ndimage.convolve1d (default)
+            'strides'   strides tricks (ndim < 4)
+            'loop'      brute force python loop
+            ==========  =====================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving sum of the input array along the specified axis. The output
+        has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, 3, 4])
+    >>> la.farray.mov_sum(arr, window=2, axis=0)
+       array([ NaN,   3.,   5.,   7.])
+
+    """
     if method == 'filter':
         y = mov_sum_filter(arr, window, axis=axis)
     elif method == 'strides':
@@ -29,6 +62,41 @@ def mov_sum(arr, window, axis=-1, method='filter'):
     return y
 
 def mov_nansum(arr, window, axis=-1, method='filter'):
+    """
+    Moving window sum along the specified axis, ignoring NaNs.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving sum. By default the moving
+        sum is taken over the last axis (-1).
+    method : str, optional
+        Four calculations methods are available:
+            ==========  =====================================
+            'filter'    scipy.ndimage.convolve1d (default)
+            'cumsum'    cumsum followed by offset difference
+            'strides'   strides tricks (ndim < 4)
+            'loop'      brute force python loop
+            ==========  =====================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving sum of the input array along the specified axis, ignoring
+        NaNs. (A window with all NaNs returns NaN for the window sum.) The
+        output has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, np.nan, 4])
+    >>> la.farray.mov_nansum(arr, window=2, axis=0)
+    array([ NaN,   3.,   2.,   4.])
+
+    """
     if method == 'filter':
         y = mov_nansum_filter(arr, window, axis=axis)
     elif method == 'cumsum':
@@ -43,6 +111,37 @@ def mov_nansum(arr, window, axis=-1, method='filter'):
     return y
 
 def mov_sum_filter(arr, window, axis=-1):
+    """
+    Moving window sum along the specified axis using the filter method.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving sum. By default the moving
+        sum is taken over the last axis (-1).
+    
+    Returns
+    -------
+    y : ndarray
+        The moving sum of the input array along the specified axis. The output
+        has the same shape as the input.
+
+    Notes
+    -----
+    The calculation of the sums uses scipy.ndimage.convolve1d. 
+
+    Examples
+    --------
+    >>> from la.farray.mov import mov_sum_filter
+    >>> arr = np.array([1, 2, 3, 4])
+    >>> mov_sum_filter(arr, window=2, axis=0)
+    array([ NaN,   3.,   5.,   7.])
+
+    """
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -57,6 +156,38 @@ def mov_sum_filter(arr, window, axis=-1):
     return arr
 
 def mov_nansum_filter(arr, window, axis=-1):
+    """
+    Moving sum (ignoring NaNs) along specified axis using the filter method.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving sum. By default the moving
+        sum is taken over the last axis (-1).
+    
+    Returns
+    -------
+    y : ndarray
+        The moving sum (ignoring NaNs) of the input array along the specified
+        axis.(A window with all NaNs returns NaN for the window sum.) The
+        output has the same shape as the input.
+
+    Notes
+    -----
+    The calculation of the sums uses scipy.ndimage.convolve1d. 
+
+    Examples
+    --------
+    >>> from la.farray.mov import mov_sum_filter
+    >>> arr = np.array([1, 2, np.nan, 4, 5, 6, 7])
+    >>> mov_nansum_filter(arr, window=2, axis=0)
+    array([ NaN,   3.,   2.,   4.,   9.,  11.,  13.])
+
+    """
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -93,12 +224,21 @@ def mov_nansum_cumsum(arr, window, axis=-1):
     Returns
     -------
     y : ndarray
-        The moving sum of the input array along the specified axis. The output
-        has the same shape as the input.
+        The moving sum (ignoring NaNs) of the input array along the specified
+        axis.(A window with all NaNs returns NaN for the window sum.) The
+        output has the same shape as the input.
+
+    Notes
+    -----
+    The calculation of the sums uses a cumsum followed by an offset
+    difference. 
 
     Examples
     --------
-    TODO: examples  
+    >>> from la.farray.mov import mov_sum_cumsum
+    >>> arr = np.array([1, 2, np.nan, 4, 5, 6, 7])
+    >>> mov_nansum_cumsum(arr, window=2, axis=0)
+    array([ NaN,   3.,   2.,   4.,   9.,  11.,  13.])
     
     """
 
@@ -143,6 +283,39 @@ def mov_nansum_cumsum(arr, window, axis=-1):
 # MEAN ----------------------------------------------------------------------
 
 def mov_mean(arr, window, axis=-1, method='filter'):
+    """
+    Moving window mean along the specified axis.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving mean. By default the moving
+        mean is taken over the last axis (-1).
+    method : str, optional
+        Three calculations methods are available:
+            ==========  =====================================
+            'filter'    scipy.ndimage.convolve1d (default)
+            'strides'   strides tricks (ndim < 4)
+            'loop'      brute force python loop
+            ==========  =====================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving mean of the input array along the specified axis. The output
+        has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, 3, 4])
+    >>> la.farray.mov_mean(arr, window=2, axis=0)
+    array([ NaN,  1.5,  2.5,  3.5])
+    
+    """
     if method == 'filter':
         y = mov_mean_filter(arr, window, axis=axis)
     elif method == 'strides':
@@ -155,6 +328,41 @@ def mov_mean(arr, window, axis=-1, method='filter'):
     return y
 
 def mov_nanmean(arr, window, axis=-1, method='filter'):
+    """
+    Moving window mean along the specified axis, ignoring NaNs.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving mean. By default the moving
+        mean is taken over the last axis (-1).
+    method : str, optional
+        Four calculations methods are available:
+            ==========  =====================================
+            'filter'    scipy.ndimage.convolve1d (default)
+            'cumsum'    cumsum followed by offset difference
+            'strides'   strides tricks (ndim < 4)
+            'loop'      brute force python loop
+            ==========  =====================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving mean of the input array along the specified axis, ignoring
+        NaNs. (A window with all NaNs returns NaN for the window mean.) The
+        output has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, np.nan, 4])
+    >>> la.farray.mov_nanmean(arr, window=2, axis=0)
+    array([ NaN,  1.5,  2. ,  4. ])
+    
+    """
     if method == 'filter':
         y = mov_nanmean_filter(arr, window, axis=axis)
     elif method == 'cumsum':
@@ -271,6 +479,39 @@ def mov_nanmean_cumsum(arr, window, axis=-1):
 # VAR -----------------------------------------------------------------------
 
 def mov_var(arr, window, axis=-1, method='filter'):
+    """
+    Moving window variance along the specified axis.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving variance. By default the
+        moving variance is taken over the last axis (-1).
+    method : str, optional
+        Three calculations methods are available:
+            ==========  =====================================
+            'filter'    scipy.ndimage.convolve1d (default)
+            'strides'   strides tricks (ndim < 4)
+            'loop'      brute force python loop
+            ==========  =====================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving variance of the input array along the specified axis. The
+        output has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, 3, 4])
+    >>> la.farray.mov_var(arr, window=2, axis=0)
+    array([  NaN,  0.25,  0.25,  0.25])
+    
+    """
     if method == 'filter':
         y = mov_var_filter(arr, window, axis=axis)
     elif method == 'strides':
@@ -283,6 +524,40 @@ def mov_var(arr, window, axis=-1, method='filter'):
     return y
 
 def mov_nanvar(arr, window, axis=-1, method='filter'):
+    """
+    Moving window variance along the specified axis, ignoring NaNs.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving variance. By default the
+        moving variance is taken over the last axis (-1).
+    method : str, optional
+        Four calculations methods are available:
+            ==========  =====================================
+            'filter'    scipy.ndimage.convolve1d (default)
+            'strides'   strides tricks (ndim < 4)
+            'loop'      brute force python loop
+            ==========  =====================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving variance of the input array along the specified axis,
+        ignoring NaNs. (A window with all NaNs returns NaN for the window
+        variance.) The output has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, np.nan, 4, 5])
+    >>> la.farray.mov_nanvar(arr, window=3, axis=0)
+    array([  NaN,   NaN,  0.25,  1.  ,  0.25])
+    
+    """
     if method == 'filter':
         y = mov_nanvar_filter(arr, window, axis=axis)
     elif method == 'strides':
@@ -342,6 +617,40 @@ def mov_nanvar_filter(arr, window, axis=-1):
 # STD -----------------------------------------------------------------------
 
 def mov_std(arr, window, axis=-1, method='filter'):
+    """
+    Moving window standard deviation along the specified axis.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving standard deviation.
+        By default the moving standard deviation is taken over the last
+        axis (-1).
+    method : str, optional
+        Three calculations methods are available:
+            ==========  =====================================
+            'filter'    scipy.ndimage.convolve1d (default)
+            'strides'   strides tricks (ndim < 4)
+            'loop'      brute force python loop
+            ==========  =====================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving standard deviation of the input array along the specified
+        axis. The output has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, 3, 4])
+    >>> la.farray.mov_std(arr, window=2)
+    array([ NaN,  0.5,  0.5,  0.5])
+    
+    """
     if method == 'filter':
         y = mov_std_filter(arr, window, axis=axis)
     elif method == 'strides':
@@ -354,6 +663,40 @@ def mov_std(arr, window, axis=-1, method='filter'):
     return y
 
 def mov_nanstd(arr, window, axis=-1, method='filter'):
+    """
+    Moving window standard deviation along the specified axis, ignoring NaNs.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving standard deviation.
+        By default the moving variance is taken over the last axis (-1).
+    method : str, optional
+        Four calculations methods are available:
+            ==========  =====================================
+            'filter'    scipy.ndimage.convolve1d (default)
+            'strides'   strides tricks (ndim < 4)
+            'loop'      brute force python loop
+            ==========  =====================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving standard deivation of the input array along the specified
+        axis, ignoring NaNs. (A window with all NaNs returns NaN for the window
+        standard deviation.) The output has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, np.nan, 4, 5])
+    >>> la.farray.mov_nanstd(arr, window=3)
+    array([ NaN,  NaN,  0.5,  1. ,  0.5])    
+
+    """
     if method == 'filter':
         y = mov_nanstd_filter(arr, window, axis=axis)
     elif method == 'strides':
@@ -390,6 +733,39 @@ def mov_nanstd_filter(arr, window, axis=-1):
 # MIN -----------------------------------------------------------------------
 
 def mov_min(arr, window, axis=-1, method='filter'):
+    """
+    Moving window minimum along the specified axis.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving minimum. By default the
+        moving minimum is taken over the last axis (-1).
+    method : str, optional
+        Three calculations methods are available:
+            ==========  =====================================
+            'filter'    scipy.ndimage.convolve1d (default)
+            'strides'   strides tricks (ndim < 4)
+            'loop'      brute force python loop
+            ==========  =====================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving minimum of the input array along the specified axis. The
+        output has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, 3, 4])
+    >>> la.farray.mov_min(arr, window=2)
+    array([ NaN,   1.,   2.,   3.])    
+
+    """
     if method == 'filter':
         y = mov_min_filter(arr, window, axis=axis)
     elif method == 'strides':
@@ -401,6 +777,40 @@ def mov_min(arr, window, axis=-1, method='filter'):
     return y
 
 def mov_nanmin(arr, window, axis=-1, method='filter'):
+    """
+    Moving window minimum along the specified axis, ignoring NaNs.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving minimum. By default the
+        moving variance is taken over the last axis (-1).
+    method : str, optional
+        Four calculations methods are available:
+            ==========  =====================================
+            'filter'    scipy.ndimage.convolve1d (default)
+            'strides'   strides tricks (ndim < 4)
+            'loop'      brute force python loop
+            ==========  =====================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving minimum of the input array along the specified axis,
+        ignoring NaNs. (A window with all NaNs returns NaN for the window
+        minimum.) The output has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, np.nan, 4, 5])
+    >>> la.farray.mov_nanmin(arr, window=2)
+    array([ NaN,   1.,   2.,   4.,   4.])    
+
+    """
     if method == 'filter':
         y = mov_nanmin_filter(arr, window, axis=axis)
     elif method == 'strides':
@@ -421,8 +831,8 @@ def mov_min_filter(arr, window, axis=-1):
         raise ValueError, "`window` is too long."  
     y = arr.astype(float)
     x0 = (window - 1) // 2
-    y = minimum_filter1d(arr, window, axis=axis, mode='constant', cval=np.nan,
-                         origin=x0)
+    minimum_filter1d(y, window, axis=axis, mode='constant', cval=np.nan,
+                     origin=x0, output=y)
     return y
 
 def mov_nanmin_filter(arr, window, axis=-1):
@@ -510,8 +920,8 @@ def mov_max_filter(arr, window, axis=-1):
         raise ValueError, "`window` is too long."  
     y = arr.astype(float)
     x0 = (window - 1) // 2
-    y = maximum_filter1d(arr, window, axis=axis, mode='constant', cval=np.nan,
-                         origin=x0)
+    maximum_filter1d(y, window, axis=axis, mode='constant', cval=np.nan,
+                     origin=x0, output=y)
     return y
 
 def mov_nanmax_filter(arr, window, axis=-1):
@@ -721,13 +1131,13 @@ def movingsum(arr, window, skip=0, axis=-1, norm=False):
     Examples
     --------
     >>> arr = np.array([1, 2, 3, 4, 5])
-    >>> mov_sum(arr, 2)
+    >>> movingsum(arr, 2)
     array([ NaN,   3.,   5.,   7.,   9.])
 
     >>> arr = np.array([1, 2, np.nan, 4, 5])
-    >>> mov_sum(arr, 2)
+    >>> movingsum(arr, 2)
     array([ NaN,   3.,   2.,   4.,   9.])
-    >>> mov_sum(arr, 2, norm=True)
+    >>> movingsum(arr, 2, norm=True)
     array([ NaN,   3.,   4.,   8.,   9.])    
     
     """
