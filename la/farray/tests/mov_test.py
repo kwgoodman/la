@@ -7,9 +7,9 @@ nan = np.nan
 from la.farray import (mov_sum, mov_nansum, mov_mean, mov_nanmean,
                        mov_var, mov_nanvar, mov_std, mov_nanstd,
                        mov_min, mov_nanmin, mov_max, mov_nanmax,
-                       mov_nanranking, mov_count,
+                       mov_nanranking, mov_count, mov_median, mov_nanmedian,
                        mov_func_loop, mov_func_strides,
-                       nanmean, nanstd, lastrank)
+                       nanmean, nanmedian, nanstd, lastrank)
 from la.farray.mov import nanvar
 from la.missing import ismissing
 
@@ -114,6 +114,16 @@ def test_mov_count():
     "Test mov_count."
     methods = ('filter', 'strides', 'func_loop', 'func_strides') 
     yield mov_unit_maker, mov_count, counter, methods
+
+def test_mov_median():
+    "Test mov_median."
+    methods = ('strides', 'func_loop', 'func_strides') 
+    yield mov_unit_maker, mov_median, np.median, methods 
+
+def test_mov_nanmedian():
+    "Test mov_nanmedian."
+    methods = ('strides', 'func_loop', 'func_strides') 
+    yield mov_unit_maker, mov_nanmedian, nanmedian, methods 
 
 # Utility -------------------------------------------------------------------
 
