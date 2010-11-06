@@ -37,7 +37,7 @@ def mov_unit_maker(func, arrfunc, methods):
                     else:
                         d = func(arr, window=w, axis=axis, method=method) 
                     err_msg = msg % (func.__name__, method, arr.ndim, w, axis)
-                    assert_array_almost_equal(actual, d, 7, err_msg)
+                    assert_array_almost_equal(actual, d, 10, err_msg)
 
 def test_mov_sum():
     "Test mov_sum."
@@ -66,7 +66,7 @@ def test_mov_var():
 
 def test_mov_nanvar():
     "Test mov_nanvar."
-    methods = ('cumsum', 'filter', 'strides', 'func_loop', 'func_strides') 
+    methods = ('filter', 'strides', 'func_loop', 'func_strides') 
     yield mov_unit_maker, mov_nanvar, nanvar, methods 
 
 def test_mov_std():
@@ -76,7 +76,7 @@ def test_mov_std():
 
 def test_mov_nanstd():
     "Test mov_nanstd."
-    methods = ('cumsum', 'filter', 'strides', 'func_loop', 'func_strides') 
+    methods = ('filter', 'strides', 'func_loop', 'func_strides') 
     yield mov_unit_maker, mov_nanstd, nanstd, methods 
 
 def test_mov_max():

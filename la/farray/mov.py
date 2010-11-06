@@ -28,7 +28,7 @@ def mov_sum(arr, window, axis=-1, method='filter'):
     elif method == 'loop':
         y = mov_func_loop(np.sum, arr, window, axis=axis)
     else:
-        msg = "`method` must be 'filter', 'cumsum', 'strides', or 'loop'."
+        msg = "`method` must be 'filter', 'strides', or 'loop'."
         raise ValueError, msg
     return y
 
@@ -154,7 +154,7 @@ def mov_mean(arr, window, axis=-1, method='filter'):
     elif method == 'loop':
         y = mov_func_loop(np.mean, arr, window, axis=axis)
     else:
-        msg = "`method` must be 'filter', 'cumsum', 'strides', or 'loop'."
+        msg = "`method` must be 'filter', 'strides', or 'loop'."
         raise ValueError, msg
     return y
 
@@ -282,21 +282,19 @@ def mov_var(arr, window, axis=-1, method='filter'):
     elif method == 'loop':
         y = mov_func_loop(np.var, arr, window, axis=axis)
     else:
-        msg = "`method` must be 'filter', 'cumsum', 'strides', or 'loop'."
+        msg = "`method` must be 'filter', 'strides', or 'loop'."
         raise ValueError, msg
     return y
 
 def mov_nanvar(arr, window, axis=-1, method='filter'):
     if method == 'filter':
         y = mov_nanvar_filter(arr, window, axis=axis)
-    elif method == 'cumsum':
-        y = mov_nanvar_cumsum(arr, window, axis=axis)
     elif method == 'strides':
         y = mov_func_strides(nanvar, arr, window, axis=axis)
     elif method == 'loop':
         y = mov_func_loop(nanvar, arr, window, axis=axis)
     else:
-        msg = "`method` must be 'filter', 'cumsum', 'strides', or 'loop'."
+        msg = "`method` must be 'filter', 'strides', or 'loop'."
         raise ValueError, msg
     return y
 
@@ -345,83 +343,6 @@ def mov_nanvar_filter(arr, window, axis=-1):
     arr[nrr == window] = np.nan
     return arr
 
-def mov_nanvar_cumsum(arr, window, axis=-1):
-    """
-    A moving window variance along the specified axis, ignoring NaNs.
-    
-    Parameters
-    ----------
-    arr : ndarray
-        Input array.
-    window : int
-        The number of elements in the moving window.
-    axis : int, optional
-        The axis over which to find the moving variance. By default the moving
-        variance is taken over the last axis (-1).
-
-    Returns
-    -------
-    y : ndarray
-        The moving variance of the input array along the specified axis. The
-        output has the same shape as the input.
-
-    Examples
-    --------
-    TODO: examples  
-    
-    """
-
-    # Check input
-    if window < 1:  
-        raise ValueError, 'window must be at least 1.'
-    if window > arr.shape[axis]:
-        raise ValueError, 'Window is too big.'      
-    
-    # Set missing values to 0
-    m = ismissing(arr) 
-    arr = arr.astype(float)
-    arr[m] = 0
-
-    # Cumsum
-    csx = arr.cumsum(axis)
-    arr *= arr
-    csx2 = arr.cumsum(axis)
-
-    # Set up indexes
-    index1 = [slice(None)] * arr.ndim 
-    index2 = list(index1) 
-    index3 = list(index1)
-    index1[axis] = slice(window - 1, None)
-    index2[axis] = slice(None, -window) 
-    index3[axis] = slice(1, None)
-
-    # Make moving sum
-    msx = csx[index1]
-    msx[index3] = msx[index3] - csx[index2] 
-    csm = (~m).cumsum(axis)     
-    msm = csm[index1]
-    msm[index3] = msm[index3] - csm[index2]  
-    
-    # Fill in windows with all missing values
-    msx[msm == 0] = np.nan
-
-    # Make moving sum
-    msx2 = csx2[index1]
-    msx2[index3] = msx2[index3] - csx2[index2] 
-
-    # Calc
-    msx *= msx
-    msx /= msm
-    msx2 -= msx
-    msx2 /= msm
-    msx2[msx2 < 0] = 0
-
-    # Pad to get back to original shape
-    arr.fill(np.nan) 
-    arr[index1] = msx2
-    
-    return arr
-
 # STD -----------------------------------------------------------------------
 
 def mov_std(arr, window, axis=-1, method='filter'):
@@ -432,21 +353,19 @@ def mov_std(arr, window, axis=-1, method='filter'):
     elif method == 'loop':
         y = mov_func_loop(np.std, arr, window, axis=axis)
     else:
-        msg = "`method` must be 'filter', 'cumsum', 'strides', or 'loop'."
+        msg = "`method` must be 'filter', 'strides', or 'loop'."
         raise ValueError, msg
     return y
 
 def mov_nanstd(arr, window, axis=-1, method='filter'):
     if method == 'filter':
         y = mov_nanstd_filter(arr, window, axis=axis)
-    elif method == 'cumsum':
-        y = mov_nanstd_cumsum(arr, window, axis=axis)
     elif method == 'strides':
         y = mov_func_strides(nanstd, arr, window, axis=axis)
     elif method == 'loop':
         y = mov_func_loop(nanstd, arr, window, axis=axis)
     else:
-        msg = "`method` must be 'filter', 'cumsum', 'strides', or 'loop'."
+        msg = "`method` must be 'filter', 'strides', or 'loop'."
         raise ValueError, msg
     return y
 
@@ -469,35 +388,6 @@ def mov_nanstd_filter(arr, window, axis=-1):
     if window > arr.shape[axis]:
         raise ValueError, "`window` is too long."  
     y = mov_nanvar_filter(arr, window, axis=axis)
-    np.sqrt(y, y)
-    return y
-
-def mov_nanstd_cumsum(arr, window, axis=-1):
-    """
-    Moving window standard deviation along the specified axis, ignoring NaNs.
-    
-    Parameters
-    ----------
-    arr : ndarray
-        Input array.
-    window : int
-        The number of elements in the moving window.
-    axis : int, optional
-        The axis over which to find the moving standard deviation. By default
-        the moving standard deviation is taken over the last axis (-1).
-
-    Returns
-    -------
-    y : ndarray
-        The moving standard deviation of the input array along the specified
-        axis. The output has the same shape as the input.
-
-    Examples
-    --------
-    TODO: examples  
-    
-    """
-    y = mov_nanvar_cumsum(arr, window, axis=axis)
     np.sqrt(y, y)
     return y
 
