@@ -66,8 +66,8 @@ class IO(object):
             
         See Also
         --------
-        la.io.save : Save larrys without a dictionary-like interface.
-        la.io.load : Load larrys without a dictionary-like interface.  
+        la.save : Save larrys without a dictionary-like interface.
+        la.load : Load larrys without a dictionary-like interface.  
             
         Notes
         -----
@@ -374,7 +374,7 @@ def save(file, lar, key):
         
     See Also
     --------
-    la.io.load : Load larrys without a dictionary-like interface.
+    la.load : Load larrys without a dictionary-like interface.
     la.IO : A dictionary-like interface to the archive.    
         
     Examples
@@ -441,7 +441,7 @@ def load(file, key):
         
     See Also
     --------
-    la.io.save : Save larrys without a dictionary-like interface.
+    la.save : Save larrys without a dictionary-like interface.
     la.IO : A dictionary-like interface to the archive.  
         
     Examples
@@ -498,8 +498,8 @@ def delete(file, key):
         
     See Also
     --------
-    la.io.save : Save larrys without a dictionary-like interface.
-    la.io.load : Load larrys without a dictionary-like interface.
+    la.save : Save larrys without a dictionary-like interface.
+    la.load : Load larrys without a dictionary-like interface.
     la.IO : A dictionary-like interface to the archive.  
         
     Examples

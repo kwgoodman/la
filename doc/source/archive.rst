@@ -349,27 +349,27 @@ Archive function reference
 
 ------------
 
-.. automethod:: la.io.save
+.. autofunction:: la.save
 
 ------------
 
-.. automethod:: la.io.load
+.. autofunction:: la.load
 
 ------------
 
-.. automethod:: la.io.delete
+.. autofunction:: la.io.delete
 
 ------------
 
-.. automethod:: la.io.repack
+.. autofunction:: la.repack
 
 ------------
 
-.. automethod:: la.io.is_archived_larry
+.. autofunction:: la.is_archived_larry
 
 ------------
 
-.. automethod:: la.io.archive_directory
+.. autofunction:: la.archive_directory
 
 
 .. _io_class_reference:
