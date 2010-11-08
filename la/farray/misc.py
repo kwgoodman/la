@@ -2,10 +2,10 @@
 
 import numpy as np
 
-from la.external.scipy import nanmedian, rankdata, nanstd, nanmean
+from la.external.scipy import nanmedian, rankdata, nanstd, nanvar, nanmean
 
 __all__ = ['geometric_mean', 'correlation', 'covMissing', 'shuffle', 'nanmean',
-           'nanmedian', 'nanstd']
+           'nanmedian', 'nanstd', 'nanvar']
 
 def geometric_mean(x, axis=-1, check_for_greater_than_zero=True):
     """

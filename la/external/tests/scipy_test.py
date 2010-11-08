@@ -12,7 +12,7 @@ Some modifications were made.
 import numpy as np
 from numpy.testing import *
 
-from la.external.scipy import (nanmean, nanmedian, nanstd, rankdata)
+from la.external.scipy import nanmean, nanmedian, nanstd, nanvar, rankdata
 
 
 X = np.array([1,2,3,4,5,6,7,8,9],float)
@@ -58,6 +58,21 @@ class TestNanFunc(TestCase):
     def test_nanstd_all(self):
         """Check nanstd when all values are nan."""
         s = nanstd(self.Xall)
+        assert np.isnan(s)
+    
+    def test_nanvar_none(self):
+        """Check nanvar when no values are nan."""
+        s = nanvar(self.X)
+        assert_approx_equal(s, np.var(self.X, ddof=0))
+
+    def test_nanvar_some(self):
+        """Check nanvar when some values only are nan."""
+        s = nanvar(self.Xsome)
+        assert_approx_equal(s, np.var(self.Xsomet, ddof=0))
+
+    def test_nanvar_all(self):
+        """Check nanvar when all values are nan."""
+        s = nanvar(self.Xall)
         assert np.isnan(s)
 
     def test_nanmedian_none(self):

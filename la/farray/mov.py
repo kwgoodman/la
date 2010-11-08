@@ -3,7 +3,7 @@
 import numpy as np
 
 from la.missing import nans, ismissing
-from la.farray import nanmean, nanstd, lastrank, nanmedian
+from la.farray import nanmean, nanstd, nanvar, lastrank, nanmedian
 from scipy.ndimage import convolve1d, maximum_filter1d, minimum_filter1d
 
 __all__ = ['mov_sum', 'mov_nansum', 'mov_mean', 'mov_nanmean',
@@ -1088,13 +1088,6 @@ def mov_func_strides(func, arr, window, axis=-1, *args, **kwargs):
     index[axis] = slice(window - 1, None)
     ynan[index] = y
     return ynan
-
-# UTILITIES -----------------------------------------------------------------
-
-def nanvar(x, axis):
-    y = nanstd(x, axis)
-    y *= y
-    return y
 
 # DEPRECATED ----------------------------------------------------------------
 

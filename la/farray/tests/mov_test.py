@@ -10,7 +10,7 @@ from la.farray import (mov_sum, mov_nansum, mov_mean, mov_nanmean,
                        mov_nanranking, mov_count, mov_median, mov_nanmedian,
                        mov_func_loop, mov_func_strides,
                        nanmean, nanmedian, nanstd, lastrank)
-from la.farray.mov import nanvar
+from la.farray import nanvar
 from la.missing import ismissing
 
 

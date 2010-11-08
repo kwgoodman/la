@@ -88,6 +88,45 @@ def nanstd(x, axis=0, bias=True):
         m2c = m2 / (n - 1.)
     return np.sqrt(m2c)
 
+# nanvar doesn't exist in scipy. I just copied nanstd above and removed
+# np.sqrt
+def nanvar(x, axis=0, bias=True):
+    """Compute the variance over the given axis ignoring nans
+
+    :Parameters:
+        x : ndarray
+            input array
+        axis : int
+            axis along which the variance is computed.
+        bias : boolean
+            If true, the biased (normalized by N, default) definition is used.
+            If false, the unbiased (N-1) is used.
+
+    :Results:
+        s : float
+            the variance."""
+    x, axis = _chk_asarray(x,axis)
+    x = x.copy()
+    Norig = x.shape[axis]
+
+    Nnan = np.sum(np.isnan(x),axis)*1.0
+    n = Norig - Nnan
+
+    x[np.isnan(x)] = 0.
+    m1 = np.sum(x,axis)/n
+
+    if axis:
+        d = (x - np.expand_dims(m1, axis))**2.0
+    else:
+        d = (x - m1)**2.0
+
+    m2 = np.sum(d,axis)-(m1*m1)*Nnan
+    if bias:
+        m2c = m2 / n
+    else:
+        m2c = m2 / (n - 1.)
+    return m2c
+
 def _nanmedian(arr1d):  # This only works on 1d arrays
     """Private function for rank a arrays. Compute the median ignoring Nan.
 
@@ -104,7 +143,7 @@ def _nanmedian(arr1d):  # This only works on 1d arrays
         return np.nan
     return np.median(x)
 
-# A change was made from the scipy version to handle scalar input an to 
+# A change was made from the scipy version to handle scalar input and to 
 # return a scalar when a 1d array is passed in or when axis is None.
 def nanmedian(x, axis=0):
     """ Compute the median along the given axis ignoring nan values
