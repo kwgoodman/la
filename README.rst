@@ -93,9 +93,9 @@ After you have installed ``la``, run the suite of unit tests::
     >>> import la
     >>> la.test()
     <snip>
-    Ran 3024 tests in 1.753s
+    Ran 3030 tests in 2.406s
     OK
-    <nose.result.TextTestResult run=2988 errors=0 failures=0> 
+    <nose.result.TextTestResult run=3030 errors=0 failures=0> 
     
 The ``la`` package contains C extensions that speed up common alignment
 operations such as adding two unaligned larrys. If the C extensions don't
@@ -133,8 +133,8 @@ package name                              ``la``
 web site                                  http://berkeleyanalytics.com/la
 license                                   Simplified BSD
 programming languages                     Python, Cython
-required dependencies                     Python, NumPy
-optional dependencies                     h5py, Scipy, nose, C-compiler
+required dependencies                     Python, NumPy, SciPy
+optional dependencies                     h5py, nose, C-compiler
 year started (open source)                2008 (2010)
 ======================================    ====================================
 
@@ -169,4 +169,3 @@ Numpy array                               ``la`` larry
 ``arr1 + arr2``                           ``lar1 + lar2``
 ``arr[:,0]``                              ``lar[:,0]``
 ======================================    ====================================
-

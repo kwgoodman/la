@@ -11,23 +11,31 @@ la 0.5 (daikon)
 
 *Release date: Not yet released, in development*
 
-Moving (rolling) summary statistics were the focus of this release.
+Moving window summary statistics were the focus of this release.
 
-**New larry methods**
+**Moving window statistics**
 
-- tofile: Save 1d or 2d larry to text file
+- larry methods: mov_sum, mov_mean, mov_var, mov_std, mov_min, mov_max,
+  mov_ranking, mov_count, mov_median, mov_func
+- Numpy array functions: mov_sum, mov_nansum, mov_mean, mov_nanmean, etc.  
+- Most functions offer 3 moving window algorithms: filter, strides, loop
+- Signature with defaults: larry.mov_sum(window, axis=-1, method='filter')  
+- array function: la.farray.mov_sum(arr, window, axis=-1, method='filter')  
 
-**New functions**
+**New methods and functions**
 
-- la.data.yahoo.quotes: Given a ticker sequence, return historical Yahoo!
+- la.data.yahoo.quotes(): Given a ticker sequence, return historical Yahoo!
   quotes (open, close, high, low, volume) as a 3d larry
-- unique: Find the unique elements of a larry
-- NaN-aware ndarray functions: demean, demedian, and zscore
+- Numpy array functions that ignore NaNs: demean, demedian, and zscore
+- la.unique(): Find the unique elements of a larry
+- larry.tofile(): Save 1d or 2d larry to text file
 
 **Breakage from la 0.4**
 
 - Scipy is now a dependency of la
 - movingsum no longer treats Inf and -Inf as missing values
+- movingsum and movingrank have been deprecated and will be removed in la 0.6;
+  use mov_sum and mov_ranking instead
 
 **Bugs fixes**
 
@@ -37,9 +45,14 @@ Moving (rolling) summary statistics were the focus of this release.
 - #7 larry.quantile() choked on axis=None
 - #8 demean, demedian, zscore choked on 1d input when axis=-1 
   
-  
+
+Older versions
+==============
+
+Release notes from past releases.
+
 la 0.4 (celery)
-===============
+---------------
 
 *Release date: 2010-07-06*
 
@@ -92,7 +105,7 @@ la.align(), which aligns two larrys, were also added.
 
 
 la 0.3 (banana)
-===============
+---------------
 
 *Release date: 2010-06-04*
 
@@ -136,7 +149,7 @@ la 0.3 (banana)
 
 
 la 0.2 (avocado)
-================
+----------------
 
 *Release date: 2010-04-27*
 
@@ -174,7 +187,7 @@ la 0.2 (avocado)
 
 
 la 0.1 (first release)
-======================
+----------------------
 
 *Release date: 2010-02-03*
 

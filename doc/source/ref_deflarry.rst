@@ -341,6 +341,56 @@ larry.
 .. automethod:: la.larry.maplabel
 
 
+Moving window statistics
+------------------------
+
+Moving window statistics along the specified axis of a larry.
+
+------------
+
+.. automethod:: la.larry.mov_sum
+
+------------
+
+.. automethod:: la.larry.mov_mean
+
+------------
+
+.. automethod:: la.larry.mov_var
+
+------------
+
+.. automethod:: la.larry.mov_std
+
+------------
+
+.. automethod:: la.larry.mov_min
+
+------------
+
+.. automethod:: la.larry.mov_max
+
+------------
+
+.. automethod:: la.larry.mov_ranking
+
+------------
+
+.. automethod:: la.larry.mov_count
+
+------------
+
+.. automethod:: la.larry.mov_median
+
+------------
+
+.. automethod:: la.larry.mov_func
+
+------------
+
+.. automethod:: la.larry.movingsum_forward
+
+
 Calculation
 ----------- 
 
@@ -360,23 +410,7 @@ The calculation methods transform the larry.
 
 ------------
 
-.. automethod:: la.larry.movingsum
-
-------------
-
-.. automethod:: la.larry.mov_sum
-
-------------
-
-.. automethod:: la.larry.movingsum_forward
-
-------------
-
 .. automethod:: la.larry.ranking
-
-------------
-
-.. automethod:: la.larry.movingrank
 
 ------------
 

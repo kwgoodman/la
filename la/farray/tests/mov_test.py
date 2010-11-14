@@ -130,5 +130,3 @@ def test_mov_nanmedian():
 
 def counter(arr, axis):
     return (~ismissing(arr)).sum(axis=axis)
-
-    

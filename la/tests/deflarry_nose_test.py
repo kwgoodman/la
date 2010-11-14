@@ -167,37 +167,6 @@ class est_calc(object):
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.lar3), 'Reference found')
     
-    def test_mov_sum_6(self):
-        "larry.mov_sum_6"
-        t = self.tmov_sum 
-        label = self.label
-        p = self.lar.mov_sum(2, norm=True)
-        msg = printfail(t, p.x, 'x')  
-        t[np.isnan(t)] = self.nancode
-        p[p.isnan()] = self.nancode             
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.lar), 'Reference found')   
-
-    def est_mov_sum_6_3(self):
-        "larry.mov_sum_6"
-        t = self.tmov_sum
-        label = self.label3
-        p = self.lar3.mov_sum(2, norm=True)
-        msg = printfail(t, p.x, 'x')  
-        t[np.isnan(t)] = self.nancode
-        p[p.isnan()] = self.nancode             
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.lar3), 'Reference found')  
-        
-    def test_mov_sum_6_3(self):
-        "duplicate larry.mov_sum_6"
-        t = self.tmov_sum
-        label = self.label3
-        p = self.lar3.mov_sum(2, norm=True)
-        self.check_function(t, label, p, self.lar3)
-
     def test_ranking_(self):
         "larry.ranking"  #not in deflarry_test
         t = self.tranking
@@ -380,14 +349,14 @@ class est_groups_moving(object):
         "larry.mov_sum 3d 1"
         t = self.tmov_sum3
         label = self.label3
-        p = self.lar3.mov_sum(2, axis=1, norm=False)
+        p = self.lar3.mov_sum(2, axis=1)
         self.check_function(t, label, p, self.lar3) 
         
     def test_mov_sum32(self):
         "larry.groupmedian 3d 2"
         #requires numpy 1.4 for nan equality testing 
-        lar3r = self.lar3.mov_sum(2, axis=0, norm=True)
-        lar2r = self.lar.mov_sum(2, axis=0, norm=True)
+        lar3r = self.lar3.mov_sum(2, axis=0)
+        lar2r = self.lar.mov_sum(2, axis=0)
         assert_equal(self.label3, lar3r.label)
         assert_equal(lar3r.x[:,:,0], lar2r.x)
         assert_equal(lar3r.x[:,:,1], lar2r.x)
@@ -395,7 +364,7 @@ class est_groups_moving(object):
     def test_mov_sum33(self):
         "larry.groupmedian 3d 3"
         #requires numpy 1.4 for nan equality testing 
-        lar3r = self.lar3.mov_sum(2, axis=2, norm=True)
+        lar3r = self.lar3.mov_sum(2, axis=2)
         assert_equal(self.label3, lar3r.label)
         assert_(not np.isfinite(lar3r.x[:,:,0]).any())
         assert_equal(lar3r.x[:,:,1], 2*self.lar3.x[:,:,1])

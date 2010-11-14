@@ -1274,7 +1274,7 @@ def mov_func(func, arr, window, axis=-1, method='loop', **kwargs):
     ----------
     func : function
         A reducing function such as np.sum, np.max, or np.median that takes
-        an axis argument.
+        a Numpy array and axis and, optionally, key word arguments as input.
     arr : ndarray
         Input array.
     window : int
