@@ -153,7 +153,7 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
         the dtype of the input is int.
     
     Notes
-    ----
+    -----
     If there is only one non-NaN value along the given axis, then that value
     is set to the midpoint of the specified normalization method. For example,
     if the input is array([1.0, nan]), then 1.0 is set to zero for the '-1,1'

@@ -10,7 +10,7 @@ __all__ = ['mov_sum', 'mov_nansum', 'mov_mean', 'mov_nanmean',
            'mov_var', 'mov_nanvar', 'mov_std', 'mov_nanstd',
            'mov_min', 'mov_nanmin', 'mov_max', 'mov_nanmax',
            'mov_nanranking', 'mov_count', 'mov_median', 'mov_nanmedian',
-           'mov_func_strides', 'mov_func_loop',
+           'mov_func',
            'movingsum', 'movingsum_forward', 'movingrank'] #Last row deprecated
 
 
@@ -30,7 +30,7 @@ def mov_sum(arr, window, axis=-1, method='filter'):
         The axis over which to perform the moving sum. By default the moving
         sum is taken over the last axis (-1).
     method : str, optional
-        Three calculations methods are available:
+        The following moving window methods are available:
             ==========  =====================================
             'filter'    scipy.ndimage.convolve1d (default)
             'strides'   strides tricks (ndim < 4)
@@ -75,7 +75,7 @@ def mov_nansum(arr, window, axis=-1, method='filter'):
         The axis over which to perform the moving sum. By default the moving
         sum is taken over the last axis (-1).
     method : str, optional
-        Four calculations methods are available:
+        The following moving window methods are available:
             ==========  =====================================
             'filter'    scipy.ndimage.convolve1d (default)
             'cumsum'    cumsum followed by offset difference
@@ -89,6 +89,12 @@ def mov_nansum(arr, window, axis=-1, method='filter'):
         The moving sum of the input array along the specified axis, ignoring
         NaNs. (A window with all NaNs returns NaN for the window sum.) The
         output has the same shape as the input.
+        
+    Notes
+    -----
+    Care should be taken when using the `cumsum` moving window method. On
+    some problem sizes it is fast; however, it is possible to get small
+    negative values even if the input is non-negative.
 
     Examples
     --------
@@ -296,7 +302,7 @@ def mov_mean(arr, window, axis=-1, method='filter'):
         The axis over which to perform the moving mean. By default the moving
         mean is taken over the last axis (-1).
     method : str, optional
-        Three calculations methods are available:
+        The following moving window methods are available:
             ==========  =====================================
             'filter'    scipy.ndimage.convolve1d (default)
             'strides'   strides tricks (ndim < 4)
@@ -341,7 +347,7 @@ def mov_nanmean(arr, window, axis=-1, method='filter'):
         The axis over which to perform the moving mean. By default the moving
         mean is taken over the last axis (-1).
     method : str, optional
-        Four calculations methods are available:
+        The following moving window methods are available:
             ==========  =====================================
             'filter'    scipy.ndimage.convolve1d (default)
             'cumsum'    cumsum followed by offset difference
@@ -355,6 +361,12 @@ def mov_nanmean(arr, window, axis=-1, method='filter'):
         The moving mean of the input array along the specified axis, ignoring
         NaNs. (A window with all NaNs returns NaN for the window mean.) The
         output has the same shape as the input.
+    
+    Notes
+    -----
+    Care should be taken when using the `cumsum` moving window method. On
+    some problem sizes it is fast; however, it is possible to get small
+    negative values even if the input is non-negative.
 
     Examples
     --------
@@ -377,9 +389,10 @@ def mov_nanmean(arr, window, axis=-1, method='filter'):
     return y
 
 def mov_mean_filter(arr, window, axis=-1):
+    "Moving window mean implemented with a filter."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
-    if window < 1:  
+    if window < 1: 
         raise ValueError, "`window` must be at least 1."
     if window > arr.shape[axis]:
         raise ValueError, "`window` is too long."  
@@ -392,6 +405,7 @@ def mov_mean_filter(arr, window, axis=-1):
     return arr
 
 def mov_nanmean_filter(arr, window, axis=-1):
+    "Moving window nanmean implemented with a filter."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -431,10 +445,6 @@ def mov_nanmean_cumsum(arr, window, axis=-1):
     y : ndarray
         The moving mean of the input array along the specified axis. The output
         has the same shape as the input.
-
-    Examples
-    --------
-    TODO: examples  
     
     """
 
@@ -492,7 +502,7 @@ def mov_var(arr, window, axis=-1, method='filter'):
         The axis over which to perform the moving variance. By default the
         moving variance is taken over the last axis (-1).
     method : str, optional
-        Three calculations methods are available:
+        The following moving window methods are available:
             ==========  =====================================
             'filter'    scipy.ndimage.convolve1d (default)
             'strides'   strides tricks (ndim < 4)
@@ -537,7 +547,7 @@ def mov_nanvar(arr, window, axis=-1, method='filter'):
         The axis over which to perform the moving variance. By default the
         moving variance is taken over the last axis (-1).
     method : str, optional
-        Four calculations methods are available:
+        The following moving window methods are available:
             ==========  =====================================
             'filter'    scipy.ndimage.convolve1d (default)
             'strides'   strides tricks (ndim < 4)
@@ -570,6 +580,7 @@ def mov_nanvar(arr, window, axis=-1, method='filter'):
     return y
 
 def mov_var_filter(arr, window, axis=-1):
+    "Moving window variance implemented with a filter."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -589,6 +600,7 @@ def mov_var_filter(arr, window, axis=-1):
     return arr
 
 def mov_nanvar_filter(arr, window, axis=-1):
+    "Moving window variance ignoring NaNs, implemented with a filter."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -631,7 +643,7 @@ def mov_std(arr, window, axis=-1, method='filter'):
         By default the moving standard deviation is taken over the last
         axis (-1).
     method : str, optional
-        Three calculations methods are available:
+        The following moving window methods are available:
             ==========  =====================================
             'filter'    scipy.ndimage.convolve1d (default)
             'strides'   strides tricks (ndim < 4)
@@ -674,9 +686,10 @@ def mov_nanstd(arr, window, axis=-1, method='filter'):
         The number of elements in the moving window.
     axis : int, optional
         The axis over which to perform the moving standard deviation.
-        By default the moving variance is taken over the last axis (-1).
+        By default the moving standard deviation is taken over the last
+        axis (-1).
     method : str, optional
-        Four calculations methods are available:
+        The following moving window methods are available:
             ==========  =====================================
             'filter'    scipy.ndimage.convolve1d (default)
             'strides'   strides tricks (ndim < 4)
@@ -686,7 +699,7 @@ def mov_nanstd(arr, window, axis=-1, method='filter'):
     Returns
     -------
     y : ndarray
-        The moving standard deivation of the input array along the specified
+        The moving standard deviation of the input array along the specified
         axis, ignoring NaNs. (A window with all NaNs returns NaN for the window
         standard deviation.) The output has the same shape as the input.
 
@@ -709,6 +722,7 @@ def mov_nanstd(arr, window, axis=-1, method='filter'):
     return y
 
 def mov_std_filter(arr, window, axis=-1):
+    "Moving window standard deviation implemented with a filter."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -720,6 +734,7 @@ def mov_std_filter(arr, window, axis=-1):
     return y
 
 def mov_nanstd_filter(arr, window, axis=-1):
+    "Moving window standard deviation ignoring NaNs, implemented with a filter."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -746,12 +761,12 @@ def mov_min(arr, window, axis=-1, method='filter'):
         The axis over which to perform the moving minimum. By default the
         moving minimum is taken over the last axis (-1).
     method : str, optional
-        Three calculations methods are available:
-            ==========  =====================================
-            'filter'    scipy.ndimage.convolve1d (default)
+        The following moving window methods are available:
+            ==========  =========================================
+            'filter'    scipy.ndimage.minimum_filter1d (default)
             'strides'   strides tricks (ndim < 4)
             'loop'      brute force python loop
-            ==========  =====================================
+            ==========  =========================================
 
     Returns
     -------
@@ -788,14 +803,14 @@ def mov_nanmin(arr, window, axis=-1, method='filter'):
         The number of elements in the moving window.
     axis : int, optional
         The axis over which to perform the moving minimum. By default the
-        moving variance is taken over the last axis (-1).
+        moving minimum is taken over the last axis (-1).
     method : str, optional
-        Four calculations methods are available:
-            ==========  =====================================
-            'filter'    scipy.ndimage.convolve1d (default)
+        The following moving window methods are available:
+            ==========  =========================================
+            'filter'    scipy.ndimage.minimum_filter1d (default)
             'strides'   strides tricks (ndim < 4)
             'loop'      brute force python loop
-            ==========  =====================================
+            ==========  =========================================
 
     Returns
     -------
@@ -822,7 +837,7 @@ def mov_nanmin(arr, window, axis=-1, method='filter'):
     return y
 
 def mov_min_filter(arr, window, axis=-1):
-    "Note: Nans handled differently from other methods. Give example."
+    "Moving window minimium implemented with a filter."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -836,6 +851,7 @@ def mov_min_filter(arr, window, axis=-1):
     return y
 
 def mov_nanmin_filter(arr, window, axis=-1):
+    "Moving window minimium ignoring NaNs, implemented with a filter."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -857,6 +873,7 @@ def mov_nanmin_filter(arr, window, axis=-1):
     return arr
 
 def mov_nanmin_loop(arr, window, axis=-1):
+    "Moving window minimium ignoring NaNs, implemented with a python loop."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -872,6 +889,7 @@ def mov_nanmin_loop(arr, window, axis=-1):
     return y
 
 def mov_nanmin_strides(arr, window, axis=-1):
+    "Moving window minimium ignoring NaNs, implemented with stides tricks."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -889,6 +907,39 @@ def mov_nanmin_strides(arr, window, axis=-1):
 # MAX -----------------------------------------------------------------------
 
 def mov_max(arr, window, axis=-1, method='filter'):
+    """
+    Moving window maximum along the specified axis.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving maximum. By default the
+        moving maximum is taken over the last axis (-1).
+    method : str, optional
+        The following moving window methods are available:
+            ==========  =========================================
+            'filter'    scipy.ndimage.minimum_filter1d (default)
+            'strides'   strides tricks (ndim < 4)
+            'loop'      brute force python loop
+            ==========  =========================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving maximum of the input array along the specified axis. The
+        output has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, 3, 4])
+    >>> la.farray.mov_max(arr, window=2)
+    array([ NaN,   2.,   3.,   4.])    
+
+    """
     if method == 'filter':
         y = mov_max_filter(arr, window, axis=axis)
     elif method == 'strides':
@@ -900,6 +951,40 @@ def mov_max(arr, window, axis=-1, method='filter'):
     return y
 
 def mov_nanmax(arr, window, axis=-1, method='filter'):
+    """
+    Moving window maximum along the specified axis, ignoring NaNs.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving maximum. By default the
+        moving maximum is taken over the last axis (-1).
+    method : str, optional
+        The following moving window methods are available:
+            ==========  =========================================
+            'filter'    scipy.ndimage.maximum_filter1d (default)
+            'strides'   strides tricks (ndim < 4)
+            'loop'      brute force python loop
+            ==========  =========================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving maximum of the input array along the specified axis,
+        ignoring NaNs. (A window with all NaNs returns NaN for the window
+        maximum.) The output has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, np.nan, 4, 5])
+    >>> la.farray.mov_nanmax(arr, window=2)
+    array([ NaN,   2.,   2.,   4.,   5.])
+
+    """
     if method == 'filter':
         y = mov_nanmax_filter(arr, window, axis=axis)
     elif method == 'strides':
@@ -911,7 +996,7 @@ def mov_nanmax(arr, window, axis=-1, method='filter'):
     return y
 
 def mov_max_filter(arr, window, axis=-1):
-    "Note: Nans handled differently from other methods. Give example."
+    "Moving window maximium implemented with a filter."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -925,6 +1010,7 @@ def mov_max_filter(arr, window, axis=-1):
     return y
 
 def mov_nanmax_filter(arr, window, axis=-1):
+    "Moving window maximium ignoring NaNs, implemented with a filter."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -946,6 +1032,7 @@ def mov_nanmax_filter(arr, window, axis=-1):
     return arr
 
 def mov_nanmax_loop(arr, window, axis=-1):
+    "Moving window maximium ignoring NaNs, implemented with a python loop."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -961,6 +1048,7 @@ def mov_nanmax_loop(arr, window, axis=-1):
     return y
 
 def mov_nanmax_strides(arr, window, axis=-1):
+    "Moving window maximium ignoring NaNs, implemented with stides tricks."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -978,6 +1066,61 @@ def mov_nanmax_strides(arr, window, axis=-1):
 # RANKING -------------------------------------------------------------------
 
 def mov_nanranking(arr, window, axis=-1, method='strides'):
+    """
+    Moving window ranking along the specified axis, ignoring NaNs.
+
+    The output is normalized to be between -1 and 1. For example, with a window
+    width of 3 (and with no ties), the possible output values are -1, 0, 1.
+    
+    Ties are broken by averaging the rankings. See the examples below. 
+
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving ranking. By default the
+        moving ranking is taken over the last axis (-1).
+    method : str, optional
+        The following moving window methods are available:
+            ==========  =====================================
+            'strides'   strides tricks (ndim < 4) (default)
+            'loop'      brute force python loop
+            ==========  =====================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving ranking of the input array along the specified axis,
+        ignoring NaNs. (A window with all NaNs returns NaN for the window
+        ranking; if all elements in a window are NaNs except the last element,
+        this NaN is returned.) The output has the same shape as the input.
+
+    Examples
+    --------
+    With window=3 and no ties, there are 3 possible output values, i.e.
+    [-1., 0., 1.]:
+
+    >>> arr = np.array([1, 2, 6, 4, 5, 3])
+    >>> la.farray.mov_nanranking(arr, window=3)
+    array([ NaN,  NaN,   1.,   0.,   0.,  -1.])
+
+    Ties are broken by averaging the rankings of the tied elements:
+
+    >>> arr = np.array([1, 2, 1, 1, 1, 2])
+    >>> la.farray.mov_nanranking(arr, window=3)
+    array([ NaN,  NaN, -0.5, -0.5,  0. ,  1. ])
+
+    In a monotonically increasing sequence, the moving window ranking is always
+    equal to 1:
+    
+    >>> arr = np.array([1, 2, 3, 4, 5])
+    >>> la.farray.mov_nanranking(arr, window=3)
+    array([ NaN,  NaN,   1.,   1.,   1.])
+
+    """
     if method == 'strides':
         y = mov_func_strides(lastrank, arr, window, axis=axis)
     elif method == 'loop':
@@ -990,12 +1133,45 @@ def mov_nanranking(arr, window, axis=-1, method='strides'):
 # COUNT MISSING -------------------------------------------------------------
 
 def mov_count(arr, window, axis=-1, method='filter'):
+    """
+    Moving window count of non-missing elements along the specified axis.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the counting. By default the moving
+        count is taken over the last axis (-1).
+    method : str, optional
+        The following moving window methods are available:
+            ==========  =====================================
+            'filter'    scipy.ndimage.convolve1d (default)
+            'strides'   strides tricks (ndim < 4)
+            'loop'      brute force python loop
+            ==========  =====================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving count of non-missing elements of the input array along the
+        specified axis. The output has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, la.nan, 4])
+    >>> la.farray.mov_count(arr, window=2)
+    array([ NaN,   2.,   1.,   1.])    
+
+    """
     if method == 'filter':
-        y = mov_sum_filter(ismissing(arr), window, axis=axis)
+        y = mov_sum_filter(~ismissing(arr), window, axis=axis)
     elif method == 'strides':
-        y = mov_func_strides(np.sum, ismissing(arr), window, axis=axis)
+        y = mov_func_strides(np.sum, ~ismissing(arr), window, axis=axis)
     elif method == 'loop':
-        y = mov_func_loop(np.sum, ismissing(arr), window, axis=axis)
+        y = mov_func_loop(np.sum, ~ismissing(arr), window, axis=axis)
     else:
         msg = "`method` must be 'filter', 'strides', or 'loop'."
         raise ValueError, msg
@@ -1004,6 +1180,38 @@ def mov_count(arr, window, axis=-1, method='filter'):
 # MEDIAN --------------------------------------------------------------------
 
 def mov_median(arr, window, axis=-1, method='loop'):
+    """
+    Moving window median along the specified axis.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving median. By default the
+        moving median is taken over the last axis (-1).
+    method : str, optional
+        The following moving window methods are available:
+            ==========  =====================================
+            'loop'      brute force python loop (default)
+            'strides'   strides tricks (ndim < 4)
+            ==========  =====================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving median of the input array along the specified axis. The
+        output has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, 3, 4, 5])
+    >>> la.farray.mov_median(arr, window=2)
+    array([ NaN,  1.5,  2.5,  3.5,  4.5])
+
+    """
     if method == 'strides':
         y = mov_func_strides(np.median, arr, window, axis=axis)
     elif method == 'loop':
@@ -1014,6 +1222,39 @@ def mov_median(arr, window, axis=-1, method='loop'):
     return y
 
 def mov_nanmedian(arr, window, axis=-1, method='loop'):
+    """
+    Moving window median along the specified axis, ignoring NaNs.
+    
+    Parameters
+    ----------
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to perform the moving median. By default the
+        moving median is taken over the last axis (-1).
+    method : str, optional
+        The following moving window methods are available:
+            ==========  =====================================
+            'loop'      brute force python loop (default)
+            'strides'   strides tricks (ndim < 4)
+            ==========  =====================================
+
+    Returns
+    -------
+    y : ndarray
+        The moving median of the input array along the specified axis,
+        ignoring NaNs. (A window with all NaNs returns NaN for the window
+        maximum.) The output has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.array([1, 2, np.nan, 4, 5])
+    >>> la.farray.mov_nanmedian(arr, window=2)
+    array([ NaN,  1.5,  2. ,  4. ,  4.5])
+
+    """
     if method == 'strides':
         y = mov_func_strides(nanmedian, arr, window, axis=axis)
     elif method == 'loop':
@@ -1025,7 +1266,58 @@ def mov_nanmedian(arr, window, axis=-1, method='loop'):
 
 # GENERAL --------------------------------------------------------------------
 
-def mov_func_loop(func, arr, window, axis=-1, *args, **kwargs):
+def mov_func(func, arr, window, axis=-1, method='loop', **kwargs):
+    """
+    Generic moving window function along the specified axis.
+    
+    Parameters
+    ----------
+    func : function
+        A reducing function such as np.sum, np.max, or np.median that takes
+        an axis argument.
+    arr : ndarray
+        Input array.
+    window : int
+        The number of elements in the moving window.
+    axis : int, optional
+        The axis over which to evaluate `func`. By default the window moves
+        along the last axis (-1).
+    method : str, optional
+        The following moving window methods are available:
+            ==========  =====================================
+            'loop'      brute force python loop (default)
+            'strides'   strides tricks (ndim < 4)
+            ==========  =====================================
+
+    Returns
+    -------
+    y : ndarray
+        A moving window evaluation of `func` along the specified axis of the
+        input array. The output has the same shape as the input.
+
+    Examples
+    --------
+    >>> arr = np.arange(4)
+    >>> la.farray.mov_func(np.sum, arr, window=2)
+    array([ NaN,   1.,   3.,   5.])
+
+    which give the same result as:
+
+    >>> la.farray.mov_sum(arr, window=2)
+    array([ NaN,   1.,   3.,   5.])
+
+    """
+    if method == 'strides':
+        y = mov_func_strides(func, arr, window, axis=axis, **kwargs)
+    elif method == 'loop':
+        y = mov_func_loop(func, arr, window, axis=axis)
+    else:
+        msg = "`method` must be 'strides' or 'loop'."
+        raise ValueError, msg
+    return y
+
+def mov_func_loop(func, arr, window, axis=-1, **kwargs):
+    "Generic moving window function implemented with a python loop."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -1038,10 +1330,11 @@ def mov_func_loop(func, arr, window, axis=-1, *args, **kwargs):
     for i in range(window - 1, arr.shape[axis]):
         idx1[axis] = slice(i + 1 - window, i + 1)
         idx2[axis] = i
-        y[idx2] = func(arr[idx1], axis, *args, **kwargs)
+        y[idx2] = func(arr[idx1], axis=axis, **kwargs)
     return y    
 
-def mov_func_strides(func, arr, window, axis=-1, *args, **kwargs):
+def mov_func_strides(func, arr, window, axis=-1, **kwargs):
+    "Generic moving window function implemented with strides."
     if axis == None:
         raise ValueError, "An `axis` value of None is not supported."
     if window < 1:  
@@ -1060,7 +1353,7 @@ def mov_func_strides(func, arr, window, axis=-1, *args, **kwargs):
         shape = (arr.size - window + 1, window)
         strides = 2 * strides
         z = as_strided(arr, shape=shape, strides=strides)
-        y = func(z, axis=1, *args, **kwargs)
+        y = func(z, axis=1, **kwargs)
     elif ndim == 2:
         if axis == 1:
             arr = arr.T
@@ -1068,7 +1361,7 @@ def mov_func_strides(func, arr, window, axis=-1, *args, **kwargs):
         shape = (arr.shape[0] - window + 1, window, arr.shape[1]) 
         strides = (strides[0],) + strides 
         z = as_strided(arr, shape=shape, strides=strides)
-        y = func(z, axis=1, *args, **kwargs)
+        y = func(z, axis=1, **kwargs)
         if axis == 1:
             y = y.T    
     elif ndim == 3:
@@ -1078,7 +1371,7 @@ def mov_func_strides(func, arr, window, axis=-1, *args, **kwargs):
         shape = (arr.shape[0]-window+1, window, arr.shape[1], arr.shape[2])
         strides = (strides[0],) + strides
         z = as_strided(arr, shape=shape, strides=strides)
-        y = func(z, axis=1, *args, **kwargs)
+        y = func(z, axis=1, **kwargs)
         if axis > 0:
             y = y.swapaxes(0, axis)
     else:
@@ -1208,5 +1501,3 @@ def movingrank(x, window, axis=-1):
         index2[axis] = slice(i-window+1, i+1, None)
         mr[index1] = np.squeeze(lastrank(x[index2], axis=axis))
     return mr
-
-

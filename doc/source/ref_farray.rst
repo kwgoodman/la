@@ -1,8 +1,8 @@
-=====================
-Numpy array functions
-=====================
+===============
+array functions
+===============
 
-Most larry methods are available as Numpy array functions. For example, to
+Most larry methods have an equivalent Numpy array function. For example, to
 find the z-score along the last axis of a larry, `lar`, you would do::
 
     >>> lar.zscore(axis=-1)
@@ -11,24 +11,24 @@ Here's the corresponding operation on a Numpy array, `arr`::
 
     >>> la.farray.zscore(arr, axis=-1)
 
-This section of the manual contains most of the Numpy array functions
-available in the ``la`` package.
+This section of the manual is a reference guide to most of the Numpy array
+functions available in the ``la`` package.
 
 .. contents:: Functions and examples
 
 
-Moving (rolling) statistics
----------------------------
+Moving window statistics
+------------------------
 
-Moving (rolling) summary statistics along the specified axis of a Numpy array.
-Some of the functions remove NaNs from the rolling window (mov_nansum); some
-don't (mov_sum).
+This section contains Numpy array functions that calculate moving window
+summary statistics. Some of the functions remove NaNs from the moving window
+(mov_nansum); some don't (mov_sum).
 
-Most of the moving window functions offer several algorithms for calculating
-moving statistics.
+Most of the moving window functions offer three algorithms for moving the
+window:
 
             ==========  ==========================
-            'filter'    scipy.ndimage.convolve1d 
+            'filter'    scipy.ndimage 
             'strides'   strides tricks (ndim < 4)
             'loop'      brute force python loop
             ==========  ==========================
@@ -63,7 +63,7 @@ moving statistics.
 
 ------------
 
-.. autofunction:: la.farray.mov_std
+.. autofunction:: la.farray.mov_nanstd
 
 ------------
              
@@ -99,8 +99,74 @@ moving statistics.
 
 ------------
              
-.. autofunction:: la.farray.mov_func_strides
+.. autofunction:: la.farray.mov_func
+
+
+Normalization
+-------------
+
+Normalization functions that take a Numpy array as input.
+
+------------
+             
+.. autofunction:: la.farray.ranking
+
+------------
+             
+.. autofunction:: la.farray.quantile
+
+------------
+             
+.. autofunction:: la.farray.demean
 
 ------------
 
-.. autofunction:: la.farray.mov_func_loop
+.. autofunction:: la.farray.demedian
+
+------------
+             
+.. autofunction:: la.farray.zscore
+
+
+Misc
+----
+
+Miscellaneous Numpy array functions.
+
+------------
+             
+.. autofunction:: la.farray.correlation
+
+------------
+             
+.. autofunction:: la.farray.shuffle
+
+------------
+             
+.. autofunction:: la.farray.geometric_mean
+
+------------
+
+.. autofunction:: la.farray.covMissing
+
+------------
+             
+.. autofunction:: la.farray.nanmean
+
+------------
+             
+.. autofunction:: la.farray.nanmedian
+
+------------
+             
+.. autofunction:: la.farray.nanvar
+
+------------
+             
+.. autofunction:: la.farray.nanstd
+
+
+
+
+
+

@@ -8,8 +8,7 @@ from la.farray import (mov_sum, mov_nansum, mov_mean, mov_nanmean,
                        mov_var, mov_nanvar, mov_std, mov_nanstd,
                        mov_min, mov_nanmin, mov_max, mov_nanmax,
                        mov_nanranking, mov_count, mov_median, mov_nanmedian,
-                       mov_func_loop, mov_func_strides,
-                       nanmean, nanmedian, nanstd, lastrank)
+                       mov_func, nanmean, nanmedian, nanstd, lastrank)
 from la.farray import nanvar
 from la.missing import ismissing
 
@@ -33,9 +32,11 @@ def mov_unit_maker(func, arrfunc, methods):
                 actual = func(arr, window=w, axis=axis, method='loop')
                 for method in methods:
                     if method == 'func_loop':
-                        d = mov_func_loop(arrfunc, arr, window=w, axis=axis)
+                        d = mov_func(arrfunc, arr, window=w, axis=axis,
+                                     method='loop')
                     elif method == 'func_strides':
-                        d = mov_func_strides(arrfunc, arr, window=w, axis=axis)
+                        d = mov_func(arrfunc, arr, window=w, axis=axis,
+                                     method='strides')
                     else:
                         d = func(arr, window=w, axis=axis, method=method) 
                     err_msg = msg % (func.__name__, method, arr.ndim, w, axis)
@@ -128,6 +129,6 @@ def test_mov_nanmedian():
 # Utility -------------------------------------------------------------------
 
 def counter(arr, axis):
-    return ismissing(arr).sum(axis=axis)
+    return (~ismissing(arr)).sum(axis=axis)
 
     
