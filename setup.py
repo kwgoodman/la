@@ -107,7 +107,9 @@ MINOR               = VER[1]
 MICRO               = VER[2]
 ISRELEASED          = False
 VERSION             = '%s.%s.%s' % (MAJOR, MINOR, MICRO)
-PACKAGES            = ["la", "la/tests", "la/util", "la/util/tests"]
+PACKAGES            = ["la", "la/tests", "la/util", "la/util/tests",
+                       "la/external", "la/external/tests", "la/farray",
+                       "la/farray/tests"]
 PACKAGE_DATA        = {'la': ['LICENSE']}
 REQUIRES            = ["numpy"]
 
