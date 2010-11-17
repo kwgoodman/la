@@ -69,14 +69,15 @@ Installation
 The ``la`` package requires Python, Numpy, and Scipy. Numpy 1.4.1 or newer is
 recommended for its improved NaN handling. Also some of the unit tests in the
 ``la`` package require Numpy 1.4 or newer and many require
-`nose <http://somethingaboutorange.com/mrl/projects/nose>`_.
-
-To save and load larrys in HDF5 format, you need
-`h5py <http://h5py.alfven.org>`_ with HDF5 1.8.
+`nose <http://somethingaboutorange.com/mrl/projects/nose>`_. To optionally
+save and load larrys in HDF5 format, you need `h5py <http://h5py.alfven.org>`_
+with HDF5 1.8.
 
 You can download the `latest version of la from the Python Package Index
 <http://pypi.python.org/pypi/la>`_.
             
+**GNU/Linux, Mac OSX et al.**
+
 To install ``la``::
 
     $ python setup.py build
@@ -87,7 +88,21 @@ Or, if you wish to specify where ``la`` is installed, for example inside
 
     $ python setup.py build
     $ sudo python setup.py install --prefix=/usr/local
-    
+
+**Windows**
+
+In order to (optionally) compile the C code in the ``la`` package you need a
+Windows version of the gcc compiler. MinGW (Minimalist GNU for Windows)
+contains gcc and has been used to successfully compile ``la`` on Windows.
+
+Install MinGW and add it to your system path. Then install ``la`` with the
+commands::
+
+    python setup.py build --compiler=mingw32
+    python setup.py install
+
+**Post install**
+
 After you have installed ``la``, run the suite of unit tests::
 
     >>> import la
@@ -145,10 +160,10 @@ data object (main class)                  larry
 number of dimensions supported            nd > 0d
 data container                            Numpy array
 direct access to data container           yes
-data types                                homogenous: float, int, str, object
+data types                                homogeneous: float, int, str, object
 label container                           list of lists
 direct access to label container          yes
-label types                               heterogenous, hashable    
+label types                               heterogeneous, hashable    
 label constraints                         unique along any one axis, hashable
 missing values                            NaN (float),  partial: '' (str),
                                           None (object)
