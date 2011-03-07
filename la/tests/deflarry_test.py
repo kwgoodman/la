@@ -1354,7 +1354,7 @@ class Test_reduce(unittest.TestCase):
         
     def test_mean_4(self):
         "larry.mean_4"
-        self.failUnlessRaises(IndexError, self.l.mean, 3)
+        self.failUnlessRaises(ValueError, self.l.mean, 3)
 
     def test_mean_5(self):
         "larry.mean_5"
@@ -1466,7 +1466,7 @@ class Test_reduce(unittest.TestCase):
         
     def test_std_4(self):
         "larry.std_4"
-        self.failUnlessRaises(IndexError, self.l.std, 3)
+        self.failUnlessRaises(ValueError, self.l.std, 3)
 
     def test_std_5(self):
         "larry.std_5"
@@ -1515,7 +1515,7 @@ class Test_reduce(unittest.TestCase):
         
     def test_var_4(self):
         "larry.var_4"
-        self.failUnlessRaises(IndexError, self.l.var, 3)
+        self.failUnlessRaises(ValueError, self.l.var, 3)
 
     def test_var_5(self):
         "larry.var_5"

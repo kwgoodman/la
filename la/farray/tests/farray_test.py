@@ -172,105 +172,7 @@ class Test_ranking(unittest.TestCase):
     "Test farray.ranking"
 
     def test_ranking_1(self):
-        "farray.ranking #1"
-        x = np.array([[ 1.0, nan, 2.0, nan, nan],
-                      [ 2.0, 2.0, nan, nan, nan],
-                      [ 3.0, 3.0, 3.0, 3.0, nan]])
-        desired = np.array([[ 0.0, nan, 0.0, nan, nan],
-                            [ 1.0, 0.0, nan, nan, nan],
-                            [ 2.0, 2.0, 2.0, 1.0, nan]])                     
-        actual = ranking(x, axis=0, norm='0,N-1', ties=False)
-        assert_almost_equal(actual, desired) 
-
-    def test_ranking_2(self):
-        "farray.ranking #2"
-        x = np.array([[ 1.0, nan, 2.0, nan, nan],
-                      [ 2.0, 2.0, nan, nan, nan],
-                      [ 3.0, 3.0, 3.0, 3.0, nan]])
-        desired = np.array([[ 0.0, nan, 0.0, nan, nan],
-                            [ 1.0, 0.0, nan, nan, nan],
-                            [ 2.0, 2.0, 2.0, 1.0, nan]])                     
-        actual = ranking(x, norm='0,N-1', ties=False)
-        assert_almost_equal(actual, desired) 
-
-    def test_ranking_3(self):
-        "farray.ranking #3"
-        x = np.array([[ 1.0, nan, 2.0, nan, nan],
-                      [ 2.0, 2.0, nan, nan, nan],
-                      [ 3.0, 3.0, 3.0, 3.0, nan],
-                      [ 4.0, 2.0, 3.0, 1.0, 0.0]])   
-        desired = np.array([[ 0.0,   nan,   4.0, nan, nan],
-                            [ 0.0,   4.0,   nan, nan, nan],
-                            [ 0.0, 4/3.0, 8/3.0, 4.0, nan],
-                            [ 4.0,   2.0,   3.0, 1.0, 0.0]])       
-        actual = ranking(x, axis=1, norm='0,N-1', ties=False)
-        assert_almost_equal(actual, desired)
-        
-    def test_ranking_4(self):
-        "farray.ranking #4"
-        x = np.array([3.0, 1.0, 2.0])[:,None]
-        desired = np.array([2, 0, 1])[:,None]
-        actual = ranking(x, axis=0, norm='0,N-1', ties=False)
-        assert_almost_equal(actual, desired)
-
-    def test_ranking_5(self):
-        "farray.ranking #5"
-        x = np.array([3.0, 1.0, 2.0])[:,None]
-        desired = np.array([0, 0, 0])[:,None]
-        actual = ranking(x, axis=1, norm='0,N-1', ties=False)
-        assert_almost_equal(actual, desired)    
-
-    def test_ranking_6(self):
-        "farray.ranking #6"
-        x = np.array([[ 1.0,   nan,   2.0,   nan,   nan],
-                      [ 2.0,   2.0,   nan,   nan,   nan],
-                      [ 3.0,   3.0,   3.0,   3.0,   nan]])
-        desired = np.array([[-1.0,   nan,  -1.0,   nan,   nan],
-                            [ 0.0,  -1.0,   nan,   nan,   nan],
-                            [ 1.0,   1.0,   1.0,   0.0,   nan]])
-        actual = ranking(x, axis=0, norm='-1,1', ties=False)
-        assert_almost_equal(actual, desired) 
-
-    def test_ranking_7(self):
-        "farray.ranking #7"
-        x = np.array([[ 1.0,   nan,   2.0,   nan,   nan],
-                      [ 2.0,   2.0,   nan,   nan,   nan],
-                      [ 3.0,   3.0,   3.0,   3.0,   nan]])
-        desired = np.array([[-1.0,   nan,  -1.0,   nan,   nan],
-                           [ 0.0,  -1.0,   nan,   nan,   nan],
-                           [ 1.0,   1.0,   1.0,   0.0,   nan]])    
-        actual = ranking(x, norm='-1,1', ties=False)
-        assert_almost_equal(actual, desired) 
-
-    def test_ranking_8(self):
-        "farray.ranking #8"
-        x = np.array([[ 1.0,   nan,   2.0,   nan,   nan],
-                      [ 2.0,   2.0,   nan,   nan,   nan],
-                      [ 3.0,   3.0,   3.0, 3.0  ,   nan],
-                      [ 4.0,   2.0,   3.0, 1.0  , 0.0  ]])   
-        desired = np.array([[-1.0,   nan,   1.0,   nan,   nan],
-                            [-1.0,   1.0,   nan,   nan,   nan],
-                            [-1.0,-1/3.0, 1/3.0,   1.0,   nan],
-                            [ 1.0,   0.0,   0.5,  -0.5,  -1.0]])     
-        actual = ranking(x, axis=1, norm='-1,1', ties=False)
-        assert_almost_equal(actual, desired)
-        
-    def test_ranking_9(self):
-        "farray.ranking #9" 
-        x = np.array([3.0, 1.0, 2.0])[:,None]
-        desired = np.array([1.0,-1.0, 0.0])[:,None]
-        actual = ranking(x, axis=0, norm='-1,1', ties=False)
-        assert_almost_equal(actual, desired)
-
-    def test_ranking_10(self):
-        "farray.ranking #10"  
-        x = np.array([3.0, 1.0, 2.0])[:,None]
-        desired = np.array([0.0, 0.0, 0.0])[:,None]
-        actual = ranking(x, axis=1, norm='-1,1', ties=False)
-        assert_almost_equal(actual, desired)  
-
-    def test_ranking_11(self):
-        "farray.ranking_11"
+        "farray.ranking_1"
         x = np.array([[ 1.0,   nan,   2.0,   nan,   nan],
                       [ 2.0,   2.0,   nan,   nan,   nan],
                       [ 3.0,   3.0,   3.0, 3.0  ,   nan]])
@@ -280,8 +182,8 @@ class Test_ranking(unittest.TestCase):
         actual = ranking(x, axis=0)
         assert_almost_equal(actual, desired) 
 
-    def test_ranking_12(self):
-        "farray.ranking_12"
+    def test_ranking_2(self):
+        "farray.ranking_2"
         x = np.array([[ 1.0,   nan,   2.0,   nan,   nan],
                       [ 2.0,   2.0,   nan,   nan,   nan],
                       [ 3.0,   3.0,   3.0,   3.0,   nan]])
@@ -291,8 +193,8 @@ class Test_ranking(unittest.TestCase):
         actual = ranking(x)
         assert_almost_equal(actual, desired) 
 
-    def test_ranking_13(self):
-        "farray.ranking_13"
+    def test_ranking_3(self):
+        "farray.ranking_3"
         x = np.array([[ 1.0,   nan,   2.0,   nan,   nan],
                       [ 2.0,   2.0,   nan,   nan,   nan],
                       [ 3.0,   3.0,   3.0, 3.0  ,   nan],
@@ -304,22 +206,22 @@ class Test_ranking(unittest.TestCase):
         actual = ranking(x, axis=1)
         assert_almost_equal(actual, desired)
         
-    def test_ranking_14(self):
-        "farray.ranking_14"  
+    def test_ranking_4(self):
+        "farray.ranking_4"  
         x = np.array([3.0, 1.0, 2.0])[:,None]
         desired = np.array([1.0,-1.0, 0.0])[:,None]
         actual = ranking(x, axis=0)
         assert_almost_equal(actual, desired) 
 
-    def test_ranking_15(self):
-        "farray.ranking_15"  
+    def test_ranking_5(self):
+        "farray.ranking_5"  
         x = np.array([3.0, 1.0, 2.0])[:,None]
         desired = np.array([0.0, 0.0, 0.0])[:,None]
         actual = ranking(x, axis=1)
         assert_almost_equal(actual, desired)
         
-    def test_ranking_16(self):
-        "farray.ranking_16"
+    def test_ranking_6(self):
+        "farray.ranking_6"
         x = np.array([[ 1.0,   nan,   1.0,   nan,   nan],
                       [ 1.0,   1.0,   nan,   nan,   nan],
                       [ 1.0,   2.0,   0.0,   2.0,   nan],
@@ -331,8 +233,8 @@ class Test_ranking(unittest.TestCase):
         actual = ranking(x)
         assert_almost_equal(actual, desired)       
 
-    def test_ranking_17(self):
-        "farray.ranking_17"
+    def test_ranking_7(self):
+        "farray.ranking_7"
         x = np.array([[ 1.0,   nan,   1.0,   nan,   nan],
                       [ 1.0,   1.0,   nan,   nan,   nan],
                       [ 1.0,   2.0,   0.0,   2.0,   nan],
@@ -344,8 +246,8 @@ class Test_ranking(unittest.TestCase):
         actual = ranking(x, 1)
         assert_almost_equal(actual, desired)
 
-    def test_ranking_18(self):
-        "farray.ranking_18"
+    def test_ranking_8(self):
+        "farray.ranking_8"
         x = np.array([[ 1.0,   1.0,   1.0,   1.0],
                       [ 1.0,   1.0,   2.0,   2.0],
                       [ 2.0,   2.0,   3.0,   2.0],
@@ -357,8 +259,8 @@ class Test_ranking(unittest.TestCase):
         actual = ranking(x, 0)
         assert_almost_equal(actual, desired)
         
-    def test_ranking_19(self):
-        "farray.ranking_19"
+    def test_ranking_9(self):
+        "farray.ranking_9"
         x = np.array([[ 1.0,   1.0,   1.0,   1.0],
                       [ 1.0,   1.0,   2.0,   2.0],
                       [ 2.0,   2.0,   3.0,   2.0],
@@ -372,8 +274,8 @@ class Test_ranking(unittest.TestCase):
         actual = ranking(x, 1)
         assert_almost_equal(actual, desired)              
 
-    def test_ranking_20(self):
-        "farray.ranking_20"
+    def test_ranking_10(self):
+        "farray.ranking_10"
         x = np.array([[ nan],
                       [ nan],
                       [ nan]])  
@@ -383,8 +285,8 @@ class Test_ranking(unittest.TestCase):
         actual = ranking(x, axis=0)
         assert_almost_equal(actual, desired)
 
-    def test_ranking_21(self):
-        "farray.ranking_21"
+    def test_ranking_11(self):
+        "farray.ranking_11"
         x = np.array([[ nan, nan],
                       [ nan, nan],
                       [ nan, nan]])  
@@ -394,41 +296,27 @@ class Test_ranking(unittest.TestCase):
         actual = ranking(x, axis=0)
         assert_almost_equal(actual, desired)
 
-    def test_ranking_22(self):
-        "farray.ranking_22"
+    def test_ranking_12(self):
+        "farray.ranking_12"
         x = np.array([[ nan, nan, nan]])  
         desired = np.array([[ nan, nan, nan]])      
         actual = ranking(x, axis=1)
         assert_almost_equal(actual, desired)
         
-    def test_ranking_23(self):
-        "farray.ranking_23"
+    def test_ranking_13(self):
+        "farray.ranking_13"
         x = np.array([ 1.0, np.inf, 2.0])  
         desired = np.array([-1.0, 1.0, 0.0])     
         actual = ranking(x, axis=0)
         assert_almost_equal(actual, desired)        
 
-    def test_ranking_24(self):
-        "farray.ranking_24"
-        x = np.array([ 1.0, np.inf, 2.0])  
-        desired = np.array([-1.0, 1.0, 0.0])         
-        actual = ranking(x, axis=0, ties=False)
-        assert_almost_equal(actual, desired) 
-
-    def test_ranking_25(self):
-        "farray.ranking_25"
+    def test_ranking_14(self):
+        "farray.ranking_14"
         x = np.array([ -np.inf, nan, 1.0, np.inf])  
         desired = np.array([-1.0, nan, 0.0, 1.0])    
         actual = ranking(x, axis=0)
         assert_almost_equal(actual, desired)
 
-    def test_ranking_26(self):
-        "farray.ranking_26"
-        x = np.array([ -np.inf, nan, 1.0, np.inf])  
-        desired = np.array([-1.0, nan, 0.0, 1.0])        
-        actual = ranking(x, axis=0, ties=False)
-        assert_almost_equal(actual, desired)
-        
         
 class Test_geometric_mean(unittest.TestCase):
     "Test farray.geometric_mean"

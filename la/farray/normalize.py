@@ -1,9 +1,10 @@
 "NaN-aware numpy array functions for normalization operations."
 
 import numpy as np
+import bottleneck as bn
 
 from la.missing import nans
-from la.external.scipy import nanmedian, rankdata, nanstd, nanmean
+from la.external.scipy import nanmedian, nanstd, nanmean
 
 __all__ = ['lastrank', 'ranking', 'push', 'quantile', 'demean',
            'demedian', 'zscore']
@@ -123,7 +124,7 @@ def lastrank(x, axis=-1, decay=0.0):
         r[~np.isfinite(x[indlast2])] = np.nan
     return r    
 
-def ranking(x, axis=0, norm='-1,1', ties=True):
+def ranking(x, axis=0, norm='-1,1'):
     """
     Normalized ranking treating NaN as missing and average ties by default.
     
@@ -141,10 +142,6 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
             'gaussian'  Rank data then scale to a Gaussian distribution
             ==========  ================================================
         The default ranking is '-1,1'.
-    ties: bool
-        If two elements of `x` have the same value then they will be ranked
-        by their order in the array (False). If `ties` is set to True
-        (default), then the ranks are averaged.
         
     Returns
     -------
@@ -172,27 +169,8 @@ def ranking(x, axis=0, norm='-1,1', ties=True):
     masknan = np.isnan(x)
     countnan = np.expand_dims(masknan.sum(ax), ax)
     countnotnan = x.shape[ax] - countnan
-    if not ties:
-        maskinf = np.isinf(x)
-        adj = masknan.cumsum(ax)
-        if masknan.any():
-            x = x.copy()
-            x[masknan] = np.inf
-        idxraw = x.argsort(ax).argsort(ax)
-        idx = idxraw.astype(float)
-        idx[masknan] = np.nan
-        idx[maskinf] -= adj[maskinf]
-    else:
-        rank1d = rankdata # Note: stats.rankdata starts ranks at 1
-        idx = np.nan * np.ones(x.shape)
-        itshape = list(x.shape)
-        itshape.pop(ax)
-        for ij in np.ndindex(*itshape):
-            ijslice = list(ij[:ax]) + [slice(None)] + list(ij[ax:])
-            x1d = x[ijslice].astype(float)
-            mask1d = ~np.isnan(x1d)
-            x1d[mask1d] = rank1d(x1d[mask1d]) - 1
-            idx[ijslice] = x1d
+    idx = bn.nanrankdata(x, ax)
+    idx -= 1
     if norm == '-1,1':
         idx /= (countnotnan - 1)
         idx *= 2

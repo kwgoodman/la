@@ -3,15 +3,14 @@
 import csv
 
 import numpy as np
+import bottleneck as bn
 
 from la.missing import ismissing, missing_marker  
 from la.flabel import listmap, listmap_fill, flattenlabel
-from la.farray import nanmean, nanmedian, nanstd
 from la.util.misc import isscalar, fromlists
 from la.farray import (group_ranking, group_mean, group_median, shuffle,
                        push, quantile, ranking, lastrank, movingsum_forward,
-                       movingrank, movingsum, geometric_mean, demean,
-                       demedian, zscore)
+                       movingsum, geometric_mean, demean, demedian, zscore)
 from la.farray import (mov_nansum, mov_nanmean, mov_nanvar, mov_nanstd,
                        mov_nanmin, mov_nanmax, mov_nanranking, mov_count,
                        mov_nanmedian, mov_func)
@@ -994,7 +993,7 @@ class larry(object):
         array([ 3.,  6.])
                     
         """   
-        return self.__reduce(np.nansum, axis=axis)    
+        return self.__reduce(bn.nansum, axis=axis)    
 
     def prod(self, axis=None):
         """
@@ -1089,7 +1088,7 @@ class larry(object):
         array([ 3.,  3.])       
                     
         """
-        return self.__reduce(nanmean, axis=axis)
+        return self.__reduce(bn.nanmean, axis=axis)
         
     def geometric_mean(self, axis=None, check_for_greater_than_zero=True):
         """
@@ -1161,7 +1160,7 @@ class larry(object):
         array([ 3.,  3.])
                     
         """
-        return self.__reduce(nanmedian, axis=axis) 
+        return self.__reduce(bn.nanmedian, axis=axis) 
             
     def std(self, axis=None):
         """
@@ -1198,7 +1197,7 @@ class larry(object):
         array([ 0.,  1.])  
                          
         """      
-        return self.__reduce(nanstd, axis=axis)  
+        return self.__reduce(bn.nanstd, axis=axis)  
         
     def var(self, axis=None):
         """
@@ -1235,12 +1234,7 @@ class larry(object):
         array([ 0.,  1.])
                     
         """         
-        y = self.__reduce(nanstd, axis=axis)
-        if np.isscalar(y):
-            y *= y 
-        else:       
-            np.multiply(y.x, y.x, y.x)
-        return y                 
+        return self.__reduce(bn.nanvar, axis=axis)  
                             
     def max(self, axis=None):
         """
@@ -1277,7 +1271,7 @@ class larry(object):
         array([ 3.,  4.])
                     
         """            
-        return self.__reduce(np.nanmax, axis=axis)             
+        return self.__reduce(bn.nanmax, axis=axis)             
            
     def min(self, axis=None):
         """
@@ -1314,7 +1308,7 @@ class larry(object):
         array([ 3.,  2.])
                     
         """
-        return self.__reduce(np.nanmin, axis=axis)  
+        return self.__reduce(bn.nanmin, axis=axis)  
 
     def __reduce(self, op, default=np.nan, **kwargs):
         axis = kwargs['axis']
@@ -3078,9 +3072,9 @@ class larry(object):
         """
         return larry(zscore(self.x, axis), self.copylabel(), integrity=False)
       
-    def ranking(self, axis=0, norm='-1,1', ties=True):
+    def ranking(self, axis=0, norm='-1,1'):
         """
-        Rank elements treating NaN as missing and optionally break ties.
+        Rank elements treating NaN as missing and break ties.
 
         Parameters
         ----------
@@ -3094,10 +3088,6 @@ class larry(object):
                 'gaussian'  Rank data then scale to a Gaussian distribution
                 ==========  ================================================
             The default ranking is '-1,1'.    
-        ties: bool
-            If two elements of `x` have the same value then they will be
-            ranked by their order in the array (False). If `ties` is set to
-            True (default), then the ranks are averaged.
             
         Returns
         -------
@@ -3119,9 +3109,8 @@ class larry(object):
         all columns.
         
         """
-        y = self.copy()
-        y.x = ranking(y.x, axis, norm=norm, ties=ties)
-        return y
+        return larry(ranking(self.x, axis, norm=norm), self.copylabel(),
+                     integrity=False)
 
     def quantile(self, q, axis=0):
         """

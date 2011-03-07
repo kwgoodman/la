@@ -6,8 +6,8 @@ Release Notes
 These are the major changes made in each release. For details of the changes
 see the commit log at http://gitorious.org/labeled-array/la
 
-la 0.5 (daikon)
-===============
+la 0.5 
+======
 
 *Release date: Not yet released, in development*
 
@@ -32,7 +32,8 @@ Moving window summary statistics were the focus of this release.
 
 **Breakage from la 0.4**
 
-- Scipy is now a dependency of la
+- Bottleneck and SciPy are now dependencies of la
+- ranking() and group_rank() no longer take a `ties` input parameter
 - movingsum no longer treats Inf and -Inf as missing values
 - movingsum and movingrank have been deprecated and will be removed in la 0.6;
   use mov_sum and mov_ranking instead
