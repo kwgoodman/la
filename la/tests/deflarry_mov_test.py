@@ -4,17 +4,14 @@ import numpy as np
 from numpy.testing import assert_array_almost_equal
 nan = np.nan
 
+import bottleneck as bn
+
 from la import larry
-from la.farray import (mov_sum, mov_nansum, mov_mean, mov_nanmean,
-                       mov_var, mov_nanvar, mov_std, mov_nanstd,
-                       mov_min, mov_nanmin, mov_max, mov_nanmax,
-                       mov_nanranking, mov_count, mov_median, mov_nanmedian,
-                       mov_func, nanmean, nanmedian, nanstd, lastrank)
-from la.farray import nanvar
-from la.missing import ismissing
+from la.farray import (move_nanranking, move_median, move_nanmedian,
+                       move_func, nanmean, nanmedian, nanstd, lastrank)
 
 
-def mov_unit_maker(attr, func, methods):
+def move_unit_maker(attr, func, methods):
     "Test that different mov methods give the same results on 2d input."
     arr1 = np.array([1, 2, 3, 4, 5, 6, nan, nan, 7, 8, 9])
     arr2 = np.array([[9.0, 3.0, nan, nan, 9.0, nan],
@@ -31,54 +28,50 @@ def mov_unit_maker(attr, func, methods):
         for axis in range(arr.ndim):
             for w in range(1, arr.shape[axis]):
                 for method in methods:
-                    a = func(arr, window=w, axis=axis, method=method)
+                    if method is not None:
+                        a = func(arr, window=w, axis=axis, method=method)
+                    else:
+                        a = func(arr, window=w, axis=axis)
                     d = larry(arr)
                     d = getattr(d, attr)
-                    d = d(window=w, axis=axis, method=method)
+                    if method is not None:
+                        d = d(window=w, axis=axis, method=method)
+                    else:    
+                        d = d(window=w, axis=axis)
                     err_msg = msg % (func.__name__, method, arr.ndim, w, axis)
                     assert_array_almost_equal(a, d.x, 10, err_msg)
 
-def test_mov_sum():
-    "Test mov_sum."
-    methods = ('filter', 'strides', 'loop', 'cumsum') 
-    yield mov_unit_maker, 'mov_sum', mov_nansum, methods 
+def test_move_sum():
+    "Test move_sum."
+    methods = (None,) 
+    yield move_unit_maker, 'move_sum', bn.move_nansum, methods 
 
-def test_mov_mean():
-    "Test mov_mean."
-    methods = ('filter', 'strides', 'loop', 'cumsum') 
-    yield mov_unit_maker, 'mov_mean', mov_nanmean, methods 
+def test_move_mean():
+    "Test move_mean."
+    methods = (None,) 
+    yield move_unit_maker, 'move_mean', bn.move_nanmean, methods 
 
-def test_mov_var():
-    "Test mov_var."
-    methods = ('filter', 'strides', 'loop') 
-    yield mov_unit_maker, 'mov_var', mov_nanvar, methods 
+def test_move_std():
+    "Test move_std."
+    methods = (None,) 
+    yield move_unit_maker, 'move_std', bn.move_nanstd, methods 
 
-def test_mov_std():
-    "Test mov_std."
-    methods = ('filter', 'strides', 'loop') 
-    yield mov_unit_maker, 'mov_std', mov_nanstd, methods 
+def test_move_max():
+    "Test move_max."
+    methods = (None,) 
+    yield move_unit_maker, 'move_max', bn.move_nanmax, methods 
 
-def test_mov_max():
-    "Test mov_max."
-    methods = ('filter', 'strides', 'loop') 
-    yield mov_unit_maker, 'mov_max', mov_nanmax, methods 
+def test_move_min():
+    "Test move_min."
+    methods = (None,) 
+    yield move_unit_maker, 'move_min', bn.move_nanmin, methods 
 
-def test_mov_min():
-    "Test mov_min."
-    methods = ('filter', 'strides', 'loop') 
-    yield mov_unit_maker, 'mov_min', mov_nanmin, methods 
+def test_move_ranking():
+    "Test move_nanranking."
+    methods = ('strides', 'loop')
+    yield move_unit_maker, 'move_ranking', move_nanranking, methods 
 
-def test_mov_ranking():
-    "Test mov_nanranking."
+def test_move_median():
+    "Test move_median."
     methods = ('strides', 'loop') 
-    yield mov_unit_maker, 'mov_ranking', mov_nanranking, methods 
-
-def test_mov_count():
-    "Test mov_count."
-    methods = ('filter', 'strides', 'loop') 
-    yield mov_unit_maker, 'mov_count', mov_count, methods
-
-def test_mov_median():
-    "Test mov_median."
-    methods = ('strides', 'loop') 
-    yield mov_unit_maker, 'mov_median', mov_nanmedian, methods 
+    yield move_unit_maker, 'move_median', move_nanmedian, methods 

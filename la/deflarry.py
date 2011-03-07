@@ -11,9 +11,7 @@ from la.util.misc import isscalar, fromlists
 from la.farray import (group_ranking, group_mean, group_median, shuffle,
                        push, quantile, ranking, lastrank, movingsum_forward,
                        movingsum, geometric_mean, demean, demedian, zscore)
-from la.farray import (mov_nansum, mov_nanmean, mov_nanvar, mov_nanstd,
-                       mov_nanmin, mov_nanmax, mov_nanranking, mov_count,
-                       mov_nanmedian, mov_func)
+from la.farray import (move_nanmedian, move_nanranking, move_func)
 
 
 class larry(object):
@@ -2471,7 +2469,7 @@ class larry(object):
     
     # Moving window statistics ----------------------------------------------
 
-    def mov_sum(self, window, axis=-1, method='filter'):
+    def move_sum(self, window, axis=-1):
         """
         Moving window sum along the specified axis, ignoring NaNs.
         
@@ -2482,14 +2480,6 @@ class larry(object):
         axis : int, optional
             The axis over which to perform the moving sum. By default the
             moving sum is taken over the last axis (-1).
-        method : str, optional
-            The following moving window methods are available:
-                ==========  =====================================
-                'filter'    scipy.ndimage.convolve1d (default)
-                'cumsum'    cumsum followed by offset difference
-                'strides'   strides tricks (ndim < 4)
-                'loop'      brute force python loop
-                ==========  =====================================
 
         Returns
         -------
@@ -2498,16 +2488,10 @@ class larry(object):
             with all NaNs returns NaN for the window sum.) The output has the
             same shape as the input.
             
-        Notes
-        -----
-        Care should be taken when using the `cumsum` moving window method. On
-        some problem sizes it is fast; however, it is possible to get small
-        negative values even if the input is non-negative.
-
         Examples
         --------
         >>> lar = larry([1, 2, la.nan, 4])
-        >>> lar.mov_sum(window=2) 
+        >>> lar.move_sum(window=2) 
         label_0
             0
             1
@@ -2517,10 +2501,10 @@ class larry(object):
         array([ NaN,   3.,   2.,   4.])
 
         """
-        x = mov_nansum(self.x, window, axis=axis, method=method)
+        x = bn.move_nansum(self.x, window, axis=axis)
         return larry(x, self.copylabel(), integrity=False)
 
-    def mov_mean(self, window, axis=-1, method='filter'):
+    def move_mean(self, window, axis=-1):
         """
         Moving window mean along the specified axis, ignoring NaNs.
         
@@ -2531,14 +2515,6 @@ class larry(object):
         axis : int, optional
             The axis over which to perform the moving mean. By default the
             moving mean is taken over the last axis (-1).
-        method : str, optional
-            The following moving window methods are available:
-                ==========  =====================================
-                'filter'    scipy.ndimage.convolve1d (default)
-                'cumsum'    cumsum followed by offset difference
-                'strides'   strides tricks (ndim < 4)
-                'loop'      brute force python loop
-                ==========  =====================================
 
         Returns
         -------
@@ -2547,16 +2523,10 @@ class larry(object):
             with all NaNs returns NaN for the window mean.) The output has the
             same shape as the input.
         
-        Notes
-        -----
-        Care should be taken when using the `cumsum` moving window method. On
-        some problem sizes it is fast; however, it is possible to get small
-        negative values even if the input is non-negative.
-
         Examples
         --------
         >>> lar = larry([1, 2, la.nan, 4])
-        >>> lar.mov_mean(window=2)  
+        >>> lar.move_mean(window=2)  
         label_0
             0
             1
@@ -2566,53 +2536,10 @@ class larry(object):
         array([ NaN,  1.5,  2. ,  4. ])
             
         """
-        x = mov_nanmean(self.x, window, axis=axis, method=method)
+        x = bn.move_nanmean(self.x, window, axis=axis)
         return larry(x, self.copylabel(), integrity=False)
 
-    def mov_var(self, window, axis=-1, method='filter'):
-        """
-        Moving window variance along the specified axis, ignoring NaNs.
-        
-        Parameters
-        ----------
-        window : int
-            The number of elements in the moving window.
-        axis : int, optional
-            The axis over which to perform the moving variance. By default the
-            moving variance is taken over the last axis (-1).
-        method : str, optional
-            The following moving window methods are available:
-                ==========  =====================================
-                'filter'    scipy.ndimage.convolve1d (default)
-                'strides'   strides tricks (ndim < 4)
-                'loop'      brute force python loop
-                ==========  =====================================
-
-        Returns
-        -------
-        y : larry
-            The moving variance along the specified axis, ignoring NaNs.
-            (A window with all NaNs returns NaN for the window variance.)
-            The output has the same shape as the input.
-
-        Examples
-        --------
-        >>> lar = larry([1, 2, la.nan, 4, 5])
-        >>> lar.mov_var(window=3) 
-        label_0
-            0
-            1
-            2
-            3
-            4
-        x
-        array([  NaN,   NaN,  0.25,  1.  ,  0.25])
-            
-        """
-        x = mov_nanvar(self.x, window, axis=axis, method=method)
-        return larry(x, self.copylabel(), integrity=False)
-
-    def mov_std(self, window, axis=-1, method='filter'):
+    def move_std(self, window, axis=-1):
         """
         Moving window standard deviation along specified axis, ignoring NaNs.
         
@@ -2624,14 +2551,7 @@ class larry(object):
             The axis over which to perform the moving standard deviation.
             By default the moving standard deviation is taken over the last
             axis (-1).
-        method : str, optional
-            The following moving window methods are available:
-                ==========  =====================================
-                'filter'    scipy.ndimage.convolve1d (default)
-                'strides'   strides tricks (ndim < 4)
-                'loop'      brute force python loop
-                ==========  =====================================
-
+       
         Returns
         -------
         y : larry
@@ -2642,7 +2562,7 @@ class larry(object):
         Examples
         --------
         >>> lar = larry([1, 2, la.nan, 4, 5])
-        >>> lar.mov_std(window=3) 
+        >>> lar.move_std(window=3) 
         label_0
             0
             1
@@ -2653,10 +2573,10 @@ class larry(object):
         array([ NaN,  NaN,  0.5,  1. ,  0.5])
         
         """
-        x = mov_nanstd(self.x, window, axis=axis, method=method)
+        x = bn.move_nanstd(self.x, window, axis=axis)
         return larry(x, self.copylabel(), integrity=False)
 
-    def mov_min(self, window, axis=-1, method='filter'):
+    def move_min(self, window, axis=-1):
         """
         Moving window minimum along the specified axis, ignoring NaNs.
         
@@ -2667,13 +2587,6 @@ class larry(object):
         axis : int, optional
             The axis over which to perform the moving minimum. By default the
             moving minimum is taken over the last axis (-1).
-        method : str, optional
-            The following moving window methods are available:
-                ==========  =========================================
-                'filter'    scipy.ndimage.minimum_filter1d (default)
-                'strides'   strides tricks (ndim < 4)
-                'loop'      brute force python loop
-                ==========  =========================================
 
         Returns
         -------
@@ -2685,7 +2598,7 @@ class larry(object):
         Examples
         --------
         >>> lar = larry([1, 2, la.nan, 4])
-        >>> lar.mov_min(window=2) 
+        >>> lar.move_min(window=2) 
         label_0
             0
             1
@@ -2695,10 +2608,10 @@ class larry(object):
         array([ NaN,   1.,   2.,   4.])
 
         """
-        x = mov_nanmin(self.x, window, axis=axis, method=method)
+        x = bn.move_nanmin(self.x, window, axis=axis)
         return larry(x, self.copylabel(), integrity=False)
 
-    def mov_max(self, window, axis=-1, method='filter'):
+    def move_max(self, window, axis=-1):
         """
         Moving window maximum along the specified axis, ignoring NaNs.
         
@@ -2709,13 +2622,6 @@ class larry(object):
         axis : int, optional
             The axis over which to perform the moving maximum. By default the
             moving maximum is taken over the last axis (-1).
-        method : str, optional
-            The following moving window methods are available:
-                ==========  =========================================
-                'filter'    scipy.ndimage.maximum_filter1d (default)
-                'strides'   strides tricks (ndim < 4)
-                'loop'      brute force python loop
-                ==========  =========================================
 
         Returns
         -------
@@ -2727,7 +2633,7 @@ class larry(object):
         Examples
         --------
         >>> lar = larry([1, 2, la.nan, 4])
-        >>> lar.mov_max(window=2) 
+        >>> lar.move_max(window=2) 
         label_0
             0
             1
@@ -2737,10 +2643,10 @@ class larry(object):
         array([ NaN,   2.,   2.,   4.])
 
         """
-        x = mov_nanmax(self.x, window, axis=axis, method=method)
+        x = bn.move_nanmax(self.x, window, axis=axis)
         return larry(x, self.copylabel(), integrity=False)
 
-    def mov_ranking(self, window, axis=-1, method='strides'):
+    def move_ranking(self, window, axis=-1, method='strides'):
         """
         Moving window ranking along the specified axis, ignoring NaNs.
 
@@ -2778,7 +2684,7 @@ class larry(object):
         [-1., 0., 1.]:
 
         >>> lar = larry([1, 2, 6, 4, 5, 3])
-        >>> lar.mov_ranking(window=3) 
+        >>> lar.move_ranking(window=3) 
         label_0
             0
             1
@@ -2792,7 +2698,7 @@ class larry(object):
         Ties are broken by averaging the rankings of the tied elements:
 
         >>> lar = larry([1, 2, 1, 1, 1, 2])
-        >>> lar.mov_ranking(window=3) 
+        >>> lar.move_ranking(window=3) 
         label_0
             0
             1
@@ -2807,7 +2713,7 @@ class larry(object):
         always equal to 1:
         
         >>> lar = larry([1, 2, 3, 4, 5])
-        >>> lar.mov_ranking(window=3) 
+        >>> lar.move_ranking(window=3) 
         label_0
             0
             1
@@ -2818,51 +2724,10 @@ class larry(object):
         array([ NaN,  NaN,   1.,   1.,   1.])
 
         """
-        x = mov_nanranking(self.x, window, axis=axis, method=method)
+        x = move_nanranking(self.x, window, axis=axis, method=method)
         return larry(x, self.copylabel(), integrity=False)
 
-    def mov_count(self, window, axis=-1, method='filter'):
-        """
-        Moving window count of non-missing elements along the specified axis.
-        
-        Parameters
-        ----------
-        window : int
-            The number of elements in the moving window.
-        axis : int, optional
-            The axis over which to perform the counting. By default the moving
-            count is taken over the last axis (-1).
-        method : str, optional
-            The following moving window methods are available:
-                ==========  =====================================
-                'filter'    scipy.ndimage.convolve1d (default)
-                'strides'   strides tricks (ndim < 4)
-                'loop'      brute force python loop
-                ==========  =====================================
-
-        Returns
-        -------
-        y : larry
-            The moving count of non-missing elements along the specified
-            axis. The output has the same shape as the input.
-
-        Examples
-        --------
-        >>> lar = larry([1, 2, la.nan, 4])
-        >>> lar.mov_count(window=2) 
-        label_0
-            0
-            1
-            2
-            3
-        x
-        array([ NaN,   2.,   1.,   1.])
-
-        """
-        x = mov_count(self.x, window, axis=axis, method=method)
-        return larry(x, self.copylabel(), integrity=False)
-
-    def mov_median(self, window, axis=-1, method='loop'):
+    def move_median(self, window, axis=-1, method='loop'):
         """
         Moving window median along the specified axis, ignoring NaNs.
         
@@ -2890,7 +2755,7 @@ class larry(object):
         Examples
         --------
         >>> lar = larry([1, 2, la.nan, 4, 5])
-        >>> lar.mov_median(window=2)
+        >>> lar.move_median(window=2)
         label_0
             0
             1
@@ -2901,10 +2766,10 @@ class larry(object):
         array([ NaN,  1.5,  2. ,  4. ,  4.5])
         
         """
-        x = mov_nanmedian(self.x, window, axis=axis, method=method)
+        x = move_nanmedian(self.x, window, axis=axis, method=method)
         return larry(x, self.copylabel(), integrity=False)
 
-    def mov_func(self, func, window, axis=-1, method='loop', **kwargs):
+    def move_func(self, func, window, axis=-1, method='loop', **kwargs):
         """
         Generic moving window function along the specified axis.
         
@@ -2935,7 +2800,7 @@ class larry(object):
         Examples
         --------
         >>> lar = larry([1, 2, 3, 4])
-        >>> lar.mov_func(np.sum, window=2)
+        >>> lar.move_func(np.sum, window=2)
         label_0
             0
             1
@@ -2946,7 +2811,7 @@ class larry(object):
 
         which give the same result as:
 
-        >>> lar.mov_sum(window=2)
+        >>> lar.move_sum(window=2)
         label_0
             0
             1
@@ -2956,10 +2821,10 @@ class larry(object):
         array([ NaN,   3.,   5.,   7.])
 
         """
-        x = mov_func(func, self.x, window, axis=axis, method=method)
+        x = move_func(func, self.x, window, axis=axis, method=method)
         return larry(x, self.copylabel(), integrity=False)
 
-    @np.deprecate(new_name='mov_sum')
+    @np.deprecate(new_name='move_sum')
     def movingsum(self, window, axis=-1, norm=False):
         y = self.copy()
         y.x = movingsum(y.x, window, axis=axis, norm=norm)
@@ -2971,7 +2836,7 @@ class larry(object):
         y.x = movingsum_forward(y.x, window, skip=skip, axis=axis, norm=norm)
         return y
     
-    @np.deprecate(new_name='mov_ranking')                        
+    @np.deprecate(new_name='move_ranking')                        
     def movingrank(self, window, axis=-1):
         """Moving rank (normalized to -1 and 1) of a given window along axis.
 
@@ -2979,7 +2844,7 @@ class larry(object):
         A data point with NaN data is returned as NaN
         If a window is all NaNs except last, this is returned as NaN
         """
-        return self.mov_ranking(window, axis=axis)
+        return self.move_ranking(window, axis=axis)
         
     # Calc ------------------------------------------------------------------
 

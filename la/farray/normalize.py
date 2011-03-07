@@ -1,6 +1,11 @@
 "NaN-aware numpy array functions for normalization operations."
 
 import numpy as np
+try:
+    from scipy.special import ndtri
+    SCIPY = True
+except:
+    SCIPY = False
 import bottleneck as bn
 
 from la.missing import nans
@@ -180,10 +185,8 @@ def ranking(x, axis=0, norm='-1,1'):
         idx *= (1.0 * (x.shape[ax] - 1) / (countnotnan - 1))
         middle = (idx.shape[ax] + 1.0) / 2.0 - 1.0
     elif norm == 'gaussian':
-        try:
-            from scipy.special import ndtri
-        except ImportError:
-            raise ImportError, 'SciPy required for gaussian normalization.'   
+        if not SCIPY:
+            raise ImportError("SciPy required for `gaussian` normalization")
         idx *= (1.0 * (x.shape[ax] - 1) / (countnotnan - 1))
         idx = ndtri((idx + 1.0) / (x.shape[ax] + 1.0))
         middle = 0.0
