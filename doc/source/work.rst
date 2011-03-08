@@ -981,22 +981,20 @@ Moving statistics
 
 larry has several methods for calculating moving window statistics:
 
-* :meth:`mov_sum <la.larry.mov_sum>`
-* :meth:`mov_mean <la.larry.mov_mean>`
-* :meth:`mov_var <la.larry.mov_var>`
-* :meth:`mov_std <la.larry.mov_std>`
-* :meth:`mov_min <la.larry.mov_min>`
-* :meth:`mov_max <la.larry.mov_max>`
-* :meth:`mov_ranking <la.larry.mov_ranking>`
-* :meth:`mov_count <la.larry.mov_count>`
-* :meth:`mov_median <la.larry.mov_median>`
-* :meth:`mov_func <la.larry.mov_func>`
+* :meth:`move_sum <la.larry.move_sum>`
+* :meth:`move_mean <la.larry.move_mean>`
+* :meth:`move_std <la.larry.move_std>`
+* :meth:`move_min <la.larry.move_min>`
+* :meth:`move_max <la.larry.move_max>`
+* :meth:`move_ranking <la.larry.move_ranking>`
+* :meth:`move_median <la.larry.move_median>`
+* :meth:`move_func <la.larry.move_func>`
 
 Let's calculate the 3-element moving mean of a larry containing random samples
 from a Gaussian distribution::
 
     >>> lar = la.randn(10)
-    >>> mmean = lar.mov_mean(window=3)
+    >>> mmean = lar.move_mean(window=3)
     >>> mmean
     label_0
         0
@@ -1017,7 +1015,7 @@ larry also provides a generic moving window function that you can supply with
 your own function. (The function you supply must be a reducing function and
 take `axis` as input). To duplicate the moving mean above, let's use np.mean::
 
-    >>> mmean2 = lar.mov_func(np.mean, window=3) 
+    >>> mmean2 = lar.move_func(np.mean, window=3) 
     >>> la.testing.assert_larry_equal(mmean, mmean2)
     >>>  
 

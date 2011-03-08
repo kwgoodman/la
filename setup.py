@@ -46,7 +46,7 @@ one way to create a one-dimensional larry::
 In the statement above the list is converted to a Numpy array and the labels
 default to ``range(n)``, where *n* in this case is 3.
     
-larry has built-in methods such as **ranking, merge, shuffle, mov_sum,
+larry has built-in methods such as **ranking, merge, shuffle, move_sum,
 zscore, demean, lag** as well as typical Numpy methods like **sum, max, std,
 sign, clip**. NaNs are treated as missing data.
     

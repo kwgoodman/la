@@ -348,43 +348,35 @@ Moving window statistics along the specified axis of a larry.
 
 ------------
 
-.. automethod:: la.larry.mov_sum
+.. automethod:: la.larry.move_sum
 
 ------------
 
-.. automethod:: la.larry.mov_mean
+.. automethod:: la.larry.move_mean
 
 ------------
 
-.. automethod:: la.larry.mov_var
+.. automethod:: la.larry.move_std
 
 ------------
 
-.. automethod:: la.larry.mov_std
+.. automethod:: la.larry.move_min
 
 ------------
 
-.. automethod:: la.larry.mov_min
+.. automethod:: la.larry.move_max
 
 ------------
 
-.. automethod:: la.larry.mov_max
+.. automethod:: la.larry.move_ranking
 
 ------------
 
-.. automethod:: la.larry.mov_ranking
+.. automethod:: la.larry.move_median
 
 ------------
 
-.. automethod:: la.larry.mov_count
-
-------------
-
-.. automethod:: la.larry.mov_median
-
-------------
-
-.. automethod:: la.larry.mov_func
+.. automethod:: la.larry.move_func
 
 ------------
 

@@ -63,20 +63,29 @@ NumPy, Scipy, and numpydoc, which all have BSD licenses, are included in
 ``la``. Parts of matplotlib are also included. See the LICENSE file, which
 is distributed with the ``la`` package, for details.
 
-Installation
-============
+Install
+=======
 
-The ``la`` package requires Python, Numpy, and Scipy. Numpy 1.4.1 or newer is
-recommended for its improved NaN handling. Also some of the unit tests in the
-``la`` package require Numpy 1.4 or newer and many require
-`nose <http://somethingaboutorange.com/mrl/projects/nose>`_. To optionally
-save and load larrys in HDF5 format, you need `h5py <http://h5py.alfven.org>`_
-with HDF5 1.8.
+Requirements:
 
-You can download the `latest version of la from the Python Package Index
-<http://pypi.python.org/pypi/la>`_.
+======================== ====================================================
+la                       Python, NumPy 1.5.1, Bottleneck 0.4.2
+Unit tests               nose
+======================== ====================================================
+
+Optional:
+
+============================= ================================================
+Archive larrys in HDF5        h5py, HDF 1.8
+Compile for speed boost       gcc or MinGW
+lar.ranking(norm='gaussian')  SciPy 0.8.0
+============================= ================================================
+
+You can download the `latest version of la <http://pypi.python.org/pypi/la>`_
+and `Bottleneck <http://pypi.python.org/pypi/Bottleneck>`_ from the Python
+Package Index.
             
-**GNU/Linux, Mac OSX et al.**
+**GNU/Linux, Mac OS X et al.**
 
 To install ``la``::
 

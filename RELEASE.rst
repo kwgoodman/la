@@ -21,8 +21,8 @@ Bottleneck package (http://pypi.python.org/pypi/Bottleneck).
 
 **Moving window**
 
-- move_sum, move_mean, move_std, move_min, move_max, move_ranking,
-  move_median, move_func
+- fast (Bottleneck): move_sum, move_mean, move_std, move_min, move_max
+- slow (Python): move_ranking, move_median, move_func
 
 **New methods and functions**
 

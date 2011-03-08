@@ -137,20 +137,20 @@ def move_nanranking(arr, window, axis=-1, method='strides'):
     [-1., 0., 1.]:
 
     >>> arr = np.array([1, 2, 6, 4, 5, 3])
-    >>> la.farray.mov_nanranking(arr, window=3)
+    >>> la.farray.move_nanranking(arr, window=3)
     array([ NaN,  NaN,   1.,   0.,   0.,  -1.])
 
     Ties are broken by averaging the rankings of the tied elements:
 
     >>> arr = np.array([1, 2, 1, 1, 1, 2])
-    >>> la.farray.mov_nanranking(arr, window=3)
+    >>> la.farray.move_nanranking(arr, window=3)
     array([ NaN,  NaN, -0.5, -0.5,  0. ,  1. ])
 
     In a monotonically increasing sequence, the moving window ranking is always
     equal to 1:
     
     >>> arr = np.array([1, 2, 3, 4, 5])
-    >>> la.farray.mov_nanranking(arr, window=3)
+    >>> la.farray.move_nanranking(arr, window=3)
     array([ NaN,  NaN,   1.,   1.,   1.])
 
     """
