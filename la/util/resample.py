@@ -33,8 +33,8 @@ def cross_validation(n, kfold, shuffle=None):
     --------
     K-fold cross validation indices for 5 elements and 2 folds:
      
-    >>> from la.util.resample import cv
-    >>> for train, test in cv(5,2):
+    >>> from la.util.resample import cross_validation
+    >>> for train, test in cross_validation(5,2):
     ...     print
     ...     print 'train: ', train
     ...     print 'test:  ', test
@@ -97,8 +97,8 @@ def bootstrap(n, nboot, randint=None):
     --------
     Three bootstrap samples taken with replacement from four elements:
     
-    >>> from la.util.resample import boot 
-    >>> for train, test in boot(4, 3):
+    >>> from la.util.resample import bootstrap 
+    >>> for train, test in bootstrap(4, 3):
     ...     print
     ...     print 'train: ', train
     ...     print 'test:  ', test
