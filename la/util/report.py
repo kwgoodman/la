@@ -20,13 +20,25 @@ def info():
     try:
         from la import IO
         io = "Available"
+        try:
+            import h5py
+            version = h5py.version.version
+            io = io + " (h5py %s)" % str(version)
+        except:
+            pass
     except ImportError:
-        io = "Not available"    
+        io = "Not available"
+
+    # Others
+    import numpy as np
+    import bottleneck as bn
     
     # Make and print report
     table = []
-    table.append(['la version', la.__version__])
+    table.append(['la', la.__version__])
     table.append(['la file', la.__file__])
+    table.append(['NumPy', np.__version__])
+    table.append(['Bottleneck', bn.__version__])
     table.append(['HDF5 archiving', io])  
     table.append(['listmap', listmap])
     table.append(['listmap_fill', listmap_fill])         

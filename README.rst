@@ -34,7 +34,8 @@ zscore, demean, lag** as well as typical Numpy methods like **sum, max, std,
 sign, clip**. NaNs are treated as missing data.
     
 Alignment by label is automatic when you add (or subtract, multiply, divide)
-two larrys.
+two larrys. You can also specify the join method (inner, outer, left, right)
+for binary operations on two larrys with unaligned labels.
     
 You can archive larrys in HDF5 format using **save** and **load** or using a
 dictionary-like interface::
@@ -129,8 +130,10 @@ Python functions::
 
     >>> la.info()
     la version      0.5.0           
-    la file         /usr/local/lib/python2.6/dist-packages/la/__init__.pyc 
-    HDF5 archiving  Available       
+    la file         /usr/local/lib/python2.6/dist-packages/la/__init__.pyc
+    NumPy           1.5.1  
+    Bottleneck      0.4.2
+    HDF5 archiving  Available (h5py 1.3.0)      
     listmap         Faster C version
     listmap_fill    Faster C version    
     
@@ -145,51 +148,5 @@ URLs
  docs              http://berkeleyanalytics.com/la
  code              http://gitorious.org/labeled-array 
  mailing list      http://groups.google.com/group/labeled-array
+ issue tracker     https://github.com/kwgoodman/la/issues
 ===============   ========================================================
-
-``la`` at a glance
-==================
-
-**la package**
-
-======================================    ====================================
-package name                              ``la``
-web site                                  http://berkeleyanalytics.com/la
-license                                   Simplified BSD
-programming languages                     Python, Cython
-required dependencies                     Python, NumPy, SciPy
-optional dependencies                     h5py, nose, C-compiler
-year started (open source)                2008 (2010)
-======================================    ====================================
-
-**Data object**
-
-=======================================   =====================================
-data object (main class)                  larry
-number of dimensions supported            nd > 0d
-data container                            Numpy array
-direct access to data container           yes
-data types                                homogeneous: float, int, str, object
-label container                           list of lists
-direct access to label container          yes
-label types                               heterogeneous, hashable    
-label constraints                         unique along any one axis, hashable
-missing values                            NaN (float),  partial: '' (str),
-                                          None (object)
-default for binary operations (+,*,...)   intersection of labels
-IO                                        HDF5, partial support for CSV
-=======================================   =====================================
-
-**Similar to Numpy**
-
-======================================    ====================================
-Numpy array                               ``la`` larry
-======================================    ====================================
-``arr = np.array([[1, 2], [3, 4]])``      ``lar = la.larry([[1, 2], [3, 4]])``
-``np.nansum(arr)``                        ``lar.sum()``
-``arr.shape``, ``arr.dtype``,             ``lar.shape``, ``lar.dtype``
-``arr.ndim``, ``arr.T``                   ``lar.ndim``, ``lar.T``
-``arr.astype(float)``                     ``lar.astype(float)``
-``arr1 + arr2``                           ``lar1 + lar2``
-``arr[:,0]``                              ``lar[:,0]``
-======================================    ====================================
