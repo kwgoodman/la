@@ -34,7 +34,8 @@ class Test_group_ranking(unittest.TestCase):
                             [ 1.0,-1.0,  1.0, nan,  nan, nan],
                             [ 1.0, 1.0,  1.0, 0.0,  1.0, nan],
                             [ 0.0, 0.0,  0.0, 0.0,  nan, nan]])
-        actual = group_ranking(self.x, sectors)
+        with np.errstate(invalid='ignore'):
+            actual = group_ranking(self.x, sectors)
         assert_almost_equal(actual, desired)
         
     def test_group_ranking_2(self):
@@ -46,7 +47,8 @@ class Test_group_ranking(unittest.TestCase):
                             [ 1.0, -1.0,  1.0, nan, nan, nan],
                             [ 1.0,  1.0,  1.0, 0.0, 1.0, nan],
                             [ nan,  nan,  nan, nan, nan, nan]])
-        actual = group_ranking(self.x, sectors)
+        with np.errstate(invalid='ignore'):
+            actual = group_ranking(self.x, sectors)
         assert_almost_equal(actual, desired)
 
 
@@ -179,7 +181,8 @@ class Test_ranking(unittest.TestCase):
         desired = np.array([[-1.0,   nan,  -1.0,   nan,   nan],
                             [ 0.0,  -1.0,   nan,   nan,   nan],
                             [ 1.0,   1.0,   1.0,   0.0,   nan]])   
-        actual = ranking(x, axis=0)
+        with np.errstate(invalid='ignore'):
+            actual = ranking(x, axis=0)
         assert_almost_equal(actual, desired) 
 
     def test_ranking_2(self):
@@ -190,7 +193,8 @@ class Test_ranking(unittest.TestCase):
         desired = np.array([[-1.0,   nan,  -1.0,   nan,   nan],
                             [ 0.0,  -1.0,   nan,   nan,   nan],
                             [ 1.0,   1.0,   1.0,   0.0,   nan]])   
-        actual = ranking(x)
+        with np.errstate(invalid='ignore'):
+            actual = ranking(x)
         assert_almost_equal(actual, desired) 
 
     def test_ranking_3(self):
@@ -217,7 +221,8 @@ class Test_ranking(unittest.TestCase):
         "farray.ranking_5"  
         x = np.array([3.0, 1.0, 2.0])[:,None]
         desired = np.array([0.0, 0.0, 0.0])[:,None]
-        actual = ranking(x, axis=1)
+        with np.errstate(invalid='ignore'):
+            actual = ranking(x, axis=1)
         assert_almost_equal(actual, desired)
         
     def test_ranking_6(self):
@@ -230,7 +235,8 @@ class Test_ranking(unittest.TestCase):
                             [ 0.0,  -1.0,   nan,  nan,   nan],
                             [ 0.0,   0.0,  -1.0,  1.0,   nan],
                             [ 0.0,   1.0,   0.5, -1.0,   0.0]])     
-        actual = ranking(x)
+        with np.errstate(invalid='ignore'):
+            actual = ranking(x)
         assert_almost_equal(actual, desired)       
 
     def test_ranking_7(self):
@@ -351,7 +357,8 @@ class Test_geometric_mean(unittest.TestCase):
     def test_geometric_mean_4(self):
         "farray.geometric_mean #4"
         desired = np.array([nan, nan])
-        actual = geometric_mean(self.xnan)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            actual = geometric_mean(self.xnan)
         assert_almost_equal(actual, desired)
         
     def test_geometric_mean_5(self):
@@ -391,7 +398,8 @@ class Test_movingsum(unittest.TestCase):
     def test_movingsum_1(self):
         "farray.movingsum #1"  
         desired = self.xnan 
-        actual = movingsum(self.xnan, self.window, norm=True)
+        with np.errstate(invalid='ignore'):
+            actual = movingsum(self.xnan, self.window, norm=True)
         assert_almost_equal(actual, desired)             
 
     def test_movingsum_2(self):
@@ -503,21 +511,24 @@ class Test_movingrank(unittest.TestCase):
     def test_movingrank_1(self):
         "farray.movingrank #1"    
         desired = self.xnan 
-        actual = movingrank(self.xnan, self.window)
+        with np.errstate(invalid='ignore'):
+            actual = movingrank(self.xnan, self.window)
         assert_almost_equal(actual, desired) 
     
     def test_movingrank_2(self):
         "farray.movingrank #2"    
         desired = np.array([[  nan,  nan,  nan,-1.0,1.0],
                            [  nan,1.0,1.0,-1.0,-1.0]]) 
-        actual = movingrank(self.x, self.window)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            actual = movingrank(self.x, self.window)
         assert_almost_equal(actual, desired)          
 
     def test_movingrank_3(self):
         "farray.movingrank #3"    
         desired = np.array([[nan,  nan,  nan,  nan,  nan],
                            [1.0,  nan,  1.0,  0.0,  -1.0]])
-        actual = movingrank(self.x, self.window, axis=0)
+        with np.errstate(invalid='ignore'):
+            actual = movingrank(self.x, self.window, axis=0)
         assert_almost_equal(actual, desired) 
         
     def test_movingrank_4(self):
@@ -525,7 +536,8 @@ class Test_movingrank(unittest.TestCase):
         desired = np.array([[nan,  nan],
                            [nan,  1.0],
                            [nan, -1.0]])
-        actual = movingrank(self.x2, self.window)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            actual = movingrank(self.x2, self.window)
         assert_almost_equal(actual, desired)
         
 class Test_correlation(unittest.TestCase):
@@ -611,12 +623,14 @@ class Test_correlation(unittest.TestCase):
         "farray.correlation_7"
         x = self.a1
         y = self.a2
-        corr = correlation(x, y, axis=1)
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y, axis=1)
         desired = np.array([nan, 1, -1, -0.5]) 
         aae(corr, desired, err_msg="aggregate of 1d tests")
         x = self.b1
         y = self.b2
-        corr = correlation(x, y, axis=1)
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y, axis=1)
         desired = np.array([nan, 1, -1, -0.5]) 
         aae(corr, desired, err_msg="aggregate of 1d tests")
 
@@ -624,12 +638,14 @@ class Test_correlation(unittest.TestCase):
         "farray.correlation_8"
         x = self.a1.T
         y = self.a2.T
-        corr = correlation(x, y, axis=0)
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y, axis=0)
         desired = np.array([nan, 1, -1, -0.5]) 
         aae(corr, desired, err_msg="aggregate of 1d tests")
         x = self.b1.T
         y = self.b2.T
-        corr = correlation(x, y, axis=0)
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y, axis=0)
         desired = np.array([nan, 1, -1, -0.5]) 
         aae(corr, desired, err_msg="aggregate of 1d tests")
 
@@ -643,7 +659,8 @@ class Test_correlation(unittest.TestCase):
         y2 = np.empty((2, y.shape[0], y.shape[1]))
         y2[0] = y
         y2[1] = y        
-        corr = correlation(x, y, axis=-1)
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y, axis=-1)
         desired = np.array([nan, 1, -1, -0.5]) 
         aae(corr, desired, err_msg="aggregate of 1d tests")
         x = self.b1
@@ -654,7 +671,8 @@ class Test_correlation(unittest.TestCase):
         y2 = np.empty((2, y.shape[0], y.shape[1]))
         y2[0] = y
         y2[1] = y        
-        corr = correlation(x, y, axis=-1)
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y, axis=-1)
         desired = np.array([nan, 1, -1, -0.5]) 
         aae(corr, desired, err_msg="aggregate of 1d tests")
 

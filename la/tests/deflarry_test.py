@@ -1062,7 +1062,8 @@ class Test_binary(unittest.TestCase):
         "larry.__div___2"
         
         # larry / array                                 
-        p = self.l1 / self.x1
+        with np.errstate(invalid='ignore', divide='ignore'):
+            p = self.l1 / self.x1
         
         # label
         label = []
@@ -1074,7 +1075,8 @@ class Test_binary(unittest.TestCase):
         self.assert_(label == p.label, msg)        
         
         # x
-        t = self.l1.x / self.x1
+        with np.errstate(invalid='ignore', divide='ignore'):
+            t = self.l1.x / self.x1
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
@@ -1088,7 +1090,8 @@ class Test_binary(unittest.TestCase):
         "larry.__div___3"
         
         # array / larry                                 
-        p = self.x1 / self.l1
+        with np.errstate(invalid='ignore', divide='ignore'):
+            p = self.x1 / self.l1
         
         # label
         label = []
@@ -1100,7 +1103,8 @@ class Test_binary(unittest.TestCase):
         self.assert_(label == p.label, msg)        
         
         # x
-        t = self.x1 / self.l1.x
+        with np.errstate(invalid='ignore', divide='ignore'):
+            t = self.x1 / self.l1.x
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
@@ -1602,7 +1606,8 @@ class Test_reduce(unittest.TestCase):
         t = np.array([ nan,  1.0, -1.0])            
         label = [[0, 1, 2]] 
         t = larry(t, label)              
-        p = self.l3.lastrank()
+        with np.errstate(divide='ignore'):
+            p = self.l3.lastrank()
         t[np.isnan(t.x)] = self.nancode
         p[p.isnan()] = self.nancode          
         msg = printfail(t.x, p.x, 'x')
@@ -1616,7 +1621,8 @@ class Test_reduce(unittest.TestCase):
         t = np.array([ nan, 1.0, -1.0])           
         label = [[0, 1, 2]] 
         t = larry(t, label)              
-        p = self.l3.lastrank(decay=0)
+        with np.errstate(divide='ignore'):
+            p = self.l3.lastrank(decay=0)
         t[np.isnan(t.x)] = self.nancode
         p[p.isnan()] = self.nancode          
         msg = printfail(t.x, p.x, 'x')
@@ -1626,7 +1632,7 @@ class Test_reduce(unittest.TestCase):
         self.assert_(noreference(p, t), 'Reference found') 
         
     def test_lastrank_3(self):
-        "larry.lastrank_23"
+        "larry.lastrank_3"
         t = np.array([ nan, 1.0, -1.0])           
         label = [[0, 1, 2]] 
         t = larry(t, label)              
@@ -2566,7 +2572,8 @@ class Test_calc(unittest.TestCase):
                       [ nan, nan, nan, 0.0],
                       [-0.5,-0.5, nan, 0.0]])
         label = [[0, 1, 2], [0, 1, 2, 3]]
-        p = self.l2.demean(0)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            p = self.l2.demean(0)
         msg = printfail(t, p.x, 'x') 
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode             
@@ -2672,9 +2679,11 @@ class Test_calc(unittest.TestCase):
         "larry.zscore_1"
         t = self.x1.copy()
         t = t - t.mean(0)
-        t = t / t.std(0)                                          
+        with np.errstate(invalid='ignore', divide='ignore'):
+            t = t / t.std(0)                                          
         label = [[0, 1, 2], [0, 1, 2, 3]]
-        p = self.l1.zscore(0)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            p = self.l1.zscore(0)
         msg = printfail(t, p.x, 'x') 
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode                        
@@ -2686,9 +2695,11 @@ class Test_calc(unittest.TestCase):
         "larry.zscore_2"
         t = self.x1.copy()
         t = t - t.mean(1).reshape(-1,1)
-        t = t / t.std(1).reshape(-1,1)                                         
+        with np.errstate(invalid='ignore', divide='ignore'):
+            t = t / t.std(1).reshape(-1,1)
         label = [[0, 1, 2], [0, 1, 2, 3]]
-        p = self.l1.zscore(1)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            p = self.l1.zscore(1)
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode                        
@@ -2969,7 +2980,8 @@ class Test_calc(unittest.TestCase):
         t = np.array([[-1.0,   nan,  -1.0,   nan,   nan],
                       [ 0.0,  -1.0,   nan,   nan,   nan],
                       [ 1.0,   1.0,   1.0,   0.0,   nan]])                     
-        p = lx.ranking(axis=0)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            p = lx.ranking(axis=0)
         label = [range(3), range(5)]
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
@@ -2987,7 +2999,8 @@ class Test_calc(unittest.TestCase):
         t = np.array([[-1.0,   nan,  -1.0,   nan,   nan],
                       [ 0.0,  -1.0,   nan,   nan,   nan],
                       [ 1.0,   1.0,   1.0,   0.0,   nan]])                    
-        p = lx.ranking()
+        with np.errstate(invalid='ignore', divide='ignore'):
+            p = lx.ranking()
         label = [range(3), range(5)]
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
@@ -3035,7 +3048,8 @@ class Test_calc(unittest.TestCase):
         x = np.array([[3.0], [1.0], [2.0]])
         lx = larry(x)
         t = np.array([[0.0], [0.0], [0.0]])
-        p = lx.ranking(axis=1)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            p = lx.ranking(axis=1)
         label = [range(3), range(1)]
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
@@ -3055,7 +3069,8 @@ class Test_calc(unittest.TestCase):
                       [ 0.0,  -1.0,   nan,  nan,   nan],
                       [ 0.0,   0.0,  -1.0,  1.0,   nan],
                       [ 0.0,   1.0,   0.5, -1.0,   0.0]])                    
-        p = lx.ranking()
+        with np.errstate(invalid='ignore', divide='ignore'):
+            p = lx.ranking()
         label = [range(4), range(5)]
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
@@ -3142,7 +3157,8 @@ class Test_calc(unittest.TestCase):
         "larry.movingrank_2"    
         t = np.array([[  nan,  nan,  nan,-1.0,1.0],
                       [  nan,1.0,1.0,-1.0,-1.0]]) 
-        p = self.l5.movingrank(2)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            p = self.l5.movingrank(2)
         label = [range(2), range(5)]
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
@@ -3155,7 +3171,8 @@ class Test_calc(unittest.TestCase):
         "larry.movingrank_3"    
         t = np.array([[nan,  nan,  nan,  nan,  nan],
                       [1.0,  nan,  1.0,  0.0,  -1.0]])
-        p = self.l5.movingrank(2, axis=0)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            p = self.l5.movingrank(2, axis=0)
         label = [range(2), range(5)]
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
@@ -3169,7 +3186,8 @@ class Test_calc(unittest.TestCase):
         t = np.array([[nan,  nan],
                       [nan,  1.0],
                       [nan, -1.0]])
-        p = self.l7.movingrank(2)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            p = self.l7.movingrank(2)
         label = [range(3), range(2)]
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode

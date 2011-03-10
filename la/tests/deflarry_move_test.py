@@ -7,8 +7,7 @@ nan = np.nan
 import bottleneck as bn
 
 from la import larry
-from la.farray import (move_nanranking, move_median, move_nanmedian,
-                       move_func, nanmean, nanmedian, nanstd, lastrank)
+from la.farray import move_nanranking, move_nanmedian 
 
 
 def move_unit_maker(attr, func, methods):
@@ -29,15 +28,19 @@ def move_unit_maker(attr, func, methods):
             for w in range(1, arr.shape[axis]):
                 for method in methods:
                     if method is not None:
-                        a = func(arr, window=w, axis=axis, method=method)
+                        with np.errstate(invalid='ignore', divide='ignore'):
+                            a = func(arr, window=w, axis=axis, method=method)
                     else:
-                        a = func(arr, window=w, axis=axis)
+                        with np.errstate(invalid='ignore', divide='ignore'):
+                            a = func(arr, window=w, axis=axis)
                     d = larry(arr)
                     d = getattr(d, attr)
                     if method is not None:
-                        d = d(window=w, axis=axis, method=method)
+                        with np.errstate(invalid='ignore', divide='ignore'):
+                            d = d(window=w, axis=axis, method=method)
                     else:    
-                        d = d(window=w, axis=axis)
+                        with np.errstate(invalid='ignore', divide='ignore'):
+                            d = d(window=w, axis=axis)
                     err_msg = msg % (func.__name__, method, arr.ndim, w, axis)
                     assert_array_almost_equal(a, d.x, 10, err_msg)
 

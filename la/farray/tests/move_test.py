@@ -26,11 +26,13 @@ def move_unit_maker(func, arrfunc, methods):
                 actual = func(arr, window=w, axis=axis, method='loop')
                 for method in methods:
                     if method == 'func_loop':
-                        d = move_func(arrfunc, arr, window=w, axis=axis,
-                                     method='loop')
+                        with np.errstate(invalid='ignore'):
+                            d = move_func(arrfunc, arr, window=w, axis=axis,
+                                          method='loop')
                     elif method == 'func_strides':
-                        d = move_func(arrfunc, arr, window=w, axis=axis,
-                                     method='strides')
+                        with np.errstate(invalid='ignore'):
+                            d = move_func(arrfunc, arr, window=w, axis=axis,
+                                          method='strides')
                     else:
                         d = func(arr, window=w, axis=axis, method=method) 
                     err_msg = msg % (func.__name__, method, arr.ndim, w, axis)

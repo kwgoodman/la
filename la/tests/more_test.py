@@ -39,22 +39,26 @@ def test_return_array():
     for func in funcs_one:
         xc = x.copy()
         args = (xc,)
-        yield check_return_array, func, args
+        with np.errstate(invalid='ignore', divide='ignore'):
+            yield check_return_array, func, args
         
     for func in funcs_oneint:
         xc = x.copy()
         args = (xc, 2)
-        yield check_return_array, func, args
+        with np.errstate(invalid='ignore', divide='ignore'):
+            yield check_return_array, func, args
         
     for func in funcs_onefrac:
         xc = x.copy()
         args = (xc, -1, 0.5)
-        yield check_return_array, func, args
+        with np.errstate(invalid='ignore', divide='ignore'):
+            yield check_return_array, func, args
         
     for func in funcs_sect:
         xc = x.copy()
         args = (xc, sectors)
-        yield check_return_array, func, args
+        with np.errstate(invalid='ignore', divide='ignore'):
+            yield check_return_array, func, args
     
 def check_3d(func, args):
     res = func(*args)
@@ -78,19 +82,23 @@ def test_3d():
     for func in funcs_one:
         xc = x.copy()
         args = (xc,)
-        yield check_3d, func, args
+        with np.errstate(invalid='ignore', divide='ignore'):
+            yield check_3d, func, args
         
     for func in funcs_oneint:
         xc = x.copy()
         args = (xc, 2)
-        yield check_3d, func, args
+        with np.errstate(invalid='ignore', divide='ignore'):
+            yield check_3d, func, args
         
     for func in funcs_onefrac:
         xc = x.copy()
         args = (xc, -1, 0.5)
-        yield check_3d, func, args
+        with np.errstate(invalid='ignore', divide='ignore'):
+            yield check_3d, func, args
     
     for func in funcs_sect:
         xc = x.copy()
         args = (xc, sectors)
-        yield check_3d, func, args
+        with np.errstate(invalid='ignore', divide='ignore'):
+            yield check_3d, func, args

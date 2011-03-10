@@ -1,5 +1,6 @@
 "Test larry methods for proper handling of negative axis input"
 
+import numpy as np
 from numpy.testing import assert_
 
 from la import larry, nan
@@ -58,10 +59,12 @@ def test_negative_axis():
         method = getattr(lar(), attr)
         p = list(parameters)
         p[p.index('axis')] = -1
-        actual = method(*p)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            actual = method(*p)
         p = list(parameters)
         p[p.index('axis')] = 1        
-        desired = method(*p)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            desired = method(*p)
         msg = "method '" + attr + "' failed axis=-1 larry test"
         if type(actual) == larry:
             yield ale, actual, desired, msg     

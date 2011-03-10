@@ -97,7 +97,8 @@ def test_methods_reduce():
         for opname in meth_reduce1:
             if np.isnan(la.x).any(): 
                 npmaop = getattr(np.ma,opname)
-                npop = lambda *args: np.ma.filled(npmaop(np.ma.fix_invalid(args[0]),args[1]),np.nan)
+                npop = lambda *args: np.ma.filled(npmaop(np.ma.fix_invalid(
+                       args[0]),args[1]),np.nan)
             else:
                 npop = getattr(np,opname)
                 
@@ -106,7 +107,8 @@ def test_methods_reduce():
                 p = getattr(la, opname)(axis)
                 tlab = deepcopy(la.label)
                 tlab.pop(axis)                
-                yield assert_larry, opname, p, t, tlab, laname+' axis='+str(axis)
+                yield assert_larry, opname, p, t, tlab, \
+                      laname+' axis='+str(axis)
 
 def test_methods_nonan():
     "larry nonan nose test"
@@ -119,7 +121,8 @@ def test_methods_nonan():
                 t = npop(la.x, axis) 
                 p = getattr(la, opname)(axis)
                 tlab = deepcopy(la.label)
-                yield assert_larry, opname, p, t, tlab, laname+' axis='+str(axis)
+                yield assert_larry, opname, p, t, tlab, \
+                      laname+' axis='+str(axis)
 
 class est_calc(object):
     "Test calc functions of larry class"
@@ -171,46 +174,48 @@ class est_calc(object):
         "larry.ranking"  #not in deflarry_test
         t = self.tranking
         label = self.label
-        p = self.lar.ranking(1)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            p = self.lar.ranking(1)
         self.check_function(t, label, p, self.lar)
 
     def test_ranking_3(self):
-        "larry.ranking 3d" 
+        "larry.ranking_3d" 
         t = self.tranking
         label = self.label3
-        p = self.lar3.ranking(2)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            p = self.lar3.ranking(2)
         self.check_function(t, label, p, self.lar3)
 
     def test_lag(self):
-        "larry.ranking 3d" 
+        "larry.lag" 
         t = self.tlag
         label = self.labellag
         p = self.lar.lag(1)
         self.check_function(t, label, p, self.lar)
                 
     def test_lag_3(self):
-        "larry.ranking 3d" 
+        "larry.lag_3d" 
         t = self.tlag
         label = self.label3lag
         p = self.lar3.lag(1)
         self.check_function(t, label, p, self.lar3)
 
     def test_pull(self):
-        "larry.ranking 3d" 
+        "larry.pull" 
         t = self.tpull
         label = self.labelpull
         p = self.lar.pull(1,1)
         self.check_function(t, label, p, self.lar, view='skip')
                 
     def test_pull_3(self):
-        "larry.ranking 3d" 
+        "larry.pull_3d" 
         t = self.tpull
         label = self.label3pull
         p = self.lar3.pull(1,2)
         self.check_function(t, label, p, self.lar3, view='skip')
 
     def test_squeeze(self):
-        "larry.squeeze 3d" 
+        "larry.squeeze" 
         t = self.lar.x
         label = self.lar.label
         x = self.lar.x[None,:]
@@ -219,7 +224,7 @@ class est_calc(object):
         self.check_function(t, label, p, lar, view='skip') #should be nocopy
    
     def test_squeeze_3(self):
-        "larry.squeeze 3d" 
+        "larry.squeeze_3d" 
         t = self.lar3.x
         label = self.lar3.label
         x = self.lar3.x[None,:]
@@ -228,7 +233,7 @@ class est_calc(object):
         self.check_function(t, label, p, lar, view='skip') #should be nocopy
 
     def test_morph_3(self):
-        "larry.morph 3d" 
+        "larry.morph_3d" 
         t = self.tmorph
         label = self.label
         label[1] = [0,3,2]
@@ -236,7 +241,7 @@ class est_calc(object):
         self.check_function(t, label, p, self.lar, view='copy')
 
     def test_morph_3b(self):
-        "larry.morph 3d" 
+        "larry.morph_3d" 
         t = self.tmorph
         label = self.label3
         label[2] = [0,3,2]
@@ -314,46 +319,47 @@ class est_groups_moving(object):
         "larry.grouprank"  #not in deflarry_test
         t = self.trank1
         label = self.label
-        p = self.lar.group_ranking(self.sectors)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            p = self.lar.group_ranking(self.sectors)
         self.check_function(t, label, p, self.lar)
         
     def test_groupmean(self):
-        "larry.grouprank"  #not in deflarry_test
+        "larry.groumean"  #not in deflarry_test
         t = self.tmean1
         label = self.label
         p = self.lar.group_mean(self.sectors)
         self.check_function(t, label, p, self.lar)
 
     def test_groupmedian(self):
-        "larry.grouprank"  #not in deflarry_test
+        "larry.groumedian"  #not in deflarry_test
         t = self.tmedian1
         label = self.label
         p = self.lar.group_median(self.sectors)
         self.check_function(t, label, p, self.lar)
 
     def test_groupmean3(self):
-        "larry.groupmean 3d"  #not in deflarry_test
+        "larry.groupmean_3d"  #not in deflarry_test
         t = self.tmean3
         label = self.label3
         p = self.lar3.group_mean(self.sectors)
         self.check_function(t, label, p, self.lar3)
 
     def test_groupmedian3(self):
-        "larry.groupmedian 3d"  #not in deflarry_test
+        "larry.groupmedian_3d"  #not in deflarry_test
         t = self.tmedian3
         label = self.label3
         p = self.lar3.group_median(self.sectors)
         self.check_function(t, label, p, self.lar3)
         
     def test_move_sum31(self):
-        "larry.move_sum 3d 1"
+        "larry.move_sum_3d_1"
         t = self.tmove_sum3
         label = self.label3
         p = self.lar3.move_sum(2, axis=1)
         self.check_function(t, label, p, self.lar3) 
         
     def test_move_sum32(self):
-        "larry.groupmedian 3d 2"
+        "larry.move_sum_3d_2"
         #requires numpy 1.4 for nan equality testing 
         lar3r = self.lar3.move_sum(2, axis=0)
         lar2r = self.lar.move_sum(2, axis=0)
@@ -362,7 +368,7 @@ class est_groups_moving(object):
         assert_equal(lar3r.x[:,:,1], lar2r.x)
         
     def test_move_sum33(self):
-        "larry.groupmedian 3d 3"
+        "larry.move_sum_3d_3"
         #requires numpy 1.4 for nan equality testing 
         lar3r = self.lar3.move_sum(2, axis=2)
         assert_equal(self.label3, lar3r.label)

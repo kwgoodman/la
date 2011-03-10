@@ -48,7 +48,7 @@ def test_3d():
         xc = x.copy()
         x2dc = x2d.copy()
         lar2dc = lar2d.copy()
-        
+
         if not axisargs:
             kwds2d = dict(axis=1)
             kwds3d = dict(axis=2)
@@ -67,9 +67,11 @@ def test_3d():
             kwds3d = {}           
 
         args2d = (x2dc,) + funcargs 
-        res2d = func(*args2d, **kwds2d)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            res2d = func(*args2d, **kwds2d)
         args3d = (xc,) + funcargs 
-        res3d = func(*args3d, **kwds3d)
+        with np.errstate(invalid='ignore', divide='ignore'):
+            res3d = func(*args3d, **kwds3d)
         
         msg = funcname + str(funcargs)
         yield assert_almost_equal, res3d[resind], res2d, 14, msg
@@ -83,5 +85,7 @@ def test_3d():
         meth2d = getattr(lar2dc, funcname)
         meth3d = getattr(lar3dc, funcname)
         msg = "method '" + funcname + "' " + repr((kwds3d, resind))
-        yield assert_larry_equal, meth2d(*funcargs, **kwds2d), \
-                           meth3d(*funcargs, **kwds3d)[resind], msg
+        with np.errstate(invalid='ignore', divide='ignore'):
+            m2 = meth2d(*funcargs, **kwds2d)
+            m3 = meth3d(*funcargs, **kwds3d)[resind] 
+        yield assert_larry_equal, m2, m3, msg
