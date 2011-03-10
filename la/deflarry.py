@@ -1160,15 +1160,36 @@ class larry(object):
         """
         return self.__reduce(bn.nanmedian, axis=axis) 
             
-    def std(self, axis=None):
+    def std(self, axis=None, ddof=0):
         """
         Standard deviation of values along axis, ignoring NaNs.
 
+        `float64` intermediate and return values are used for integer inputs.
+
+        Instead of a faster one-pass algorithm, a more stable two-pass
+        algorithm is used.
+
+        An example of a one-pass algorithm:
+
+            >>> np.sqrt((arr*arr).mean() - arr.mean()**2)
+        
+        An example of a two-pass algorithm:    
+        
+            >>> np.sqrt(((arr - arr.mean())**2).mean())
+
+        Note in the two-pass algorithm the mean must be found (first pass)
+        before the squared deviation (second pass) can be found.
+
         Parameters
         ----------
-        axis : {None, integer}, optional
-            Axis to find the standard deviation along (integer) or the global
-            standard deviation (None, default).
+        axis : {int, None}, optional
+            Axis along which the standard deviation is computed. The default
+            (axis=None) is to compute the standard deviation of the flattened
+            array.
+        ddof : int, optional
+            Means Delta Degrees of Freedom. The divisor used in calculations
+            is ``N - ddof``, where ``N`` represents the number of elements.
+            By default `ddof` is zero.
 
         Returns
         -------
@@ -1195,17 +1216,37 @@ class larry(object):
         array([ 0.,  1.])  
                          
         """      
-        return self.__reduce(bn.nanstd, axis=axis)  
+        return self.__reduce(bn.nanstd, axis=axis, ddof=ddof)  
         
-    def var(self, axis=None):
+    def var(self, axis=None, ddof=0):
         """
         Variance of values along axis, ignoring NaNs.
+        
+        `float64` intermediate and return values are used for integer inputs.
+
+        Instead of a faster one-pass algorithm, a more stable two-pass
+        algorithm is used.
+
+        An example of a one-pass algorithm:
+
+            >>> np.sqrt((arr*arr).mean() - arr.mean()**2)
+        
+        An example of a two-pass algorithm:    
+        
+            >>> np.sqrt(((arr - arr.mean())**2).mean())
+
+        Note in the two-pass algorithm the mean must be found (first pass)
+        before the squared deviation (second pass) can be found.
 
         Parameters
         ----------
-        axis : {None, integer}, optional
-            Axis to find the variance along (integer) or the global variance
-            (None, default).
+        axis : {int, None}, optional
+            Axis along which the variance is computed. The default (axis=None)
+            is to compute the variance of the flattened array.
+        ddof : int, optional
+            Means Delta Degrees of Freedom. The divisor used in calculations
+            is ``N - ddof``, where ``N`` represents the number of elements.
+            By default `ddof` is zero.
 
         Returns
         -------
@@ -1232,7 +1273,7 @@ class larry(object):
         array([ 0.,  1.])
                     
         """         
-        return self.__reduce(bn.nanvar, axis=axis)  
+        return self.__reduce(bn.nanvar, axis=axis, ddof=ddof)  
                             
     def max(self, axis=None):
         """

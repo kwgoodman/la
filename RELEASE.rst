@@ -32,6 +32,10 @@ Bottleneck package (http://pypi.python.org/pypi/Bottleneck).
 - la.unique(): Find the unique elements of a larry
 - larry.tofile(): Save 1d or 2d larry to text file
 
+**Enhancements**
+
+- Add optional `ddof` input parameter to larry.std() and larry.var() 
+
 **Breakage from la 0.4**
 
 - Bottleneck is now a dependency of la
@@ -42,11 +46,14 @@ Bottleneck package (http://pypi.python.org/pypi/Bottleneck).
 
 **Bugs fixes**
 
+- Please report bugs at https://github.com/kwgoodman/la/issues
 - #1 Due to a typo, la.info() crashed if h5py could not be imported
 - #2 larry.sortaxis(None) chopped off singleton dimensions
 - #5 la.farray.lastrank() choked on empty array input
 - #7 larry.quantile() choked on axis=None
-- #8 demean, demedian, zscore choked on 1d input when axis=-1 
+- #8 demean, demedian, zscore choked on 1d input when axis=-1
+- #9 cross_validation docstring refers to old name of function (cv) 
+- #10 Unit tests: "Warning: invalid value encountered in..." 
   
 
 Older versions
