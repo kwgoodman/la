@@ -29,7 +29,7 @@ one way to create a one-dimensional larry::
 In the statement above the list is converted to a Numpy array and the labels
 default to ``range(n)``, where *n* in this case is 3.
     
-larry has built-in methods such as **ranking, merge, shuffle, mov_sum,
+larry has built-in methods such as **ranking, merge, shuffle, move_sum,
 zscore, demean, lag** as well as typical Numpy methods like **sum, max, std,
 sign, clip**. NaNs are treated as missing data.
     
@@ -63,20 +63,29 @@ NumPy, Scipy, and numpydoc, which all have BSD licenses, are included in
 ``la``. Parts of matplotlib are also included. See the LICENSE file, which
 is distributed with the ``la`` package, for details.
 
-Installation
-============
+Install
+=======
 
-The ``la`` package requires Python, Numpy, and Scipy. Numpy 1.4.1 or newer is
-recommended for its improved NaN handling. Also some of the unit tests in the
-``la`` package require Numpy 1.4 or newer and many require
-`nose <http://somethingaboutorange.com/mrl/projects/nose>`_. To optionally
-save and load larrys in HDF5 format, you need `h5py <http://h5py.alfven.org>`_
-with HDF5 1.8.
+Requirements:
 
-You can download the `latest version of la from the Python Package Index
-<http://pypi.python.org/pypi/la>`_.
+======================== ====================================================
+la                       Python, NumPy 1.5.1, Bottleneck 0.4.2
+Unit tests               nose
+======================== ====================================================
+
+Optional:
+
+============================= ================================================
+Archive larrys in HDF5        h5py, HDF 1.8
+Compile for speed boost       gcc or MinGW
+lar.ranking(norm='gaussian')  SciPy 0.8.0
+============================= ================================================
+
+You can download the `latest version of la <http://pypi.python.org/pypi/la>`_
+and `Bottleneck <http://pypi.python.org/pypi/Bottleneck>`_ from the Python
+Package Index.
             
-**GNU/Linux, Mac OSX et al.**
+**GNU/Linux, Mac OS X et al.**
 
 To install ``la``::
 
@@ -108,9 +117,9 @@ After you have installed ``la``, run the suite of unit tests::
     >>> import la
     >>> la.test()
     <snip>
-    Ran 3030 tests in 2.406s
+    Ran 2998 tests in 2.406s
     OK
-    <nose.result.TextTestResult run=3030 errors=0 failures=0> 
+    <nose.result.TextTestResult run=2998 errors=0 failures=0> 
     
 The ``la`` package contains C extensions that speed up common alignment
 operations such as adding two unaligned larrys. If the C extensions don't

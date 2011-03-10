@@ -84,7 +84,7 @@ mts = [('A'          ,  'property' ,    arr()),
        ('morph'      ,  [[], 0]    ,    lar()),              
        ('morph_like' ,  [lar()]    ,    lar()), 
       #('movingrank' ,  None       ,    lar()),       # 2d only
-      #('mov_sum'    , [0] ,    ValueError),          # 2d only
+      #('move_sum'   , [0] ,    ValueError),          # 2d only
       #('movingsum_forward',[0],ValueError),          # 2d only
        ('nan_replace',  [0]        ,    lar()),
        ('ndim'       ,  'property' ,    'use_numpy'),               

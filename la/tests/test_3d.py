@@ -15,7 +15,6 @@ def getfuncs(argint, argfrac, argsector):
              ('nanmean'               , (), ()),
              ('nanstd'                , (), ()),
              ('movingrank'            , (argint,), ()),
-             ('mov_sum'               , (argint,), ()),
              ('movingsum_forward'     , (argint,), ()),
              ('quantile'              , (argint,), ()),
              ('push'                  , (argint,), ()),
@@ -86,16 +85,3 @@ def test_3d():
         msg = "method '" + funcname + "' " + repr((kwds3d, resind))
         yield assert_larry_equal, meth2d(*funcargs, **kwds2d), \
                            meth3d(*funcargs, **kwds3d)[resind], msg
-        
-
-
-
-
-
-
-
-
-
-
-
-

@@ -266,7 +266,7 @@ class Test_calc_la2(est_calc):
         self.labelmedian = self.label
         self.label3median = self.label3
         
-        self.tmov_sum = np.array([[ nan, 4.0, 4.0, 2.0],
+        self.tmove_sum = np.array([[ nan, 4.0, 4.0, 2.0],
                                     [ nan, nan, nan, 2.0],
                                     [ nan, 2.0, 2.0, 2.0]]) 
         
@@ -345,26 +345,26 @@ class est_groups_moving(object):
         p = self.lar3.group_median(self.sectors)
         self.check_function(t, label, p, self.lar3)
         
-    def test_mov_sum31(self):
-        "larry.mov_sum 3d 1"
-        t = self.tmov_sum3
+    def test_move_sum31(self):
+        "larry.move_sum 3d 1"
+        t = self.tmove_sum3
         label = self.label3
-        p = self.lar3.mov_sum(2, axis=1)
+        p = self.lar3.move_sum(2, axis=1)
         self.check_function(t, label, p, self.lar3) 
         
-    def test_mov_sum32(self):
+    def test_move_sum32(self):
         "larry.groupmedian 3d 2"
         #requires numpy 1.4 for nan equality testing 
-        lar3r = self.lar3.mov_sum(2, axis=0)
-        lar2r = self.lar.mov_sum(2, axis=0)
+        lar3r = self.lar3.move_sum(2, axis=0)
+        lar2r = self.lar.move_sum(2, axis=0)
         assert_equal(self.label3, lar3r.label)
         assert_equal(lar3r.x[:,:,0], lar2r.x)
         assert_equal(lar3r.x[:,:,1], lar2r.x)
         
-    def test_mov_sum33(self):
+    def test_move_sum33(self):
         "larry.groupmedian 3d 3"
         #requires numpy 1.4 for nan equality testing 
-        lar3r = self.lar3.mov_sum(2, axis=2)
+        lar3r = self.lar3.move_sum(2, axis=2)
         assert_equal(self.label3, lar3r.label)
         assert_(not np.isfinite(lar3r.x[:,:,0]).any())
         assert_equal(lar3r.x[:,:,1], 2*self.lar3.x[:,:,1])
@@ -395,36 +395,36 @@ class Test_group_moving(est_groups_moving):
         self.label = [[0, 1, 2, 3, 4, 5], [0, 1, 2, 3, 4, 5]]
         
         self.trank1 = np.array([[-1.0, 0.0,  nan, nan, -1.0, nan],
-                               [-1.0, 1.0, -1.0, nan,  nan, nan],
-                               [ 0.0,-1.0, -1.0, nan,  0.0, nan],
-                               [ 1.0,-1.0,  1.0, nan,  nan, nan],
-                               [ 1.0, 1.0,  1.0, 0.0,  1.0, nan],
-                               [ 0.0, 0.0,  0.0, 0.0,  nan, nan]])
+                                [-1.0, 1.0, -1.0, nan,  nan, nan],
+                                [ 0.0,-1.0, -1.0, nan,  0.0, nan],
+                                [ 1.0,-1.0,  1.0, nan,  nan, nan],
+                                [ 1.0, 1.0,  1.0, 0.0,  1.0, nan],
+                                [ 0.0, 0.0,  0.0, 0.0,  nan, nan]])
         
         self.tmean1 = np.array([[ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
-                               [ 2.0, 0.5,  1.5, nan,  nan, nan],
-                               [ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
-                               [ 2.0, 0.5,  1.5, nan,  nan, nan],
-                               [ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
-                               [ 5.0, 5.0,  4.0, 4.0,  nan, nan]])
+                                [ 2.0, 0.5,  1.5, nan,  nan, nan],
+                                [ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
+                                [ 2.0, 0.5,  1.5, nan,  nan, nan],
+                                [ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
+                                [ 5.0, 5.0,  4.0, 4.0,  nan, nan]])
         
         self.tmean3 = np.dstack([self.tmean1, self.tmean1])
         
         self.tmedian1 = np.array([[ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
-                               [ 2.0, 0.5,  1.5, nan,  nan, nan],
-                               [ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
-                               [ 2.0, 0.5,  1.5, nan,  nan, nan],
-                               [ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
-                               [ 5.0, 5.0,  4.0, 4.0,  nan, nan]])
+                                  [ 2.0, 0.5,  1.5, nan,  nan, nan],
+                                  [ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
+                                  [ 2.0, 0.5,  1.5, nan,  nan, nan],
+                                  [ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
+                                  [ 5.0, 5.0,  4.0, 4.0,  nan, nan]])
         
         self.tmedian3 = np.dstack([self.tmedian1, self.tmedian1])
-        self.tmov_sum1 = np.array([[ nan,   3.,   3.,  nan,   0.,   0.],
-                               [ nan,   2.,   2.,   1.,  nan,  nan],
-                               [ nan,   4.,   2.,   0.,   1.,   1.],
-                               [ nan,   3.,   2.,   2.,  nan,  nan],
-                               [ nan,   8.,   7.,   3.,   2.,   2.],
-                               [ nan,  10.,   9.,   8.,   4.,  nan]])
-        self.tmov_sum3 = np.dstack([self.tmov_sum1, self.tmov_sum1])
+        self.tmove_sum1 = np.array([[ nan,   3.,   3.,  nan,   0.,   0.],
+                                    [ nan,   2.,   2.,   1.,  nan,  nan],
+                                    [ nan,   4.,   2.,   0.,   1.,   1.],
+                                    [ nan,   3.,   2.,   2.,  nan,  nan],
+                                    [ nan,   8.,   7.,   3.,   2.,   2.],
+                                    [ nan,  10.,   9.,   8.,   4.,  nan]])
+        self.tmove_sum3 = np.dstack([self.tmove_sum1, self.tmove_sum1])
 
 # --------------------------------------------------------------------------
 

@@ -6,7 +6,7 @@ from la.farray import ranking, nanmedian
 __all__ = ['group_ranking', 'group_mean', 'group_median', 'unique_group']
 
 
-def group_ranking(x, groups, norm='-1,1', ties=True, axis=0):
+def group_ranking(x, groups, norm='-1,1', axis=0):
     """
     Ranking within groups along axis.
     
@@ -21,10 +21,6 @@ def group_ranking(x, groups, norm='-1,1', ties=True, axis=0):
         '0,N-1'     Zero to N-1 ranking
         '-1,1'      Scale zero to N-1 ranking to be between -1 and 1
         'gaussian'  Rank data then scale to a Gaussian distribution
-    ties : bool
-        If two elements of `x` have the same value then they will be ranked
-        by their order in the array (False). If `ties` is set to True
-        (default), then the ranks are averaged.
     axis : int, {default: 0}
         axis along which the ranking is calculated
         
@@ -56,7 +52,7 @@ def group_ranking(x, groups, norm='-1,1', ties=True, axis=0):
         idx = groups == group
         idxall = [slice(None)] * x.ndim
         idxall[axis] = idx
-        xnorm[idxall] = ranking(x[idxall], axis=axis, norm=norm, ties=ties) 
+        xnorm[idxall] = ranking(x[idxall], axis=axis, norm=norm) 
            
     return xnorm
 

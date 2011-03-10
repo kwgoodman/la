@@ -6,21 +6,23 @@ Release Notes
 These are the major changes made in each release. For details of the changes
 see the commit log at http://gitorious.org/labeled-array/la
 
-la 0.5 (daikon)
-===============
+la 0.5 
+======
 
 *Release date: Not yet released, in development*
 
-Moving window summary statistics were the focus of this release.
+The fifth release of la is faster and adds fast, moving window methods to
+larry. The cost of the speed and new functionality is that la now requires the
+Bottleneck package (http://pypi.python.org/pypi/Bottleneck).
 
-**Moving window statistics**
+**Faster**
 
-- larry methods: mov_sum, mov_mean, mov_var, mov_std, mov_min, mov_max,
-  mov_ranking, mov_count, mov_median, mov_func
-- Numpy array functions: mov_sum, mov_nansum, mov_mean, mov_nanmean, etc.  
-- Most functions offer 3 moving window algorithms: filter, strides, loop
-- Signature with defaults: larry.mov_sum(window, axis=-1, method='filter')  
-- array function: la.farray.mov_sum(arr, window, axis=-1, method='filter')  
+- sum, mean, std, var, min, max, median, ranking 
+
+**Moving window**
+
+- fast (Bottleneck): move_sum, move_mean, move_std, move_min, move_max
+- slow (Python): move_ranking, move_median, move_func
 
 **New methods and functions**
 
@@ -32,10 +34,11 @@ Moving window summary statistics were the focus of this release.
 
 **Breakage from la 0.4**
 
-- Scipy is now a dependency of la
+- Bottleneck is now a dependency of la
+- ranking() and group_rank() no longer take a `ties` input parameter
 - movingsum no longer treats Inf and -Inf as missing values
 - movingsum and movingrank have been deprecated and will be removed in la 0.6;
-  use mov_sum and mov_ranking instead
+  use move_sum and move_ranking instead
 
 **Bugs fixes**
 
@@ -51,8 +54,8 @@ Older versions
 
 Release notes from past releases.
 
-la 0.4 (celery)
----------------
+la 0.4
+------
 
 *Release date: 2010-07-06*
 
@@ -104,8 +107,8 @@ la.align(), which aligns two larrys, were also added.
 - #590270 Index with 1d array bug: lar[1darray,:] worked; lar[1darray] crashed
 
 
-la 0.3 (banana)
----------------
+la 0.3
+------
 
 *Release date: 2010-06-04*
 
@@ -148,8 +151,8 @@ la 0.3 (banana)
 - #585694 cumsum and cumprod crashed on dtype=int
 
 
-la 0.2 (avocado)
-----------------
+la 0.2
+------
 
 *Release date: 2010-04-27*
 
@@ -186,8 +189,8 @@ la 0.2 (avocado)
 - #569622: Negative axis input gave wrong output for several larry methods
 
 
-la 0.1 (first release)
-----------------------
+la 0.1
+------
 
 *Release date: 2010-02-03*
 
