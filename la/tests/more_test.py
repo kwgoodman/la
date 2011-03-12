@@ -7,10 +7,10 @@ nan = np.nan
 from la.farray import (push, geometric_mean, lastrank,
                        movingrank, movingsum_forward,
                        quantile, ranking, group_mean, group_median,
-                       group_ranking, nanmedian, nanstd)
+                       group_ranking)
 
 # Functions to test
-funcs_one = [geometric_mean, lastrank, nanstd, ranking, nanmedian]
+funcs_one = [geometric_mean, lastrank, ranking]
 funcs_oneint = [movingrank, movingsum_forward, quantile, push]
 funcs_onefrac = [lastrank]
 funcs_sect = [group_mean, group_median, group_ranking]

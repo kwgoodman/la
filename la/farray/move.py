@@ -1,9 +1,10 @@
 "Moving (rolling) statistics on numpy arrays."
 
 import numpy as np
+import bottleneck as bn
 
 from la.missing import nans, ismissing
-from la.farray import nanmean, nanstd, nanvar, lastrank, nanmedian
+from la.farray import lastrank
 
 __all__ = ['move_median', 'move_nanmedian', 'move_func', 'move_nanranking',
            'movingsum', 'movingsum_forward', 'movingrank'] #Last row deprecated
@@ -88,9 +89,9 @@ def move_nanmedian(arr, window, axis=-1, method='loop'):
 
     """
     if method == 'strides':
-        y = move_func_strides(nanmedian, arr, window, axis=axis)
+        y = move_func_strides(bn.nanmedian, arr, window, axis=axis)
     elif method == 'loop':
-        y = move_func_loop(nanmedian, arr, window, axis=axis)
+        y = move_func_loop(bn.nanmedian, arr, window, axis=axis)
     else:
         msg = "`method` must be 'strides' or 'loop'."
         raise ValueError, msg

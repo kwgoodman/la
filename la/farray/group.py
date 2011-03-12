@@ -1,7 +1,8 @@
 "NaN-aware numpy array functions for group by operations."
 
 import numpy as np
-from la.farray import ranking, nanmedian
+import bottleneck as bn
+from la.farray import ranking
 
 __all__ = ['group_ranking', 'group_mean', 'group_median', 'unique_group']
 
@@ -129,7 +130,7 @@ def group_median(x, groups, axis=0):
         idxall = [slice(None)] * x.ndim
         idxall[axis] = idx
         if idx.sum() > 0:
-            ns = nanmedian(x[idxall], axis=axis)
+            ns = bn.nanmedian(x[idxall], axis=axis)
             xmedian[idxall] = np.expand_dims(ns, axis)
             
     return xmedian

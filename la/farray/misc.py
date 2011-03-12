@@ -1,11 +1,10 @@
 "NaN-aware numpy array functions for miscellaneous operations."
 
 import numpy as np
+import bottleneck as bn
 
-from la.external.scipy import nanmedian, rankdata, nanstd, nanvar, nanmean
+__all__ = ['geometric_mean', 'correlation', 'covMissing', 'shuffle']
 
-__all__ = ['geometric_mean', 'correlation', 'covMissing', 'shuffle', 'nanmean',
-           'nanmedian', 'nanstd', 'nanvar']
 
 def geometric_mean(x, axis=-1, check_for_greater_than_zero=True):
     """
@@ -101,13 +100,13 @@ def correlation(arr1, arr2, axis=None):
             x1[mask] = np.nan
             x2[mask] = np.nan 
             if axis == 0:
-                x1 = x1 - nanmean(x1, axis)
-                x2 = x2 - nanmean(x2, axis)              
+                x1 = x1 - bn.nanmean(x1, axis)
+                x2 = x2 - bn.nanmean(x2, axis)              
             else:
                 idx = [slice(None)] * x1.ndim
                 idx[axis] = None
-                x1 = x1 - nanmean(x1, axis)[idx]
-                x2 = x2 - nanmean(x2, axis)[idx]           
+                x1 = x1 - bn.nanmean(x1, axis)[idx]
+                x2 = x2 - bn.nanmean(x2, axis)[idx]           
             num = np.nansum(x1 * x2, axis)
             den = np.sqrt(np.nansum(x1 * x1, axis) * np.nansum(x2 * x2, axis))
     else:

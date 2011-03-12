@@ -9,7 +9,6 @@ except:
 import bottleneck as bn
 
 from la.missing import nans
-from la.external.scipy import nanmedian, nanstd, nanmean
 
 __all__ = ['lastrank', 'ranking', 'push', 'quantile', 'demean',
            'demedian', 'zscore']
@@ -314,7 +313,7 @@ def demean(arr, axis=None):
     array([ -1.,  NaN,   0.,   1.])
  
     """
-    marr = nanmean(arr, axis) 
+    marr = bn.nanmean(arr, axis) 
     if (axis != 0) and (not axis is None) and (not np.isscalar(marr)):
         ind = [slice(None)] * arr.ndim
         ind[axis] = np.newaxis
@@ -345,7 +344,7 @@ def demedian(arr, axis=None):
     array([ -1.,  NaN,   0.,   8.])        
     
     """
-    marr = nanmedian(arr, axis) 
+    marr = bn.nanmedian(arr, axis) 
     if (axis != 0) and (not axis is None) and (not np.isscalar(marr)):
         ind = [slice(None)] * arr.ndim
         ind[axis] = np.newaxis
@@ -377,7 +376,7 @@ def zscore(arr, axis=None):
         
     """
     arr = demean(arr, axis)
-    norm = nanstd(arr, axis) 
+    norm = bn.nanstd(arr, axis) 
     if (axis != 0) and (not axis is None) and (not np.isscalar(norm)):
         ind = [slice(None)] * arr.ndim
         ind[axis] = np.newaxis

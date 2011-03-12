@@ -70,7 +70,7 @@ Install
 Requirements:
 
 ======================== ====================================================
-la                       Python, NumPy 1.5.1, Bottleneck 0.4.2
+la                       Python, NumPy 1.5.1, Bottleneck 0.4.3
 Unit tests               nose
 ======================== ====================================================
 
@@ -118,9 +118,9 @@ After you have installed ``la``, run the suite of unit tests::
     >>> import la
     >>> la.test()
     <snip>
-    Ran 2998 tests in 2.406s
+    Ran 2975 tests in 2.017s
     OK
-    <nose.result.TextTestResult run=2998 errors=0 failures=0> 
+    <nose.result.TextTestResult run=2975 errors=0 failures=0> 
     
 The ``la`` package contains C extensions that speed up common alignment
 operations such as adding two unaligned larrys. If the C extensions don't

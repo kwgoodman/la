@@ -324,28 +324,28 @@ class est_groups_moving(object):
         self.check_function(t, label, p, self.lar)
         
     def test_groupmean(self):
-        "larry.groumean"  #not in deflarry_test
+        "larry.group_mean"  #not in deflarry_test
         t = self.tmean1
         label = self.label
         p = self.lar.group_mean(self.sectors)
         self.check_function(t, label, p, self.lar)
 
     def test_groupmedian(self):
-        "larry.groumedian"  #not in deflarry_test
+        "larry.group_median"  #not in deflarry_test
         t = self.tmedian1
         label = self.label
         p = self.lar.group_median(self.sectors)
         self.check_function(t, label, p, self.lar)
 
     def test_groupmean3(self):
-        "larry.groupmean_3d"  #not in deflarry_test
+        "larry.group_mean_3d"  #not in deflarry_test
         t = self.tmean3
         label = self.label3
         p = self.lar3.group_mean(self.sectors)
         self.check_function(t, label, p, self.lar3)
 
     def test_groupmedian3(self):
-        "larry.groupmedian_3d"  #not in deflarry_test
+        "larry.group_median_3d"  #not in deflarry_test
         t = self.tmedian3
         label = self.label3
         p = self.lar3.group_median(self.sectors)

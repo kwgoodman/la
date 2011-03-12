@@ -17,7 +17,8 @@ Bottleneck package (http://pypi.python.org/pypi/Bottleneck).
 
 **Faster**
 
-- sum, mean, std, var, min, max, median, ranking 
+- sum, mean, std, var, min, max, median, ranking
+- correlation, group_median, demean, demedian, zscore
 
 **Moving window**
 
