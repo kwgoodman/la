@@ -36,6 +36,7 @@ Bottleneck package (http://pypi.python.org/pypi/Bottleneck).
 **Enhancements**
 
 - Add optional `ddof` input parameter to larry.std() and larry.var() 
+- Cut import time by 15%
 
 **Breakage from la 0.4**
 
