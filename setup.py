@@ -71,8 +71,7 @@ try:
           packages=PACKAGES,
           package_data=PACKAGE_DATA,
           requires=REQUIRES,
-          zip_safe=False,
-          ext_modules = [Extension("la.cflabel", ["la/src/cflabel.c"])]          
+          ext_modules = [Extension("la.cflabel", ["la/src/cflabel.c"])]
          )
 except SystemExit:
     # Probably clistmap.c failed to compile, so use slower python version
@@ -95,5 +94,4 @@ except SystemExit:
           packages=PACKAGES,
           package_data=PACKAGE_DATA,
           requires=REQUIRES,
-          zip_safe=False
          )     
