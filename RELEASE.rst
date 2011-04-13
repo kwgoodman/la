@@ -4,7 +4,7 @@ Release Notes
 =============
 
 These are the major changes made in each release. For details of the changes
-see the commit log at http://gitorious.org/labeled-array/la
+see the commit log at https://github.com/kwgoodman/la
 
 la 0.5 
 ======
