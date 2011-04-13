@@ -1,5 +1,8 @@
 "Test ability to handle 3d arrays"
 
+# For support of python 2.5
+from __future__ import with_statement
+
 import numpy as np
 from numpy.testing import assert_almost_equal
 nan = np.nan

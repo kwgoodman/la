@@ -1,5 +1,8 @@
 "Unit tests of array functions."
 
+# For support of python 2.5
+from __future__ import with_statement
+
 import unittest
 
 import numpy as np

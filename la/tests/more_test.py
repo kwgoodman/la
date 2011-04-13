@@ -1,5 +1,8 @@
 # these are tests for use with nose using generators, not for unittest.
 
+# For support of python 2.5
+from __future__ import with_statement
+
 import numpy as np
 from numpy.testing import assert_  # could look for nose
 nan = np.nan

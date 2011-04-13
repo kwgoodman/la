@@ -1,4 +1,7 @@
 
+# For support of python 2.5
+from __future__ import with_statement
+
 import os
 import tempfile
 from copy import deepcopy

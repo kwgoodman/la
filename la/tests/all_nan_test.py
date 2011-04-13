@@ -1,5 +1,8 @@
 "Test larry methods for proper handling of all NaN input"
 
+# For support of python 2.5
+from __future__ import with_statement
+
 import numpy as np
 from numpy.testing import assert_equal
 
