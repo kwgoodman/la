@@ -21,85 +21,32 @@ Moving window statistics
 ------------------------
 
 This section contains Numpy array functions that calculate moving window
-summary statistics. Some of the functions remove NaNs from the moving window
-(mov_nansum); some don't (mov_sum).
+summary statistics.
 
-Most of the moving window functions offer three algorithms for moving the
+.. note::
+
+    The `Bottleneck package <http://pypi.python.org/pypi/Bottleneck>`_
+    contains fast moving window functions.
+
+Most of the moving window functions offer two algorithms for moving the
 window:
 
             ==========  ==========================
-            'filter'    scipy.ndimage 
             'strides'   strides tricks (ndim < 4)
             'loop'      brute force python loop
             ==========  ==========================
 
 ------------
              
-.. autofunction:: la.farray.mov_sum
-
-------------
-             
-.. autofunction:: la.farray.mov_nansum
-
-------------
-             
-.. autofunction:: la.farray.mov_mean
+.. autofunction:: la.farray.move_median
 
 ------------
 
-.. autofunction:: la.farray.mov_nanmean
-
-------------
-             
-.. autofunction:: la.farray.mov_var
+.. autofunction:: la.farray.move_nanmedian
 
 ------------
 
-.. autofunction:: la.farray.mov_nanvar
-
-------------
-             
-.. autofunction:: la.farray.mov_std
-
-------------
-
-.. autofunction:: la.farray.mov_nanstd
-
-------------
-             
-.. autofunction:: la.farray.mov_min
-
-------------
-
-.. autofunction:: la.farray.mov_nanmin
-
-------------
-             
-.. autofunction:: la.farray.mov_max
-
-------------
-
-.. autofunction:: la.farray.mov_nanmax
-
-------------
-
-.. autofunction:: la.farray.mov_nanranking
-
-------------
-             
-.. autofunction:: la.farray.mov_count
-
-------------
-             
-.. autofunction:: la.farray.mov_median
-
-------------
-
-.. autofunction:: la.farray.mov_nanmedian
-
-------------
-             
-.. autofunction:: la.farray.mov_func
+.. autofunction:: la.farray.move_nanranking
 
 
 Normalization
@@ -148,25 +95,3 @@ Miscellaneous Numpy array functions.
 ------------
 
 .. autofunction:: la.farray.covMissing
-
-------------
-             
-.. autofunction:: la.farray.nanmean
-
-------------
-             
-.. autofunction:: la.farray.nanmedian
-
-------------
-             
-.. autofunction:: la.farray.nanvar
-
-------------
-             
-.. autofunction:: la.farray.nanstd
-
-
-
-
-
-
