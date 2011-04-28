@@ -9,7 +9,7 @@ see the commit log at https://github.com/kwgoodman/la
 la 0.5 
 ======
 
-*Release date: Not yet released, in development*
+*Release date: 2011-04-28*
 
 The fifth release of la is faster and adds fast, moving window methods to
 larry. The cost of the speed and new functionality is that la now requires the
