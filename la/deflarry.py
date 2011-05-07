@@ -2300,13 +2300,12 @@ class larry(object):
         (even if they already had all NaNs in the row or column before this
         function was called) will be removed.
         
-        The op can be '==', '>', '<', '>=', '<=', '!=', 'in', 'not in'.
+        The op can be '==', '>', '<', '>=', '<=', '!='.
         
         Parameters
         ----------
         op : string
-            Operation to perform. op can be '==', '>', '<', '>=', '<=', '!=',
-            'in', 'not in'.
+            Operation to perform. op can be '==', '>', '<', '>=', '<=', '!='.
         value : anything that can be compared to labels
             Usually the same type as the labels. So if the labels are integers
             then value is an integer.
@@ -2330,11 +2329,11 @@ class larry(object):
         """
         if (vacuum == True) and (self.ndim != 2):
             raise ValueError, 'When vacuum is True, larry must be 2d'
-        ops = ('==', '>', '<', '>=', '<=', '!=', 'in', 'not in')
+        ops = ('==', '>', '<', '>=', '<=', '!=')
         if op not in ops:
             raise ValueError, 'Unknown op'   
         y = self.copy()
-        idx = eval('y.x ' + op + 'value')
+        idx = eval('y.x ' + op + ' value')
         y.x[~idx] = np.nan
         if vacuum:
             y = y.vacuum()
