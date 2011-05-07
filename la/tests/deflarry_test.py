@@ -3495,6 +3495,40 @@ class Test_alignment(unittest.TestCase):
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l), 'Reference found')
         
+    def test_lag_2(self):
+        "larry.lag_2"
+        desired = larry([1, 2, 3])
+        actual = desired.lag(0)
+        ale(actual, desired, 'zero lag', original=desired)
+    
+    def test_lag_3(self):
+        "larry.lag_3"
+        original = larry([1, 2, 3])
+        desired = larry([2, 3], [[0, 1]])
+        actual = original.lag(-1)
+        ale(actual, desired, 'negative lag', original=desired)
+    
+    def test_lag_4(self):
+        "larry.lag_4"
+        original = larry([[1, 2, 3], [4, 5, 6]])
+        desired = larry([[2, 3], [5, 6]], [[0, 1], [0, 1]])
+        actual = original.lag(-1)
+        ale(actual, desired, 'negative lag', original=desired)
+    
+    def test_lag_5(self):
+        "larry.lag_5"
+        original = larry([[1, 2, 3], [4, 5, 6]])
+        desired = larry([[4, 5, 6]], [[0], [0, 1, 2]])
+        actual = original.lag(-1, axis=0)
+        ale(actual, desired, 'negative lag', original=desired)
+    
+    def test_lag_6(self):
+        "larry.lag_6"
+        original = larry([[1, 2, 3], [4, 5, 6]])
+        desired = larry([[1, 2, 3]], [[1], [0, 1, 2]])
+        actual = original.lag(1, axis=0)
+        ale(actual, desired, 'positive lag', original=desired)
+        
     def test_flatten_1(self):
         "larry.flatten_1"
         y = larry([1, 2, 3])

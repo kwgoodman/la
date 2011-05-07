@@ -3354,7 +3354,9 @@ class larry(object):
         Parameters
         ----------
         nlag : int
-            Number of periods (rows, columns, etc) to lag.
+            Number of periods (rows, columns, etc) to lag. The lag can be
+            positive (delay), zero (copy of input), or negative (push
+            forward).
         axis : int
             The axis to lag along. The default is -1.
             
@@ -3372,26 +3374,49 @@ class larry(object):
             
         Examples
         --------
+        Create a larry:
+
         >>> y = larry([1, 2, 3, 4], [['a', 'b', 'c', 'd']])
+
+        A positive lag:
+
         >>> y.lag(2)
         label_0
             c
             d
         x
-        array([1, 2])                      
+        array([1, 2])
+
+        A negative lag:
+
+        >>> y.lag(-2)
+        label_0
+            a
+            b
+        x
+        array([3, 4])
                         
         """
         if axis is None:
             raise IndexError, 'axis cannot be None.'
-        if nlag < 0:
-            raise ValueError, 'nlag cannot be negative'
-        y = self.copy()
-        y.label[axis] = y.label[axis][nlag:]
-        index = [slice(None)] * self.ndim
-        index[axis] = slice(0, -nlag)            
-        y.x = y.x[index]
+        if nlag > 0:
+            y = self.copy()
+            y.label[axis] = y.label[axis][nlag:]
+            index = [slice(None)] * self.ndim
+            index[axis] = slice(0, -nlag)            
+            y.x = y.x[index]
+        elif nlag < 0:
+            y = self.copy()
+            y.label[axis] = y.label[axis][:nlag]
+            index = [slice(None)] * self.ndim
+            index[axis] = slice(-nlag, None)            
+            y.x = y.x[index]
+        elif nlag == 0:
+            y = self.copy()
+        else:
+            raise RuntimeError("Unrecognized value of `nlag`.")
         return y
-    
+
     def sortaxis(self, axis=None, reverse=False):
         """
         Sort data (and label) according to label along specified axis.

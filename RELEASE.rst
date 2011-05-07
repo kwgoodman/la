@@ -6,8 +6,27 @@ Release Notes
 These are the major changes made in each release. For details of the changes
 see the commit log at https://github.com/kwgoodman/la
 
-la 0.5 
+la 0.6 
 ======
+
+*Release date: Not yet released, in development*
+
+**Enhancements**
+
+- larry.lag() now accepts negative lags
+
+**Bugs fixes**
+
+- Please report bugs at https://github.com/kwgoodman/la/issues
+- #14 larry.lag() gives wrong output when nlag=0
+
+Older versions
+==============
+
+Release notes from past releases.
+
+la 0.5 
+------
 
 *Release date: 2011-04-28*
 
@@ -56,12 +75,6 @@ Bottleneck package (http://pypi.python.org/pypi/Bottleneck).
 - #8 demean, demedian, zscore choked on 1d input when axis=-1
 - #9 cross_validation docstring refers to old name of function (cv) 
 - #10 Unit tests: "Warning: invalid value encountered in..." 
-  
-
-Older versions
-==============
-
-Release notes from past releases.
 
 la 0.4
 ------
@@ -115,7 +128,6 @@ la.align(), which aligns two larrys, were also added.
 
 - #590270 Index with 1d array bug: lar[1darray,:] worked; lar[1darray] crashed
 
-
 la 0.3
 ------
 
@@ -159,7 +171,6 @@ la 0.3
 - #583596 assert_larry_equal crashed when comparing float larry to str larry
 - #585694 cumsum and cumprod crashed on dtype=int
 
-
 la 0.2
 ------
 
@@ -196,7 +207,6 @@ la 0.2
 - #518442: sum, std, var returned NaN for shapes that contain zero: (2, 0, 3)
 - #568175: larry.std(axis=-1) and var crashed on negative axis input
 - #569622: Negative axis input gave wrong output for several larry methods
-
 
 la 0.1
 ------

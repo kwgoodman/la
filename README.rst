@@ -118,9 +118,9 @@ After you have installed ``la``, run the suite of unit tests::
     >>> import la
     >>> la.test()
     <snip>
-    Ran 2975 tests in 2.017s
+    Ran 2980 tests in 2.121s
     OK
-    <nose.result.TextTestResult run=2975 errors=0 failures=0> 
+    <nose.result.TextTestResult run=2980 errors=0 failures=0> 
     
 The ``la`` package contains C extensions that speed up common alignment
 operations such as adding two unaligned larrys. If the C extensions don't
@@ -129,7 +129,7 @@ versions of the functions. To see whether you are using the C functions or the
 Python functions::
 
     >>> la.info()
-    la version      0.5.0           
+    la version      0.6.0           
     la file         /usr/local/lib/python2.6/dist-packages/la/__init__.pyc
     NumPy           1.5.1  
     Bottleneck      0.4.2
