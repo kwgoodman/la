@@ -10,7 +10,10 @@ from la.util.misc import randstring
 
 from la import larry
 
-        
+__all__ = ['IO', 'save', 'load', 'repack', 'is_archived_larry',
+           'archive_directory']
+       
+
 class IO(object):
     "Save and load larrys in HDF5 format using a dictionary-like interface."
     

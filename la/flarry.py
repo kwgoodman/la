@@ -7,6 +7,10 @@ from la.flabel import flattenlabel, listmap, listmap_fill
 from la.farray import covMissing
 from la.missing import missing_marker, ismissing
 
+__all__ = ['align', 'align_raw', 'isaligned', 'union', 'intersection',
+           'binaryop', 'add', 'subtract', 'multiply', 'divide',
+           'unique', 'stack', 'panel', 'cov', 'rand', 'randn']
+
 
 # Alignment -----------------------------------------------------------------
 
