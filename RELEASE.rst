@@ -11,6 +11,10 @@ la 0.6
 
 *Release date: Not yet released, in development*
 
+**New functions**
+
+- la.isaligned() returns True if two larrys are aligned along specified axis
+
 **Enhancements**
 
 - larry.lag() now accepts negative lags

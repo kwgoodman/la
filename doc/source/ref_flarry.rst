@@ -33,6 +33,10 @@ The alignment functions help you align one of more larrys.
 
 ------------
              
+.. autofunction:: la.isaligned
+
+------------
+             
 .. autofunction:: la.union
 
 ------------

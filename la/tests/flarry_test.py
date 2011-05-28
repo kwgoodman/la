@@ -8,8 +8,8 @@ nan = np.nan
 from numpy.testing import assert_array_equal
 
 from la import larry
-from la import (union, intersection, panel, stack, cov, align, binaryop, add,
-                subtract, multiply, divide, unique)
+from la import (union, intersection, panel, stack, cov, align, isaligned,
+                binaryop, add, subtract, multiply, divide, unique)
 from la.util.testing import assert_larry_equal as ale
 
 
@@ -37,7 +37,42 @@ class Test_func(unittest.TestCase):
         actual = intersection(1, y1, y2)
         desired = ['d']
         self.assert_(actual == desired, 'intersection axis=1') 
-        
+
+    def test_isaligned_1(self):
+        "isaligned_1"
+        lar1 = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
+        lar2 = larry([[5, 6], [7, 8]], [['r2', 'r1'], ['c1', 'c2']])
+        a = isaligned(lar1, lar2)
+        self.assert_(~a, "Should return False")
+
+    def test_isaligned_2(self):
+        "isaligned_2"
+        lar1 = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
+        lar2 = larry([[4, 5], [6, 7]], [['r2', 'r1'], ['c1', 'c2']])
+        a = isaligned(lar1, lar2, axis=0)
+        self.assert_(~a, "Should return False")
+    
+    def test_isaligned_3(self):
+        "isaligned_3"
+        lar1 = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
+        lar2 = larry([[5, 6], [7, 8]], [['r2', 'r1'], ['c1', 'c2']])
+        a = isaligned(lar1, lar2, axis=1)
+        self.assert_(a, "Should return True")
+
+    def test_isaligned_4(self):
+        "isaligned_4"
+        lar1 = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
+        lar2 = larry([5, 6], [['r1', 'r2']])
+        a = isaligned(lar1, lar2, axis=0)
+        self.assert_(a, "Should return True")
+    
+    def test_isaligned_5(self):
+        "isaligned_5"
+        lar1 = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
+        lar2 = larry([5, 6], [['r1', 'r2']])
+        a = isaligned(lar1, lar2)
+        self.assert_(~a, "Should return False")
+
     def test_panel_1(self):
         "func.panel_1"         
         original = larry(np.arange(24).reshape(2,3,4))                   

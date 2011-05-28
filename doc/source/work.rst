@@ -730,7 +730,9 @@ not aligned::
 
     >>> y1 = larry([1, 2], [['a', 'z']])
     >>> y2 = larry([1, 2], [['z', 'a']])
-    
+    >>> la.isaligned(y1, y2)
+    False
+
 What is ``y1 + y2``? ::
 
     >>> y1 + y2

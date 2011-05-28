@@ -45,6 +45,11 @@ def align(lar1, lar2, join='inner', cast=True):
         A copy of the aligned version of `lar1`.
     lar4 : larry
         A copy of the aligned version of `lar2`.                     
+    
+    See Also
+    --------
+    la.isaligned: Return True if two larrys are aligned along specified axis.
+    la.align_raw: Low level version of la.align.
         
     Examples
     --------
@@ -153,7 +158,8 @@ def align_raw(lar1, lar2, join='inner', cast=True):
         
     See Also
     --------
-    la.align: Align two larrys using one of five join methods.   
+    la.align: Align two larrys using one of five join methods.
+    la.isaligned: Return True if two larrys are aligned along specified axis.
         
     Notes
     -----
@@ -341,7 +347,55 @@ def align_raw(lar1, lar2, join='inner', cast=True):
         label.append(list3)
     
     return x1, x2, label, x1isview, x2isview
+
+def isaligned(lar1, lar2, axis=None):
+    """
+    Return True if labels of two given larrys are aligned along specified axis.
+
+    Parameters
+    ----------
+    lar1 : larry
+        Input.
+    lar2 : larry
+        Input
+    axis : {int, None}, optional
+        The axis along which to check for aligment of labels. By default
+        (axis=None) all axes are checked.
+
+    Returns
+    -------
+    y : bool
+        Returns True if labels are aligned; False if labels are not aligned.
     
+    See Also
+    --------
+    la.align: Align two larrys using one of five join methods.   
+
+    Examples
+    --------
+    Make two 2d larrys that are aligned along columns but not rows:
+
+    >>> lar1 = larry([[1, 2], [3, 4]], [['row1', 'row2'], ['col1', 'col2']])
+    >>> lar2 = larry([[1, 2], [3, 4]], [['row2', 'row1'], ['col1', 'col2']])
+
+    The two larrys are not aligned:
+
+    >>> la.isaligned(lar1, lar2)
+    False
+    >>> la.isaligned(lar1, lar2, axis=0)
+    False
+
+    But the columns of the two larrys are aligned:
+
+    >>> la.isaligned(lar1, lar2, axis=1)
+    True
+    
+    """
+    if axis is None:
+        return lar1.label == lar2.label
+    else:
+        return lar1.label[axis] == lar2.label[axis]
+
 def union(axis, *args):
     """
     Union of labels along specified axis.
