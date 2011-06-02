@@ -655,7 +655,7 @@ def _is_archived_larry(obj):
     "True if obj is an archived larry, False otherwise."
     if isinstance(obj, h5py.Group):
         if 'larry' in obj.attrs:
-            if obj.attrs['larry'] is True:
+            if obj.attrs['larry'] == True:
                 if 'x' in obj:
                     ndim = len(obj['x'].shape)
                     labels = map(str, range(ndim))
