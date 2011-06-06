@@ -70,7 +70,7 @@ Install
 Requirements:
 
 ======================== ====================================================
-la                       Python, NumPy 1.5.1, Bottleneck 0.4.3
+la                       Python, NumPy 1.5.1, 1.6.0, Bottleneck 0.5.0
 Unit tests               nose
 ======================== ====================================================
 
@@ -79,7 +79,7 @@ Optional:
 ============================= ================================================
 Archive larrys in HDF5        h5py, HDF 1.8
 Compile for speed boost       gcc or MinGW
-lar.ranking(norm='gaussian')  SciPy 0.8.0
+lar.ranking(norm='gaussian')  SciPy 0.8.0, 0.9.0
 ============================= ================================================
 
 You can download the `latest version of la <http://pypi.python.org/pypi/la>`_
@@ -131,8 +131,8 @@ Python functions::
     >>> la.info()
     la version      0.6.0           
     la file         /usr/local/lib/python2.6/dist-packages/la/__init__.pyc
-    NumPy           1.5.1  
-    Bottleneck      0.4.3
+    NumPy           1.6.0  
+    Bottleneck      0.5.0
     HDF5 archiving  Available (h5py 1.3.0)      
     listmap         Faster C version
     listmap_fill    Faster C version    
