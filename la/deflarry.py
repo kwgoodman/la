@@ -2979,7 +2979,7 @@ class larry(object):
       
     def ranking(self, axis=0, norm='-1,1'):
         """
-        Rank elements treating NaN as missing and break ties.
+        Rank elements treating NaN as missing and averaging ties.
 
         Parameters
         ----------

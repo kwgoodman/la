@@ -125,7 +125,7 @@ def lastrank(x, axis=-1, decay=0.0):
 
 def ranking(x, axis=0, norm='-1,1'):
     """
-    Normalized ranking treating NaN as missing and average ties by default.
+    Normalized ranking treating NaN as missing and averaging ties.
     
     Parameters
     ----------
