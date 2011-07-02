@@ -23,6 +23,8 @@ la 0.6
 
 - Please report bugs at https://github.com/kwgoodman/la/issues
 - #14 larry.lag() gives wrong output when nlag=0
+- #21 Merging two larrys chokes when one is empty
+- #22 Morphing an empty larry chokes lar.morph()  
 
 Older versions
 ==============

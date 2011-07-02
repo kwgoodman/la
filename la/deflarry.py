@@ -5,7 +5,7 @@ import csv
 import numpy as np
 import bottleneck as bn
 
-from la.missing import ismissing, missing_marker  
+from la.missing import ismissing, missing_marker, nans  
 from la.flabel import listmap, listmap_fill, flattenlabel
 from la.util.misc import isscalar, fromlists
 from la.farray import (group_ranking, group_mean, group_median, shuffle,
@@ -3157,18 +3157,29 @@ class larry(object):
             return self.copy()
         else:    
             idx, idx_miss = listmap_fill(self.label[axis], label)           
-            x = self.x.take(idx, axis)
-            if len(idx_miss) > 0:
-                index = [slice(None)] * self.ndim
-                index[axis] = idx_miss
-                miss = missing_marker(x)
+            if len(idx) == len(idx_miss):
+                # None of the elements we want are in the input larry
+                shape = list(self.x.shape)
+                shape[axis] = len(idx)
+                miss = missing_marker(self.x)
                 if miss == NotImplemented:
-                    x = x.astype(float)
-                    miss = missing_marker(x)      
-                x[index] = miss      
+                    x = self.x.astype(float)
+                else:
+                    x = self.x
+                x = nans(shape, dtype=x.dtype)
+            else:    
+                x = self.x.take(idx, axis)
+                if len(idx_miss) > 0:
+                    index = [slice(None)] * self.ndim
+                    index[axis] = idx_miss
+                    miss = missing_marker(x)
+                    if miss == NotImplemented:
+                        x = x.astype(float)
+                        miss = missing_marker(x)      
+                    x[index] = miss      
             lab = self.copylabel()
             lab[axis] = list(label)
-            return larry(x, lab)
+        return larry(x, lab)
         
     def morph_like(self, lar):
         """
@@ -3304,7 +3315,8 @@ class larry(object):
         if (not update) and np.logical_and(mask1, mask2).any():
             raise ValueError('Overlapping values')
         else:
-            lar1.x[mask2] = lar2.x[mask2]
+            if mask2.any():
+                lar1.x[mask2] = lar2.x[mask2]
      
         return lar1
         

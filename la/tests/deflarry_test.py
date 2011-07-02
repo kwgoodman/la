@@ -3467,6 +3467,13 @@ class Test_alignment(unittest.TestCase):
         actual = original.morph([10, 0], axis=0)
         desired = la.larry([nan, 1.0], [[10, 0]])
         ale(actual, desired, "bool morph unmappable", original=original)
+    
+    def test_morph12(self):
+        "larry.merge_12"
+        lar1 = larry([])
+        lar2 = larry([nan, nan], [[1, 2]])
+        larm = lar1.morph([1, 2], axis=0)
+        ale(larm, lar2, "merge into empty larry", original=lar1)
        
     def test_morph_like_1(self):
         "larry.morph_like_1"
@@ -3983,6 +3990,34 @@ class Test_merge(unittest.TestCase):
         larr = lar1.merge(lar1, update=True)
         assert_equal(larr.x, lar1.x)
         assert_(larr.label == lar1.label)
+    
+    def test_merge10(self):
+        "larry.merge_10"
+        lar1 = larry([])
+        lar2 = larry([1., 2.])
+        larm = lar1.merge(lar2)
+        ale(larm, lar2, "merge into empty larry", original=lar1)
+    
+    def test_merge11(self):
+        "larry.merge_11"
+        lar1 = larry([])
+        lar2 = larry([1, 2])
+        larm = lar2.merge(lar1)
+        ale(larm, lar2, "merge an empty larry", original=lar2)
+    
+    def test_merge12(self):
+        "larry.merge_12"
+        lar1 = larry([[]])
+        lar2 = larry([[1., 2.], [1., 2.]])
+        larm = lar1.merge(lar2)
+        ale(larm, lar2, "merge into empty larry", original=lar1)
+    
+    def test_merge13(self):
+        "larry.merge_13"
+        lar1 = larry([[]])
+        lar2 = larry([[1., 2.], [1., 2.]])
+        larm = lar2.merge(lar1)
+        ale(larm, lar2, "merge an empty larry", original=lar2)
         
 class Test_vacuum(unittest.TestCase):
     "Test vacuum functions of the larry class"
@@ -4149,9 +4184,8 @@ def suite():
     s.append(u(Test_properties_01))      
     return unittest.TestSuite(s)
 
-def run():   
-    suite = testsuite()
-    unittest.TextTestRunner(verbosity=2).run(suite)
+def run():
+    unittest.TextTestRunner(verbosity=2).run(suite())
     
 if __name__ == '__main__':
     run()   
@@ -4175,4 +4209,3 @@ def take_test():
                 ygetitem = y[tuple(index)]
                 arg = (str(shape), str(axis), str(idx))
                 yield ale, ytake, ygetitem, msg % arg
-
