@@ -14,7 +14,6 @@ la 0.6
 **New functions**
 
 - la.isaligned() returns True if two larrys are aligned along specified axis
-
 - la.sortby() sorts a larry by a row or column specified by its label
 
 **Enhancements**

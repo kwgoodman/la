@@ -1550,8 +1550,7 @@ def randn(*args, **kwargs):
         return randnfunc()         
     else:
         raise ValueError, 'Input parameters not recognized'
-                            
-                            
+ 
 def sortby(lar, element, axis, reverse=False):
     """
     Sort 2d larry by the row or column corresponding to given label element.
@@ -1578,15 +1577,13 @@ def sortby(lar, element, axis, reverse=False):
     --------
     Create a larry:
 
-    >>> import numpy as np, la
-    >>> from am.trade.trade import sortby
     >>> label = [['a','b'], ['c','d','e']]
     >>> x = np.array([[1, 2, 3], [3, 1, 2]])
     >>> lar = la.larry(x, label)
 
     Sort larry by row 'b' along the first axis:
 
-    >>> sortby(lar, 'b', axis=0)
+    >>> la.sortby(lar, 'b', axis=0)
     label_0
         a
         b
