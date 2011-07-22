@@ -107,4 +107,6 @@ Miscellaneous functions that operate on larrys.
 
 .. autofunction:: la.cov
 
+------------
 
+.. autofunction:: la.sortby

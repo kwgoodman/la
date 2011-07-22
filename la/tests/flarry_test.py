@@ -9,7 +9,7 @@ from numpy.testing import assert_array_equal
 
 from la import larry
 from la import (union, intersection, panel, stack, cov, align, isaligned,
-                binaryop, add, subtract, multiply, divide, unique)
+                binaryop, add, subtract, multiply, divide, unique, sortby)
 from la.util.testing import assert_larry_equal as ale
 
 
@@ -952,3 +952,66 @@ class Test_divide(unittest.TestCase):
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)
                     
+class Test_sortby(unittest.TestCase):
+    "Test la.sortby()"
+    
+    def setUp(self):
+        label = [['a','b'], ['c','d','e']]
+        x = np.array([[1, 2, 3],
+                      [3, 1, 2]])
+        self.lar = larry(x,label)
+        
+    def test_sortby_1(self):
+        "trade.sortby #1"
+        theory = self.lar[:,[1, 2, 0]]
+        practice = sortby(self.lar, 'b', 0)
+        msg = "Sorting by element in axis 0 failed"
+        ale(theory, practice, msg=msg)
+    
+    def test_sortby_2(self):
+        "trade.sortby #2"
+        theory = self.lar[[1, 0],:]
+        practice = sortby(self.lar, 'e', 1)
+        msg="Sorting by element in axis 1 failed"
+        ale(theory, practice, msg=msg)
+
+    def test_sortby_3(self):
+        "trade.sortby #3"
+        theory = self.lar[:,[1, 2, 0]]
+        practice = sortby(self.lar, 'b', -2)
+        msg = "Sorting by element in axis -2 failed"
+        ale(theory, practice, msg=msg)
+    
+    def test_sortby_4(self):
+        "trade.sortby #4"
+        theory = self.lar[[1, 0],:]
+        practice = sortby(self.lar, 'e', -1)
+        msg="Sorting by element in axis -1 failed"
+        ale(theory, practice, msg=msg)
+
+    def test_sortby_5(self):
+        "trade.sortby #5"
+        theory = self.lar[:,[0, 2, 1]]
+        practice = sortby(self.lar, 'b', 0, reverse=True)
+        msg = "Reverse sorting by element in axis 0 failed"
+        ale(theory, practice, msg=msg)
+    
+    def test_sortby_6(self):
+        "trade.sortby #6"
+        theory = self.lar
+        practice = sortby(self.lar, 'e', 1, reverse=True)
+        msg="Reverse sorting by element in axis 1 failed"
+        ale(theory, practice, msg=msg)
+
+    def test_sortby_7(self):
+        "trade.sortby #7"
+        self.assertRaises(ValueError, sortby, self.lar, 'b', 2)   
+    
+    def test_sortby_8(self):
+        "trade.sortby #8"
+        self.assertRaises(ValueError, sortby, self.lar, 'b', -3)
+        
+    def test_sortby_9(self):
+        "trade.sortby #9"
+        lar = self.lar[0]
+        self.assertRaises(ValueError, sortby, lar, 'd', 0) 
