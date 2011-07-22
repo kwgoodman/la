@@ -118,7 +118,7 @@ After you have installed ``la``, run the suite of unit tests::
     >>> import la
     >>> la.test()
     <snip>
-    Ran 2990 tests in 2.121s
+    Ran 2999 tests in 2.121s
     OK
     <nose.result.TextTestResult run=2990 errors=0 failures=0> 
     

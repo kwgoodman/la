@@ -8,7 +8,7 @@ from la.farray import covMissing
 from la.missing import missing_marker, ismissing
 
 __all__ = ['align', 'align_raw', 'isaligned', 'union', 'intersection',
-           'binaryop', 'add', 'subtract', 'multiply', 'divide',
+           'binaryop', 'add', 'sortby', 'subtract', 'multiply', 'divide',
            'unique', 'stack', 'panel', 'cov', 'rand', 'randn']
 
 
@@ -1551,3 +1551,68 @@ def randn(*args, **kwargs):
     else:
         raise ValueError, 'Input parameters not recognized'
                             
+                            
+def sortby(lar, element, axis, reverse=False):
+    """
+    Sort 2d larry by the row or column corresponding to given label element.
+    
+    Parameters
+    ----------
+    lar : larry 
+        A 2d input larry to be sorted.
+    element : str
+        The label element specifying the row or column by which to sort.
+    axis : int
+        The axis along which the element is located. Sorting takes place along
+        the opposite axis.
+    reverse : bool, optional
+        Keyword indicating whether to sort in ascending order (False) or
+        descending order (True). The default is to sort in ascending order.
+    
+    Returns
+    -------
+    lar2 : larry
+        A sorted copy of the larry.
+    
+    Examples 
+    --------
+    Create a larry:
+
+    >>> import numpy as np, la
+    >>> from am.trade.trade import sortby
+    >>> label = [['a','b'], ['c','d','e']]
+    >>> x = np.array([[1, 2, 3], [3, 1, 2]])
+    >>> lar = la.larry(x, label)
+
+    Sort larry by row 'b' along the first axis:
+
+    >>> sortby(lar, 'b', axis=0)
+    label_0
+        a
+        b
+    label_1
+        d
+        e
+        c
+    x
+    array([[2, 3, 1],
+           [1, 2, 3]])
+
+    """
+    if lar.ndim != 2:
+        raise ValueError("`lar` must be 2d.")
+    if axis < 0:
+        axis += lar.ndim
+    if axis not in (0, 1):
+        raise ValueError("`axis` must be 0 or 1.")
+    idx = lar.labelindex(element, axis)
+    if axis == 0:
+        idx = lar.x[idx,:].argsort()
+        if reverse:
+            idx = idx[::-1]
+        return lar[:,idx]
+    else:
+        idx = lar.x[:,idx].argsort()
+        if reverse:
+            idx = idx[::-1]
+        return lar[idx,:]
