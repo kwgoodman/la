@@ -708,9 +708,10 @@ def tuple2datetime(i):
     return datetime.datetime(*i)    
 
 def time2tuple(t):
-    "Convert datetime.time to tuple; tzinfo, if any, is lost,"
+    "Convert datetime.time to tuple; tzinfo, if any, is lost."
     return (t.hour, t.minute, t.second, t.microsecond)
 
 def tuple2time(i):
+    "Convert tuple to a datetime.time object."
     return datetime.time(*i)
     
