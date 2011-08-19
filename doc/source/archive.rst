@@ -314,7 +314,7 @@ same type. Therefore, to archive a larry the labels along any one dimension
 must be of the same type and that type must be one that is recognized by
 h5py and HDF5: strings and scalars. An exception is made for labels with dates
 of type datetime.date and datetime.datetime: ``la`` automatically converts
-datetime.date (datetime.datetime,git  datetime.time) to integers (tuples) when 
+datetime.date (datetime.datetime, datetime.time) to integers (tuples) when 
 saving and back to dates when loading.
 
 
