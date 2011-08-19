@@ -11,7 +11,7 @@ nan = np.nan
 import la
 from la import larry
 from la import IO
-from la.io import datetime2tuple, tuple2datetime
+from la.io import datetime2tuple, tuple2datetime, time2tuple, tuple2time
 from la.util.testing import assert_larry_equal
 
 
@@ -84,6 +84,17 @@ class Test_io(unittest.TestCase):
         actual = io['desired'][:]
         assert_larry_equal(actual, desired)
         
+    def test_io_6(self):
+        "io_datetimes"
+        io = IO(self.filename)
+        x = [1, 2]
+        label = [[datetime.time(13,15,59,9998),
+                  datetime.time(11,23)]]
+        desired = larry(x, label) 
+        io['desired'] = desired
+        actual = io['desired'][:]
+        assert_larry_equal(actual, desired)
+        
 def testsuite():
     s = []
     u = unittest.TestLoader().loadTestsFromTestCase
@@ -114,3 +125,17 @@ def datetime_test():
         d = tuple2datetime(i)
         msg = "datetime.datetime to tuple roundtrip failed."
         np.testing.assert_equal(d, date, msg)
+        
+def time_test():
+    "Test datetime.datetime conversion"
+    dt = datetime.time
+    times = [dt(1,30),
+             dt(23,59,59),
+             dt(0,0,0,1),
+             dt(15,  1, 23, 500),
+             dt(23, 59, 59, 999999)]
+    for time in times:
+        i = time2tuple(time)
+        t = tuple2time(i)
+        msg = "datetime.datetime to tuple roundtrip failed."
+        np.testing.assert_equal(t, time, msg)

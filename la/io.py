@@ -362,11 +362,15 @@ def save(file, lar, key):
     
     If all labels along an axis are dates of type datetime.date, then the
     dates are converted to integers before saving and the HDF5 Dataset used
-    to store that label is assigned an attribute name 'datetype' which is set
+    to store that label is assigned an attribute name 'datetime_type' which is set
     to 'date'. When loading the larry, the dates will automatically be
     converted back to datetime.date dates.
+    
+    Similarly, if the labels are of type datetime.time, then we convert to
+    integers and set the attribute to 'date' when saving and automatically
+    convert back to datetime.time when loading.
 
-    Similarly, if the labels are datetime.datetime then the attribute is set
+    Finally, if the labels are datetime.datetime then the attribute is set
     to 'datetime' and the labels are converted to tuples when saving and
     back to datetime.datetime when loading.
     
@@ -413,8 +417,8 @@ def save(file, lar, key):
     fkey.attrs['larry'] = True
     fkey['x'] = lar.x
     for i in range(lar.ndim):
-        fkey[str(i)], datetype = _list2array(lar.label[i])
-        fkey[str(i)].attrs['datetype'] = datetype
+        fkey[str(i)], datetime_type = _list2array(lar.label[i])
+        fkey[str(i)].attrs['datetime_type'] = datetime_type
     
     # Close if file is a filename   
     if opened:
@@ -607,10 +611,12 @@ def _load_label(group, ndim):
     label = []
     for i in range(ndim):
         labellist = group[str(i)][:].tolist()
-        datetype = group[str(i)].attrs['datetype']
-        if datetype == 'date':
+        datetime_type = group[str(i)].attrs['datetime_type']
+        if datetime_type == 'date':
             labellist = map(datetime.date.fromordinal, labellist)
-        elif datetype == 'datetime':
+        elif datetime_type == 'time':
+            labellist = map(tuple2time, labellist)
+        elif datetime_type == 'datetime':
             labellist = map(tuple2datetime, labellist)
         label.append(labellist)
     return label                     
@@ -624,16 +630,20 @@ def _list2array(x):
         msg = 'Elements of a label along any one dimension must be of the '
         msg += 'same type.'  
         raise TypeError, msg
-    datetype = 'not_date'
+    datetime_type = 'not_datetime'
     dtype = None
     if type0 == datetime.date:
         x = map(datetime.date.toordinal, x)
-        datetype = 'date'
+        datetime_type = 'date'
+    elif type0 == datetime.time:
+        x = map(time2tuple, x)
+        datetime_type = 'time'
+        dtype = "i4,i4,i4,i4"
     elif type0 == datetime.datetime:
         x = map(datetime2tuple, x)
-        datetype = 'datetime'
+        datetime_type = 'datetime'
         dtype = ','.join(["i4" for i in range(len(x[0]))])
-    return np.asarray(x, dtype=dtype), datetype
+    return np.asarray(x, dtype=dtype), datetime_type
     
 def _openfile(file):
     """
@@ -696,3 +706,12 @@ def datetime2tuple(dt):
 def tuple2datetime(i):
     "Convert tuple to a datetime.datetime object."
     return datetime.datetime(*i)    
+
+def time2tuple(t):
+    "Convert datetime.time to tuple; tzinfo, if any, is lost."
+    return (t.hour, t.minute, t.second, t.microsecond)
+
+def tuple2time(i):
+    "Convert tuple to a datetime.time object."
+    return datetime.time(*i)
+    
