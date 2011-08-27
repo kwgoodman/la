@@ -1005,13 +1005,28 @@ class Test_sortby(unittest.TestCase):
 
     def test_sortby_7(self):
         "trade.sortby #7"
-        self.assertRaises(ValueError, sortby, self.lar, 'b', 2)   
-    
+        theory = practice = larry([[]])
+        msg = "Sorting empty 2d larry failed"
+        ale(theory, practice, msg=msg)
+        
     def test_sortby_8(self):
         "trade.sortby #8"
+        theory = practice = larry([])
+        msg = "Sorting empty 1d larry failed"
+        ale(theory, practice, msg=msg)
+        
+    def test_sortby_9(self): 
+        "trade.sortby #9"
+        self.assertRaises(ValueError, sortby, self.lar, 'b', 2)   
+    
+    def test_sortby_10(self):
+        "trade.sortby #10"
         self.assertRaises(ValueError, sortby, self.lar, 'b', -3)
         
-    def test_sortby_9(self):
-        "trade.sortby #9"
+    def test_sortby_11(self):
+        "trade.sortby #11"
         lar = self.lar[0]
         self.assertRaises(ValueError, sortby, lar, 'd', 0) 
+        
+    
+        
