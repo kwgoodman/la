@@ -1596,6 +1596,12 @@ def sortby(lar, element, axis, reverse=False):
            [1, 2, 3]])
 
     """
+    if lar.ndim == 1: 
+        if lar.shape[0] == 0:
+            return lar
+    if lar.ndim == 2:
+        if lar.shape[1] == 0:
+            return lar
     if lar.ndim != 2:
         raise ValueError("`lar` must be 2d.")
     if axis < 0:
