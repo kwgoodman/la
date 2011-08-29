@@ -118,9 +118,9 @@ After you have installed ``la``, run the suite of unit tests::
     >>> import la
     >>> la.test()
     <snip>
-    Ran 3003 tests in 2.67s
+    Ran 3006 tests in 1.246s
     OK
-    <nose.result.TextTestResult run=3003 errors=0 failures=0> 
+    <nose.result.TextTestResult run=3006 errors=0 failures=0> 
     
 The ``la`` package contains C extensions that speed up common alignment
 operations such as adding two unaligned larrys. If the C extensions don't
