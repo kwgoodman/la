@@ -1007,7 +1007,7 @@ class Test_sortby(unittest.TestCase):
         "trade.sortby #7"
         theory = larry([[]])
         practice = sortby(theory, 0, 0)
-        msg = "Sorting empty 2d larry failed"
+        msg = "Sorting empty larry failed"
         ale(theory, practice, msg=msg)
         
     def test_sortby_8(self): 
@@ -1027,4 +1027,12 @@ class Test_sortby(unittest.TestCase):
         "trade.sortby #11"
         lar = rand(0,2)
         self.assertRaises(IndexError, sortby, lar, 0, 0)
+        
+    def test_sortby_12(self):
+        "trade.sortby #12"
+        lar = rand(0,2)
+        theory = lar.copy()
+        practice = sortby(lar, 0, 1)
+        msg="Sorting empty larry failed"
+        ale(theory, practice, msg=msg)
         
