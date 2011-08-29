@@ -7,7 +7,7 @@ import numpy as np
 nan = np.nan
 from numpy.testing import assert_array_equal
 
-from la import larry
+from la import larry, rand
 from la import (union, intersection, panel, stack, cov, align, isaligned,
                 binaryop, add, subtract, multiply, divide, unique, sortby)
 from la.util.testing import assert_larry_equal as ale
@@ -1005,13 +1005,34 @@ class Test_sortby(unittest.TestCase):
 
     def test_sortby_7(self):
         "trade.sortby #7"
+        theory = larry([[]])
+        practice = sortby(theory, 0, 0)
+        msg = "Sorting empty larry failed"
+        ale(theory, practice, msg=msg)
+        
+    def test_sortby_8(self): 
+        "trade.sortby #8"
         self.assertRaises(ValueError, sortby, self.lar, 'b', 2)   
     
-    def test_sortby_8(self):
-        "trade.sortby #8"
-        self.assertRaises(ValueError, sortby, self.lar, 'b', -3)
-        
     def test_sortby_9(self):
         "trade.sortby #9"
+        self.assertRaises(ValueError, sortby, self.lar, 'b', -3)
+        
+    def test_sortby_10(self):
+        "trade.sortby #10"
         lar = self.lar[0]
         self.assertRaises(ValueError, sortby, lar, 'd', 0) 
+    
+    def test_sortby_11(self):
+        "trade.sortby #11"
+        lar = rand(0,2)
+        self.assertRaises(IndexError, sortby, lar, 0, 0)
+        
+    def test_sortby_12(self):
+        "trade.sortby #12"
+        lar = rand(0,2)
+        theory = lar.copy()
+        practice = sortby(lar, 0, 1)
+        msg="Sorting empty larry failed"
+        ale(theory, practice, msg=msg)
+        

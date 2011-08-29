@@ -1573,7 +1573,7 @@ def sortby(lar, element, axis, reverse=False):
     lar2 : larry
         A sorted copy of the larry.
     
-    Examples 
+    Examples
     --------
     Create a larry:
 
@@ -1598,6 +1598,9 @@ def sortby(lar, element, axis, reverse=False):
     """
     if lar.ndim != 2:
         raise ValueError("`lar` must be 2d.")
+    if lar.size == 0:
+        if element in lar.label[axis]:
+            return lar.copy()
     if axis < 0:
         axis += lar.ndim
     if axis not in (0, 1):
