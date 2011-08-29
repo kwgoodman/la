@@ -7,7 +7,7 @@ import numpy as np
 nan = np.nan
 from numpy.testing import assert_array_equal
 
-from la import larry
+from la import larry, rand
 from la import (union, intersection, panel, stack, cov, align, isaligned,
                 binaryop, add, subtract, multiply, divide, unique, sortby)
 from la.util.testing import assert_larry_equal as ale
@@ -1022,6 +1022,9 @@ class Test_sortby(unittest.TestCase):
         "trade.sortby #10"
         lar = self.lar[0]
         self.assertRaises(ValueError, sortby, lar, 'd', 0) 
-        
     
+    def test_sortby_11(self):
+        "trade.sortby #11"
+        lar = rand(0,2)
+        self.assertRaises(IndexError, sortby, lar, 0, 0)
         
