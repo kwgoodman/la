@@ -1006,7 +1006,7 @@ class Test_sortby(unittest.TestCase):
     def test_sortby_7(self):
         "trade.sortby #7"
         theory = larry([[]])
-        practice = sortby(theory, 'a', 0)
+        practice = sortby(theory, 0, 0)
         msg = "Sorting empty 2d larry failed"
         ale(theory, practice, msg=msg)
         
