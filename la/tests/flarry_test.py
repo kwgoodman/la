@@ -962,74 +962,74 @@ class Test_sortby(unittest.TestCase):
         self.lar = larry(x,label)
         
     def test_sortby_1(self):
-        "trade.sortby #1"
+        "sortby test #1"
         theory = self.lar[:,[1, 2, 0]]
         practice = sortby(self.lar, 'b', 0)
         msg = "Sorting by element in axis 0 failed"
         ale(theory, practice, msg=msg)
     
     def test_sortby_2(self):
-        "trade.sortby #2"
+        "sortby test #2"
         theory = self.lar[[1, 0],:]
         practice = sortby(self.lar, 'e', 1)
         msg="Sorting by element in axis 1 failed"
         ale(theory, practice, msg=msg)
 
     def test_sortby_3(self):
-        "trade.sortby #3"
+        "sortby test #3"
         theory = self.lar[:,[1, 2, 0]]
         practice = sortby(self.lar, 'b', -2)
         msg = "Sorting by element in axis -2 failed"
         ale(theory, practice, msg=msg)
     
     def test_sortby_4(self):
-        "trade.sortby #4"
+        "sortby test #4"
         theory = self.lar[[1, 0],:]
         practice = sortby(self.lar, 'e', -1)
         msg="Sorting by element in axis -1 failed"
         ale(theory, practice, msg=msg)
 
     def test_sortby_5(self):
-        "trade.sortby #5"
+        "sortby test #5"
         theory = self.lar[:,[0, 2, 1]]
         practice = sortby(self.lar, 'b', 0, reverse=True)
         msg = "Reverse sorting by element in axis 0 failed"
         ale(theory, practice, msg=msg)
     
     def test_sortby_6(self):
-        "trade.sortby #6"
+        "sortby test #6"
         theory = self.lar
         practice = sortby(self.lar, 'e', 1, reverse=True)
         msg="Reverse sorting by element in axis 1 failed"
         ale(theory, practice, msg=msg)
 
     def test_sortby_7(self):
-        "trade.sortby #7"
+        "sortby test #7"
         theory = larry([[]])
         practice = sortby(theory, 0, 0)
         msg = "Sorting empty larry failed"
         ale(theory, practice, msg=msg)
         
     def test_sortby_8(self): 
-        "trade.sortby #8"
+        "sortby test #8"
         self.assertRaises(ValueError, sortby, self.lar, 'b', 2)   
     
     def test_sortby_9(self):
-        "trade.sortby #9"
+        "sortby test #9"
         self.assertRaises(ValueError, sortby, self.lar, 'b', -3)
         
     def test_sortby_10(self):
-        "trade.sortby #10"
+        "sortby test #10"
         lar = self.lar[0]
         self.assertRaises(ValueError, sortby, lar, 'd', 0) 
     
     def test_sortby_11(self):
-        "trade.sortby #11"
+        "sortby test #11"
         lar = rand(0,2)
         self.assertRaises(IndexError, sortby, lar, 0, 0)
         
     def test_sortby_12(self):
-        "trade.sortby #12"
+        "sortby test #12"
         lar = rand(0,2)
         theory = lar.copy()
         practice = sortby(lar, 0, 1)
