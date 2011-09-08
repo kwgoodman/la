@@ -1259,65 +1259,45 @@ def panel(lar):
     Examples
     --------
     First make a 3d larry:
-    
-    >>> import numpy as np
-    >>> y = larry(np.arange(24).reshape(2,3,4))
-    >>> y
+
+    >>> x = np.ones((2,2)).cumsum(0) - 1
+    >>> lar = la.larry(x, [['r1', 'r2'], ['c1', 'c2']])
+    >>> lar = lar.insertaxis(0, "name")
+    >>> lar 
     label_0
-        0
-        1
+        name
     label_1
-        0
-        1
-        2
+        r1
+        r2
     label_2
-        0
-        1
-        2
-        3
+        c1
+        c2
     x
-    array([[[ 0,  1,  2,  3],
-            [ 4,  5,  6,  7],
-            [ 8,  9, 10, 11]],
-    .
-           [[12, 13, 14, 15],
-            [16, 17, 18, 19],
-            [20, 21, 22, 23]]])
-            
-    Then make a panel:        
-            
-    >>> la.func.panel(y)
+    array([[[ 0.,  0.],
+            [ 1.,  1.]]])
+
+    Then make a panel:
+
+    >>> la.panel(lar) 
     label_0
-        (0, 0)
-        (0, 1)
-        (0, 2)
-        ...
-        (2, 1)
-        (2, 2)
-        (2, 3)
+        ('r1', 'c1')
+        ('r1', 'c2')
+        ('r2', 'c1')
+        ('r2', 'c2')
     label_1
-        0
-        1
+        name
     x
-    array([[ 0, 12],
-           [ 4, 16],
-           [ 8, 20],
-           [ 1, 13],
-           [ 5, 17],
-           [ 9, 21],
-           [ 2, 14],
-           [ 6, 18],
-           [10, 22],
-           [ 3, 15],
-           [ 7, 19],
-           [11, 23]])            
-    
+    array([[ 0.],
+           [ 0.],
+           [ 1.],
+           [ 1.]])
+ 
     """
     if lar.ndim != 3:
         raise ValueError, "lar must be 3d."
     y = lar.copy()
     y.label = [flattenlabel([y.label[1], y.label[2]])[0], y.label[0]]
-    y.x = y.x.T.reshape(-1, y.shape[0])
+    y.x = y.x.T.reshape(-1, y.shape[0], order="F")
     return y
 
 def cov(lar):

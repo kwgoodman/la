@@ -74,35 +74,54 @@ class Test_func(unittest.TestCase):
         self.assert_(~a, "Should return False")
 
     def test_panel_1(self):
-        "func.panel_1"         
-        original = larry(np.arange(24).reshape(2,3,4))                   
+        "func.panel_1" 
+        x = np.ones((4,3), dtype=np.int).cumsum(0) - 1
+        label = [['r1', 'r2', 'r3', 'r4'], ['c1', 'c2', 'c3']]
+        original = larry(x, label)
+        original = original.insertaxis(0, "name")
         actual = panel(original)
-        x = np.array([[ 0, 12],
-                      [ 4, 16],
-                      [ 8, 20],
-                      [ 1, 13],
-                      [ 5, 17],
-                      [ 9, 21],
-                      [ 2, 14],
-                      [ 6, 18],
-                      [10, 22],
-                      [ 3, 15],
-                      [ 7, 19],
-                      [11, 23]])
-        label = [[(0, 0),
-                  (0, 1),
-                  (0, 2),
-                  (0, 3),
-                  (1, 0),
-                  (1, 1),
-                  (1, 2),
-                  (1, 3),
-                  (2, 0),
-                  (2, 1),
-                  (2, 2),
-                  (2, 3)], [0, 1]]
+        x = np.array([[0,0,0,1,1,1,2,2,2,3,3,3]]).T
+        label = [[('r1', 'c1'),
+                  ('r1', 'c2'),
+                  ('r1', 'c3'),
+                  ('r2', 'c1'),
+                  ('r2', 'c2'),
+                  ('r2', 'c3'),
+                  ('r3', 'c1'),
+                  ('r3', 'c2'),
+                  ('r3', 'c3'),
+                  ('r4', 'c1'),
+                  ('r4', 'c2'),
+                  ('r4', 'c3')], ['name']]
         desired = larry(x, label)         
         ale(actual, desired, msg='panel test #1', original=original) 
+
+    def test_panel_2(self):
+        "func.panel_2" 
+        x = np.ones((4,3)).cumsum(0) - 1
+        label = [['r1', 'r2', 'r3', 'r4'], ['c1', 'c2', 'c3']]
+        original = larry(x, label)
+        original = original.insertaxis(0, "name")
+        y = original.copy()
+        y.label[0] = ["two"]
+        original = original.merge(y)
+        actual = panel(original)
+        x = np.array([[0,0,0,1,1,1,2,2,2,3,3,3]], dtype=np.float).T
+        x = np.hstack((x,x))
+        label = [[('r1', 'c1'),
+                  ('r1', 'c2'),
+                  ('r1', 'c3'),
+                  ('r2', 'c1'),
+                  ('r2', 'c2'),
+                  ('r2', 'c3'),
+                  ('r3', 'c1'),
+                  ('r3', 'c2'),
+                  ('r3', 'c3'),
+                  ('r4', 'c1'),
+                  ('r4', 'c2'),
+                  ('r4', 'c3')], ['name', 'two']]
+        desired = larry(x, label)         
+        ale(actual, desired, msg='panel test #2', original=original) 
         
     def test_stack_1(self):
         "func.stack_1"           
