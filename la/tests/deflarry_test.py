@@ -1709,7 +1709,21 @@ class Test_comparison(unittest.TestCase):
         msg = printfail(t, p.x, 'x')       
         self.assert_((t == p.x).all(), msg) 
         label = [[0, 1, 2]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))                                
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))                              
+    
+    def test_eq_6(self):
+        "larry.__eq___6"
+        lar = la.larry([1, 2, 3])
+        actual = lar == 'a'
+        desired = lar.x == 'a'
+        self.assert_(actual == desired, "failed")
+    
+    def test_eq_7(self):
+        "larry.__eq___7"
+        lar = la.larry(['a', 'b', 'c'])
+        actual = lar == 1
+        desired = lar.x == 1
+        self.assert_(actual == desired, "failed")
 
     def test_ne_1(self):
         "larry.__ne___1"
@@ -1748,6 +1762,20 @@ class Test_comparison(unittest.TestCase):
         "larry.__ne___4"
         date = datetime.date(2004, 1, 1)
         self.failUnlessRaises(TypeError, self.l.__ne__, date)
+    
+    def test_ne_5(self):
+        "larry.__ne___5"
+        lar = la.larry([1, 2, 3])
+        actual = lar != 'a'
+        desired = lar.x != 'a'
+        self.assert_(actual == desired, "failed")
+    
+    def test_ne_6(self):
+        "larry.__ne___6"
+        lar = la.larry(['a', 'b', 'c'])
+        actual = lar != 1
+        desired = lar.x != 1
+        self.assert_(actual == desired, "failed")
         
     def test_lt_1(self):
         "larry.__lt___1"
@@ -1786,6 +1814,20 @@ class Test_comparison(unittest.TestCase):
         "larry.__lt___4"
         date = datetime.date(2004, 1, 1)
         self.failUnlessRaises(TypeError, self.l.__lt__, date)                        
+    
+    def test_lt_5(self):
+        "larry.__lt___5"
+        lar = la.larry([1, 2, 3])
+        actual = lar < 'a'
+        desired = lar.x < 'a'
+        self.assert_(actual == desired, "failed")
+    
+    def test_lt_6(self):
+        "larry.__lt___6"
+        lar = la.larry(['a', 'b', 'c'])
+        actual = lar < 1
+        desired = lar.x < 1
+        self.assert_(actual == desired, "failed")
 
     def test_gt_1(self):
         "larry.__gt___1"
@@ -1824,6 +1866,20 @@ class Test_comparison(unittest.TestCase):
         "larry.__gt___4"
         date = datetime.date(2004, 1, 1)
         self.failUnlessRaises(TypeError, self.l.__gt__, date) 
+    
+    def test_gt_5(self):
+        "larry.__gt___5"
+        lar = la.larry([1, 2, 3])
+        actual = lar > 'a'
+        desired = lar.x > 'a'
+        self.assert_(actual == desired, "failed")
+    
+    def test_gt_6(self):
+        "larry.__gt___6"
+        lar = la.larry(['a', 'b', 'c'])
+        actual = lar > 1
+        desired = lar.x > 1
+        self.assert_(actual == desired, "failed")
         
     def test_le_1(self):
         "larry.__le___1"
@@ -1862,6 +1918,20 @@ class Test_comparison(unittest.TestCase):
         "larry.__le___4"
         date = datetime.date(2004, 1, 1)
         self.failUnlessRaises(TypeError, self.l.__le__, date)                        
+    
+    def test_le_5(self):
+        "larry.__le___5"
+        lar = la.larry([1, 2, 3])
+        actual = lar <= 'a'
+        desired = lar.x <= 'a'
+        self.assert_(actual == desired, "failed")
+    
+    def test_le_6(self):
+        "larry.__le___6"
+        lar = la.larry(['a', 'b', 'c'])
+        actual = lar <= 1
+        desired = lar.x <= 1
+        self.assert_(actual == desired, "failed")
 
     def test_ge_1(self):
         "larry.__ge___1"
@@ -1895,6 +1965,20 @@ class Test_comparison(unittest.TestCase):
         self.assert_((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
+    
+    def test_ge_4(self):
+        "larry.__ge___4"
+        lar = la.larry([1, 2, 3])
+        actual = lar >= 'a'
+        desired = lar.x >= 'a'
+        self.assert_(actual == desired, "failed")
+    
+    def test_ge_5(self):
+        "larry.__ge___5"
+        lar = la.larry(['a', 'b', 'c'])
+        actual = lar >= 1
+        desired = lar.x >= 1
+        self.assert_(actual == desired, "failed")
 
         
 class Test_anyall(unittest.TestCase):

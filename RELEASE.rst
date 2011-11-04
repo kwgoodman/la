@@ -28,6 +28,7 @@ la 0.6
 - #21 Merging two larrys chokes when one is empty
 - #22 Morphing an empty larry chokes lar.morph()
 - #31 la.panel() gives wrong output 
+- #35 larry([1, 2]) == 'a' did not return a bool like numpy does
 
 Older versions
 ==============

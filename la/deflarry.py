@@ -1568,25 +1568,28 @@ class larry(object):
     def __ge__(self, other):
         "Element by element 'greater than or equal to' (>=) comparison."     
         return self.__compare(other, '>=') 
-
+  
     def __compare(self, other, op):         
         if (np.isscalar(other) or isinstance(other, np.ndarray) or
             (type(other) == list) or (type(other) == tuple)):
-            y = self.copy()
             if op == '==':
-                y.x = y.x == other
+                x = self.x == other
             elif op == '!=':
-                y.x = y.x != other
+                x = self.x != other
             elif op == '<':
-                y.x = y.x < other           
+                x = self.x < other           
             elif op == '>':
-                y.x = y.x > other           
+                x = self.x > other           
             elif op == '<=':
-                y.x = y.x <= other           
+                x = self.x <= other           
             elif op == '>=':
-                y.x = y.x >= other           
+                x = self.x >= other           
             else:
                 raise ValueError, 'Unknown comparison operator'
+            if isinstance(x, np.ndarray):
+                y = larry(x, self.copylabel(), integrity=False)
+            else:
+                y = x
             return y
         elif isinstance(other, larry):
             x, y, label = self.__align(other)
