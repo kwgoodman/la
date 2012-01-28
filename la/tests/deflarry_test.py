@@ -24,8 +24,8 @@ class Test_init(unittest.TestCase):
         self.list = [[1,2],[3,4]]
         self.tuple = ((1,2),(3,4))
         self.matrix = np.matrix([[1,2],[3,4]])
-        self.array = np.array([[1,2],[3,4]])                
-        self.label = [[0,1],[0,1]]                                                      
+        self.array = np.array([[1,2],[3,4]])
+        self.label = [[0,1],[0,1]]              
 
     def test_init_list(self):
         "larry.__init__list"
@@ -2275,6 +2275,13 @@ class Test_getset(unittest.TestCase):
         desired = larry([ 3.0, 5.0], [[1, 2]])
         actual = self.l[np.array([1, 2]), 0]
         ale(actual, desired, original=self.l) 
+
+    def test_getitem_22(self):
+        "larry.__getitem___22"
+        lar = larry([None, None])
+        desired = None
+        actual = lar[0]
+        self.assert_(actual==desired, "Indexing object dtype failed.")
                 
     def test_setitem_1(self):
         "larry.__setitem___1"
@@ -2288,7 +2295,7 @@ class Test_getset(unittest.TestCase):
         p[np.isnan(p.x)] = self.nancode        
         self.assert_((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))         
+        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
 
     def test_setitem_2(self):
         "larry.__setitem___2"

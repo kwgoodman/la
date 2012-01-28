@@ -1717,7 +1717,7 @@ class larry(object):
             msg = 'Only slice, integer, and seq (list, tuple, 1d array)'
             msg = msg + ' indexing supported'
             raise IndexError, msg        
-        if np.isscalar(x):
+        if not isinstance(x, np.ndarray):
             return x                                
         return larry(x, label)
 

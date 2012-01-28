@@ -29,6 +29,7 @@ la 0.6
 - #22 Morphing an empty larry chokes lar.morph()
 - #31 la.panel() gives wrong output 
 - #35 larry([1, 2]) == 'a' did not return a bool like numpy does
+- #38 Indexing single element of larry with object dtype  
 - #39 move_func(myfunc) did not pass kwargs to myfunc when method='loop'
 
 Older versions
