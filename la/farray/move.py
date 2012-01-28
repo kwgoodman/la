@@ -210,7 +210,7 @@ def move_func(func, arr, window, axis=-1, method='loop', **kwargs):
     if method == 'strides':
         y = move_func_strides(func, arr, window, axis=axis, **kwargs)
     elif method == 'loop':
-        y = move_func_loop(func, arr, window, axis=axis)
+        y = move_func_loop(func, arr, window, axis=axis, **kwargs)
     else:
         msg = "`method` must be 'strides' or 'loop'."
         raise ValueError, msg
