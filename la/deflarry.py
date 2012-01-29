@@ -1643,10 +1643,13 @@ class larry(object):
             index = int(index)                
             if index >= self.shape[0]:
                 raise IndexError, 'index out of range'
+            x = self.x[index]
+            if self.ndim <= 1:
+                return x
             label = self.label[1:]
-            x = self.x[index]                                       
         elif typidx is tuple:
             label = []
+            allscalar = True
             for ax in xrange(self.ndim):
                 if ax < len(index):
                     idx = index[ax]
@@ -1659,7 +1662,8 @@ class larry(object):
                         try:
                             lab = [self.label[ax][z] for z in idx]
                         except IndexError:
-                            raise IndexError, 'index out of range'                           
+                            raise IndexError, 'index out of range'
+                        allscalar = False
                     elif typ is np.ndarray:
                         if idx.ndim != 1:
                             msg = 'You can use a Numpy array for indexing, '
@@ -1676,16 +1680,20 @@ class larry(object):
                                 lab = [self.label[ax][z] for z in idx]
                             except IndexError:
                                 raise IndexError, 'index out of range'                       
+                        allscalar = False
                     elif typ is slice:
                         lab = self.label[ax][idx] 
+                        allscalar = False
                     else:
                         msg = 'I do not recognize the way you are indexing'
                         raise IndexError, msg                       
                 else:
                     lab = self.label[ax]
                 if lab:     
-                    label.append(lab)              
+                    label.append(lab)
             x = self.x[index]
+            if allscalar:
+                return x
         elif typidx is slice:       
             label = list(self.label)
             label[0] = label[0][index]
@@ -1717,8 +1725,6 @@ class larry(object):
             msg = 'Only slice, integer, and seq (list, tuple, 1d array)'
             msg = msg + ' indexing supported'
             raise IndexError, msg        
-        if not isinstance(x, np.ndarray):
-            return x                                
         return larry(x, label)
 
     def take(self, indices, axis):

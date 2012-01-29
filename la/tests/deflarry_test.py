@@ -2282,6 +2282,28 @@ class Test_getset(unittest.TestCase):
         desired = None
         actual = lar[0]
         self.assert_(actual==desired, "Indexing object dtype failed.")
+    
+    def test_getitem_23(self):
+        "larry.__getitem___23"
+        a = np.empty(2, dtype=object)
+        a[0] = np.array([1, 2, 3])
+        a[1] = np.array([4, 5, 6])
+        lar = larry(a)
+        desired = np.array([4, 5, 6])
+        actual = lar[1]
+        err_msg = "Indexing 1d object dtype (array of arrays) failed."
+        assert_equal(actual, desired, err_msg)
+    
+    def test_getitem_24(self):
+        "larry.__getitem___24"
+        a = np.empty((2,1), dtype=object)
+        a[0,0] = np.array([1, 2, 3])
+        a[1,0] = np.array([4, 5, 6])
+        lar = larry(a)
+        desired = np.array([4, 5, 6])
+        actual = lar[1,0]
+        err_msg = "Indexing 2d object dtype (array of arrays) failed."
+        assert_equal(actual, desired, err_msg)
                 
     def test_setitem_1(self):
         "larry.__setitem___1"
