@@ -390,6 +390,16 @@ class Test_align_1d(unittest.TestCase):
         ale(a1, d1, msg % 'left', original=y1)
         ale(a2, d2, msg % 'right', original=y2)
 
+    def test_1d21(self):
+        "align 1d test #21"
+        y1 = larry([1, 2, 3])
+        y2 = larry([1, 2, 3, 4])
+        a1, a2 = align(y1, y2, join='skip')
+        d1, d2 = y1.copy(), y2.copy()
+        msg = "align 1d fail on %s larry"
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)
+
 class Test_align_2d(unittest.TestCase):
     "Test 2d alignment of larrys"   
 
@@ -471,6 +481,40 @@ class Test_align_2d(unittest.TestCase):
         msg = "align 2d fail on %s larry"
         ale(a1, d1, msg % 'left', original=y1)
         ale(a2, d2, msg % 'right', original=y2)
+    
+    def test_2d9(self):
+        "align 2d test #9"
+        y1 = larry([[1, 2],    [3, 4]])
+        y2 = larry([[1, 2, 5], [3, 4, 6]])
+        a1, a2 = align(y1, y2, 'skip')
+        d1, d2 = y1.copy(), y2.copy()
+        msg = "align 2d fail on %s larry"
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)            
+
+    def test_2d10(self):
+        "align 2d test #10"
+        y1 = larry([[1, 2], [3, 4], [7, 8]])
+        y2 = larry([[1, 2, 5], [3, 4, 6]])
+        a1, a2 = align(y1, y2, ['inner', 'skip'])
+        d1 = larry([[1, 2], [3, 4]])
+        d2 = larry([[1, 2, 5], [3, 4, 6]])
+        msg = "align 2d fail on %s larry"
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)            
+
+    def test_2d11(self):
+        "align 2d test #11"
+        y1 = larry([[0.1, 0.2], [0.3, 0.4], [0.7, 0.8]])
+        y2 = larry([[0.1, 0.2, 0.5], [0.3, 0.4, 0.6]])
+        a1, a2 = align(y1, y2, ['skip', 'outer'])
+        d1 = larry([[0.1, 0.2, np.nan], [0.3, 0.4, np.nan],
+                    [0.7, 0.8, np.nan]])
+        d2 = larry([[0.1, 0.2, 0.5],    [0.3, 0.4, 0.6]])
+        msg = "align 2d fail on %s larry"
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)            
+
         
 class Test_binaryop(unittest.TestCase):
     "Test la.binaryop()"   
