@@ -25,12 +25,12 @@ Archive functions
 One method to archive larrys is to use the archive functions (see
 :ref:`ioclass` for a second, more powerful method):
 
-* :func:`save <la.io.save>`
-* :func:`load <la.io.load>`
+* :func:`save <la.save>`
+* :func:`load <la.load>`
 * :func:`delete <la.io.delete>`
-* :func:`archive_directory <la.io.archive_directory>`
-* :func:`is_archived_larry <la.io.is_archived_larry>`
-* :func:`repack <la.io.repack>`
+* :func:`archive_directory <la.archive_directory>`
+* :func:`is_archived_larry <la.is_archived_larry>`
+* :func:`repack <la.repack>`
 
 To demonstrate, let's start by creating a larry::
 
