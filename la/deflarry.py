@@ -1689,12 +1689,12 @@ class larry(object):
                         raise IndexError, msg                       
                 else:
                     lab = self.label[ax]
-                if lab:     
+                if lab is not None:     
                     label.append(lab)
             x = self.x[index]
             if allscalar:
                 return x
-        elif typidx is slice:       
+        elif typidx is slice:
             label = list(self.label)
             label[0] = label[0][index]
             x = self.x[index]

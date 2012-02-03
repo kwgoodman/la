@@ -30,6 +30,7 @@ la 0.6
 **Bugs fixes**
 
 - #14 larry.lag() gives wrong output when nlag=0
+- #20 Indexing chokes on lar[:,3:2]  
 - #21 Merging two larrys chokes when one is empty
 - #22 Morphing an empty larry chokes lar.morph()
 - #31 la.panel() gives wrong output 

@@ -2304,7 +2304,13 @@ class Test_getset(unittest.TestCase):
         actual = lar[1,0]
         err_msg = "Indexing 2d object dtype (array of arrays) failed."
         assert_equal(actual, desired, err_msg)
-                
+    
+    def test_getitem_25(self):
+        "larry.__getitem___25"
+        desired = larry(np.ones((3,0)))
+        actual = self.l[:,1:1]
+        ale(actual, desired, original=self.l) 
+    
     def test_setitem_1(self):
         "larry.__setitem___1"
         t = np.array([[ 1.0, nan],
