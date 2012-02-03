@@ -21,6 +21,10 @@ la 0.6
 - larry.lag() now accepts negative lags
 - datime.time and datetime.datetime labels can now be (HDF5) archived
 
+**Breakage from la 0.5**
+
+- optional parameter for larry creation renamed from integrity to validate
+
 **Bugs fixes**
 
 - Please report bugs at https://github.com/kwgoodman/la/issues

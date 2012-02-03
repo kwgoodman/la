@@ -102,11 +102,11 @@ def align(lar1, lar2, join='inner', cast=True):
                                                    cast=cast)
     if x1isview:    
         x1 = x1.copy()
-    lar3 = larry(x1, label, integrity=False)        
+    lar3 = larry(x1, label, validate=False)        
     label = [list(lab) for lab in label]
     if x2isview:    
         x2 = x2.copy()
-    lar4 = larry(x2, label, integrity=False)    
+    lar4 = larry(x2, label, validate=False)    
     return lar3, lar4
 
 def align_raw(lar1, lar2, join='inner', cast=True):    
@@ -618,7 +618,7 @@ def binaryop(func, lar1, lar2, join='inner', cast=True, missone='ignore',
     # Binary function
     x = func(x1, x2, **kwargs)
     
-    return larry(x, label, integrity=False)
+    return larry(x, label, validate=False)
     
 def add(lar1, lar2, join='inner', cast=True, missone='ignore',
         misstwo='ignore'):
@@ -1349,7 +1349,7 @@ def rand(*args, **kwargs):
         may be omitted if you pass in a label as a keyword argument.
     kwargs : keyword arguments, optional
         Keyword arguments to use in the construction of the larry such as
-        label and integrity. If a label is passed then its dimensions must
+        label and validate. If a label is passed then its dimensions must
         match the `n` integers passed in or, optionally, you can pass in the
         label without the `n` shape integers. If rand is passed in then that
         will be used to generate the random numbers. In that way you can set
@@ -1447,7 +1447,7 @@ def randn(*args, **kwargs):
         may be omitted if you pass in a label as a keyword argument.
     kwargs : keyword arguments, optional
         Keyword arguments to use in the construction of the larry such as
-        label and integrity. If a label is passed then its dimensions must
+        label and validate. If a label is passed then its dimensions must
         match the `n` integers passed in or, optionally, you can pass in the
         label without the `n` shape integers. If randn is passed in then that
         will be used to generate the random numbers. In that way you can set

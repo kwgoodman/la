@@ -17,7 +17,7 @@ from la.farray import (move_nanmedian, move_nanranking, move_func)
 class larry(object):
     "Labeled array"
 
-    def __init__(self, x, label=None, dtype=None, integrity=True):
+    def __init__(self, x, label=None, dtype=None, validate=True):
         """
         Meet larry, he's a labeled array.
         
@@ -34,7 +34,7 @@ class larry(object):
             etc.
         dtype : data-type, optional
             The desired data type of the larry.         
-        integrity : bool, optional
+        validate : bool, optional
             Check the integrity of the larry by checking that the dimensions
             of the data match the dimension of the label, that the labels are
             unique along each axis, and so on. This check adds time to the
@@ -105,7 +105,7 @@ class larry(object):
             x = x.astype(dtype)            
         if label is None:
             label = [range(z) for z in x.shape]
-        if integrity: 
+        if validate: 
             ndim = x.ndim
             if ndim != len(label):
                 raise ValueError, 'Exactly one label per dimension needed'
@@ -161,7 +161,7 @@ class larry(object):
         """
         x = np.log(self.x)
         label = self.copylabel()
-        return larry(x, label, integrity=False) 
+        return larry(x, label, validate=False) 
 
     def exp(self):
         """
@@ -186,7 +186,7 @@ class larry(object):
         """
         x = np.exp(self.x)
         label = self.copylabel()
-        return larry(x, label, integrity=False)
+        return larry(x, label, validate=False)
         
     def sqrt(self):
         """
@@ -211,7 +211,7 @@ class larry(object):
         """
         x = np.sqrt(self.x)
         label = self.copylabel()
-        return larry(x, label, integrity=False)
+        return larry(x, label, validate=False)
 
     def sign(self):
         """
@@ -239,7 +239,7 @@ class larry(object):
         """
         x = np.sign(self.x)
         label = self.copylabel()
-        return larry(x, label, integrity=False)
+        return larry(x, label, validate=False)
         
     def power(self, q):               
         """
@@ -269,7 +269,7 @@ class larry(object):
         """
         x = np.power(self.x, q)
         label = self.copylabel()
-        return larry(x, label, integrity=False)
+        return larry(x, label, validate=False)
         
     def __pow__(self, q):
         """
@@ -532,7 +532,7 @@ class larry(object):
         """
         label = self.copylabel()
         x = np.isnan(self.x)
-        return larry(x, label, integrity=False)                             
+        return larry(x, label, validate=False)                             
 
     def isfinite(self):
         """
@@ -559,7 +559,7 @@ class larry(object):
         """    
         label = self.copylabel()
         x = np.isfinite(self.x)
-        return larry(x, label, integrity=False)
+        return larry(x, label, validate=False)
         
     def isinf(self):
         """
@@ -586,7 +586,7 @@ class larry(object):
         """    
         label = self.copylabel()
         x = np.isinf(self.x)
-        return larry(x, label, integrity=False) 
+        return larry(x, label, validate=False) 
         
     def __invert__(self):
         """
@@ -632,7 +632,7 @@ class larry(object):
         """
         if self.dtype != bool:
             raise TypeError, 'Only larrys with bool dtype can be inverted.'
-        return larry(~self.x, self.copylabel(), integrity=False)
+        return larry(~self.x, self.copylabel(), validate=False)
         
     # Binary Functions ------------------------------------------------------- 
     
@@ -674,15 +674,15 @@ class larry(object):
             if self.label == other.label:
                 x = self.x + other.x
                 label = self.copylabel()
-                return larry(x, label, integrity=False)                        
+                return larry(x, label, validate=False)                        
             else:       
                 x, y, label = self.__align(other)
                 x = x + y
-                return larry(x, label, integrity=False)
+                return larry(x, label, validate=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x + other
             label = self.copylabel()
-            return larry(x, label, integrity=False)                 
+            return larry(x, label, validate=False)                 
         raise TypeError, 'Input must be scalar, array, or larry.' 
     
     __radd__ = __add__
@@ -719,15 +719,15 @@ class larry(object):
             if self.label == other.label:
                 x = self.x - other.x
                 label = self.copylabel()
-                return larry(x, label, integrity=False)                          
+                return larry(x, label, validate=False)                          
             else:          
                 x, y, label = self.__align(other)        
                 x = x - y
-                return larry(x, label, integrity=False)
+                return larry(x, label, validate=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x - other
             label = self.copylabel()
-            return larry(x, label, integrity=False)       
+            return larry(x, label, validate=False)       
         raise TypeError, 'Input must be scalar, array, or larry.'
         
     def __rsub__(self, other):
@@ -768,15 +768,15 @@ class larry(object):
             if self.label == other.label:
                 x = self.x / other.x
                 label = self.copylabel()
-                return larry(x, label, integrity=False)                          
+                return larry(x, label, validate=False)                          
             else:          
                 x, y, label = self.__align(other)        
                 x = x / y
-                return larry(x, label, integrity=False)
+                return larry(x, label, validate=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x / other
             label = self.copylabel()
-            return larry(x, label, integrity=False)        
+            return larry(x, label, validate=False)        
         raise TypeError, 'Input must be scalar, array, or larry.'
         
     def __rdiv__(self, other):
@@ -824,15 +824,15 @@ class larry(object):
             if self.label == other.label:
                 x = self.x * other.x
                 label = self.copylabel()
-                return larry(x, label, integrity=False)                          
+                return larry(x, label, validate=False)                          
             else:           
                 x, y, label = self.__align(other)
                 x = x * y
-                return larry(x, label, integrity=False)
+                return larry(x, label, validate=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x * other
             label = self.copylabel()
-            return larry(x, label, integrity=False)   
+            return larry(x, label, validate=False)   
         raise TypeError, 'Input must be scalar, array, or larry.'
 
     __rmul__ = __mul__
@@ -868,15 +868,15 @@ class larry(object):
             if self.label == other.label:
                 x = np.logical_and(self.x, other.x)
                 label = self.copylabel()
-                return larry(x, label, integrity=False)                      
+                return larry(x, label, validate=False)                      
             else:          
                 x, y, label = self.__align(other)
                 x = np.logical_and(x, y)
-                return larry(x, label, integrity=False)
+                return larry(x, label, validate=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):            
             x = np.logical_and(self.x, other)
             label = self.copylabel()
-            return larry(x, label, integrity=False)
+            return larry(x, label, validate=False)
         raise TypeError, 'Input must be scalar, array, or larry.'
 
     __rand__ = __and__
@@ -912,15 +912,15 @@ class larry(object):
             if self.label == other.label:
                 x = np.logical_or(self.x, other.x)
                 label = self.copylabel()
-                return larry(x, label, integrity=False)                      
+                return larry(x, label, validate=False)                      
             else:          
                 x, y, label = self.__align(other)
                 x = np.logical_or(x, y)
-                return larry(x, label, integrity=False)
+                return larry(x, label, validate=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):            
             x = np.logical_or(self.x, other)
             label = self.copylabel()
-            return larry(x, label, integrity=False)
+            return larry(x, label, validate=False)
         raise TypeError, 'Input must be scalar, array, or larry.'
 
     __ror__ = __or__
@@ -1364,7 +1364,7 @@ class larry(object):
             else:
                 label = self.copylabel()
                 label.pop(axis)
-                return larry(x, label, integrity=False)
+                return larry(x, label, validate=False)
         if np.isscalar(axis):
             x = op(self.x, **kwargs)
             if np.isscalar(x):
@@ -1372,7 +1372,7 @@ class larry(object):
             else:    
                 label = self.copylabel()
                 label.pop(axis)
-                return larry(x, label, integrity=False)      
+                return larry(x, label, validate=False)      
         elif axis is None:
             return op(self.x, **kwargs)
         else:
@@ -1587,7 +1587,7 @@ class larry(object):
             else:
                 raise ValueError, 'Unknown comparison operator'
             if isinstance(x, np.ndarray):
-                y = larry(x, self.copylabel(), integrity=False)
+                y = larry(x, self.copylabel(), validate=False)
             else:
                 y = x
             return y
@@ -1607,7 +1607,7 @@ class larry(object):
                 x = x >= y                              
             else:
                 raise ValueError, 'Unknown comparison operator'              
-            return larry(x, label, integrity=False)
+            return larry(x, label, validate=False)
         else:
             raise TypeError, 'Input must be scalar, numpy array, or larry.'
 
@@ -2551,7 +2551,7 @@ class larry(object):
 
         """
         x = bn.move_nansum(self.x, window, axis=axis)
-        return larry(x, self.copylabel(), integrity=False)
+        return larry(x, self.copylabel(), validate=False)
 
     def move_mean(self, window, axis=-1):
         """
@@ -2586,7 +2586,7 @@ class larry(object):
             
         """
         x = bn.move_nanmean(self.x, window, axis=axis)
-        return larry(x, self.copylabel(), integrity=False)
+        return larry(x, self.copylabel(), validate=False)
 
     def move_std(self, window, axis=-1):
         """
@@ -2623,7 +2623,7 @@ class larry(object):
         
         """
         x = bn.move_nanstd(self.x, window, axis=axis)
-        return larry(x, self.copylabel(), integrity=False)
+        return larry(x, self.copylabel(), validate=False)
 
     def move_min(self, window, axis=-1):
         """
@@ -2658,7 +2658,7 @@ class larry(object):
 
         """
         x = bn.move_nanmin(self.x, window, axis=axis)
-        return larry(x, self.copylabel(), integrity=False)
+        return larry(x, self.copylabel(), validate=False)
 
     def move_max(self, window, axis=-1):
         """
@@ -2693,7 +2693,7 @@ class larry(object):
 
         """
         x = bn.move_nanmax(self.x, window, axis=axis)
-        return larry(x, self.copylabel(), integrity=False)
+        return larry(x, self.copylabel(), validate=False)
 
     def move_ranking(self, window, axis=-1, method='strides'):
         """
@@ -2774,7 +2774,7 @@ class larry(object):
 
         """
         x = move_nanranking(self.x, window, axis=axis, method=method)
-        return larry(x, self.copylabel(), integrity=False)
+        return larry(x, self.copylabel(), validate=False)
 
     def move_median(self, window, axis=-1, method='loop'):
         """
@@ -2816,7 +2816,7 @@ class larry(object):
         
         """
         x = move_nanmedian(self.x, window, axis=axis, method=method)
-        return larry(x, self.copylabel(), integrity=False)
+        return larry(x, self.copylabel(), validate=False)
 
     def move_func(self, func, window, axis=-1, method='loop', **kwargs):
         """
@@ -2871,7 +2871,7 @@ class larry(object):
 
         """
         x = move_func(func, self.x, window, axis=axis, method=method)
-        return larry(x, self.copylabel(), integrity=False)
+        return larry(x, self.copylabel(), validate=False)
 
     @np.deprecate(new_name='move_sum')
     def movingsum(self, window, axis=-1, norm=False):
@@ -2925,7 +2925,7 @@ class larry(object):
         array([-1.5, -0.5,  0.5,  1.5])
             
         """
-        return larry(demean(self.x, axis), self.copylabel(), integrity=False)
+        return larry(demean(self.x, axis), self.copylabel(), validate=False)
 
     def demedian(self, axis=None):
         """
@@ -2955,7 +2955,7 @@ class larry(object):
         array([-1.5, -0.5,  0.5,  1.5])
             
         """
-        return larry(demedian(self.x, axis), self.copylabel(), integrity=False)
+        return larry(demedian(self.x, axis), self.copylabel(), validate=False)
         
     def zscore(self, axis=None):
         """
@@ -2984,7 +2984,7 @@ class larry(object):
         array([-1.22474487,  0.        ,  1.22474487])
             
         """
-        return larry(zscore(self.x, axis), self.copylabel(), integrity=False)
+        return larry(zscore(self.x, axis), self.copylabel(), validate=False)
       
     def ranking(self, axis=0, norm='-1,1'):
         """
@@ -3024,7 +3024,7 @@ class larry(object):
         
         """
         return larry(ranking(self.x, axis, norm=norm), self.copylabel(),
-                     integrity=False)
+                     validate=False)
 
     def quantile(self, q, axis=0):
         """
@@ -3365,7 +3365,7 @@ class larry(object):
         for i in idx:
             label.append(self.label[i])    
         x = self.x.squeeze()
-        return larry(x, label, integrity=False)
+        return larry(x, label, validate=False)
 
     def lag(self, nlag, axis=-1):
         """
@@ -3751,7 +3751,7 @@ class larry(object):
         """   
         label = self.copylabel()
         x = ismissing(self)
-        return larry(x, label, integrity=False)
+        return larry(x, label, validate=False)
 
     def cut_missing(self, fraction, axis=None):
         """
@@ -4772,7 +4772,7 @@ class larry(object):
         """
         label = [list(z) for z in self.label]
         x = self.x.copy()
-        return larry(x, label, integrity=False)
+        return larry(x, label, validate=False)
         
     def copylabel(self):
         """
