@@ -343,7 +343,7 @@ class Test_ranking(unittest.TestCase):
                             [-1.0, -1.0,    1.0,   1.0],
                             [ 1.0,  1.0,   -1.0,   1.0],
                             [ 1.0,  1.0,   -1.0,   1.0]])
-        desired *= 0.533333333
+        desired *= 8.0 / 15
         actual = ranking(x, axis=None)
         assert_almost_equal(actual, desired)
 
@@ -357,7 +357,7 @@ class Test_ranking(unittest.TestCase):
                             [-1.0,  0.0,    1.0,   1.0],
                             [ 1.0,  nan,   -1.0,   1.0],
                             [ 1.0,  0.0,   -1.0,   1.0]])
-        desired *= 0.61538462
+        desired *= 8.0 / 13
         actual = ranking(x, axis=None)
         assert_almost_equal(actual, desired)
         
