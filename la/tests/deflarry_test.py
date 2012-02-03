@@ -3263,6 +3263,141 @@ class Test_calc(unittest.TestCase):
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, lx), 'Reference found') 
 
+    def test_ranking_10(self):
+        "farray.ranking_10"
+        x = np.array([[ nan],
+                      [ nan],
+                      [ nan]])
+        lx = larry(x)
+        p = lx.ranking(0)
+        t = np.array([[ nan],
+                      [ nan],
+                      [ nan]])
+        label = [range(3), range(1)]
+        msg = printfail(t, p.x, 'x')  
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode               
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, lx), 'Reference found') 
+
+    def test_ranking_11(self):
+        "farray.ranking_11"
+        x = np.array([[ nan, nan],
+                      [ nan, nan],
+                      [ nan, nan]])  
+        lx = larry(x)
+        p = lx.ranking(0)
+        t = np.array([[ nan, nan],
+                      [ nan, nan],
+                      [ nan, nan]])
+        label = [range(3), range(2)]
+        msg = printfail(t, p.x, 'x')  
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode               
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, lx), 'Reference found') 
+
+    def test_ranking_12(self):
+        "farray.ranking_12"
+        x = np.array([[ nan, nan, nan]])  
+        lx = larry(x)
+        p = lx.ranking(1)
+        t = np.array([[ nan, nan, nan]])      
+        label = [range(1), range(3)]
+        msg = printfail(t, p.x, 'x')  
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode               
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, lx), 'Reference found') 
+        
+    def test_ranking_13(self):
+        "farray.ranking_13"
+        x = np.array([ 1.0, np.inf, 2.0])  
+        lx = larry(x)
+        p = lx.ranking(0)
+        t = np.array([-1.0, 1.0, 0.0])     
+        label = [range(3)]
+        msg = printfail(t, p.x, 'x')  
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode               
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, lx), 'Reference found') 
+
+    def test_ranking_14(self):
+        "farray.ranking_14"
+        x = np.array([ -np.inf, nan, 1.0, np.inf])  
+        lx = larry(x)
+        p = lx.ranking(0)
+        t = np.array([-1.0, nan, 0.0, 1.0])    
+        label = [range(4)]
+        msg = printfail(t, p.x, 'x')  
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode               
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, lx), 'Reference found') 
+
+    def test_ranking_15(self):
+        "farray.ranking_15"
+        x = np.array([ -np.inf, nan, 1.0, np.inf])  
+        lx = larry(x)
+        p = lx.ranking(None)
+        t = np.array([-1.0, nan, 0.0, 1.0])    
+        label = [range(4)]
+        msg = printfail(t, p.x, 'x')  
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode               
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, lx), 'Reference found') 
+
+    def test_ranking_16(self):
+        "farray.ranking_16"
+        x = np.array([[ 1.0,   1.0,   1.0,   1.0],
+                      [ 1.0,   1.0,   2.0,   2.0],
+                      [ 2.0,   2.0,   1.0,   2.0],
+                      [ 2.0,   2.0,   1.0,   2.0]]) 
+        lx = larry(x)
+        p = lx.ranking(None)
+        t = np.array([[-1.0, -1.0,   -1.0,  -1.0],
+                      [-1.0, -1.0,    1.0,   1.0],
+                      [ 1.0,  1.0,   -1.0,   1.0],
+                      [ 1.0,  1.0,   -1.0,   1.0]])
+        t *= 0.533333333
+        label = [range(4), range(4)]
+        msg = printfail(t, p.x, 'x')  
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode               
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, lx), 'Reference found') 
+
+    def test_ranking_17(self):
+        "farray.ranking_17"
+        x = np.array([[ nan,   1.0,   1.0,   1.0],
+                      [ 1.0,   1.5,   2.0,   2.0],
+                      [ 2.0,   nan,   1.0,   2.0],
+                      [ 2.0,   1.5,   1.0,   2.0]]) 
+        lx = larry(x)
+        p = lx.ranking(None)
+        x = x.T  
+        t = np.array([[ nan, -1.0,   -1.0,  -1.0],
+                      [-1.0,  0.0,    1.0,   1.0],
+                      [ 1.0,  nan,   -1.0,   1.0],
+                      [ 1.0,  0.0,   -1.0,   1.0]])
+        t *= 0.61538462
+        label = [range(4), range(4)]
+        msg = printfail(t, p.x, 'x')  
+        t[np.isnan(t)] = self.nancode
+        p[p.isnan()] = self.nancode               
+        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assert_(noreference(p, lx), 'Reference found') 
+
     def test_movingrank_1(self):
         "larry.movingrank_1"    
         t = self.x6 

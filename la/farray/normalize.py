@@ -131,7 +131,7 @@ def ranking(x, axis=0, norm='-1,1'):
     ----------
     x : ndarray
         Data to be ranked.
-    axis : int, optional
+    axis : {int, None} optional
         Axis to rank over. Default axis is 0.
     norm: str, optional
         A string that specifies the normalization:
@@ -161,6 +161,9 @@ def ranking(x, axis=0, norm='-1,1'):
     example, the output will have the same min and max along all columns.
     
     """
+    if axis is None:
+        ranked_x = ranking(x.reshape(-1), norm=norm)
+        return ranked_x.reshape(*x.shape)
     ax = axis
     if ax < 0:
         # This converts a negative axis to the equivalent positive axis

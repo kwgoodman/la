@@ -2992,7 +2992,7 @@ class larry(object):
 
         Parameters
         ----------
-        axis : int, optional
+        axis : {int, None} optional
             Axis to rank over. Default axis is 0.
         norm: str, optional
             A string that specifies the normalization:

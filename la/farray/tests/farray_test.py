@@ -326,6 +326,40 @@ class Test_ranking(unittest.TestCase):
         actual = ranking(x, axis=0)
         assert_almost_equal(actual, desired)
 
+    def test_ranking_15(self):
+        "farray.ranking_15"
+        x = np.array([ -np.inf, nan, 1.0, np.inf])  
+        desired = np.array([-1.0, nan, 0.0, 1.0])    
+        actual = ranking(x, axis=None)
+        assert_almost_equal(actual, desired)
+
+    def test_ranking_16(self):
+        "farray.ranking_16"
+        x = np.array([[ 1.0,   1.0,   1.0,   1.0],
+                      [ 1.0,   1.0,   2.0,   2.0],
+                      [ 2.0,   2.0,   1.0,   2.0],
+                      [ 2.0,   2.0,   1.0,   2.0]]) 
+        desired = np.array([[-1.0, -1.0,   -1.0,  -1.0],
+                            [-1.0, -1.0,    1.0,   1.0],
+                            [ 1.0,  1.0,   -1.0,   1.0],
+                            [ 1.0,  1.0,   -1.0,   1.0]])
+        desired *= 0.533333333
+        actual = ranking(x, axis=None)
+        assert_almost_equal(actual, desired)
+
+    def test_ranking_17(self):
+        "farray.ranking_17"
+        x = np.array([[ nan,   1.0,   1.0,   1.0],
+                      [ 1.0,   1.5,   2.0,   2.0],
+                      [ 2.0,   nan,   1.0,   2.0],
+                      [ 2.0,   1.5,   1.0,   2.0]]) 
+        desired = np.array([[ nan, -1.0,   -1.0,  -1.0],
+                            [-1.0,  0.0,    1.0,   1.0],
+                            [ 1.0,  nan,   -1.0,   1.0],
+                            [ 1.0,  0.0,   -1.0,   1.0]])
+        desired *= 0.61538462
+        actual = ranking(x, axis=None)
+        assert_almost_equal(actual, desired)
         
 class Test_geometric_mean(unittest.TestCase):
     "Test farray.geometric_mean"
