@@ -20,6 +20,7 @@ la 0.6
 
 - larry.lag() now accepts negative lags
 - datime.time and datetime.datetime labels can now be (HDF5) archived
+- la.align() can now skip the axes you do not wish to align
 
 **Breakage from la 0.5**
 
@@ -27,7 +28,6 @@ la 0.6
 
 **Bugs fixes**
 
-- Please report bugs at https://github.com/kwgoodman/la/issues
 - #14 larry.lag() gives wrong output when nlag=0
 - #21 Merging two larrys chokes when one is empty
 - #22 Morphing an empty larry chokes lar.morph()
