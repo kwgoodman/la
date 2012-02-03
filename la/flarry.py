@@ -26,7 +26,7 @@ def align(lar1, lar2, join='inner', cast=True):
     lar2 : larry
         One of the input larrys. Must have the same number of dimensions as
         `lar1`.
-    join : {'inner', 'outer', 'left', 'right', list}, optional
+    join : {'inner', 'outer', 'left', 'right', 'skip', list}, optional
         The join method used to align the two larrys. The default join method
         along each axis is 'inner', i.e., the intersection of the labels. If
         `join` is a list of strings then the length of the list should be the 
@@ -100,13 +100,26 @@ def align(lar1, lar2, join='inner', cast=True):
     """
     x1, x2, label, x1isview, x2isview = align_raw(lar1, lar2, join=join,
                                                    cast=cast)
+    # convert x1 array to larry
+    label1 = []
+    for j, lab in enumerate(label):
+        if lab is None:
+            label1.append(list(lar1.label[j]))
+        else:
+            label1.append(list(lab))
     if x1isview:    
         x1 = x1.copy()
-    lar3 = larry(x1, label, validate=False)        
-    label = [list(lab) for lab in label]
+    lar3 = larry(x1, label1, validate=False)  
+    # convert x2 array to larry
+    label2 = []
+    for j, lab in enumerate(label):
+        if lab is None:
+            label2.append(list(lar2.label[j]))
+        else:
+            label2.append(list(lab))
     if x2isview:    
         x2 = x2.copy()
-    lar4 = larry(x2, label, validate=False)    
+    lar4 = larry(x2, label2, validate=False)    
     return lar3, lar4
 
 def align_raw(lar1, lar2, join='inner', cast=True):    
@@ -126,7 +139,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
     lar2 : larry
         One of the input larrys. Must have the same number of dimensions as
         `lar1`.
-    join : {'inner', 'outer', 'left', 'right', list}, optional
+    join : {'inner', 'outer', 'left', 'right', 'skip', list}, optional
         The join method used to align the two larrys. The default join method
         along each axis is 'inner', i.e., the intersection of the labels. If
         `join` is a list of strings then the length of the list should be the 
@@ -150,7 +163,8 @@ def align_raw(lar1, lar2, join='inner', cast=True):
     x2 : ndarray
         The aligned version of `lar2`.
     label : list of lists
-        The label of the joined larrys.
+        The label of the joined larrys. If join method along any axis is
+        'skip', then the corresponding entry of label is `None`.
     x1isview : bool
         True if x1 is a view of lar1.x; False otherwise. A view of lar1.x is
         retuned if the labels of `lar1` and `lar2` are the same along all
@@ -345,7 +359,9 @@ def align_raw(lar1, lar2, join='inner', cast=True):
                     index1 = [slice(None)] * ndim
                     index1[ax] = idx1_miss                            
                     x1[index1] = miss1 
-                x1isview = False                                 
+                x1isview = False      
+        elif joinax == 'skip':
+            list3 = None
         else:
             raise ValueError, 'join type not recognized'  
         label.append(list3)
