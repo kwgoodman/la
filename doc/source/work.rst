@@ -768,10 +768,10 @@ The sum of two larrys using an outer join (union of the labels)::
     x
     array([  2.,   4.,  NaN])
     
-The available join methods are inner, outer, left, right, and list. If the
-join method is specified as a list then the first element in the list is the
-join method for axis=0, the second element is the join method for axis=1, and
-so on. 
+The available join methods are `inner`, `outer`, `left`, `right`, `skip`,
+and list. If the join method is specified as a list then the first element
+in the list is the join method for axis=0, the second element is the join
+method for axis=1, and so on. 
     
 The fill method can also be specified (see :func:`la.add` for details)::
 
