@@ -2982,7 +2982,7 @@ class Test_calc(unittest.TestCase):
         "larry.move_sum_7"
         t = np.array([[ nan, nan, nan, nan],
                       [ 2.0, 2.0, nan, 2.0],
-                      [ 1.0, 1.0, nan, 2.0]])                                            
+                      [ 1.0, 1.0, nan, 2.0]])
         label = [[0, 1, 2], [0, 1, 2, 3]]
         p = self.l2.move_sum(2, axis=0)
         msg = printfail(t, p.x, 'x')
