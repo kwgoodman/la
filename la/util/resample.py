@@ -167,6 +167,7 @@ def split(data, idx_train, idx_test, axis):
     >>> kfold = 4
     >>> cv = cross_validation(n, kfold)
     >>> for idx_train, idx_test in cv:
+    ...     ytrain, ytest = split(y, idx_train, idx_test, axis=0)
     ...     print '-' * 10
     ...     print 'ytrain:'
     ...     print ytrain
