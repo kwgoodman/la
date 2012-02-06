@@ -382,13 +382,13 @@ def align_axis(lars, axis=0, join='inner', flag=False):
 
     Parameters
     ----------
-    lars: array_like
+    lars : array_like
         A collection (list, tuple, set, array, etc.) of larrys to align.
-    axis: {int, array_like}, optional
+    axis : {int, array_like}, optional
         An integer indicating which axis along which to align the larrys in
         `lars`, or a sequence of integers of the same length as `lars`
         indicating which axis to use for each entry in `lars`.
-    join: {'inner', 'outer', 'left', 'right'}
+    join : {'inner', 'outer', 'left', 'right'}
         If inner, then labels present in every larry will be kept. If 'outer',
         all labels appearing in any array are kept, and additional entries are
         added to larrys containing fewer labels. See la.morph() for rules on
@@ -398,7 +398,7 @@ def align_axis(lars, axis=0, join='inner', flag=False):
 
     Returns
     -------
-    (lar1, lar2, ...): tuple
+    (lar1, lar2, ...) : tuple
         Tuple of larrys, one corresponding to each entry of lars. None of the
         output refer to input, and the labels of the output do not refer to one
         another.
