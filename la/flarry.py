@@ -1792,11 +1792,15 @@ def lrange(*args, **kwargs):
         `step` apart if such a keyword argument is used), labeled either by
         integers or by the labels supplied.
     
+    See Also
+    --------
+    empty, ones, zeros
+    
     Examples
     --------
-    A basic, 1d arange using the 'dtype' argument:
+    A basic, 1d lrange using the 'dtype' argument:
     
-    >>> la.arange(5, dtype='f4') 
+    >>> la.lrange(5, dtype='f4') 
     label_0
         0
         1
@@ -1806,8 +1810,8 @@ def lrange(*args, **kwargs):
     x
     array([0.0, 1.0, 2.0, 3.0, 4.0], dtype=np.float32)
  
-    A multi-dimensional arange:
-    >>> la.arange(2,3,3)
+    A multi-dimensional lrange:
+    >>> la.lrange(2,3,3)
     label_0
         0
         1
@@ -1830,7 +1834,7 @@ def lrange(*args, **kwargs):
     
     Using the 'label' keword:
 
-    >>> la.arange(label=[['a', 'b']])
+    >>> la.lrange(label=[['a', 'b']])
     label_0
         a
         b
@@ -1891,9 +1895,13 @@ def empty(shape=None, label=None, dtype=None, order='C'):
         a ``(d1, ..., dn)``-shaped larry of ones, labeled either by
         integers or by the labels supplied.
     
+    See Also
+    --------
+    zeros, ones, lrange
+    
     Examples
     --------
-    A basic, 1d arange using the 'dtype' argument:
+    A basic, 1d larry using the 'dtype' argument:
     
     >>> la.empty(5, dtype='i4') 
     label_0
@@ -1906,6 +1914,7 @@ def empty(shape=None, label=None, dtype=None, order='C'):
     array([0, 0, 0, -7, 987], dtype=np.int32)
  
     A multi-dimensional larry:
+    
     >>> la.empty(2,3,3)
     label_0
         0
@@ -1928,7 +1937,7 @@ def empty(shape=None, label=None, dtype=None, order='C'):
     
     Using the 'label' argument:
 
-    >>> la.arange(label=[['a', 'b']])
+    >>> la.empty(label=[['a', 'b']])
     label_0
         a
         b
@@ -1949,8 +1958,6 @@ def empty(shape=None, label=None, dtype=None, order='C'):
         label = [range(i) for i in shape]
     data = np.empty(shape, dtype, order)
     return larry(data, label)
-
-
 
 def ones(shape=None, label=None, dtype=None, order='C'):
     """
@@ -1979,9 +1986,13 @@ def ones(shape=None, label=None, dtype=None, order='C'):
         a ``(d1, ..., dn)``-shaped larry of ones, labeled either by
         integers or by the labels supplied.
     
+    See Also
+    --------
+    empty, zeros, lrange
+    
     Examples
     --------
-    A basic, 1d arange using the 'dtype' argument:
+    A basic, 1d larry using the 'dtype' argument:
     
     >>> la.ones(5, dtype='i4') 
     label_0
@@ -1993,8 +2004,9 @@ def ones(shape=None, label=None, dtype=None, order='C'):
     x
     array([1, 1, 1, 1, 1], dtype=np.int32)
  
-    A multi-dimensional arange:
-    >>> la.arange(2,3,3)
+    A multi-dimensional larry:
+
+    >>> la.ones(2,3,3)
     label_0
         0
         1
@@ -2017,7 +2029,7 @@ def ones(shape=None, label=None, dtype=None, order='C'):
     
     Using the 'label' argument:
 
-    >>> la.arange(label=[['a', 'b']])
+    >>> la.ones(label=[['a', 'b']])
     label_0
         a
         b
@@ -2049,7 +2061,6 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
     order : {'C', 'F'}, optional
         Whether to store multidimensional data in C- or Fortran-contiguous
         (row- or column-wise) order in memory.
- 
 
     Returns
     -------
@@ -2057,11 +2068,15 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
         a ``(d1, ..., dn)``-shaped larry of zeros, labeled either by
         integers or by the labels supplied.
     
+    See Also
+    --------
+    empty, ones, lrange
+
     Examples
     --------
-    A basic, 1d arange using the 'dtype' argument:
+    A basic, 1d larry using the 'dtype' argument:
     
-    >>> la.ones(5, dtype='i4') 
+    >>> la.zeros(5, dtype='i4') 
     label_0
         0
         1
@@ -2071,8 +2086,9 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
     x
     array([0, 0, 0, 0, 0], dtype=np.int32)
  
-    A multi-dimensional arange:
-    >>> la.arange(2,3,3)
+    A multi-dimensional larry:
+
+    >>> la.zeros(2,3,3)
     label_0
         0
         1
@@ -2095,7 +2111,7 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
     
     Using the 'label' argument:
 
-    >>> la.arange(label=[['a', 'b']])
+    >>> la.ones(label=[['a', 'b']])
     label_0
         a
         b
@@ -2106,4 +2122,3 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
     lar = empty(shape, label, dtype, order)
     lar.x.fill(0)
     return lar
-
