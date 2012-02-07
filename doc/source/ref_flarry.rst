@@ -75,6 +75,24 @@ The binary functions combine two larrys into one.
              
 .. autofunction:: la.divide
 
+Quick Instantiation
+-------------------
+
+Functions that quickly generate larrys.
+
+------------             
+
+.. autofunction:: la.zeros
+
+------------             
+
+.. autofunction:: la.ones
+
+------------             
+
+.. autofunction:: la.lrange
+
+
 
 Random
 ------

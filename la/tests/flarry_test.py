@@ -10,7 +10,7 @@ from numpy.testing import assert_array_equal
 from la import larry, rand
 from la import (union, intersection, panel, stack, cov, align, isaligned,
                 binaryop, add, subtract, multiply, divide, unique, sortby,
-                align_axis, arange, ones, zeros)
+                align_axis, lrange, ones, zeros)
 from la.util.testing import assert_larry_equal as ale
 
 
@@ -664,25 +664,25 @@ class Test_align_axis(unittest.TestCase):
 class Test_quick_inst(unittest.TestCase):
     "Test quick larry-creation functions."
 
-    def test_arange_1(self):
-        a = arange(5)
+    def test_lrange_1(self):
+        a = lrange(5)
         d = larry([0, 1, 2, 3, 4])
-        ale(a, d, "arange failed.")
+        ale(a, d, "lrange failed.")
 
-    def test_arange_2(self):
-        a = arange(label=[['a', 'b', 'c', 'd']])
+    def test_lrange_2(self):
+        a = lrange(label=[['a', 'b', 'c', 'd']])
         d = larry([0, 1, 2, 3], [['a', 'b', 'c', 'd']])
-        ale(a, d, "arange failed.")
+        ale(a, d, "lrange failed.")
 
-    def test_arange_3(self):
-        a = arange(2, 2, dtype='f8')
+    def test_lrange_3(self):
+        a = lrange(2, 2, dtype='f8')
         d = larry(np.array([0, 1, 2, 3], dtype='f8').reshape(2,2))
-        ale(a, d, "arange failed.")
+        ale(a, d, "lrange failed.")
 
-    def test_arange_4(self):
-        a = arange([['a', 'b'], ['c', 'd']])
+    def test_lrange_4(self):
+        a = lrange([['a', 'b'], ['c', 'd']])
         d = larry([[0, 1], [2, 3]], [['a', 'b'], ['c', 'd']])
-        ale(a, d, "arange failed.")
+        ale(a, d, "lrange failed.")
 
     def test_ones_1(self):
         a = ones(5)

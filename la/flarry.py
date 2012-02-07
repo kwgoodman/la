@@ -7,7 +7,7 @@ from la.flabel import flattenlabel, listmap, listmap_fill
 from la.farray import covMissing
 from la.missing import missing_marker, ismissing
 
-__all__ = ['align', 'align_axis', 'align_raw', 'arange', 'ones', 'zeros',
+__all__ = ['align', 'align_axis', 'align_raw', 'lrange', 'ones', 'zeros',
            'isaligned', 'union', 'intersection', 'binaryop', 'add', 'sortby',
            'subtract', 'multiply', 'divide', 'unique', 'stack', 'panel', 'cov',
            'rand', 'randn']
@@ -650,279 +650,6 @@ def intersection(axis, *args):
     rc = list(rc)
     rc.sort()
     return rc    
-# Instantiation shortcuts---------------------------------------------------
-
-def arange(*args, **kwargs):
-    """
-    Array of sequential integers, filled where later axes have smaller spacing.
-    
-    Parameters
-    ----------
-    args : `n` ints, optional
-        The dimensions of the returned larry, should be all positive. these
-        may be omitted if you pass in a label as a keyword argument.
-        For convenience, if `arg[0]` is a list, then it will be
-        assumed to refer to `label` (see below).
-    kwargs : keyword arguments, optional
-        If 'label' is supplied, the output will be thus labeled and the shape
-        will be determined by looking at the given labels (any dimension
-        arguments in `args` will be ignored in this case). Other kwargs are as
-        for np.arange, except that 'stop' is not allowed since it is determined
-        by the dimensions of the larry.
-        
-    Returns
-    -------
-    lar : larry
-        a ``(d1, ..., dn)``-shaped larry of consecutive integers (or spaced
-        `step` apart if such a keyword argument is used), labeled either by
-        integers or by the labels supplied.
-    
-    Examples
-    --------
-    A basic, 1d arange using the 'dtype' argument:
-    
-    >>> la.arange(5, dtype='f4') 
-    label_0
-        0
-        1
-        2
-        3
-        4
-    x
-    array([0.0, 1.0, 2.0, 3.0, 4.0], dtype=np.float32)
- 
-    A multi-dimensional arange:
-    >>> la.arange(2,3,3)
-    label_0
-        0
-        1
-    label_1
-        0
-        1
-        2
-    label_2
-        0
-        1
-        2
-    x
-    array([[[ 0,  1,  2],
-            [ 3,  4,  5],
-            [ 6,  7,  8]],
-
-           [[ 9, 10, 11],
-            [12, 13, 14],
-            [15, 16, 17]]])
-    
-    Using the 'label' keword:
-
-    >>> la.arange(label=[['a', 'b']])
-    label_0
-        a
-        b
-    x
-    array([0, 1])
-    
-    """
-    # set label and size
-    if 'label' in kwargs:
-        label = list(kwargs['label'])
-        shape = [len(lab) for lab in label]
-        del kwargs['label']
-    else:
-        if isinstance(args[0], list):
-           label = list(args[0])
-           shape = [len(lab) for lab in label]
-        else:
-            shape = args
-            label = [range(i) for i in shape]
-    # start and step
-    start, step = 0, 1
-    if 'start' in kwargs:
-        start = kwargs['start']
-        del kwargs['start']
-    if 'step' in kwargs:
-        step = kwargs['step']
-        del kwargs['step']
-    # make the data, adjust, and put together
-    total = np.product(np.array(shape))
-    data = np.arange(total, **kwargs).reshape(shape)
-    data *= step; data += start
-    return larry(data, label)
-
-def ones(shape=None, label=None, **kwargs):
-    """
-    Array of sequential integers, filled where later axes have smaller spacing.
-    
-    Parameters
-    ----------
-    shape : {int, tuple}, optional
-        If shape is given, then a label must be supplied. If both
-        are supplied, then `shape` is ignored. If `shape` is an int, output
-        will be one-dimensional.
-    label : list, optional
-        List of lists, a label for the larry produced. For convenience, if no
-        keywords are supplied but the first argument is a list, then
-        that argument will be assumed to be `label` rather than `shape`.
-    kwargs : keyword arguments, optional
-        If 'label' is supplied, the output will be thus labeled and the shape
-        will be determined by looking at the given labels (if shape is
-        supplied, it will be overridden
-        arguments in `args` will be ignored in this case). Other kwargs are as
-        for np.arange.
-
-    Returns
-    -------
-    lar : larry
-        a ``(d1, ..., dn)``-shaped larry of ones, labeled either by
-        integers or by the labels supplied.
-    
-    Examples
-    --------
-    A basic, 1d arange using the 'dtype' argument:
-    
-    >>> la.ones(5, dtype='i4') 
-    label_0
-        0
-        1
-        2
-        3
-        4
-    x
-    array([1, 1, 1, 1, 1], dtype=np.int32)
- 
-    A multi-dimensional arange:
-    >>> la.arange(2,3,3)
-    label_0
-        0
-        1
-    label_1
-        0
-        1
-        2
-    label_2
-        0
-        1
-        2
-    x
-    array([[[ 1.,  1.,  1.],
-            [ 1.,  1.,  1.],
-            [ 1.,  1.,  1.]],
-
-           [[ 1.,  1.,  1.],
-            [ 1.,  1.,  1.],
-            [ 1.,  1.,  1.]]])
-    
-    Using the 'label' argument:
-
-    >>> la.arange(label=[['a', 'b']])
-    label_0
-        a
-        b
-    x
-    array([1., 1.])
-    
-    """
-    if shape is not None:
-        if isinstance(shape, list):
-           label = shape
-        if isinstance(shape, int):
-           shape = (shape,)
-    if label is not None:
-        shape = [len(lab) for lab in label]
-    else:
-        if shape is None:
-           raise ValueError("Either `label` or `shape` must be supplied.")
-        label = [range(i) for i in shape]
-    data = np.ones(shape, **kwargs)
-    return larry(data, label)
-
-def zeros(shape=None, label=None, **kwargs):
-    """
-    Array of sequential integers, filled where later axes have smaller spacing.
-    
-    Parameters
-    ----------
-    shape : {int, tuple}, optional
-        If shape is given, then a label must be supplied. If both
-        are supplied, then `shape` is ignored. If `shape` is an int, output
-        will be one-dimensional.
-    label : list, optional
-        List of lists, a label for the larry produced. For convenience, if no
-        keywords are supplied but the first argument is a list, then
-        that argument will be assumed to be `label` rather than `shape`.
-    kwargs : keyword arguments, optional
-        If 'label' is supplied, the output will be thus labeled and the shape
-        will be determined by looking at the given labels (if shape is
-        supplied, it will be overridden
-        arguments in `args` will be ignored in this case). Other kwargs are as
-        for np.arange.
-
-    Returns
-    -------
-    lar : larry
-        a ``(d1, ..., dn)``-shaped larry of zeros, labeled either by
-        integers or by the labels supplied.
-    
-    Examples
-    --------
-    A basic, 1d arange using the 'dtype' argument:
-    
-    >>> la.ones(5, dtype='i4') 
-    label_0
-        0
-        1
-        2
-        3
-        4
-    x
-    array([0, 0, 0, 0, 0], dtype=np.int32)
- 
-    A multi-dimensional arange:
-    >>> la.arange(2,3,3)
-    label_0
-        0
-        1
-    label_1
-        0
-        1
-        2
-    label_2
-        0
-        1
-        2
-    x
-    array([[[ 0.,  0.,  0.],
-            [ 0.,  0.,  0.],
-            [ 0.,  0.,  0.]],
-
-           [[ 0.,  0.,  0.],
-            [ 0.,  0.,  0.],
-            [ 0.,  0.,  0.]]])
-    
-    Using the 'label' argument:
-
-    >>> la.arange(label=[['a', 'b']])
-    label_0
-        a
-        b
-    x
-    array([0., 0.])
-    
-    """
-    if shape is not None:
-        if isinstance(shape, list):
-           label = shape
-        if isinstance(shape, int):
-           shape = (shape,)
-    if label is not None:
-        shape = [len(lab) for lab in label]
-    else:
-        if shape is None:
-           raise ValueError("Either `label` or `shape` must be supplied.")
-        label = [range(i) for i in shape]
-    data = np.zeros(shape, **kwargs)
-    return larry(data, label)
-
 
 # Binary-- -----------------------------------------------------------------
 
@@ -2037,3 +1764,278 @@ def sortby(lar, element, axis, reverse=False):
         if reverse:
             idx = idx[::-1]
         return lar[idx,:]
+
+# Instantiation shortcuts---------------------------------------------------
+
+def lrange(*args, **kwargs):
+    """
+    Make larry of sequential integers, shaped according to input.
+    
+    Parameters
+    ----------
+    args : `n` ints, optional
+        The dimensions of the returned larry, should be all positive. these
+        may be omitted if you pass in a label as a keyword argument.
+        For convenience, if `arg[0]` is a list, then it will be
+        assumed to refer to `label` (see below).
+    kwargs : keyword arguments, optional
+        If 'label' is supplied, the output will be thus labeled and the shape
+        will be determined by looking at the given labels (any dimension
+        arguments in `args` will be ignored in this case). Other kwargs are as
+        for np.arange, except that 'stop' is not allowed since it is determined
+        by the dimensions of the larry.
+        
+    Returns
+    -------
+    lar : larry
+        a ``(d1, ..., dn)``-shaped larry of consecutive integers (or spaced
+        `step` apart if such a keyword argument is used), labeled either by
+        integers or by the labels supplied.
+    
+    Examples
+    --------
+    A basic, 1d arange using the 'dtype' argument:
+    
+    >>> la.arange(5, dtype='f4') 
+    label_0
+        0
+        1
+        2
+        3
+        4
+    x
+    array([0.0, 1.0, 2.0, 3.0, 4.0], dtype=np.float32)
+ 
+    A multi-dimensional arange:
+    >>> la.arange(2,3,3)
+    label_0
+        0
+        1
+    label_1
+        0
+        1
+        2
+    label_2
+        0
+        1
+        2
+    x
+    array([[[ 0,  1,  2],
+            [ 3,  4,  5],
+            [ 6,  7,  8]],
+
+           [[ 9, 10, 11],
+            [12, 13, 14],
+            [15, 16, 17]]])
+    
+    Using the 'label' keword:
+
+    >>> la.arange(label=[['a', 'b']])
+    label_0
+        a
+        b
+    x
+    array([0, 1])
+    
+    """
+    # set label and size
+    if 'label' in kwargs:
+        label = list(kwargs['label'])
+        shape = [len(lab) for lab in label]
+        del kwargs['label']
+    else:
+        if isinstance(args[0], list):
+           label = list(args[0])
+           shape = [len(lab) for lab in label]
+        else:
+            shape = args
+            label = [range(i) for i in shape]
+    # start and step
+    start, step = 0, 1
+    if 'start' in kwargs:
+        start = kwargs['start']
+        del kwargs['start']
+    if 'step' in kwargs:
+        step = kwargs['step']
+        del kwargs['step']
+    # make the data, adjust, and put together
+    total = np.product(np.array(shape))
+    data = np.arange(total, **kwargs).reshape(shape)
+    data *= step; data += start
+    return larry(data, label)
+
+def ones(shape=None, label=None, dtype=None, order='C'):
+    """
+    Makes a larry of all ones.
+    
+    Parameters
+    ----------
+    shape : {int, tuple}, optional
+        If shape is given, then a label must be supplied. If both
+        are supplied, then `shape` is ignored. If `shape` is an int, output
+        will be one-dimensional.
+    label : list, optional
+        List of lists, a label for the larry produced. For convenience, if no
+        keywords are supplied but the first argument is a list, then
+        that argument will be assumed to be `label` rather than `shape`.
+    dtype : data-type, optional
+        The desired data-type for the array, e.g., `numpy.int8`.  Default is
+        `numpy.float64`.
+    order : {'C', 'F'}, optional
+        Whether to store multidimensional data in C- or Fortran-contiguous
+        (row- or column-wise) order in memory.
+
+    Returns
+    -------
+    lar : larry
+        a ``(d1, ..., dn)``-shaped larry of ones, labeled either by
+        integers or by the labels supplied.
+    
+    Examples
+    --------
+    A basic, 1d arange using the 'dtype' argument:
+    
+    >>> la.ones(5, dtype='i4') 
+    label_0
+        0
+        1
+        2
+        3
+        4
+    x
+    array([1, 1, 1, 1, 1], dtype=np.int32)
+ 
+    A multi-dimensional arange:
+    >>> la.arange(2,3,3)
+    label_0
+        0
+        1
+    label_1
+        0
+        1
+        2
+    label_2
+        0
+        1
+        2
+    x
+    array([[[ 1.,  1.,  1.],
+            [ 1.,  1.,  1.],
+            [ 1.,  1.,  1.]],
+
+           [[ 1.,  1.,  1.],
+            [ 1.,  1.,  1.],
+            [ 1.,  1.,  1.]]])
+    
+    Using the 'label' argument:
+
+    >>> la.arange(label=[['a', 'b']])
+    label_0
+        a
+        b
+    x
+    array([1., 1.])
+    
+    """
+    if shape is not None:
+        if isinstance(shape, list):
+           label = shape
+        if isinstance(shape, int):
+           shape = (shape,)
+    if label is not None:
+        shape = [len(lab) for lab in label]
+    else:
+        if shape is None:
+           raise ValueError("Either `label` or `shape` must be supplied.")
+        label = [range(i) for i in shape]
+    data = np.ones(shape, dtype, order)
+    return larry(data, label)
+
+def zeros(shape=None, label=None, dtype=None, order='C'):
+    """
+    Makes a larry of zeros.
+    
+    Parameters 
+    ----------
+    shape : {int, tuple}, optional
+        If shape is given, then a label must be supplied. If both
+        are supplied, then `shape` is ignored. If `shape` is an int, output
+        will be one-dimensional.
+    label : list, optional
+        List of lists, a label for the larry produced. For convenience, if no
+        keywords are supplied but the first argument is a list, then
+        that argument will be assumed to be `label` rather than `shape`.
+    dtype : data-type, optional
+        The desired data-type for the array, e.g., `numpy.int8`.  Default is
+        `numpy.float64`.
+    order : {'C', 'F'}, optional
+        Whether to store multidimensional data in C- or Fortran-contiguous
+        (row- or column-wise) order in memory.
+ 
+
+    Returns
+    -------
+    lar : larry
+        a ``(d1, ..., dn)``-shaped larry of zeros, labeled either by
+        integers or by the labels supplied.
+    
+    Examples
+    --------
+    A basic, 1d arange using the 'dtype' argument:
+    
+    >>> la.ones(5, dtype='i4') 
+    label_0
+        0
+        1
+        2
+        3
+        4
+    x
+    array([0, 0, 0, 0, 0], dtype=np.int32)
+ 
+    A multi-dimensional arange:
+    >>> la.arange(2,3,3)
+    label_0
+        0
+        1
+    label_1
+        0
+        1
+        2
+    label_2
+        0
+        1
+        2
+    x
+    array([[[ 0.,  0.,  0.],
+            [ 0.,  0.,  0.],
+            [ 0.,  0.,  0.]],
+
+           [[ 0.,  0.,  0.],
+            [ 0.,  0.,  0.],
+            [ 0.,  0.,  0.]]])
+    
+    Using the 'label' argument:
+
+    >>> la.arange(label=[['a', 'b']])
+    label_0
+        a
+        b
+    x
+    array([0., 0.])
+    
+    """
+    if shape is not None:
+        if isinstance(shape, list):
+           label = shape
+        if isinstance(shape, int):
+           shape = (shape,)
+    if label is not None:
+        shape = [len(lab) for lab in label]
+    else:
+        if shape is None:
+           raise ValueError("Either `label` or `shape` must be supplied.")
+        label = [range(i) for i in shape]
+    data = np.zeros(shape, dtype, order)
+    return larry(data, label)
+
