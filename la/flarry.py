@@ -1847,7 +1847,12 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
         if isinstance(shape, int):
            shape = (shape,)
     if label is not None:
-        shape = [len(lab) for lab in label]
+        if shape is not None:
+            _shape = [len(lab) for lab in label]
+            if _shape != shape:
+                raise ValueError("Shape and label cannot disagree")
+        else:
+            shape = [len(lab) for lab in label]
     else:
         if shape is None:
            raise ValueError("Either `label` or `shape` must be supplied.")
@@ -1935,7 +1940,12 @@ def empty(shape=None, label=None, dtype=None, order='C'):
         if isinstance(shape, int):
            shape = (shape,)
     if label is not None:
-        shape = [len(lab) for lab in label]
+        if shape is not None:
+            _shape = [len(lab) for lab in label]
+            if _shape != shape:
+                raise ValueError("Shape and label cannot disagree")
+        else:
+            shape = [len(lab) for lab in label]
     else:
         if shape is None:
            raise ValueError("Either `label` or `shape` must be supplied.")
