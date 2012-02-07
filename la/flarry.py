@@ -388,11 +388,11 @@ def align_axis(lars, axis=0, join='inner', flag=False):
         `lars`, or a sequence of integers of the same length as `lars`
         indicating which axis to use for each entry in `lars`.
     join : {'inner', 'outer', 'left', 'right'}, optional
-        If inner, then labels present in every larry will be kept. If 'outer',
-        all labels appearing in any array are kept, and additional entries are
-        added to larrys containing fewer labels. See la.morph() for rules on
-        how this is done. If 'right' or 'left' then the labels of the output
-        will match those of either the first or last entry of `lars`,
+        If 'inner', then labels present in every larry will be kept. If
+        'outer', all labels appearing in any array are kept, and additional
+        entries are added to larrys containing fewer labels. See la.morph() for
+        rules on how this is done. If 'right' or 'left' then the labels of the
+        output will match those of either the first or last entry of `lars`,
         respectively
 
     Returns
@@ -515,7 +515,6 @@ def align_axis(lars, axis=0, join='inner', flag=False):
         elif join == 'outer':
             for new_label in labels[1:]:
                 label |= new_label
-    if join in ('inner', 'outer'):
         label = list(label)
         label.sort() 
     lars_out = []
