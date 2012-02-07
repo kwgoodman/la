@@ -10,7 +10,7 @@ from numpy.testing import assert_array_equal
 from la import larry, rand
 from la import (union, intersection, panel, stack, cov, align, isaligned,
                 binaryop, add, subtract, multiply, divide, unique, sortby,
-                align_axis)
+                align_axis, lrange, ones, zeros)
 from la.util.testing import assert_larry_equal as ale
 
 
@@ -660,6 +660,69 @@ class Test_align_axis(unittest.TestCase):
         ale(a1, d1, msg % '1st', original=y1)
         ale(a2, d2, msg % '2nd', original=y2)
         ale(a3, d3, msg % '3rd', original=y3)
+
+class Test_quick_inst(unittest.TestCase):
+    "Test quick larry-creation functions."
+
+    def test_lrange_1(self):
+        a = lrange(5)
+        d = larry([0, 1, 2, 3, 4])
+        ale(a, d, "lrange failed.")
+
+    def test_lrange_2(self):
+        a = lrange(label=[['a', 'b', 'c', 'd']])
+        d = larry([0, 1, 2, 3], [['a', 'b', 'c', 'd']])
+        ale(a, d, "lrange failed.")
+
+    def test_lrange_3(self):
+        a = lrange((2, 2), dtype='f8')
+        d = larry(np.array([0, 1, 2, 3], dtype='f8').reshape(2,2))
+        ale(a, d, "lrange failed.")
+
+    def test_lrange_4(self):
+        a = lrange([['a', 'b'], ['c', 'd']])
+        d = larry([[0, 1], [2, 3]], [['a', 'b'], ['c', 'd']])
+        ale(a, d, "lrange failed.")
+
+    def test_ones_1(self):
+        a = ones(5)
+        d = larry([1., 1., 1., 1., 1.])
+        ale(a, d, "ones failed.")
+
+    def test_ones_2(self):
+        a = ones(label=[['a', 'b', 'c', 'd']])
+        d = larry([1., 1., 1., 1.], [['a', 'b', 'c', 'd']])
+        ale(a, d, "ones failed.")
+
+    def test_ones_3(self):
+        a = ones((2, 2), dtype='i8')
+        d = larry(np.array([1., 1., 1., 1.], dtype='i8').reshape(2,2))
+        ale(a, d, "ones failed.")
+
+    def test_ones_4(self):
+        a = ones([['a', 'b'], ['c', 'd']])
+        d = larry([[1., 1.], [1., 1.]], [['a', 'b'], ['c', 'd']])
+        ale(a, d, "ones failed.")
+
+    def test_zeros_1(self):
+        a = zeros(5)
+        d = larry([0., 0., 0., 0., 0.])
+        ale(a, d, "zeros failed.")
+
+    def test_zeros_2(self):
+        a = zeros(label=[['a', 'b', 'c', 'd']])
+        d = larry([0., 0., 0., 0.], [['a', 'b', 'c', 'd']])
+        ale(a, d, "zeros failed.")
+
+    def test_zeros_3(self):
+        a = zeros((2, 2), dtype='i8')
+        d = larry(np.array([0., 0., 0., 0.], dtype='i8').reshape(2,2))
+        ale(a, d, "zeros failed.")
+
+    def test_zeros_4(self):
+        a = zeros([['a', 'b'], ['c', 'd']])
+        d = larry([[0., 0.], [0., 0.]], [['a', 'b'], ['c', 'd']])
+        ale(a, d, "zeros failed.")
 
 class Test_binaryop(unittest.TestCase):
     "Test la.binaryop()"   
