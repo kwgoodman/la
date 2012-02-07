@@ -24,6 +24,7 @@ la 0.6
 - la.align() can now skip the axes you do not wish to align
 - Upgrade numpydoc from 0.3.1 to 0.4 to support Sphinx 1.0.1
 - la.farray.ranking() and larry ranking method support `axis=None`
+- Generate C code with Cython 0.15.1 instead of Cython 0.11
 
 **Breakage from la 0.5**
 

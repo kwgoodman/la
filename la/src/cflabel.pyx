@@ -1,5 +1,7 @@
 "Cython versions of la/flabel.py functions"
 
+from cpython cimport bool
+
 def listmap(list list1, list list2, bool ignore_unmappable=False):
     """
     Indices that map one list onto another list.
