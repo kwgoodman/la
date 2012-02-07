@@ -387,7 +387,7 @@ def align_axis(lars, axis=0, join='inner', flag=False):
         An integer indicating which axis along which to align the larrys in
         `lars`, or a sequence of integers of the same length as `lars`
         indicating which axis to use for each entry in `lars`.
-    join : {'inner', 'outer', 'left', 'right'}
+    join : {'inner', 'outer', 'left', 'right'}, optional
         If inner, then labels present in every larry will be kept. If 'outer',
         all labels appearing in any array are kept, and additional entries are
         added to larrys containing fewer labels. See la.morph() for rules on
@@ -401,19 +401,104 @@ def align_axis(lars, axis=0, join='inner', flag=False):
         Tuple of larrys, one corresponding to each entry of lars. None of the
         output refer to input, and the labels of the output do not refer to one
         another.
-        
+
+    Examples
+    --------
+
+    >>> l1 = la.larry([1, 2, 3, 4], [['a', 'b', 'c', 'd']])
+    >>> l2 = la.larry([[4, 5], [6, 7]], [['x', 'y'], ['c', 'd']])
+    >>> l3 = la.larry([8, 9, 10], [['c', 'd', 'e']])
+    
+    Two arrays, with inner join:
+
+    >>> a1, a2 = la.align_axis([l1, l2], axis=[0, 1, 0])
+    >>> a1
+    
+    label_0
+        c
+        d
+    x
+    array([3, 4])
+    
+    >>> a2
+    
+    label_0
+        x
+        y
+    label_1
+        c
+        d
+    x
+    array([[4, 5],
+           [6, 7]])
+    
+    Two arrays, with outer join:
+
+    >>> a1, a2 = la.align_axis([l1, l3], join='outer')
+    >>> a1
+
+    label_0
+        a
+        b
+        c
+        d
+        e
+    x
+    array([  1.,   2.,   3.,   4.,  nan])
+
+    >>> a2
+
+    label_0
+        a
+        b
+        c
+        d
+        e
+    x
+    array([ nan,  nan,   8.,   9.,  10.])
+
+
+    Multiple arrays:
+
+    >>> a1, a2 = la.align_axis([l1, l2, l3], axis=[0, 1, 0])
+    >>> a1
+
+    label_0
+        c
+        d
+    x
+    array([3, 4])
+
+    >>> a2
+
+    label_0
+        x
+        y
+    label_1
+        c
+        d
+    x
+    array([[4, 5],
+           [6, 7]])
+
+    >>> a3
+
+    label_0
+        c
+        d
+    x
+    array([8, 9])
+
     """
     # input checks and preprocessing
     nlar = len(lars)
     if isinstance(axis, int):
-        axis = np.repeat(axis, nlar)
-    if isinstance(axis, list) or isinstance(axis, tuple):
-        axis = np.array(axis)
+        axis = [axis for j in range(nlar)]
     for j, lar in enumerate(lars):
         if not isinstance(lar, larry):
             raise ValueError("Inputs must be larry.")
         if axis[j] > len(lar.shape):
-            raise ValueError("Axis out of range for input larry " + j)
+            raise ValueError("Axis out of range for input larry %d" % j)
     if join not in ['inner', 'outer', 'left', 'right']:
         raise ValueError("Value of `join` not recognized.")
     # alignment
@@ -431,8 +516,10 @@ def align_axis(lars, axis=0, join='inner', flag=False):
             for new_label in labels[1:]:
                 label |= new_label
     if join in ('inner', 'outer'):
-        label = list(label); label.sort()
+        label = list(label)
+        label.sort() 
     lars_out = []
+    # create output
     for j, lar in enumerate(lars):
         lab = list(label)
         lars_out.append(lar.morph(lab, axis[j]))
