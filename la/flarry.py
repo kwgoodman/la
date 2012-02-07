@@ -1767,23 +1767,27 @@ def sortby(lar, element, axis, reverse=False):
 
 # Instantiation shortcuts---------------------------------------------------
 
-def lrange(*args, **kwargs):
+def lrange(shape=None, label=None, start=0, step=1, dtype=None):
     """
     Make larry of sequential integers, shaped according to input.
     
     Parameters
     ----------
-    args : `n` ints, optional
-        The dimensions of the returned larry, should be all positive. these
-        may be omitted if you pass in a label as a keyword argument.
-        For convenience, if `arg[0]` is a list, then it will be
-        assumed to refer to `label` (see below).
-    kwargs : keyword arguments, optional
-        If 'label' is supplied, the output will be thus labeled and the shape
-        will be determined by looking at the given labels (any dimension
-        arguments in `args` will be ignored in this case). Other kwargs are as
-        for np.arange, except that 'stop' is not allowed since it is determined
-        by the dimensions of the larry.
+    shape : {int, tuple}, optional
+        If shape is given, then a label must be supplied. If both
+        are supplied, then `shape` is ignored. If `shape` is an int, output
+        will be one-dimensional.
+    start : int, optional
+        First integer appearing. Defaults to 0
+    step : int, optional
+        Difference between successive integers. Defaults to 1.
+    label : list, optional
+        List of lists, a label for the larry produced. For convenience, if no
+        keywords are supplied but the first argument is a list, then
+        that argument will be assumed to be `label` rather than `shape`.
+    dtype : data-type, optional
+        The desired data-type for the array, e.g., `numpy.int8`.  Default is
+        `numpy.float64`.
         
     Returns
     -------
@@ -1842,30 +1846,21 @@ def lrange(*args, **kwargs):
     array([0, 1])
     
     """
-    # set label and size
-    if 'label' in kwargs:
-        label = list(kwargs['label'])
+    if shape is not None:
+        if isinstance(shape, list):
+           if isinstance(shape[0], list):
+                label = shape
+        if isinstance(shape, int):
+           shape = (shape,)
+    if label is not None:
         shape = [len(lab) for lab in label]
-        del kwargs['label']
     else:
-        if isinstance(args[0], list):
-           label = list(args[0])
-           shape = [len(lab) for lab in label]
-        else:
-            shape = args
-            label = [range(i) for i in shape]
-    # start and step
-    start, step = 0, 1
-    if 'start' in kwargs:
-        start = kwargs['start']
-        del kwargs['start']
-    if 'step' in kwargs:
-        step = kwargs['step']
-        del kwargs['step']
-    # make the data, adjust, and put together
-    total = np.product(np.array(shape))
-    data = np.arange(total, **kwargs).reshape(shape)
-    data *= step; data += start
+        if shape is None:
+           raise ValueError("Either `label` or `shape` must be supplied.")
+        label = [range(i) for i in shape]
+    total = np.product(shape)
+    data = np.arange(start=start, stop=step*total+start, step=step,
+                     dtype=dtype).reshape(shape)
     return larry(data, label)
 
 def empty(shape=None, label=None, dtype=None, order='C'):
@@ -1947,7 +1942,8 @@ def empty(shape=None, label=None, dtype=None, order='C'):
     """
     if shape is not None:
         if isinstance(shape, list):
-           label = shape
+           if isinstance(shape[0], list):
+                label = shape
         if isinstance(shape, int):
            shape = (shape,)
     if label is not None:

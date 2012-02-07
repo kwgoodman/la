@@ -675,7 +675,7 @@ class Test_quick_inst(unittest.TestCase):
         ale(a, d, "lrange failed.")
 
     def test_lrange_3(self):
-        a = lrange(2, 2, dtype='f8')
+        a = lrange((2, 2), dtype='f8')
         d = larry(np.array([0, 1, 2, 3], dtype='f8').reshape(2,2))
         ale(a, d, "lrange failed.")
 
