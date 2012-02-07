@@ -16,6 +16,7 @@ la 0.6
 - la.isaligned() returns True if two larrys are aligned along specified axis
 - la.sortby() sorts a larry by a row or column specified by its label
 - la.align_axis() aligns multiple larrys along (possibly) different axes
+- la.arange(), la.ones(), and la.zeros() provide quick ways to get test data
 
 **Enhancements**
 
