@@ -1774,17 +1774,17 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
     Parameters
     ----------
     shape : {int, tuple}, optional
-        If shape is given, then a label must be supplied. If both
+        If shape is not given, then a label must be supplied. If both
         are supplied, then `shape` is ignored. If `shape` is an int, output
         will be one-dimensional.
+    label : list, optional
+        List of lists, a label for the larry produced. For convenience, if no
+        keywords are supplied but the first argument is a list of lists, then
+        that argument will be assumed to be `label` rather than `shape`.
     start : int, optional
         First integer appearing. Defaults to 0
     step : int, optional
         Difference between successive integers. Defaults to 1.
-    label : list, optional
-        List of lists, a label for the larry produced. For convenience, if no
-        keywords are supplied but the first argument is a list, then
-        that argument will be assumed to be `label` rather than `shape`.
     dtype : data-type, optional
         The desired data-type for the array, e.g., `numpy.int8`.  Default is
         `numpy.float64`.
@@ -1804,7 +1804,7 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
     --------
     A basic, 1d lrange using the 'dtype' argument:
     
-    >>> la.lrange(5, dtype='f4') 
+    >>> la.lrange(3, dtype='f4') 
     label_0
         0
         1
@@ -1812,10 +1812,10 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
         3
         4
     x
-    array([0.0, 1.0, 2.0, 3.0, 4.0], dtype=np.float32)
+    array([0.0, 1.0, 2.0], dtype=np.float32)
  
     A multi-dimensional lrange:
-    >>> la.lrange(2,3,3)
+    >>> la.lrange((2,3,3))
     label_0
         0
         1
@@ -1857,7 +1857,6 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
     else:
         if shape is None:
            raise ValueError("Either `label` or `shape` must be supplied.")
-        label = [range(i) for i in shape]
     total = np.product(shape)
     data = np.arange(start=start, stop=step*total+start, step=step,
                      dtype=dtype).reshape(shape)
@@ -1870,12 +1869,12 @@ def empty(shape=None, label=None, dtype=None, order='C'):
     Parameters
     ----------
     shape : {int, tuple}, optional
-        If shape is given, then a label must be supplied. If both
+        If shape is not given, then a label must be supplied. If both
         are supplied, then `shape` is ignored. If `shape` is an int, output
         will be one-dimensional.
     label : list, optional
         List of lists, a label for the larry produced. For convenience, if no
-        keywords are supplied but the first argument is a list, then
+        keywords are supplied but the first argument list of lists, then
         that argument will be assumed to be `label` rather than `shape`.
     dtype : data-type, optional
         The desired data-type for the array, e.g., `numpy.int8`.  Default is
@@ -1898,7 +1897,7 @@ def empty(shape=None, label=None, dtype=None, order='C'):
     --------
     A basic, 1d larry using the 'dtype' argument:
     
-    >>> la.empty(5, dtype='i4') 
+    >>> la.empty(3, dtype='i4') 
     label_0
         0
         1
@@ -1906,7 +1905,7 @@ def empty(shape=None, label=None, dtype=None, order='C'):
         3
         4
     x
-    array([0, 0, 0, -7, 987], dtype=np.int32)
+    array([0, -7, 987], dtype=np.int32)
  
     A multi-dimensional larry:
     
@@ -1951,7 +1950,6 @@ def empty(shape=None, label=None, dtype=None, order='C'):
     else:
         if shape is None:
            raise ValueError("Either `label` or `shape` must be supplied.")
-        label = [range(i) for i in shape]
     data = np.empty(shape, dtype, order)
     return larry(data, label)
 
@@ -1962,12 +1960,12 @@ def ones(shape=None, label=None, dtype=None, order='C'):
     Parameters
     ----------
     shape : {int, tuple}, optional
-        If shape is given, then a label must be supplied. If both
+        If shape is not given, then a label must be supplied. If both
         are supplied, then `shape` is ignored. If `shape` is an int, output
         will be one-dimensional.
     label : list, optional
         List of lists, a label for the larry produced. For convenience, if no
-        keywords are supplied but the first argument is a list, then
+        keywords are supplied but the first argument list of lists, then
         that argument will be assumed to be `label` rather than `shape`.
     dtype : data-type, optional
         The desired data-type for the array, e.g., `numpy.int8`.  Default is
@@ -1990,7 +1988,7 @@ def ones(shape=None, label=None, dtype=None, order='C'):
     --------
     A basic, 1d larry using the 'dtype' argument:
     
-    >>> la.ones(5, dtype='i4') 
+    >>> la.ones(3, dtype='i4') 
     label_0
         0
         1
@@ -1998,7 +1996,7 @@ def ones(shape=None, label=None, dtype=None, order='C'):
         3
         4
     x
-    array([1, 1, 1, 1, 1], dtype=np.int32)
+    array([1, 1, 1], dtype=np.int32)
  
     A multi-dimensional larry:
 
@@ -2044,12 +2042,12 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
     Parameters 
     ----------
     shape : {int, tuple}, optional
-        If shape is given, then a label must be supplied. If both
+        If shape is not given, then a label must be supplied. If both
         are supplied, then `shape` is ignored. If `shape` is an int, output
         will be one-dimensional.
     label : list, optional
         List of lists, a label for the larry produced. For convenience, if no
-        keywords are supplied but the first argument is a list, then
+        keywords are supplied but the first argument list of lists, then
         that argument will be assumed to be `label` rather than `shape`.
     dtype : data-type, optional
         The desired data-type for the array, e.g., `numpy.int8`.  Default is
@@ -2072,7 +2070,7 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
     --------
     A basic, 1d larry using the 'dtype' argument:
     
-    >>> la.zeros(5, dtype='i4') 
+    >>> la.zeros(3, dtype='i4') 
     label_0
         0
         1
@@ -2080,7 +2078,7 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
         3
         4
     x
-    array([0, 0, 0, 0, 0], dtype=np.int32)
+    array([0, 0, 0], dtype=np.int32)
  
     A multi-dimensional larry:
 
