@@ -1778,9 +1778,7 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
         are supplied, then `shape` is ignored. If `shape` is an int, output
         will be one-dimensional.
     label : list, optional
-        List of lists, a label for the larry produced. For convenience, if no
-        keywords are supplied but the first argument is a list of lists, then
-        that argument will be assumed to be `label` rather than `shape`.
+        List of lists, a label for the larry produced.
     start : int, optional
         First integer appearing. Defaults to 0
     step : int, optional
@@ -1869,9 +1867,7 @@ def empty(shape=None, label=None, dtype=None, order='C'):
         are supplied, then `shape` is ignored. If `shape` is an int, output
         will be one-dimensional.
     label : list, optional
-        List of lists, a label for the larry produced. For convenience, if no
-        keywords are supplied but the first argument list of lists, then
-        that argument will be assumed to be `label` rather than `shape`.
+        List of lists, a label for the larry produced. 
     dtype : data-type, optional
         The desired data-type for the array, e.g., `numpy.int8`.  Default is
         `numpy.float64`.
@@ -1957,9 +1953,7 @@ def ones(shape=None, label=None, dtype=None, order='C'):
         are supplied, then `shape` is ignored. If `shape` is an int, output
         will be one-dimensional.
     label : list, optional
-        List of lists, a label for the larry produced. For convenience, if no
-        keywords are supplied but the first argument list of lists, then
-        that argument will be assumed to be `label` rather than `shape`.
+        List of lists, a label for the larry produced.
     dtype : data-type, optional
         The desired data-type for the array, e.g., `numpy.int8`.  Default is
         `numpy.float64`.
@@ -2037,9 +2031,7 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
         are supplied, then `shape` is ignored. If `shape` is an int, output
         will be one-dimensional.
     label : list, optional
-        List of lists, a label for the larry produced. For convenience, if no
-        keywords are supplied but the first argument list of lists, then
-        that argument will be assumed to be `label` rather than `shape`.
+        List of lists, a label for the larry produced.
     dtype : data-type, optional
         The desired data-type for the array, e.g., `numpy.int8`.  Default is
         `numpy.float64`.
