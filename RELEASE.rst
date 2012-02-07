@@ -16,7 +16,8 @@ la 0.6
 - la.isaligned() returns True if two larrys are aligned along specified axis
 - la.sortby() sorts a larry by a row or column specified by its label
 - la.align_axis() aligns multiple larrys along (possibly) different axes
-- la.lrange(), la.empty(), la.ones(), and la.zeros() generate larrys
+- la.zeros(), la.ones(), la.empty()
+- la.lrange() similar to np.arange() but allows multi-dimensional output
 
 **Enhancements**
 

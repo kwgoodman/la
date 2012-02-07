@@ -80,19 +80,19 @@ Quick Instantiation
 
 Functions that quickly generate larrys.
 
-------------             
-
-.. autofunction:: la.empty
-
-------------             
+------------
 
 .. autofunction:: la.zeros
 
-------------             
+------------
 
 .. autofunction:: la.ones
 
-------------             
+------------
+
+.. autofunction:: la.empty
+
+------------
 
 .. autofunction:: la.lrange
 

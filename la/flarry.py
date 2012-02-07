@@ -1769,8 +1769,8 @@ def sortby(lar, element, axis, reverse=False):
 
 def lrange(shape=None, label=None, start=0, step=1, dtype=None):
     """
-    Make larry of sequential integers, shaped according to input.
-    
+    Return a new larry of sequential integers, shaped according to input.
+
     Parameters
     ----------
     shape : {int, tuple}, optional
@@ -1788,18 +1788,18 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
     dtype : data-type, optional
         The desired data-type for the array, e.g., `numpy.int8`.  Default is
         `numpy.float64`.
-        
+
     Returns
     -------
     lar : larry
         a ``(d1, ..., dn)``-shaped larry of consecutive integers (or spaced
         `step` apart if such a keyword argument is used), labeled either by
         integers or by the labels supplied.
-    
+  
     See Also
     --------
     empty, ones, zeros
-    
+  
     Examples
     --------
     A basic, 1d lrange using the 'dtype' argument:
@@ -1809,12 +1809,11 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
         0
         1
         2
-        3
-        4
     x
     array([0.0, 1.0, 2.0], dtype=np.float32)
  
     A multi-dimensional lrange:
+
     >>> la.lrange((2,3,3))
     label_0
         0
@@ -1831,12 +1830,12 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
     array([[[ 0,  1,  2],
             [ 3,  4,  5],
             [ 6,  7,  8]],
-
+    .
            [[ 9, 10, 11],
             [12, 13, 14],
             [15, 16, 17]]])
     
-    Using the 'label' keword:
+    Using the `label` keyword:
 
     >>> la.lrange(label=[['a', 'b']])
     label_0
@@ -1864,7 +1863,7 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
 
 def empty(shape=None, label=None, dtype=None, order='C'):
     """
-    Makes an empty larry.
+    Return a new larry of given shape and type, without initializing entries.
     
     Parameters
     ----------
@@ -1881,13 +1880,13 @@ def empty(shape=None, label=None, dtype=None, order='C'):
         `numpy.float64`.
     order : {'C', 'F'}, optional
         Whether to store multidimensional data in C- or Fortran-contiguous
-        (row- or column-wise) order in memory.
+        (row- or column-wise) order in memory. The default is C order.
 
     Returns
     -------
     lar : larry
-        a ``(d1, ..., dn)``-shaped larry of ones, labeled either by
-        integers or by the labels supplied.
+        a ``(d1, ..., dn)``-shaped larry of uninitialized values, labeled either
+        by integers or by the labels supplied.
     
     See Also
     --------
@@ -1909,7 +1908,7 @@ def empty(shape=None, label=None, dtype=None, order='C'):
  
     A multi-dimensional larry:
     
-    >>> la.empty(2,3,3)
+    >>> la.empty(2, 3, 3)
     label_0
         0
         1
@@ -1955,7 +1954,7 @@ def empty(shape=None, label=None, dtype=None, order='C'):
 
 def ones(shape=None, label=None, dtype=None, order='C'):
     """
-    Makes a larry of all ones.
+    Return a new larry of given shape and type, filled with ones.
     
     Parameters
     ----------
@@ -1972,7 +1971,7 @@ def ones(shape=None, label=None, dtype=None, order='C'):
         `numpy.float64`.
     order : {'C', 'F'}, optional
         Whether to store multidimensional data in C- or Fortran-contiguous
-        (row- or column-wise) order in memory.
+        (row- or column-wise) order in memory. The default is C order.
 
     Returns
     -------
@@ -1993,14 +1992,12 @@ def ones(shape=None, label=None, dtype=None, order='C'):
         0
         1
         2
-        3
-        4
     x
     array([1, 1, 1], dtype=np.int32)
  
     A multi-dimensional larry:
 
-    >>> la.ones(2,3,3)
+    >>> la.ones(2, 3, 3)
     label_0
         0
         1
@@ -2016,7 +2013,7 @@ def ones(shape=None, label=None, dtype=None, order='C'):
     array([[[ 1.,  1.,  1.],
             [ 1.,  1.,  1.],
             [ 1.,  1.,  1.]],
-
+    .
            [[ 1.,  1.,  1.],
             [ 1.,  1.,  1.],
             [ 1.,  1.,  1.]]])
@@ -2037,7 +2034,7 @@ def ones(shape=None, label=None, dtype=None, order='C'):
 
 def zeros(shape=None, label=None, dtype=None, order='C'):
     """
-    Makes a larry of zeros.
+    Return a new larry of given shape and type, filled with zeros.
     
     Parameters 
     ----------
@@ -2075,14 +2072,12 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
         0
         1
         2
-        3
-        4
     x
     array([0, 0, 0], dtype=np.int32)
  
     A multi-dimensional larry:
 
-    >>> la.zeros(2,3,3)
+    >>> la.zeros(2, 3, 3)
     label_0
         0
         1
@@ -2098,14 +2093,14 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
     array([[[ 0.,  0.,  0.],
             [ 0.,  0.,  0.],
             [ 0.,  0.,  0.]],
-
+    .
            [[ 0.,  0.,  0.],
             [ 0.,  0.,  0.],
             [ 0.,  0.,  0.]]])
     
     Using the 'label' argument:
 
-    >>> la.ones(label=[['a', 'b']])
+    >>> la.zeros(label=[['a', 'b']])
     label_0
         a
         b
