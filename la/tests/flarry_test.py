@@ -9,7 +9,8 @@ from numpy.testing import assert_array_equal
 
 from la import larry, rand
 from la import (union, intersection, panel, stack, cov, align, isaligned,
-                binaryop, add, subtract, multiply, divide, unique, sortby)
+                binaryop, add, subtract, multiply, divide, unique, sortby,
+                align_axis)
 from la.util.testing import assert_larry_equal as ale
 
 
@@ -515,7 +516,151 @@ class Test_align_2d(unittest.TestCase):
         ale(a1, d1, msg % 'left', original=y1)
         ale(a2, d2, msg % 'right', original=y2)            
 
-        
+class Test_align_axis(unittest.TestCase):
+    "Test align_axis on larrys"
+
+    def test_align_axis_1(self):
+        y1 = larry([[0.1, 0.2], [0.3, 0.4], [0.7, 0.8]])
+        y2 = larry([[0.1, 0.2, 0.5], [0.3, 0.4, 0.6]])
+        a1, a2 = align_axis([y1, y2], axis=1, join='outer')
+        d1 = larry([[0.1, 0.2, np.nan], [0.3, 0.4, np.nan],
+                    [0.7, 0.8, np.nan]])
+        d2 = larry([[0.1, 0.2, 0.5],    [0.3, 0.4, 0.6]])
+        msg = "align_axis fail on %s larry"
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2) 
+    
+    def test_align_axis_2(self):
+        "align 2d test #10"
+        y1 = larry([[1, 2], [3, 4], [7, 8]])
+        y2 = larry([[1, 2, 5], [3, 4, 6]])
+        a1, a2 = align_axis([y1, y2], axis=0, join='inner')
+        d1 = larry([[1, 2], [3, 4]])
+        d2 = larry([[1, 2, 5], [3, 4, 6]])
+        msg = "align_axis fail on %s larry"
+        ale(a1, d1, msg % 'left', original=y1)
+        ale(a2, d2, msg % 'right', original=y2)
+
+    def test_align_axis_3(self):
+        y1 = larry([1.0, 2.0, 3.0, 4.0], [[1, 2, 3, 4]])
+        y2 = larry([5.0, 6.0], [[2, 3]])
+        y3 = larry([7.0, 8.0, 9.0], [[2, 3, 5]])
+        a1, a2, a3 = align_axis([y1, y2, y3])
+        dlab = [[2, 3]]
+        d1 = larry([2.0, 3.0], dlab)
+        d2 = larry([5.0, 6.0], dlab)
+        d3 = larry([7.0, 8.0], dlab)
+        msg = "align_axis fail on %s larry"
+        ale(a1, d1, msg % '1st', original=y1)
+        ale(a2, d2, msg % '2nd', original=y2)
+        ale(a3, d3, msg % '3rd', original=y3)
+
+    def test_align_axis_4(self):
+        y1 = larry([1.0, 2.0, 3.0, 4.0], [[1, 2, 3, 4]])
+        y2 = larry([5.0, 6.0], [[2, 3]])
+        y3 = larry([7.0, 8.0, 9.0], [[2, 3, 5]])
+        a1, a2, a3 = align_axis([y1, y2, y3], join='outer')
+        dlab = [[1, 2, 3, 4, 5]]
+        d1 = larry([1.0, 2.0, 3.0, 4.0, nan], dlab)
+        d2 = larry([nan, 5.0, 6.0, nan, nan], dlab)
+        d3 = larry([nan, 7.0, 8.0, nan, 9.0], dlab)
+        msg = "align_axis fail on %s larry"
+        ale(a1, d1, msg % '1st', original=y1)
+        ale(a2, d2, msg % '2nd', original=y2)
+        ale(a3, d3, msg % '3rd', original=y3)
+
+    def test_align_axis_5(self):
+        y1 = larry([[1.0, 2.0],
+                    [3.0, 4.0],
+                    [5.0, 6.0]], [['a', 'b', 'c'], [1, 2]])
+        y2 = larry([['x'], ['y'], ['z']], [['a', 'b', 'cc'], [1]])
+        y3 = larry([50, 51, 52], [['aa', 'b', 'c']])
+        a1, a2, a3 = align_axis([y1, y2, y3], axis=0, join='inner')
+        d1 = larry([[3.0, 4.0]], [['b'], [1, 2]])
+        d2 = larry([['y']], [['b'], [1]])
+        d3 = larry([51], [['b']])
+        msg = "align_axis fail on %s larry"
+        ale(a1, d1, msg % '1st', original=y1)
+        ale(a2, d2, msg % '2nd', original=y2)
+        ale(a3, d3, msg % '3rd', original=y3)
+       
+    def test_align_axis_6(self):
+        y1 = larry([[1.0, 2.0],
+                    [3.0, 4.0],
+                    [5.0, 6.0]], [['a', 'b', 'c'], [1, 2]])
+        y2 = larry([['x'], ['y'], ['z']], [['a', 'b', 'cc'], [1]])
+        y3 = larry([50, 51, 52], [['aa', 'b', 'c']])
+        a1, a2, a3 = align_axis([y1, y2, y3], axis=0, join='outer')
+        d1 = larry([[1.0, 2.0],
+                    [nan, nan],
+                    [3.0, 4.0],
+                    [5.0, 6.0],
+                    [nan, nan]], 
+                   label = [['a', 'aa', 'b', 'c', 'cc'], [1, 2]])
+        d2 = larry([['x'], [''], ['y'], [''], ['z']], 
+                   [['a', 'aa', 'b', 'c', 'cc'], [1]])
+        d3 = larry([nan, 50.0, 51.0, 52.0, nan], [['a', 'aa', 'b', 'c', 'cc']])
+        msg = "align_axis fail on %s larry"
+        ale(a1, d1, msg % '1st', original=y1)
+        ale(a2, d2, msg % '2nd', original=y2)
+        ale(a3, d3, msg % '3rd', original=y3)
+
+    def test_align_axis_7(self):
+        y1 = larry([[1.0, 2.0],
+                    [3.0, 4.0],
+                    [5.0, 6.0]], [['a', 'b', 'c'], [1, 2]])
+        y2 = larry([['x'], ['y'], ['z']], [['a', 'b', 'cc'], [1]])
+        y3 = larry([50, 51, 52], [['aa', 'b', 'c']])
+        a1, a2, a3 = align_axis([y1, y2, y3], axis=0, join='left')
+        d1 = larry([[1.0, 2.0],
+                    [3.0, 4.0],
+                    [5.0, 6.0]], [['a', 'b', 'c'], [1, 2]])
+        d2 = larry([['x'], ['y'], ['']], 
+                   [['a', 'b', 'c'], [1]])
+        d3 = larry([nan, 51.0, 52.0], [['a', 'b', 'c']])
+        msg = "align_axis fail on %s larry"
+        ale(a1, d1, msg % '1st', original=y1)
+        ale(a2, d2, msg % '2nd', original=y2)
+        ale(a3, d3, msg % '3rd', original=y3)
+
+    def test_align_axis_8(self):
+        y1 = larry([[1.0, 2.0],
+                    [3.0, 4.0],
+                    [5.0, 6.0]], [['a', 'b', 'c'], [1, 2]])
+        y2 = larry([['x'], ['y'], ['z']], [['a', 'b', 'cc'], [1]])
+        y3 = larry([50, 51, 52], [['aa', 'b', 'c']])
+        a3, a2, a1 = align_axis([y3, y2, y1], axis=0, join='right')
+        d1 = larry([[1.0, 2.0],
+                    [3.0, 4.0],
+                    [5.0, 6.0]], [['a', 'b', 'c'], [1, 2]])
+        d2 = larry([['x'], ['y'], ['']], 
+                   [['a', 'b', 'c'], [1]])
+        d3 = larry([nan, 51.0, 52.0], [['a', 'b', 'c']])
+        msg = "align_axis fail on %s larry"
+        ale(a1, d1, msg % '1st', original=y1)
+        ale(a2, d2, msg % '2nd', original=y2)
+        ale(a3, d3, msg % '3rd', original=y3)
+
+    def test_align_axis_9(self):
+        y1 = larry([[1.0, 2.0],
+                    [3.0, 4.0],
+                    [5.0, 6.0]], [['a', 'b', 'c'], [1, 2]])
+        y1 = y1.T
+        y2 = larry([['x'], ['y'], ['z']], [['a', 'b', 'cc'], [1]])
+        y3 = larry([50, 51, 52], [['aa', 'b', 'c']])
+        a1, a2, a3 = align_axis([y1, y2, y3], axis=[1, 0, 0], join='left')
+        d1 = larry([[1.0, 2.0],
+                    [3.0, 4.0],
+                    [5.0, 6.0]], [['a', 'b', 'c'], [1, 2]])
+        d1 = d1.T
+        d2 = larry([['x'], ['y'], ['']], 
+                   [['a', 'b', 'c'], [1]])
+        d3 = larry([nan, 51.0, 52.0], [['a', 'b', 'c']])
+        msg = "align_axis fail on %s larry"
+        ale(a1, d1, msg % '1st', original=y1)
+        ale(a2, d2, msg % '2nd', original=y2)
+        ale(a3, d3, msg % '3rd', original=y3)
+
 class Test_binaryop(unittest.TestCase):
     "Test la.binaryop()"   
 

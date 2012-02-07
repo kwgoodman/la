@@ -7,9 +7,9 @@ from la.flabel import flattenlabel, listmap, listmap_fill
 from la.farray import covMissing
 from la.missing import missing_marker, ismissing
 
-__all__ = ['align', 'align_raw', 'isaligned', 'union', 'intersection',
-           'binaryop', 'add', 'sortby', 'subtract', 'multiply', 'divide',
-           'unique', 'stack', 'panel', 'cov', 'rand', 'randn']
+__all__ = ['align', 'align_axis', 'align_raw', 'isaligned', 'union',
+           'intersection', 'binaryop', 'add', 'sortby', 'subtract', 'multiply',
+           'divide', 'unique', 'stack', 'panel', 'cov', 'rand', 'randn']
 
 
 # Alignment -----------------------------------------------------------------
@@ -374,6 +374,150 @@ def align_raw(lar1, lar2, join='inner', cast=True):
         label.append(list3)
     
     return x1, x2, label, x1isview, x2isview
+
+def align_axis(lars, axis=0, join='inner', flag=False):
+    """
+    Align many larrys along potentially different axes.
+
+    Parameters
+    ----------
+    lars : array_like
+        A collection (list, tuple, set, array, etc.) of larrys to align.
+    axis : {int, array_like}, optional
+        An integer indicating which axis along which to align the larrys in
+        `lars`, or a sequence of integers of the same length as `lars`
+        indicating which axis to use for each entry in `lars`.
+    join : {'inner', 'outer', 'left', 'right'}, optional
+        If 'inner', then labels present in every larry will be kept. If
+        'outer', all labels appearing in any array are kept, and additional
+        entries are added to larrys containing fewer labels. See la.morph() for
+        rules on how this is done. If 'right' or 'left' then the labels of the
+        output will match those of either the first or last entry of `lars`,
+        respectively
+
+    Returns
+    -------
+    (lar1, lar2, ...) : tuple
+        Tuple of larrys, one corresponding to each entry of lars. None of the
+        output refer to input, and the labels of the output do not refer to one
+        another.
+
+    Examples
+    --------
+
+    Create three larrys:
+
+    >>> l1 = la.larry([1, 2, 3, 4], [['a', 'b', 'c', 'd']])
+    >>> l2 = la.larry([[4, 5], [6, 7]], [['x', 'y'], ['c', 'd']])
+    >>> l3 = la.larry([8, 9, 10], [['c', 'd', 'e']])
+    
+    Align the first axis of the first larry with the second axis of the
+    second larry using an inner join:
+
+    >>> a1, a2 = la.align_axis([l1, l2], axis=[0, 1])
+    >>> a1
+    label_0
+        c
+        d
+    x
+    array([3, 4])
+    >>> a2
+    label_0
+        x
+        y
+    label_1
+        c
+        d
+    x
+    array([[4, 5],
+           [6, 7]])
+    
+    Align the first axis of two larrys with an outer join:
+
+    >>> a1, a2 = la.align_axis([l1, l3], join='outer')
+    >>> a1
+    label_0
+        a
+        b
+        c
+        d
+        e
+    x
+    array([  1.,   2.,   3.,   4.,  nan])
+    >>> a2
+    label_0
+        a
+        b
+        c
+        d
+        e
+    x
+    array([ nan,  nan,   8.,   9.,  10.])
+
+    Align multiple larrys with an inner join:
+
+    >>> a1, a2, a3 = la.align_axis([l1, l2, l3], axis=[0, 1, 0])
+    >>> a1
+    label_0
+        c
+        d
+    x
+    array([3, 4])
+    >>> a2
+    label_0
+        x
+        y
+    label_1
+        c
+        d
+    x
+    array([[4, 5],
+           [6, 7]])
+    >>> a3
+    label_0
+        c
+        d
+    x
+    array([8, 9])
+
+    """
+
+    # Input checks and preprocessing
+    nlar = len(lars)
+    if isinstance(axis, int):
+        axis = [axis for j in range(nlar)]
+    for j, lar in enumerate(lars):
+        if not isinstance(lar, larry):
+            raise ValueError("Inputs must be larry.")
+        if (axis[j] >= lar.ndim) or (axis[j] < -lar.ndim):
+            raise ValueError("Axis out of range for input larry %d" % j)
+    if join not in ['inner', 'outer', 'left', 'right']:
+        raise ValueError("Value of `join` not recognized.")
+
+    # Alignment
+    if join == 'left':
+        label = lars[0].label[axis[0]]
+    elif join == 'right':
+        label = lars[-1].label[axis[-1]]
+    else:
+        labels = [set(lar.label[axis[j]]) for j, lar in enumerate(lars)]
+        label = labels[0]
+        if join == 'inner': 
+            for new_label in labels[1:]:
+                label &= new_label
+        elif join == 'outer':
+            for new_label in labels[1:]:
+                label |= new_label
+        label = list(label)
+        label.sort() 
+    lars_out = []
+
+    # Create output
+    for j, lar in enumerate(lars):
+        lab = list(label)
+        lars_out.append(lar.morph(lab, axis[j]))
+
+    return tuple(lars_out)
 
 def isaligned(lar1, lar2, axis=None):
     """

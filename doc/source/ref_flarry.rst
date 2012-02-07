@@ -32,6 +32,10 @@ The alignment functions help you align one of more larrys.
 .. autofunction:: la.align_raw
 
 ------------
+
+.. autofunction:: la.align_axis
+
+------------
              
 .. autofunction:: la.isaligned
 
