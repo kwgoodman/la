@@ -1846,9 +1846,6 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
     
     """
     if shape is not None:
-        if isinstance(shape, list):
-           if isinstance(shape[0], list):
-                label = shape
         if isinstance(shape, int):
            shape = (shape,)
     if label is not None:
@@ -1939,9 +1936,6 @@ def empty(shape=None, label=None, dtype=None, order='C'):
     
     """
     if shape is not None:
-        if isinstance(shape, list):
-           if isinstance(shape[0], list):
-                label = shape
         if isinstance(shape, int):
            shape = (shape,)
     if label is not None:
