@@ -82,6 +82,10 @@ Functions that quickly generate larrys.
 
 ------------             
 
+.. autofunction:: la.empty
+
+------------             
+
 .. autofunction:: la.zeros
 
 ------------             

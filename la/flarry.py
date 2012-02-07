@@ -7,10 +7,10 @@ from la.flabel import flattenlabel, listmap, listmap_fill
 from la.farray import covMissing
 from la.missing import missing_marker, ismissing
 
-__all__ = ['align', 'align_axis', 'align_raw', 'lrange', 'ones', 'zeros',
-           'isaligned', 'union', 'intersection', 'binaryop', 'add', 'sortby',
-           'subtract', 'multiply', 'divide', 'unique', 'stack', 'panel', 'cov',
-           'rand', 'randn']
+__all__ = ['align', 'align_axis', 'align_raw', 'lrange', 'empty', 'ones',
+           'zeros', 'isaligned', 'union', 'intersection', 'binaryop', 'add',
+           'sortby', 'subtract', 'multiply', 'divide', 'unique', 'stack',
+           'panel', 'cov', 'rand', 'randn']
 
 
 # Alignment -----------------------------------------------------------------
@@ -1864,6 +1864,94 @@ def lrange(*args, **kwargs):
     data *= step; data += start
     return larry(data, label)
 
+def empty(shape=None, label=None, dtype=None, order='C'):
+    """
+    Makes an empty larry.
+    
+    Parameters
+    ----------
+    shape : {int, tuple}, optional
+        If shape is given, then a label must be supplied. If both
+        are supplied, then `shape` is ignored. If `shape` is an int, output
+        will be one-dimensional.
+    label : list, optional
+        List of lists, a label for the larry produced. For convenience, if no
+        keywords are supplied but the first argument is a list, then
+        that argument will be assumed to be `label` rather than `shape`.
+    dtype : data-type, optional
+        The desired data-type for the array, e.g., `numpy.int8`.  Default is
+        `numpy.float64`.
+    order : {'C', 'F'}, optional
+        Whether to store multidimensional data in C- or Fortran-contiguous
+        (row- or column-wise) order in memory.
+
+    Returns
+    -------
+    lar : larry
+        a ``(d1, ..., dn)``-shaped larry of ones, labeled either by
+        integers or by the labels supplied.
+    
+    Examples
+    --------
+    A basic, 1d arange using the 'dtype' argument:
+    
+    >>> la.empty(5, dtype='i4') 
+    label_0
+        0
+        1
+        2
+        3
+        4
+    x
+    array([0, 0, 0, -7, 987], dtype=np.int32)
+ 
+    A multi-dimensional larry:
+    >>> la.empty(2,3,3)
+    label_0
+        0
+        1
+    label_1
+        0
+        1
+        2
+    label_2
+        0
+        1
+        2
+    x
+    array([[[      0e0,  0e0,  0e0],
+            [      0e0,  0e0,  0e0],
+            [      0e0,  0e0,  0e0]],
+           [[ 3.2e-254,  0e0,  0e0],
+            [     0e0.,  0e0,  0e0],
+            [     0e0,   0e0,  0e0]]])
+    
+    Using the 'label' argument:
+
+    >>> la.arange(label=[['a', 'b']])
+    label_0
+        a
+        b
+    x
+    array([0e0, -3.2e-256])
+    
+    """
+    if shape is not None:
+        if isinstance(shape, list):
+           label = shape
+        if isinstance(shape, int):
+           shape = (shape,)
+    if label is not None:
+        shape = [len(lab) for lab in label]
+    else:
+        if shape is None:
+           raise ValueError("Either `label` or `shape` must be supplied.")
+        label = [range(i) for i in shape]
+    data = np.empty(shape, dtype, order)
+    return larry(data, label)
+
+
+
 def ones(shape=None, label=None, dtype=None, order='C'):
     """
     Makes a larry of all ones.
@@ -1937,19 +2025,9 @@ def ones(shape=None, label=None, dtype=None, order='C'):
     array([1., 1.])
     
     """
-    if shape is not None:
-        if isinstance(shape, list):
-           label = shape
-        if isinstance(shape, int):
-           shape = (shape,)
-    if label is not None:
-        shape = [len(lab) for lab in label]
-    else:
-        if shape is None:
-           raise ValueError("Either `label` or `shape` must be supplied.")
-        label = [range(i) for i in shape]
-    data = np.ones(shape, dtype, order)
-    return larry(data, label)
+    lar = empty(shape, label, dtype, order)
+    lar.x.fill(1)
+    return lar
 
 def zeros(shape=None, label=None, dtype=None, order='C'):
     """
@@ -2025,17 +2103,7 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
     array([0., 0.])
     
     """
-    if shape is not None:
-        if isinstance(shape, list):
-           label = shape
-        if isinstance(shape, int):
-           shape = (shape,)
-    if label is not None:
-        shape = [len(lab) for lab in label]
-    else:
-        if shape is None:
-           raise ValueError("Either `label` or `shape` must be supplied.")
-        label = [range(i) for i in shape]
-    data = np.zeros(shape, dtype, order)
-    return larry(data, label)
+    lar = empty(shape, label, dtype, order)
+    lar.x.fill(0)
+    return lar
 
