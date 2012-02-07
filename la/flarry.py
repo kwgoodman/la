@@ -405,23 +405,23 @@ def align_axis(lars, axis=0, join='inner', flag=False):
     Examples
     --------
 
+    Create three larrys:
+
     >>> l1 = la.larry([1, 2, 3, 4], [['a', 'b', 'c', 'd']])
     >>> l2 = la.larry([[4, 5], [6, 7]], [['x', 'y'], ['c', 'd']])
     >>> l3 = la.larry([8, 9, 10], [['c', 'd', 'e']])
     
-    Two arrays, with inner join:
+    Align the first axis of the first larry with the second axis of the
+    second larry using an inner join:
 
-    >>> a1, a2 = la.align_axis([l1, l2], axis=[0, 1, 0])
+    >>> a1, a2 = la.align_axis([l1, l2], axis=[0, 1])
     >>> a1
-    
     label_0
         c
         d
     x
     array([3, 4])
-    
     >>> a2
-    
     label_0
         x
         y
@@ -432,11 +432,10 @@ def align_axis(lars, axis=0, join='inner', flag=False):
     array([[4, 5],
            [6, 7]])
     
-    Two arrays, with outer join:
+    Align the first axis of two larrys with an outer join:
 
     >>> a1, a2 = la.align_axis([l1, l3], join='outer')
     >>> a1
-
     label_0
         a
         b
@@ -445,9 +444,7 @@ def align_axis(lars, axis=0, join='inner', flag=False):
         e
     x
     array([  1.,   2.,   3.,   4.,  nan])
-
     >>> a2
-
     label_0
         a
         b
@@ -457,20 +454,16 @@ def align_axis(lars, axis=0, join='inner', flag=False):
     x
     array([ nan,  nan,   8.,   9.,  10.])
 
+    Align multiple larrys with an inner join:
 
-    Multiple arrays:
-
-    >>> a1, a2 = la.align_axis([l1, l2, l3], axis=[0, 1, 0])
+    >>> a1, a2, a3 = la.align_axis([l1, l2, l3], axis=[0, 1, 0])
     >>> a1
-
     label_0
         c
         d
     x
     array([3, 4])
-
     >>> a2
-
     label_0
         x
         y
@@ -480,9 +473,7 @@ def align_axis(lars, axis=0, join='inner', flag=False):
     x
     array([[4, 5],
            [6, 7]])
-
     >>> a3
-
     label_0
         c
         d
@@ -490,18 +481,20 @@ def align_axis(lars, axis=0, join='inner', flag=False):
     array([8, 9])
 
     """
-    # input checks and preprocessing
+
+    # Input checks and preprocessing
     nlar = len(lars)
     if isinstance(axis, int):
         axis = [axis for j in range(nlar)]
     for j, lar in enumerate(lars):
         if not isinstance(lar, larry):
             raise ValueError("Inputs must be larry.")
-        if axis[j] > len(lar.shape):
+        if (axis[j] >= lar.ndim) or (axis[j] < -lar.ndim):
             raise ValueError("Axis out of range for input larry %d" % j)
     if join not in ['inner', 'outer', 'left', 'right']:
         raise ValueError("Value of `join` not recognized.")
-    # alignment
+
+    # Alignment
     if join == 'left':
         label = lars[0].label[axis[0]]
     elif join == 'right':
@@ -518,10 +511,12 @@ def align_axis(lars, axis=0, join='inner', flag=False):
         label = list(label)
         label.sort() 
     lars_out = []
-    # create output
+
+    # Create output
     for j, lar in enumerate(lars):
         lab = list(label)
         lars_out.append(lar.morph(lab, axis[j]))
+
     return tuple(lars_out)
 
 def isaligned(lar1, lar2, axis=None):
