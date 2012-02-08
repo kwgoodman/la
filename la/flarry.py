@@ -1774,9 +1774,8 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
     Parameters
     ----------
     shape : {int, tuple}, optional
-        If shape is not given, then a label must be supplied. If both
-        are supplied, then `shape` is ignored. If `shape` is an int, output
-        will be one-dimensional.
+        If `shape` is not given, then `label` must be supplied. If `shape` is
+        an int, output will be one-dimensional.
     label : list, optional
         List of lists, a label for the larry produced.
     start : int, optional
@@ -1843,9 +1842,6 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
     array([0, 1])
     
     """
-    if shape is not None:
-        if isinstance(shape, int):
-           shape = (shape,)
     if label is not None:
         shape = [len(lab) for lab in label]
     else:
@@ -1863,9 +1859,8 @@ def empty(shape=None, label=None, dtype=None, order='C'):
     Parameters
     ----------
     shape : {int, tuple}, optional
-        If shape is not given, then a label must be supplied. If both
-        are supplied, then `shape` is ignored. If `shape` is an int, output
-        will be one-dimensional.
+        If `shape` is not given, then `label` must be supplied. If `shape` is
+        an int, output will be one-dimensional.
     label : list, optional
         List of lists, a label for the larry produced. 
     dtype : data-type, optional
@@ -1931,9 +1926,6 @@ def empty(shape=None, label=None, dtype=None, order='C'):
     array([0e0, -3.2e-256])
     
     """
-    if shape is not None:
-        if isinstance(shape, int):
-           shape = (shape,)
     if label is not None:
         shape = [len(lab) for lab in label]
     else:
@@ -1949,9 +1941,8 @@ def ones(shape=None, label=None, dtype=None, order='C'):
     Parameters
     ----------
     shape : {int, tuple}, optional
-        If shape is not given, then a label must be supplied. If both
-        are supplied, then `shape` is ignored. If `shape` is an int, output
-        will be one-dimensional.
+        If `shape` is not given, then `label` must be supplied. If `shape` is
+        an int, output will be one-dimensional.
     label : list, optional
         List of lists, a label for the larry produced.
     dtype : data-type, optional
@@ -2027,9 +2018,8 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
     Parameters 
     ----------
     shape : {int, tuple}, optional
-        If shape is not given, then a label must be supplied. If both
-        are supplied, then `shape` is ignored. If `shape` is an int, output
-        will be one-dimensional.
+        If `shape` is not given, then `label` must be supplied. If `shape` is
+        an int, output will be one-dimensional.
     label : list, optional
         List of lists, a label for the larry produced.
     dtype : data-type, optional
