@@ -161,6 +161,27 @@ You can also create larrys, filled with random samples, using
     array([[ 0.3449072 ,  0.40397174],
            [ 0.7791279 ,  0.86084403]])
 
+Another way to create larrys is to use :func:`la.zeros`,  :func:`la.ones`,
+:func:`la.empty`, and  :func:`la.lrange`::
+
+    >>> la.ones(2)
+    label_0
+        0
+        1
+    x
+    array([ 1.,  1.])
+
+    >>> la.lrange(label=[['r1', 'r2'], ['c1', 'c2']])
+    label_0
+        r1
+        r2
+    label_1
+        c1
+        c2
+    x
+    array([[0, 1],
+           [2, 3]])
+
 The following functions can also be used to create larrys:
 
 * :meth:`fromtuples <la.larry.fromtuples>`
