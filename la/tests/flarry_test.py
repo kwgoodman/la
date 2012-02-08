@@ -10,7 +10,7 @@ from numpy.testing import assert_array_equal
 from la import larry, rand
 from la import (union, intersection, panel, stack, cov, align, isaligned,
                 binaryop, add, subtract, multiply, divide, unique, sortby,
-                align_axis, lrange, ones, zeros)
+                align_axis, lrange, ones, zeros, empty)
 from la.util.testing import assert_larry_equal as ale
 
 
@@ -680,9 +680,15 @@ class Test_quick_inst(unittest.TestCase):
         ale(a, d, "lrange failed.")
 
     def test_lrange_4(self):
-        a = lrange([['a', 'b'], ['c', 'd']])
+        a = lrange(label=[['a', 'b'], ['c', 'd']])
         d = larry([[0, 1], [2, 3]], [['a', 'b'], ['c', 'd']])
         ale(a, d, "lrange failed.")
+
+    def test_lrange_5(self):
+        self.failUnlessRaises(ValueError, lrange, (2,), ['a', 'b', 'c'])
+
+    def test_empty_1(self):
+        self.failUnlessRaises(ValueError, empty, (2,), ['a', 'b', 'c'])
 
     def test_ones_1(self):
         a = ones(5)
@@ -700,7 +706,7 @@ class Test_quick_inst(unittest.TestCase):
         ale(a, d, "ones failed.")
 
     def test_ones_4(self):
-        a = ones([['a', 'b'], ['c', 'd']])
+        a = ones(label=[['a', 'b'], ['c', 'd']])
         d = larry([[1., 1.], [1., 1.]], [['a', 'b'], ['c', 'd']])
         ale(a, d, "ones failed.")
 
@@ -720,7 +726,7 @@ class Test_quick_inst(unittest.TestCase):
         ale(a, d, "zeros failed.")
 
     def test_zeros_4(self):
-        a = zeros([['a', 'b'], ['c', 'd']])
+        a = zeros(label=[['a', 'b'], ['c', 'd']])
         d = larry([[0., 0.], [0., 0.]], [['a', 'b'], ['c', 'd']])
         ale(a, d, "zeros failed.")
 
