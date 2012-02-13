@@ -12,17 +12,27 @@ To convert from cython to C:
 $ cd la/src
 $ python setup.py build_ext --inplace
 
+Or use top-level Makefile
 """
 
+import os
+import sys
 from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Distutils import build_ext
 
-ext_modules = [Extension("cflabel", ["cflabel.pyx"])]
+name = 'cflabel'
+mod_dir = os.path.dirname(__file__)
+ext_modules = [Extension(name, [os.path.join(mod_dir, name + ".pyx")])]
 
 setup(
-  name = 'cflabel',
+  name = name,
   cmdclass = {'build_ext': build_ext},
   ext_modules = ext_modules
 )
 
+# Move compiled code one directory up
+extension = '.so'
+if sys.platform.startswith('win'):
+    extension = '.pyd'
+os.rename(name + extension, os.path.join(mod_dir, "../" + name + extension))
