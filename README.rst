@@ -70,7 +70,7 @@ Install
 Requirements:
 
 ======================== ====================================================
-la                       Python, NumPy 1.5.1, 1.6.0, Bottleneck 0.5.0
+la                       Python, NumPy 1.5.1-1.6.1, Bottleneck 0.5.0
 Unit tests               nose
 ======================== ====================================================
 
@@ -98,6 +98,10 @@ Or, if you wish to specify where ``la`` is installed, for example inside
 
     $ python setup.py build
     $ sudo python setup.py install --prefix=/usr/local
+
+Alternatively, you can use the makefile to install ``la`` inplace::
+
+    $ make all
 
 **Windows**
 
@@ -133,7 +137,7 @@ Python functions::
     la file         /usr/local/lib/python2.6/dist-packages/la/__init__.pyc
     NumPy           1.6.0  
     Bottleneck      0.5.0
-    HDF5 archiving  Available (h5py 1.3.0)      
+    HDF5 archiving  Available (h5py 2.0.0)      
     listmap         Faster C version
     listmap_fill    Faster C version    
     
