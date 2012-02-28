@@ -42,6 +42,7 @@ la 0.6
 - #35 larry([1, 2]) == 'a' did not return a bool like numpy does
 - #38 Indexing single element of larry with object dtype  
 - #39 move_func(myfunc) did not pass kwargs to myfunc when method='loop'
+- #49 setup.py does not install module to load yahoo finance data
 
 Older versions
 ==============

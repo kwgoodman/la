@@ -48,7 +48,8 @@ MICRO               = VER[2]
 ISRELEASED          = False
 VERSION             = '%s.%s.%s' % (MAJOR, MINOR, MICRO)
 PACKAGES            = ["la", "la/tests", "la/util", "la/util/tests",
-                       "la/external", "la/farray", "la/farray/tests"]
+                       "la/external", "la/farray", "la/farray/tests",
+                       "la/data"]
 PACKAGE_DATA        = {'la': ['LICENSE']}
 REQUIRES            = ["numpy", "Bottleneck"]
 
