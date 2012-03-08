@@ -4015,9 +4015,9 @@ class larry(object):
         array([1, 2, 2])
                 
         """
-        y = self.copy()
-        y.x = y.x.astype(dtype)    
-        return y
+        label = self.copylabel()
+        x = self.x.astype(dtype)
+        return larry(x, label, validate=False)
         
     @property
     def T(self):
