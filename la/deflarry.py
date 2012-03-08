@@ -3818,9 +3818,9 @@ class larry(object):
         recent, where recent is defined by the window. The filling proceeds
         from left to right along each row.
         """
-        y = self.copy()
-        y.x = push(y.x, window, axis=axis)
-        return y
+        label = self.copylabel()
+        x = push(self.x, window, axis=axis)
+        return larry(x, label, validate=False)
         
     def vacuum(self, axis=None):
         """
