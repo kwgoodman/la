@@ -786,9 +786,9 @@ class larry(object):
             msg += 'so I removed it. Send me your example and I will fix.'
             raise RuntimeError, msg                   
         if np.isscalar(other) or isinstance(other, np.ndarray):
-            y = self.copy()
-            y.x = other / y.x
-            return y           
+            label = self.copylabel()
+            x = other / self.x
+            return larry(x, label, validate=False)
         raise TypeError, 'Input must be scalar, array, or larry.'
         
     def __mul__(self, other): 
@@ -4154,10 +4154,9 @@ class larry(object):
         array([1, 2, 3, 4])
    
         """
-        y = self.copy()
-        y.x = y.x.flatten(order)
-        y.label = flattenlabel(y.label, order)
-        return y
+        label = flattenlabel(self.label, order)
+        x = self.x.flatten(order)
+        return larry(x, label, validate=False)
         
     def unflatten(self):
         """
