@@ -460,13 +460,13 @@ class larry(object):
         return y
         
     def __neg__(self):
-        "Return a copy with each element multiplied by minus 1."
-        y = self.copy()
-        y.x *= -1
-        return y
+        "Return a copy with each element switched with its negative."
+        label = self.copylabel()
+        x = self.x.__neg__()
+        return larry(x, label, validate=False)
     
     def __pos__(self):
-        "Return a copy with each element multiplied by 1."
+        "Return a copy."
         return self.copy()
         
     def abs(self):

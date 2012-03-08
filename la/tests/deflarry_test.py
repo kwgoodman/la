@@ -432,8 +432,8 @@ class Test_unary(unittest.TestCase):
         self.assert_((abs(t - p) < self.tol).all(), msg)
         self.assert_(noreference(p, t), 'Reference found')        
                 
-    def test___neg__(self):
-        "larry.__neg__"
+    def test___neg__1(self):
+        "larry.__neg__1"
         t = np.array([[-1.0,-1.0],
                       [-1.0,-1.0],
                       [-1.0,-1.0]])
@@ -445,6 +445,13 @@ class Test_unary(unittest.TestCase):
         label = [[0,1,2], [0,1]]
         self.assert_(label == p.label, printfail(label, p.label, 'label'))
         self.assert_(noreference(p, self.l), 'Reference found')
+
+    def test___neg__2(self):
+        "larry.__neg__2"
+        original = larry([True, False])
+        actual = -original
+        desired = larry([False, True])
+        ale(actual, desired, "__neg__ of bool", original=original)
 
     def test___pos__(self):
         "larry.__pos__"     
