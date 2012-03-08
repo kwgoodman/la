@@ -1,7 +1,7 @@
 "Test larry methods for proper handling of empty larrys"
 
 import numpy as np
-from numpy.testing import assert_, assert_equal
+from numpy.testing import assert_
 
 from la import larry, nan
 from la.util.testing import assert_larry_equal as ale
@@ -200,5 +200,8 @@ def test_reduce_shape():
                 ymethod = getattr(y, method['la'])
                 lar = ymethod(axis=axis, **method['kw'])               
                 yield ale, lar, arr, msg % (method['la'], shape, axis)             
-                  
-            
+def test_50():
+    "Regression #50"
+    actual = larry([], dtype=np.int).sum(0)
+    desired = np.nan
+    ale(actual, desired, "Regression #50")

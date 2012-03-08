@@ -1356,12 +1356,12 @@ class larry(object):
             if axis == None:
                 return default
             shape = list(self.shape)
-            shape.pop(axis)   
-            x = np.ones(shape, dtype=self.dtype) 
-            x.fill(default)
-            if (x.ndim == 0) and (x.size == 1):
+            shape.pop(axis)
+            if len(shape) == 0:
                 return default
             else:
+                x = np.empty(shape, dtype=self.dtype)
+                x.fill(default)
                 label = self.copylabel()
                 label.pop(axis)
                 return larry(x, label, validate=False)

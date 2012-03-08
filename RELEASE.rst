@@ -43,6 +43,7 @@ la 0.6
 - #38 Indexing single element of larry with object dtype  
 - #39 move_func(myfunc) did not pass kwargs to myfunc when method='loop'
 - #49 setup.py does not install module to load yahoo finance data
+- #50 la.larry([], dtype=np.int).sum(0), and similar reductions, choke
 
 Older versions
 ==============
