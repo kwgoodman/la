@@ -18,7 +18,7 @@ def geometric_mean(x, axis=-1, check_for_greater_than_zero=True):
         raise ValueError, msg
     x = x.copy()
     m = np.isnan(x)
-    x[m] = 1.0
+    np.putmask(x, m, 1.0)
     m = np.asarray(~m, np.float64)
     m = m.sum(axis)
     x = np.log(x).sum(axis)
@@ -30,7 +30,7 @@ def geometric_mean(x, axis=-1, check_for_greater_than_zero=True):
         if m == 0:
             idx = np.nan
     else:
-        idx[m == 0] = np.nan
+        np.putmask(idx, m==0, np.nan)
     x = np.multiply(x, idx)
     return x
 
@@ -97,8 +97,8 @@ def correlation(arr1, arr2, axis=None):
         else:
             x1 = arr1.copy()
             x2 = arr2.copy()
-            x1[mask] = np.nan
-            x2[mask] = np.nan 
+            np.putmask(x1, mask, np.nan)
+            np.putmask(x2, mask, np.nan)
             if axis == 0:
                 x1 = x1 - bn.nanmean(x1, axis)
                 x2 = x2 - bn.nanmean(x2, axis)              
@@ -152,7 +152,7 @@ def covMissing(R):
     
     """
     mask = np.isnan(R)
-    R[mask] = 0
+    np.putmask(R, mask, 0)
     mask = np.asarray(mask, np.float64)
     mask = 1 - mask # Change meaning of missing matrix to present matrix  
 

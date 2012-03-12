@@ -120,7 +120,7 @@ def lastrank(x, axis=-1, decay=0.0):
         if not np.isfinite(x[indlast2]):
             r = np.nan
     else:
-        r[~np.isfinite(x[indlast2])] = np.nan
+        np.putmask(r, ~np.isfinite(x[indlast2]), np.nan)
     return r    
 
 def ranking(x, axis=0, norm='-1,1'):
@@ -195,7 +195,7 @@ def ranking(x, axis=0, norm='-1,1'):
     else:
         msg = "norm must be '-1,1', '0,N-1', or 'gaussian'."
         raise ValueError(msg)
-    idx[(countnotnan==1)*(~masknan)] = middle
+    np.putmask(idx, (countnotnan==1)*(~masknan), middle)
     return idx
 
 def push(x, n, axis=-1):
@@ -273,7 +273,7 @@ def quantile(x, q, axis=0):
         raise ValueError, 'q must be one or greater.'
     elif q == 1:
         y = np.zeros(x.shape)
-        y[np.isnan(x)] = np.nan
+        np.putmask(y, np.isnan(x), np.nan)
         return y
     if axis == None:
         if q > x.size:

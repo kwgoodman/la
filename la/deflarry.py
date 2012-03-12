@@ -347,10 +347,10 @@ class larry(object):
             raise ValueError, 'axis cannot be None'
         y = self.copy()
         idx = np.isnan(y.x)
-        y[idx] = 0
+        np.putmask(y.x, idx, 0)
         y.x.cumsum(axis, out=y.x)
         if idx.any():
-            y.x[idx] = np.nan
+            np.putmask(y.x, idx, np.nan)
         return y        
 
     def cumprod(self, axis): 
@@ -413,10 +413,10 @@ class larry(object):
             raise ValueError, 'axis cannot be None'
         y = self.copy()
         idx = np.isnan(y.x)
-        y[idx] = 1
+        np.putmask(y.x, idx, 1)
         y.x.cumprod(axis, out=y.x)
         if idx.any():
-            y.x[idx] = np.nan
+            np.putmask(y.x, idx, np.nan)
         return y
 
     def clip(self, lo, hi):
@@ -1047,14 +1047,14 @@ class larry(object):
         """
         y = self.copy()
         idx = np.isnan(y.x)
-        y.x[idx] = 1
+        np.putmask(y.x, idx, 1)
         y = y.__reduce(np.prod, axis=axis)
         idx = idx.all(axis)
         if idx.ndim == 0:
             if idx:
                 y = np.nan
-        else:        
-            y[idx] = np.nan
+        else:
+            np.putmask(y.x, idx, np.nan)
         return y 
 
     def mean(self, axis=None):
@@ -3062,9 +3062,9 @@ class larry(object):
         array([-1., -1.,  0.,  0.,  1.,  1.])
             
         """
-        y = self.copy()
-        y.x = quantile(y.x, q, axis=axis)       
-        return y
+        label = self.copylabel()
+        x = quantile(self.x, q, axis=axis)       
+        return larry(x, label, validate=False)
         
     # Group calc -------------------------------------------------------------  
                  
@@ -3184,7 +3184,7 @@ class larry(object):
                     miss = missing_marker(x)
                     if miss == NotImplemented:
                         x = x.astype(float)
-                        miss = missing_marker(x)      
+                        miss = missing_marker(x)
                     x[index] = miss      
             lab = self.copylabel()
             lab[axis] = list(label)
@@ -3900,7 +3900,7 @@ class larry(object):
                     
         """
         y = self.copy()
-        y.x[np.isnan(y.x)] = replace_with
+        np.putmask(y.x, np.isnan(y.x), replace_with)
         return y                                     
 
     # Size, shape, type ------------------------------------------------------
