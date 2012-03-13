@@ -12,7 +12,7 @@ Here's larry in schematic form::
             y = 'IBM'    129.03   130.39   130.55
                 'DELL'    14.82    15.11    14.94
                 
-The larry above is stored internally as a `Numpy <http://www.numpy.org>`_
+The larry above is stored internally as a `Numpy <http://scipy.org>`_
 array and a list of lists::
 
         y.label = [['AAPL', 'IBM', 'DELL'], [date1, date2, date3]]

@@ -28,14 +28,6 @@ summary statistics.
     The `Bottleneck package <http://pypi.python.org/pypi/Bottleneck>`_
     contains fast moving window functions.
 
-Most of the moving window functions offer two algorithms for moving the
-window:
-
-            ==========  ==========================
-            'strides'   strides tricks (ndim < 4)
-            'loop'      brute force python loop
-            ==========  ==========================
-
 ------------
              
 .. autofunction:: la.farray.move_median

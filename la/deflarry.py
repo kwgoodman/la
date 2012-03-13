@@ -3021,7 +3021,7 @@ class larry(object):
         are NaNs. That ensures that when ranking along the columns of a 2d
         array, for example, the output will have the same min and max along
         all columns.
-        
+
         """
         return larry(ranking(self.x, axis, norm=norm), self.copylabel(),
                      validate=False)
@@ -4315,9 +4315,9 @@ class larry(object):
         Convert a list of tuples to a larry.
         
         The input data, if there are N dimensions and M data points, should have
-        this form:
+        this form::
         
-        [(label0_1, label1_1, ..., labelN_1, value_1),
+         [(label0_1, label1_1, ..., labelN_1, value_1),
          (label0_2, label1_2, ..., labelN_2, value_2),
          ...
          (label0_M, label1_M, ..., labelN_M, value_M)]
@@ -4408,10 +4408,10 @@ class larry(object):
     def fromlist(data):
         """
         Convert a flattened list to a larry.
-        
+
         The input data, if there are N dimensions and M data points, should have
-        this form:
-        ::
+        this form::
+
             [[value_1,  value_2,  ..., value_M],
             [(label0_1, label1_1, ..., labelN_1),
             (label0_2, label1_2, ..., labelN_2),
@@ -4482,10 +4482,10 @@ class larry(object):
     def fromdict(data):
         """
         Convert a dictionary to a larry.
-        
+
         The input data, if there are N dimensions and M data points, should
-        have this form:
-        ::
+        have this form::
+
             {(label0_1, label1_1, ..., labelN_1): value_1,
             (label0_2, label1_2, ..., labelN_2): value_2,
             ...
@@ -4538,8 +4538,8 @@ class larry(object):
         As you can see from above, the tocsv and fromcvs methods are fragile.
         A more robust archiving solution is given by the IO class.        
         
-        The format of the csv file is:
-        ::
+        The format of the csv file is::
+
             label0, label1, ..., labelN, value
             label0, label1, ..., labelN, value
             label0, label1, ..., labelN, value
@@ -4600,8 +4600,8 @@ class larry(object):
         As you can see from above, the tocsv and fromcvs methods are fragile.
         A more robust archiving solution is given by the IO class.
         
-        The format of the csv file is:
-        ::
+        The format of the csv file is::
+
             label0, label1, ..., labelN, value
             label0, label1, ..., labelN, value
             label0, label1, ..., labelN, value

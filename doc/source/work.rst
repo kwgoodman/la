@@ -14,7 +14,7 @@ All of the examples below assume that you have already imported larry::
 More examples of what you can do with larrys are given in :ref:`reference`.    
 
 
-.. _creation:
+.. _creation2:
 
 Creating a larry
 ----------------
@@ -1149,7 +1149,7 @@ The corresponding methods
 :meth:`fromdict <la.larry.fromdict>`,
 :meth:`fromlist <la.larry.fromlist>`,
 :meth:`fromcsv <la.larry.fromcsv>`
-are discused in :ref:`creation`.
+are discused in :ref:`creation2`.
 
 
 Archiving
@@ -1169,7 +1169,7 @@ function or method runs with complex input, the output might be wrong.
 
 **Comparing with Numpy arrays**
 
-Do not compare (==, !=, >, <, >=, <=, |, &) a NumPy array on the left-hand
+Do not compare (==, !=, >, <, >=, <=, \|, &) a NumPy array on the left-hand
 side with a larry on the right-hand side. You will get unexpected results. To
 compare a larry to a NumPy array, put the Numpy array on the right-hand side.
 

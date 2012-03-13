@@ -143,13 +143,6 @@ def covMissing(R):
     Note the mean of each row of R is assumed to be zero. So returns are not
     demeaned and the covariance is normalized by T not T-1.
     
-    
-    Notes
-    -----
-    
-    equivalence to using numpy masked array function
-    l7.demean(axis=1).cov().x -np.ma.cov(np.ma.fix_invalid(x7), bias=1).data
-    
     """
     mask = np.isnan(R)
     np.putmask(R, mask, 0)

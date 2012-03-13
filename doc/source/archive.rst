@@ -348,8 +348,6 @@ This section contains the reference guide to the archive functions,
 Archive function reference
 """"""""""""""""""""""""""
 
-------------
-
 .. autofunction:: la.save
 
 ------------

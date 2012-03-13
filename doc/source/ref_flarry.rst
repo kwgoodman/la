@@ -10,8 +10,8 @@ categories:
 .. contents:: Functions and examples
 
 Below you'll find the functions in each category along with examples. All
-of the examples assume that you have already imported larry:
-::
+of the examples assume that you have already imported larry::
+
     >>> from la import larry
     
 The reference guide for the larry methods, as opposed to functions, can be

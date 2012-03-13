@@ -12,10 +12,10 @@ Below you'll find the methods in each category along with examples. All
 of the examples assume that you have already imported larry::
 
     >>> from la import larry
-    
+
 The reference guide for the larry functions, as opposed to methods, can be
 found in :ref:`functions`.     
-    
+
 
 .. _creation:
 
@@ -112,7 +112,7 @@ and do not change its shape or ordering.
 Binary methods
 --------------
 
-The binary methods (such as +, -, / and *) combine a larry with a scalar,
+The binary methods (such as +, -, / and \*) combine a larry with a scalar,
 Numpy array, or another larry. More general binary functions, that give you
 control of the join method and the fill method can be found in
 :ref:`binaryfunc`.
