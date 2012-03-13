@@ -31,6 +31,7 @@ la 0.6
 **Faster**
 
 - larry methods: merge, nan_replace, push, cumsum, cumprod, astype, __rdiv__
+- larry function: cov
 - Numpy array functions: geometric_mean, correlation, covMissing
 
 **Breakage from la 0.5**

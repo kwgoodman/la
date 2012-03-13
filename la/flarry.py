@@ -773,15 +773,15 @@ def binaryop(func, lar1, lar2, join='inner', cast=True, missone='ignore',
     if missone != 'ignore':    
         missone1 = miss1 & ~miss2
         if missone1.any():
-            x1[missone1] = missone
+            np.putmask(x1, missone1, missone)
         missone2 = miss2 & ~miss1    
         if missone2.any():
-            x2[missone2] = missone
+            np.putmask(x2, missone2, missone)
     if misstwo != 'ignore':            
         misstwo12 = miss1 & miss2    
         if misstwo12.any():
-            x1[misstwo12] = misstwo
-            x2[misstwo12] = misstwo           
+            np.putmask(x1, misstwo12, misstwo)
+            np.putmask(x2, misstwo12, misstwo)
             
     # Binary function
     x = func(x1, x2, **kwargs)
@@ -1497,10 +1497,9 @@ def cov(lar):
     """
     if lar.ndim != 2:
         raise ValueError, 'This function only works on 2d larrys'      
-    y = lar.copy()
-    y.label[1] = list(y.label[0])
-    y.x = covMissing(y.x)
-    return y
+    label = [list(lar.label[0]), list(lar.label[0])]
+    x = covMissing(lar.x)
+    return larry(x, label, validate=False)
 
 # Random -----------------------------------------------------------    
     
