@@ -6,8 +6,19 @@ Release Notes
 These are the major changes made in each release. For details of the changes
 see the commit log at https://github.com/kwgoodman/la
 
-la 0.6 
+la 0.7
 ======
+
+*Release date: Not yet released, in development*
+
+
+Older versions
+==============
+
+Release notes from past releases.
+
+la 0.6
+------
 
 *Release date: 2012-03-19*
 
@@ -52,11 +63,6 @@ la 0.6
 - #49 setup.py does not install module to load yahoo finance data
 - #50 la.larry([], dtype=np.int).sum(0), and similar reductions, choke
 - #51 -la.larry([True, False]) returns wrong answer
-
-Older versions
-==============
-
-Release notes from past releases.
 
 la 0.5 
 ------
