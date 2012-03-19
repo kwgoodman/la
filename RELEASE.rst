@@ -9,7 +9,7 @@ see the commit log at https://github.com/kwgoodman/la
 la 0.6 
 ======
 
-*Release date: Not yet released, in development*
+*Release date: 2012-03-19*
 
 **New functions**
 
