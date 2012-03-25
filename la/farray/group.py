@@ -92,7 +92,7 @@ def group_mean(x, groups, axis=0):
         idxall[axis] = idx
         if idx.sum() > 0:
             norm = 1.0 * (~np.isnan(x[idxall])).sum(axis)
-            ns = np.nansum(x[idxall], axis=axis) / norm
+            ns = bn.nansum(x[idxall], axis=axis) / norm
             xmean[idxall] = np.expand_dims(ns, axis)
             
     return xmean

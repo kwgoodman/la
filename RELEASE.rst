@@ -17,7 +17,8 @@ la 0.7
 - Binary functions (+, -, / , &, ...) for unaligned larrys
 - la.align(), la.add(), la.subtract(), etc for unaligned larrys
 - la.union(), la.intersection()
-- la.align_axis()  
+- la.align_axis()
+- la.farray.correlation(arr1, arr2, axis) for numpy arrays
 
 Older versions
 ==============

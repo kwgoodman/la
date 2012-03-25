@@ -93,7 +93,7 @@ def correlation(arr1, arr2, axis=None):
             x1 = x1 - x1.mean()
             x2 = x2 - x2.mean()        
             num = (x1 * x2).sum()
-            den = np.sqrt((x1 * x1).sum() * (x2 * x2).sum()) 
+            den = np.sqrt((x1**2).sum() * (x2**2).sum()) 
         else:
             x1 = arr1.copy()
             x2 = arr2.copy()
@@ -107,8 +107,8 @@ def correlation(arr1, arr2, axis=None):
                 idx[axis] = None
                 x1 = x1 - bn.nanmean(x1, axis)[idx]
                 x2 = x2 - bn.nanmean(x2, axis)[idx]           
-            num = np.nansum(x1 * x2, axis)
-            den = np.sqrt(np.nansum(x1 * x1, axis) * np.nansum(x2 * x2, axis))
+            num = bn.nansum(x1 * x2, axis)
+            den = np.sqrt(bn.nansum(x1**2, axis) * bn.nansum(x2**2, axis))
     else:
         # Neither arr1 or arr2 contains nans, so use faster non-nan functions
         if axis == None:
@@ -117,7 +117,7 @@ def correlation(arr1, arr2, axis=None):
             x1 = x1 - x1.mean()
             x2 = x2 - x2.mean()        
             num = (x1 * x2).sum()
-            den = np.sqrt((x1 * x1).sum() * (x2 * x2).sum()) 
+            den = np.sqrt((x1**2).sum() * (x2**2).sum()) 
         else:
             x1 = arr1
             x2 = arr2
@@ -130,7 +130,7 @@ def correlation(arr1, arr2, axis=None):
                 x1 = x1 - x1.mean(axis)[idx]
                 x2 = x2 - x2.mean(axis)[idx]           
             num = np.sum(x1 * x2, axis)
-            den = np.sqrt(np.sum(x1 * x1, axis) * np.sum(x2 * x2, axis))                
+            den = np.sqrt(np.sum(x1**2, axis) * np.sum(x2**2, axis))                
     return num / den 
 
 def covMissing(R):
