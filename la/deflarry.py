@@ -927,32 +927,25 @@ class larry(object):
 
     def __align(self, other):
         "Align larrys for binary operations."
-        if self.label == other.label:
-            # Labels are already aligned
-            x = self.x
-            y = other.x
-            label = self.copylabel()
-        else:  
-            # Labels are not aligned.  
-            if self.ndim != other.ndim:
-                msg = 'Binary operation on two larrys with different dimension'
-                raise IndexError, msg
-            label = []
-            x = self.x
-            y = other.x 
-            ax = -1           
-            for ls, lo in zip(self.copylabel(), other.label):
-                ax += 1
-                if ls == lo:
-                    lab = ls
-                else:
-                    lab = list(frozenset(ls) & frozenset(lo))
-                    lab.sort()
-                    ids = listmap(ls, lab)
-                    ido = listmap(lo, lab)
-                    x = x.take(ids, ax)
-                    y = y.take(ido, ax)    
-                label.append(lab)
+        if self.ndim != other.ndim:
+            msg = 'Binary operation on two larrys with different dimension'
+            raise IndexError, msg
+        label = []
+        x = self.x
+        y = other.x 
+        ax = -1           
+        for ls, lo in zip(self.label, other.label):
+            ax += 1
+            if ls == lo:
+                lab = list(ls)
+            else:
+                lab = list(frozenset(ls).intersection(lo))
+                lab.sort()
+                ids = listmap(ls, lab)
+                ido = listmap(lo, lab)
+                x = x.take(ids, ax)
+                y = y.take(ido, ax)    
+            label.append(lab)
         return x, y, label
                   
     # Reduce functions -------------------------------------------------------

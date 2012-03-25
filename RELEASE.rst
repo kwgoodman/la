@@ -11,6 +11,9 @@ la 0.7
 
 *Release date: Not yet released, in development*
 
+**Enhancements**
+
+- Binary functions (+, -, / , &, ...) are faster for unaligned larrys
 
 Older versions
 ==============
