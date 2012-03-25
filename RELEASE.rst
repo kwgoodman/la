@@ -11,9 +11,12 @@ la 0.7
 
 *Release date: Not yet released, in development*
 
-**Enhancements**
+**Faster**
 
-- Binary functions (+, -, / , &, ...) are faster for unaligned larrys
+- Binary functions (+, -, / , &, ...) for unaligned larrys
+- la.align(), la.add(), la.subtract(), etc for unaligned larrys
+- la.union(), la.intersection()
+- la.align_axis()  
 
 Older versions
 ==============

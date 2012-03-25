@@ -284,7 +284,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
             if list1 == list2:
                 list3 = list(list1)
             else:
-                list3 = list(set(list1) & (set(list2)))
+                list3 = list(set(list1).intersection(list2))
                 list3.sort()
                 idx1 = listmap(list1, list3)
                 idx2 = listmap(list2, list3)
@@ -296,7 +296,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
             if list1 == list2:
                 list3 = list(list1)
             else:                 
-                list3 = list(set(list1) | (set(list2)))
+                list3 = list(set(list1).union(list2))
                 list3.sort()
                 idx1, idx1_miss = listmap_fill(list1, list3, fill=0)
                 idx2, idx2_miss = listmap_fill(list2, list3, fill=0)
@@ -501,14 +501,14 @@ def align_axis(lars, axis=0, join='inner', flag=False):
     elif join == 'right':
         label = lars[-1].label[axis[-1]]
     else:
-        labels = [set(lar.label[axis[j]]) for j, lar in enumerate(lars)]
-        label = labels[0]
+        #labels = [set(lar.label[axis[j]]) for j, lar in enumerate(lars)]
+        label = frozenset(lars[0].label[axis[0]])
         if join == 'inner': 
-            for new_label in labels[1:]:
-                label &= new_label
+            for i, lar in enumerate(lars[1:]):
+                label = label.intersection(lar.label[axis[i]])
         elif join == 'outer':
-            for new_label in labels[1:]:
-                label |= new_label
+            for i, lar in enumerate(lars[1:]):
+                label = label.union(lar.label[axis[i]])
         label = list(label)
         label.sort() 
     lars_out = []
@@ -602,7 +602,7 @@ def union(axis, *args):
     rc = frozenset([])
     for arg in args:
         if isinstance(arg, larry):
-            rc = frozenset(arg.label[axis]) | rc
+            rc = rc.union(arg.label[axis])
         else:
             raise TypeError, 'One or more input is not a larry'
     rc = list(rc)
@@ -644,7 +644,7 @@ def intersection(axis, *args):
     for i in xrange(1, len(args)):
         arg = args[i]
         if isinstance(arg, larry):
-            rc = frozenset(arg.label[axis]) & rc
+            rc = rc.intersection(arg.label[axis])
         else:
             raise TypeError, 'One or more input is not a larry'
     rc = list(rc)
