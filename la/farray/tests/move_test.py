@@ -8,7 +8,7 @@ from numpy.testing import assert_array_almost_equal
 nan = np.nan
 import bottleneck as bn
 
-from la.farray import move_median, move_nanmedian, move_func
+from la.farray import move_nanmedian, move_func
 
 
 def move_unit_maker(func, arrfunc, methods):
@@ -41,11 +41,6 @@ def move_unit_maker(func, arrfunc, methods):
                         d = func(arr, window=w, axis=axis, method=method) 
                     err_msg = msg % (func.__name__, method, arr.ndim, w, axis)
                     assert_array_almost_equal(actual, d, 10, err_msg)
-
-def test_move_median():
-    "Test move_median."
-    methods = ('strides', 'func_loop', 'func_strides') 
-    yield move_unit_maker, move_median, np.median, methods 
 
 def test_move_nanmedian():
     "Test move_nanmedian."
