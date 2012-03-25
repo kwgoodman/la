@@ -1631,6 +1631,7 @@ class larry(object):
                [4]])
         
         """
+        validate = True
         typidx = type(index)
         if isscalar(index):
             index = int(index)                
@@ -1640,7 +1641,9 @@ class larry(object):
             if self.ndim <= 1:
                 return x
             label = self.label[1:]
+            validate = False
         elif typidx is tuple:
+            validate = False
             label = []
             allscalar = True
             for ax in xrange(self.ndim):
@@ -1657,6 +1660,7 @@ class larry(object):
                         except IndexError:
                             raise IndexError, 'index out of range'
                         allscalar = False
+                        validate = True
                     elif typ is np.ndarray:
                         if idx.ndim != 1:
                             msg = 'You can use a Numpy array for indexing, '
@@ -1672,7 +1676,8 @@ class larry(object):
                             try:
                                 lab = [self.label[ax][z] for z in idx]
                             except IndexError:
-                                raise IndexError, 'index out of range'                       
+                                raise IndexError, 'index out of range'
+                            validate = True 
                         allscalar = False
                     elif typ is slice:
                         lab = self.label[ax][idx] 
@@ -1691,6 +1696,7 @@ class larry(object):
             label = list(self.label)
             label[0] = label[0][index]
             x = self.x[index]
+            validate = False
         elif typidx is list:
             label = list(self.label)
             label[0] = [label[0][int(i)] for i in index]
@@ -1706,6 +1712,7 @@ class larry(object):
                                                 enumerate(index) if z]
                 except IndexError:
                     raise IndexError, 'index out of range'
+                validate = False
             else:
                 try:
                     lab = [self.label[0][z] for z in index]
@@ -1718,7 +1725,7 @@ class larry(object):
             msg = 'Only slice, integer, and seq (list, tuple, 1d array)'
             msg = msg + ' indexing supported'
             raise IndexError, msg        
-        return larry(x, label)
+        return larry(x, label, validate=validate)
 
     def take(self, indices, axis):
         """

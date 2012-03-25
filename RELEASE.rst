@@ -13,6 +13,7 @@ la 0.7
 
 **Faster**
 
+- Indexing into larrys with scalars, slices, and 1d bool numpy arrays
 - Binary functions (+, -, / , &, ...) for unaligned larrys
 - la.align(), la.add(), la.subtract(), etc for unaligned larrys
 - la.union(), la.intersection()
