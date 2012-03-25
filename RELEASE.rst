@@ -20,6 +20,10 @@ la 0.7
 - la.align_axis()
 - la.farray.correlation(arr1, arr2, axis) for numpy arrays
 
+**Breakage from la 0.6**
+
+- Numpy array version of move_median() removed since bottleneck now used
+
 Older versions
 ==============
 
