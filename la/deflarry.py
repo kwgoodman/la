@@ -3248,7 +3248,10 @@ class larry(object):
         """
         if self.ndim != lar.ndim:
             raise IndexError, 'larrys must be of the same dimension.'
-        y = self.copy()      
+        if self.ndim == 0:
+            y = self.copy()
+        else:
+            y = self
         for i in range(self.ndim):
             y = y.morph(lar.getlabel(i), axis=i)     
         return y        
