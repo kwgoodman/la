@@ -3335,7 +3335,7 @@ class larry(object):
             raise ValueError('Overlapping values')
         else:
             if mask2.any():
-                lar1.x[mask2] = lar2.x[mask2]
+                np.putmask(lar1.x, mask2, lar2.x)
      
         return lar1
         
