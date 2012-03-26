@@ -3631,7 +3631,7 @@ class Test_alignment(unittest.TestCase):
         
     def test_morph_7(self):
         lar = larry([1, 2, 3])
-        self.failUnlessRaises(ValueError, lar.morph, [0, 0], 0)
+        self.failUnlessRaises(IndexError, lar.morph, [0, 0], 0)
 
     def test_morph_8(self):
         "larry.morph_8"

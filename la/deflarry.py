@@ -3194,8 +3194,10 @@ class larry(object):
                         miss = missing_marker(x)
                     x[index] = miss      
             lab = self.copylabel()
+            if len(set(label)) != len(label):
+                raise IndexError("`label` contains duplicates")
             lab[axis] = list(label)
-        return larry(x, lab)
+        return larry(x, lab, validate=False)
         
     def morph_like(self, lar):
         """
