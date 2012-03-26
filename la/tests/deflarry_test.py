@@ -2226,7 +2226,7 @@ class Test_getset(unittest.TestCase):
 
     def test_getitem_15(self):
         "larry.__getitem___15"
-        self.failUnlessRaises(ValueError, self.l.__getitem__, [0,1,0])
+        self.failUnlessRaises(IndexError, self.l.__getitem__, [0,1,0])
         
     def test_getitem_16(self):
         "larry.__getitem___16"

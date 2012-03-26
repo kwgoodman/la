@@ -1699,9 +1699,14 @@ class larry(object):
             validate = False
         elif typidx is list:
             label = list(self.label)
-            label[0] = [label[0][int(i)] for i in index]
-            x = self.x.take(index, axis=0) 
+            lab = [label[0][int(i)] for i in index]
+            if len(set(lab)) != len(lab):
+                raise IndexError("Duplicate labels along axis 0.")
+            label[0] = lab
+            x = self.x.take(index, axis=0)
+            validate = False
         elif typidx is np.ndarray:    
+            validate = False
             if index.ndim != 1:
                 msg = 'You can use a Numpy array for indexing, '
                 msg += 'but it must be 1d.'
@@ -1712,15 +1717,17 @@ class larry(object):
                                                 enumerate(index) if z]
                 except IndexError:
                     raise IndexError, 'index out of range'
-                validate = False
+                x = self.x[index]
             else:
                 try:
                     lab = [self.label[0][z] for z in index]
                 except IndexError:
-                    raise IndexError, 'index out of range' 
+                    raise IndexError, 'index out of range'
+                if len(set(lab)) != len(lab):
+                    raise IndexError("Duplicate labels along axis 0.")
+                x = self.x.take(index, axis=0)
             label = self.copylabel()
-            label[0] = lab        
-            x = self.x[index]                                 
+            label[0] = lab                 
         else:        
             msg = 'Only slice, integer, and seq (list, tuple, 1d array)'
             msg = msg + ' indexing supported'
