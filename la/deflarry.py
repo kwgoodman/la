@@ -3294,7 +3294,7 @@ class larry(object):
         lar2 = other
         for ax in range(ndim):
             if lar1.label[ax] != lar2.label[ax]:
-                mergelabel = set(lar1.label[ax]) | set(lar2.label[ax])
+                mergelabel = set(lar1.label[ax] + lar2.label[ax])
                 mergelabel = sorted(mergelabel)
                 lar1 = lar1.morph(mergelabel, ax)
                 lar2 = lar2.morph(mergelabel, ax)

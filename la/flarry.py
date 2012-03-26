@@ -501,7 +501,6 @@ def align_axis(lars, axis=0, join='inner', flag=False):
     elif join == 'right':
         label = lars[-1].label[axis[-1]]
     else:
-        #labels = [set(lar.label[axis[j]]) for j, lar in enumerate(lars)]
         label = frozenset(lars[0].label[axis[0]])
         if join == 'inner': 
             for i, lar in enumerate(lars[1:]):
