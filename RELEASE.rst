@@ -16,11 +16,10 @@ la 0.7
 - Indexing into larrys with scalars, slices, and 1d numpy arrays
 - Binary functions (+, -, / , &, ...) for unaligned larrys
 - la.align(), la.add(), la.subtract(), etc for unaligned larrys
-- la.union(), la.intersection()
-- la.align_axis()
+- la.union(), la.intersection(), la.align_axis()
 - la.farray.correlation(arr1, arr2, axis) for numpy arrays
-- larry.morph(), larry.morph_like()
-- larry.merge() when update=True  
+- larry.merge() when update=True, larry.morph(), larry.morph_like()
+- larry.take()
 
 **Breakage from la 0.6**
 

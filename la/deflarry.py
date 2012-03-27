@@ -1799,9 +1799,12 @@ class larry(object):
         """
         label = self.copylabel()
         labelaxis = label[axis]
-        label[axis] = [labelaxis[idx] for idx in indices]
+        lab = [labelaxis[idx] for idx in indices]
+        if len(set(lab)) != len(lab):
+            raise IndexError("`indices` must be unique")
+        label[axis] = lab
         x = self.x.take(indices, axis)
-        return larry(x, label)
+        return larry(x, label, validate=False)
 
     @property    
     def lix(self):
