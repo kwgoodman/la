@@ -20,6 +20,7 @@ la 0.7
 - la.farray.correlation(arr1, arr2, axis) for numpy arrays
 - larry.merge() when update=True, larry.morph(), larry.morph_like()
 - larry.take()
+- larry.sortaxis()
 
 **Breakage from la 0.6**
 

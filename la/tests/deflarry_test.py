@@ -3811,21 +3811,21 @@ class Test_alignment(unittest.TestCase):
         original = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']]) 
         actual = original.sortaxis(reverse=True)
         desired = original.copy()
-        ale(actual, desired, 'sortaxis_1', original=original)
+        ale(actual, desired, 'sortaxis_2', original=original)
 
     def test_sortaxis_3(self):
         "larry.sortaxis_3"
         original = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']]) 
         actual = original.sortaxis(axis=0)
         desired = larry([[2, 1], [4, 3]], [['a', 'b'], ['d', 'c']])
-        ale(actual, desired, 'sortaxis_1', original=original)
+        ale(actual, desired, 'sortaxis_3', original=original)
 
     def test_sortaxis_4(self):
         "larry.sortaxis_4"
         original = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']]) 
         actual = original.sortaxis(axis=1)
         desired = larry([[3, 4], [1, 2]], [['b', 'a'], ['c', 'd']]) 
-        ale(actual, desired, 'sortaxis_1', original=original)
+        ale(actual, desired, 'sortaxis_4', original=original)
         
     def test_sortaxis_5(self):
         "larry.sortaxis_5"
@@ -3834,6 +3834,22 @@ class Test_alignment(unittest.TestCase):
         actual = original.sortaxis()
         desired = larry([[1, 2]], [[9], ['a', 'b']])
         ale(actual, desired, 'sortaxis_5', original=original)        
+
+    def test_sortaxis_6(self):
+        "larry.sortaxis_6"
+        # Make sure a copy is returned
+        original = larry([0]) 
+        actual = original.sortaxis()
+        desired = original.copy()
+        ale(actual, desired, 'sortaxis_6', original=original)
+
+    def test_sortaxis_7(self):
+        "larry.sortaxis_7"
+        # Make sure a copy is returned
+        original = larry([[1, 1], [1, 1]]) 
+        actual = original.sortaxis()
+        desired = original.copy()
+        ale(actual, desired, 'sortaxis_7', original=original)
         
     def test_flipaxis_1(self):
         "larry.flipaxis_1"
