@@ -80,18 +80,6 @@ la1_3d = larry(np.dstack((x1,2*x1)))
 
 las = [(la1,'la1'), (la2,'la2'), (la1_3d, 'la1_3d'), (la3,'la3')]
 lasnonan = [(la1,'la1'), (la1_3d, 'la1_3d')]
-
-def test_methods_unary():
-    "larry unary nose test"
-    # Simple unary elementwise operations
-    for la, laname in las:
-        for opname in meth_unary1:
-            npop = getattr(np,opname)
-            t = npop(la.x)   # Add +1 here to check whether tests fail
-            p = getattr(la, opname)()
-            
-            yield assert_larry, opname, p, t, la.label, laname
-            yield assert_, noreference(p, la), opname + ' - noreference'
             
 def test_methods_reduce():
     "larry reduce nose test"
@@ -110,20 +98,6 @@ def test_methods_reduce():
                 p = getattr(la, opname)(axis)
                 tlab = deepcopy(la.label)
                 tlab.pop(axis)                
-                yield assert_larry, opname, p, t, tlab, \
-                      laname+' axis='+str(axis)
-
-def test_methods_nonan():
-    "larry nonan nose test"
-    # Simple unary elementwise operations
-    for la, laname in lasnonan:
-        for opname in meth_nonan:
-            npop = getattr(np,opname)
-                
-            for axis in range(la.x.ndim):
-                t = npop(la.x, axis) 
-                p = getattr(la, opname)(axis)
-                tlab = deepcopy(la.label)
                 yield assert_larry, opname, p, t, tlab, \
                       laname+' axis='+str(axis)
 
