@@ -17,37 +17,6 @@ from la.util.testing import printfail, noreference
 from la.util.testing import assert_larry_equal as ale
 
 
-class Test_init(unittest.TestCase):
-    "Test init of larry class"
-    
-    def setUp(self):
-        self.list = [[1,2],[3,4]]
-        self.tuple = ((1,2),(3,4))
-        self.matrix = np.matrix([[1,2],[3,4]])
-        self.array = np.array([[1,2],[3,4]])
-        self.label = [[0,1],[0,1]]
-        self.desired = la.lrange((2,2)) + 1
-
-    def test_init_list(self):
-        "larry.__init__list"
-        actual = larry(self.list)
-        ale(actual, self.desired, msg='create larry from list')
-
-    def test_init_tuple(self):
-        "larry.__init__tuple"
-        actual = larry(self.tuple)
-        ale(actual, self.desired, msg='create larry from tuple')
-
-    def test_init_matrix(self):
-        "larry.__init__matrix"
-        actual = larry(self.matrix)
-        ale(actual, self.desired, msg='create larry from matrix')
-
-    def test_init_array(self):
-        "larry.__init__array"
-        actual = larry(self.array)
-        ale(actual, self.desired, msg='create larry from array')
-
 class Test_binary(unittest.TestCase):
     "Test binary functions of Data class"
     
