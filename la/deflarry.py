@@ -100,7 +100,8 @@ class larry(object):
             try:
                 x = np.asarray(x, dtype=dtype)
             except:
-                raise ValueError, "x must be array_like."
+                msg = "x must be array_like and dtype must be known."
+                raise ValueError, msg
         elif dtype != None:
             x = x.astype(dtype)            
         if label is None:

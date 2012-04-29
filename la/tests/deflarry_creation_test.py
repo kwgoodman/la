@@ -1,5 +1,6 @@
 import os
 import tempfile
+from nose.tools import assert_raises
 import numpy as np
 import la
 from la import larry
@@ -29,6 +30,16 @@ def larry_init_array_test():
     desired = larry(np.array([[0, 1], [2, 3]]))
     actual = la.lrange((2, 2))
     ale(actual, desired, msg='create larry from matrix')
+
+def larry_init_raises_test():
+    "larry.__init__raises"
+    def make_bad_larry(x, label=None, dtype=None):
+        return larry(x, label, dtype)
+    assert_raises(ValueError, make_bad_larry, [1], [['a']], 1)
+    assert_raises(ValueError, make_bad_larry, [[1, 2]], [['a', 'b']])
+    assert_raises(ValueError, make_bad_larry, 0)
+    assert_raises(ValueError, make_bad_larry, [1, 2], [['a']])
+    assert_raises(ValueError, make_bad_larry, [1, 2], [['a', 'a']])
 
 # --------------------------------------------------------------------------
 
