@@ -77,12 +77,28 @@ def test___pow__():
     yield unit_maker, "__pow__", np.power, {'la':[1.3], 'np':[1.3]}
 
 def test_cumsum():
-    yield unit_maker, "cumsum", np.cumsum, {'la':[0], 'np':[0]}
-    yield unit_maker, "cumsum", np.cumsum, {'la':[-1], 'np':[-1]}
+    def cumsum(a, axis):
+        m = np.ma.fix_invalid(a)
+        m = m.cumsum(axis)
+        mask = m.mask
+        a = np.asarray(m)
+        if mask.any():
+            a[mask] = np.nan
+        return a
+    yield unit_maker, "cumsum", cumsum, {'la':[0], 'np':[0]}
+    yield unit_maker, "cumsum", cumsum, {'la':[-1], 'np':[-1]}
 
 def test_cumprod():
-    yield unit_maker, "cumprod", np.cumprod, {'la':[0], 'np':[0]}
-    yield unit_maker, "cumprod", np.cumprod, {'la':[-1], 'np':[-1]}
+    def cumprod(a, axis):
+        m = np.ma.fix_invalid(a)
+        m = m.cumprod(axis)
+        mask = m.mask
+        a = np.asarray(m)
+        if mask.any():
+            a[mask] = np.nan
+        return a
+    yield unit_maker, "cumprod", cumprod, {'la':[0], 'np':[0]}
+    yield unit_maker, "cumprod", cumprod, {'la':[-1], 'np':[-1]}
 
 def test_clip():
     yield unit_maker, "clip", np.clip, {'la':[-1,1], 'np':[-1,1]}

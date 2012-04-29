@@ -26,6 +26,10 @@ la 0.7
 
 - Numpy array version of move_median() removed since bottleneck now used
 
+**Bug fixes**
+
+- #59 Proper int promotion in larry.cumsum() and larry.cumprod()
+
 Older versions
 ==============
 
@@ -64,7 +68,7 @@ la 0.6
 
 - optional parameter for larry creation renamed from integrity to validate
 
-**Bugs fixes**
+**Bug fixes**
 
 - #14 larry.lag() gives wrong output when nlag=0
 - #20 Indexing chokes on lar[:,3:2]  
@@ -118,7 +122,7 @@ Bottleneck package (http://pypi.python.org/pypi/Bottleneck).
 - movingsum and movingrank have been deprecated and will be removed in la 0.6;
   use move_sum and move_ranking instead
 
-**Bugs fixes**
+**Bug fixes**
 
 - Please report bugs at https://github.com/kwgoodman/la/issues
 - #1 Due to a typo, la.info() crashed if h5py could not be imported

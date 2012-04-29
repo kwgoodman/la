@@ -348,7 +348,7 @@ class larry(object):
         y = self.copy()
         idx = np.isnan(y.x)
         np.putmask(y.x, idx, 0)
-        y.x.cumsum(axis, out=y.x)
+        y.x = y.x.cumsum(axis)
         if idx.any():
             np.putmask(y.x, idx, np.nan)
         return y        
@@ -414,7 +414,7 @@ class larry(object):
         y = self.copy()
         idx = np.isnan(y.x)
         np.putmask(y.x, idx, 1)
-        y.x.cumprod(axis, out=y.x)
+        y.x = y.x.cumprod(axis)
         if idx.any():
             np.putmask(y.x, idx, np.nan)
         return y
