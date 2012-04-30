@@ -164,9 +164,3 @@ def test_invert_raises():
     "invert raises"
     y = la.larry([0, 1])
     assert_raises(TypeError, y.invert)
-
-def test___invert__raises():
-    "invert raises"
-    y = la.larry([0, 1])
-    assert_raises(TypeError, y.invert)
-
