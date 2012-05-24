@@ -135,8 +135,8 @@ Python functions::
     >>> la.info()
     la version      0.7.0
     la file         /usr/local/lib/python2.6/dist-packages/la/__init__.pyc
-    NumPy           1.6.1
-    Bottleneck      0.5.0
+    NumPy           1.6.2
+    Bottleneck      0.6.0
     HDF5 archiving  Available (h5py 2.0.0)      
     listmap         Faster C version
     listmap_fill    Faster C version    
