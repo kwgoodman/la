@@ -3918,8 +3918,8 @@ class larry(object):
                     
         """
         y = self.copy()
-        np.putmask(y.x, np.isnan(y.x), replace_with)
-        return y                                     
+        bn.replace(y.x, np.nan, replace_with)
+        return y                            
 
     # Size, shape, type ------------------------------------------------------
 
