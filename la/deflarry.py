@@ -4961,7 +4961,16 @@ class Lix(object):
                     index2.append([idx])
                 else:
                     raise IndexError, 'Unsupported indexing operation.'
-            y.x[np.ix_(*index2)] = value
+            if isinstance(value, larry):
+                if value.ndim != len(index2):
+                    raise IndexError, '`value` has wrong ndim'
+                for ax, ix2 in enumerate(index2):
+                    lab = [y.label[ax][i] for i in ix2]
+                    if lab != value.label[ax]:
+                        raise IndexError, 'larry labels are not aligned'
+                y.x[np.ix_(*index2)] = value.x
+            else:
+                y.x[np.ix_(*index2)] = value
         elif isscalar(index):
             # Example: lar.lix[0]
             y[index] = value
