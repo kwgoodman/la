@@ -23,6 +23,10 @@ la 0.7
 - larry.sortaxis()
 - larry.nan_replace()
 
+**Enhancements**
+
+- Added setitem ability to label indexing (lix)
+
 **Breakage from la 0.6**
 
 - Numpy array version of move_median() removed since bottleneck now used

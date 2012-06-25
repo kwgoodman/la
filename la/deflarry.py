@@ -1926,7 +1926,7 @@ class larry(object):
         array([1, 4])       
         
         """                       
-        return Lix(self)                               
+        return Lix(self)
         
     def __setitem__(self, index, value):
         """
@@ -3919,7 +3919,7 @@ class larry(object):
         """
         y = self.copy()
         bn.replace(y.x, np.nan, replace_with)
-        return y                            
+        return y
 
     # Size, shape, type ------------------------------------------------------
 
@@ -4873,7 +4873,7 @@ class Lix(object):
             return y[index2]
         elif typ == slice:
             # Examples: lar.lix[['a']:], lar.lix[['a']:['b']],
-            #           lar.lix[['a']:['b']:2], lar.lix[2:['b']] 
+            #           lar.lix[['a']:['b']:2], lar.lix[2:['b']]
             return y[slicemaker(index, y.labelindex, 0)]
         elif typ == tuple:
             index2 = []
@@ -4932,7 +4932,7 @@ class Lix(object):
             y[index2] = value
         elif typ == slice:
             # Examples: lar.lix[['a']:], lar.lix[['a']:['b']],
-            #           lar.lix[['a']:['b']:2], lar.lix[2:['b']] 
+            #           lar.lix[['a']:['b']:2], lar.lix[2:['b']]
             y[slicemaker(index, y.labelindex, 0)] = value
         elif typ == tuple:
             index2 = []
