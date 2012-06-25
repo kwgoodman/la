@@ -70,7 +70,7 @@ Install
 Requirements:
 
 ======================== ====================================================
-la                       Python, NumPy 1.5.1-1.6.1, Bottleneck 0.5.0
+la                       Python, NumPy 1.5.1-1.6.2, Bottleneck 0.6.0
 Unit tests               nose
 ======================== ====================================================
 
@@ -79,7 +79,7 @@ Optional:
 ============================= ================================================
 Archive larrys in HDF5        h5py, HDF 1.8
 Compile for speed boost       gcc or MinGW
-lar.ranking(norm='gaussian')  SciPy 0.8.0, 0.9.0
+lar.ranking(norm='gaussian')  SciPy 0.8, 0.9, 0.10
 ============================= ================================================
 
 You can download the `latest version of la <http://pypi.python.org/pypi/la>`_
@@ -122,9 +122,9 @@ After you have installed ``la``, run the suite of unit tests::
     >>> import la
     >>> la.test()
     <snip>
-    Ran 3002 tests in 9.225s
+    Ran 3012 tests in 9.225s
     OK
-    <nose.result.TextTestResult run=3002 errors=0 failures=0>
+    <nose.result.TextTestResult run=3012 errors=0 failures=0>
     
 The ``la`` package contains C extensions that speed up common alignment
 operations such as adding two unaligned larrys. If the C extensions don't
@@ -135,8 +135,8 @@ Python functions::
     >>> la.info()
     la version      0.7.0
     la file         /usr/local/lib/python2.6/dist-packages/la/__init__.pyc
-    NumPy           1.6.1
-    Bottleneck      0.5.0
+    NumPy           1.6.2
+    Bottleneck      0.6.0
     HDF5 archiving  Available (h5py 2.0.0)      
     listmap         Faster C version
     listmap_fill    Faster C version    

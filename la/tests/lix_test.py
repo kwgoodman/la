@@ -1,10 +1,14 @@
 "Unit tests of larry's indexing by label method, lix"
 
+from nose.tools import assert_raises
+
 import numpy as np
 from numpy.testing import assert_equal
 
+import la
 from la import larry
 from la.util.misc import isscalar
+from la.util.testing import assert_larry_equal as ale
 
 S = slice
 N = None
@@ -106,11 +110,76 @@ def test_lix(si=si):
         msg = '\nlix fail on shape %s and index %s\n'           
         yield assert_equal, actual, desired, msg  % (str(shape), str(index))                           
         
-        
-        
-        
-        
-        
-        
-        
-        
+# ---------------------------------------------------------------------------
+# Test lix setitem
+
+def lix_setitem_test_01():
+    actual = la.lrange(label=[['a', 'b']])
+    actual.lix[['a']] = 9
+    desired = la.lrange(label=[['a', 'b']])
+    desired[0] = 9
+    ale(actual, desired)
+
+def lix_setitem_test_02():
+    actual = la.lrange(label=[['a', 'b'], ['c', 'd']])
+    actual.lix[['a']] = 9
+    desired = la.lrange(label=[['a', 'b'], ['c', 'd']])
+    desired[0] = 9
+    ale(actual, desired)
+
+def lix_setitem_test_03():
+    actual = la.lrange(label=[['a', 'b'], ['c', 'd']])
+    actual.lix[0] = 9
+    desired = la.lrange(label=[['a', 'b'], ['c', 'd']])
+    desired[0] = 9
+    ale(actual, desired)
+
+def lix_setitem_test_04():
+    actual = la.lrange(label=[['a', 'b'], ['c', 'd']])
+    actual.lix[['a']:['b']] = 9
+    desired = la.lrange(label=[['a', 'b'], ['c', 'd']])
+    desired[0:1] = 9
+    ale(actual, desired)
+
+def lix_setitem_test_05():
+    actual = la.lrange(label=[['a', 'b'], ['c', 'd']])
+    actual.lix[['b'], ['d']] = 9
+    desired = la.lrange(label=[['a', 'b'], ['c', 'd']])
+    desired[1, 1] = 9
+    ale(actual, desired)
+
+def lix_setitem_test_06():
+    actual = la.lrange(label=[['a', 'b', 'c'], ['1', '2', '3']])
+    actual.lix[['a', 'b'], ['1', '2']] = 9
+    desired = la.lrange(label=[['a', 'b', 'c'], ['1', '2', '3']])
+    desired[:2, :2] = 9
+    ale(actual, desired)
+
+def lix_setitem_test_07():
+    actual = la.lrange(label=[['a', 'b', 'c'], ['1', '2', '3']])
+    actual.lix[['a', 'b'], ['1', '2']] = np.arange(4).reshape(2, 2)
+    desired = la.lrange(label=[['a', 'b', 'c'], ['1', '2', '3']])
+    desired[:2, :2] = np.arange(4).reshape(2, 2)
+    ale(actual, desired)
+
+def lix_setitem_test_08():
+    actual = la.lrange(label=[['a', 'b'], ['c', 'd']])
+    actual.lix[['a']] = la.larry([9, 10], [['c', 'd']])
+    desired = la.lrange(label=[['a', 'b'], ['c', 'd']])
+    desired[0] = [9, 10]
+    ale(actual, desired)
+
+def lix_setitem_test_09():
+    def lixit(lar, index, value):
+        lar.lix[index] = value
+    actual = la.lrange(label=[['a', 'b'], ['c', 'd']])
+    index = ['a']
+    value = la.larry([10, 9], [['d', 'c']])
+    assert_raises(IndexError, lixit, actual, index, value)
+
+def lix_setitem_test_10():
+    actual = la.lrange(label=[['a', 'b'], ['c', 'd']])
+    actual.lix[:,['d']] = la.larry([[9], [10]], [['a', 'b'],['d']])
+    desired = la.lrange(label=[['a', 'b'], ['c', 'd']])
+    desired[:,-1] = [9, 10]
+    ale(actual, desired)

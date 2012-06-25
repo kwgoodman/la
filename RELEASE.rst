@@ -21,6 +21,11 @@ la 0.7
 - larry.merge() when update=True, larry.morph(), larry.morph_like()
 - larry.take()
 - larry.sortaxis()
+- larry.nan_replace()
+
+**Enhancements**
+
+- Added setitem ability to label indexing (lix)
 
 **Breakage from la 0.6**
 
