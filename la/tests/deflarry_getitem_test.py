@@ -176,14 +176,14 @@ def test_getitem_20():
                      [ 5.0, 6.0]], [[1, 2], [0, 1]])
     lar1, lar2 = make_larrys()
     actual = lar1[np.array([1, 2]),:]
-    ale(actual, desired, original=lar1)                       
+    ale(actual, desired, original=lar1)
 
 def test_getitem_21():
     "larry.getitem #21"
     desired = larry([ 3.0, 5.0], [[1, 2]])
     lar1, lar2 = make_larrys()
     actual = lar1[np.array([1, 2]), 0]
-    ale(actual, desired, original=lar1) 
+    ale(actual, desired, original=lar1)
 
 def test_getitem_22():
     "larry.getitem #22"
@@ -219,4 +219,29 @@ def test_getitem_25():
     desired = larry(np.ones((3,0)))
     lar1, lar2 = make_larrys()
     actual = lar1[:,1:1]
-    ale(actual, desired, original=lar1) 
+    ale(actual, desired, original=lar1)
+
+# ------------------------------------------------------------------------
+# indexing with bool larrys
+
+def test_getitem_26():
+    "larry.getitem #26"
+    lar1, lar2 = make_larrys()
+    idx1 = larry([True, False, True])
+    actual = lar1[idx1]
+    arr = lar1.x[idx1.x]
+    assert_equal(arr.shape, actual.shape)
+    idx2 = [0, 2]
+    desired = lar1[idx2]
+    ale(actual, desired, original=lar1)
+
+def test_getitem_27():
+    "larry.getitem #27"
+    lar1, lar2 = make_larrys()
+    idx1 = larry([True, False])
+    actual = lar1[:,idx1]
+    arr = lar1.x[:,idx1.x]
+    assert_equal(arr.shape, actual.shape)
+    idx2 = [0]
+    desired = lar1[:,idx2]
+    ale(actual, desired, original=lar1)
