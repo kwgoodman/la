@@ -1762,9 +1762,9 @@ class larry(object):
             label[0] = lab
             x = self.x[index.x]
         else:        
-            msg = 'Only slice, integer, and seq (list, tuple, 1d array)'
-            msg = msg + ' indexing supported'
-            raise IndexError, msg        
+            msg = 'Only slice, integer, and seq (list, tuple, 1d array,'
+            msg = msg + ' 1d bool larry) indexing supported'
+            raise IndexError(msg)
         return larry(x, label, validate=validate)
 
     def take(self, indices, axis):
