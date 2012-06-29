@@ -1685,11 +1685,13 @@ class larry(object):
                         allscalar = False
                     elif typ is larry:
                         if idx.dtype.type != np.bool_:
-                            raise ValueError("If index is larry it must of bool dtype")
+                            raise IndexError("If index is larry it must of bool dtype")
                         if idx.ndim != 1:
-                            raise ValueError("If index is larry it must be 1d")
+                            raise IndexError("If index is larry it must be 1d")
+                        if self.label[ax] != idx.label[0]:
+                            raise IndexError("When indexing larrys must be aligned")
                         try:
-                            lab = [self.label[0][j] for j, z in
+                            lab = [self.label[ax][j] for j, z in
                                                         enumerate(idx.x) if z]
                         except IndexError:
                             raise IndexError, 'index out of range'
@@ -1746,9 +1748,11 @@ class larry(object):
             label[0] = lab                 
         elif typidx is larry:
             if index.dtype.type != np.bool_:
-                raise ValueError("If index is larry it must of bool dtype")
+                raise IndexError("If index is larry it must of bool dtype")
             if index.ndim != 1:
-                raise ValueError("If index is larry it must be 1d")
+                raise IndexError("If index is larry it must be 1d")
+            if self.label[0] != index.label[0]:
+                raise IndexError("When indexing larrys must be aligned")
             try:
                 lab = [self.label[0][j] for j, z in
                                             enumerate(index) if z]

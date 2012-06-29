@@ -230,7 +230,7 @@ def test_getitem_26():
     idx1 = larry([True, False, True])
     actual = lar1[idx1]
     arr = lar1.x[idx1.x]
-    assert_equal(arr.shape, actual.shape)
+    assert_array_equal(arr, actual.x)
     idx2 = [0, 2]
     desired = lar1[idx2]
     ale(actual, desired, original=lar1)
@@ -241,7 +241,58 @@ def test_getitem_27():
     idx1 = larry([True, False])
     actual = lar1[:,idx1]
     arr = lar1.x[:,idx1.x]
-    assert_equal(arr.shape, actual.shape)
+    assert_array_equal(arr, actual.x)
+    idx2 = [0]
+    desired = lar1[:,idx2]
+    ale(actual, desired, original=lar1)
+
+def test_getitem_28():
+    "larry.getitem #28"
+    lar1, lar2 = make_larrys()
+    idx1 = larry([True, False, True, False])
+    actual = lar2[idx1]
+    arr = lar2.x[idx1.x]
+    assert_array_equal(arr, actual.x)
+    idx2 = [0, 2]
+    desired = lar2[idx2]
+    ale(actual, desired, original=lar2)
+
+def test_getitem_29():
+    "larry.getitem #29"
+    lar1, lar2 = make_larrys()
+    idx = larry([True, False, True, False])
+    assert_raises(IndexError, lar1.__getitem__, idx[::-1])
+    assert_raises(IndexError, lar2.__getitem__, idx[::-1])
+    idx = larry([0, 1, 2, 3])
+    assert_raises(IndexError, lar1.__getitem__, idx)
+    assert_raises(IndexError, lar2.__getitem__, idx)
+    idx = larry([True, False])
+    assert_raises(IndexError, lar1.__getitem__, (slice(None), idx[::-1]))    
+
+def test_getitem_30():
+    "larry.getitem #30"
+    lar1, lar2 = make_larrys()
+    lar1.label[0] = ['a', 'b', 'c']
+    lar1.label[1] = ['A', 'B']
+    lar2.label[0] = ['a', 'b', 'c', 'd']
+    idx1 = larry([True, False, True], label=[['a', 'b', 'c']])
+    actual = lar1[idx1]
+    arr = lar1.x[idx1.x]
+    assert_array_equal(arr, actual.x)
+    idx2 = [0, 2]
+    desired = lar1[idx2]
+    ale(actual, desired, original=lar1)
+
+def test_getitem_31():
+    "larry.getitem #31"
+    lar1, lar2 = make_larrys()
+    lar1.label[0] = ['a', 'b', 'c']
+    lar1.label[1] = ['A', 'B']
+    lar2.label[0] = ['a', 'b', 'c', 'd']
+    idx1 = larry([True, False], label=[['A', 'B']])
+    actual = lar1[:,idx1]
+    arr = lar1.x[:,idx1.x]
+    assert_array_equal(arr, actual.x)
     idx2 = [0]
     desired = lar1[:,idx2]
     ale(actual, desired, original=lar1)
