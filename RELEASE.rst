@@ -35,6 +35,7 @@ la 0.7
 **Bug fixes**
 
 - #59 Proper int promotion in larry.cumsum() and larry.cumprod()
+- #62 la.cov() overwrites NaNs in input array
 
 Older versions
 ==============

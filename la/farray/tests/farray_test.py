@@ -13,7 +13,8 @@ nan = np.nan
 from la.util.testing import printfail
 from la.farray import group_ranking, group_mean, group_median
 from la.farray import (movingsum, movingrank, movingsum_forward, ranking, 
-                       geometric_mean, unique_group, correlation, lastrank)
+                       geometric_mean, unique_group, correlation, lastrank,
+                       covMissing)
 
 # Sector functions ----------------------------------------------------------
 
@@ -731,32 +732,17 @@ class Test_lastrank(unittest.TestCase):
         s = lastrank(np.array([]))
         aae(s, np.nan, err_msg="size 0 lastrank fail")
 
-# Unit tests ---------------------------------------------------------------- 
-    
-def suite():
+def test_covMissing_1():
+    "farray.covMissing_1"
+    a = np.ones((2,10))
+    actual = covMissing(a)
+    desired = np.ones((2,2))
+    aae(actual, desired)
 
-    unit = unittest.TestLoader().loadTestsFromTestCase
-    s = []
-    
-    # Sector functions
-    s.append(unit(Test_group_ranking))
-    s.append(unit(Test_group_mean)) 
-    s.append(unit(Test_group_median)) 
-    
-    # Normalize functions
-    s.append(unit(Test_ranking))    
-    s.append(unit(Test_geometric_mean))
-    s.append(unit(Test_movingsum))
-    s.append(unit(Test_movingsum_forward))
-    s.append(unit(Test_movingrank))
-    s.append(unit(Test_lastrank))
-    
-    # Calc function
-    s.append(unit(Test_correlation))              
-         
-    return unittest.TestSuite(s)
-
-def run():   
-    suite = testsuite()
-    unittest.TextTestRunner(verbosity=2).run(suite)
-
+def test_covMissing_2():
+    "farray.covMissing_2"
+    a = np.ones((2,4))
+    a[0,1] = np.nan
+    b = a.copy()
+    ignore = covMissing(a)
+    aae(a, b)

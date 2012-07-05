@@ -144,6 +144,7 @@ def covMissing(R):
     demeaned and the covariance is normalized by T not T-1.
     
     """
+    R = R.copy()
     mask = np.isnan(R)
     np.putmask(R, mask, 0)
     mask = np.asarray(mask, np.float64)
