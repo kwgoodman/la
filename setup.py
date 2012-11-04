@@ -1,8 +1,13 @@
 #!/usr/bin/env python
-
+from __future__ import print_function
 import os
 from distutils.core import setup
 from distutils.extension import Extension
+
+try:
+    from distutils.command.build_py import build_py_2to3 as build_py
+except ImportError:
+    from distutils.command.build_py import build_py
 
 CLASSIFIERS = ["Development Status :: 4 - Beta",
                "Environment :: Console",
@@ -14,7 +19,7 @@ CLASSIFIERS = ["Development Status :: 4 - Beta",
                "Topic :: Scientific/Engineering"]
 
 description = "Label the rows, columns, any dimension, of your NumPy arrays."
-fid = file('README.rst', 'r')
+fid = open('README.rst', 'r')
 long_description = fid.read()
 fid.close()
 idx = max(0, long_description.find("The main class of the la package"))
@@ -22,7 +27,7 @@ long_description = long_description[idx:]
 
 # Get la version
 ver_file = os.path.join('la', 'version.py')
-fid = file(ver_file, 'r')
+fid = open(ver_file, 'r')
 VER = fid.read()
 fid.close()
 VER = VER.split("= ")
@@ -72,13 +77,14 @@ try:
           packages=PACKAGES,
           package_data=PACKAGE_DATA,
           requires=REQUIRES,
-          ext_modules = [Extension("la.cflabel", ["la/src/cflabel.c"])]
+          ext_modules = [Extension("la.cflabel", ["la/src/cflabel.c"])],
+          cmdclass={'build_py': build_py}
          )
 except SystemExit:
     # Probably clistmap.c failed to compile, so use slower python version
     msg = '\nLooks like cflabel.c failed to compile, so the slower python '
     msg += 'version will be used instead.\n'  
-    print msg        
+    print(msg)
     setup(name=NAME,
           maintainer=MAINTAINER,
           maintainer_email=MAINTAINER_EMAIL,
@@ -95,4 +101,5 @@ except SystemExit:
           packages=PACKAGES,
           package_data=PACKAGE_DATA,
           requires=REQUIRES,
+          cmdclass={'build_py': build_py}
          )     

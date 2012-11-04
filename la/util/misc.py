@@ -7,7 +7,7 @@ import numpy as np
 from la.flabel import list2index
 
         
-C = string.letters + string.digits
+C = string.ascii_letters + string.digits
 def randstring(n):
     "Random characters string selected from lower, upper letters and digits."
     s = []

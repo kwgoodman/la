@@ -1,5 +1,5 @@
 "la init"
-
+from __future__ import print_function
 # Classes
 from la.deflarry import larry
 
@@ -22,7 +22,7 @@ try:
     test = Tester().test
     del Tester
 except (ImportError, ValueError):
-    print "No la unit testing available."
+    print("No la unit testing available.")
     
 try:
     # Namespace cleaning

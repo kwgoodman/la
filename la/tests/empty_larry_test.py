@@ -156,8 +156,8 @@ def test_empty():
 # Check that the right shape and value are returned by the reducing methods
 # when the input has a shape tuple that contains 0
 
-False = np.False_
-True = ~False
+#False = np.False_
+#True = ~False
 
 def reduce_methods():
     r = [{'la': 'sum',      'np': 'sum', 'dflt': nan,   'kw': {}},

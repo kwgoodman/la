@@ -1,4 +1,4 @@
-
+from __future__ import print_function
 import datetime
 import numpy as np
 import la
@@ -110,10 +110,10 @@ def quotes(tickers, date1=None, date2=None, adjust=True, verbose=False):
     lar = None
     items = ['open', 'close', 'high', 'low', 'volume', 'adjclose']
     if verbose:
-        print "Load data"
+        print("Load data")
     for ticker in tickers:
         if verbose:
-            print "\t" + ticker
+            print("\t" + ticker)
         data, dates = quotes_historical_yahoo(ticker, date1, date2)
         data = np.array(data).T
         qlar = la.larry(data, [items, dates])

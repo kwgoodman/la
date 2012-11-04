@@ -53,14 +53,14 @@ def nans(shape, dtype=float):
             return a
         elif a.dtype == np.bool_:
             msg = 'Missing values are not supported for bool dtype.'
-            raise TypeError, msg            
+            raise TypeError(msg)            
         elif a.dtype == object:
             a.fill(None)
             return a       
     # int dtype can't be filled with NaN
     msg = 'Inexact scalar dtype, such as float, needed for NaN '
     msg += 'fill value.'
-    raise TypeError, msg
+    raise TypeError(msg)
 
 def missing_marker(data):
     """

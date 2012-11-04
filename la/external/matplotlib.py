@@ -95,7 +95,7 @@ def quotes_historical_yahoo(ticker, date1, date2):
         data, dates = parse_yahoo_historical(fh)
         if len(data) == 0:
             return None
-    except IOError, exc:
+    except IOError as exc:
         warnings.warn('urlopen() failure\n' + exc.strerror[1])
         return None
     return data, dates

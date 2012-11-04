@@ -50,7 +50,7 @@ class Test_binary(unittest.TestCase):
             lab = sorted(list(lab))
             label.append(lab)   
         msg = printfail(label, p.label, 'label')    
-        self.assert_(label == p.label, msg)        
+        self.assertTrue(label == p.label, msg)        
         
         # x
         t = np.array([[ 1.0, 2.0],
@@ -58,11 +58,11 @@ class Test_binary(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found')   
-        self.assert_(noreference(p, self.l2), 'Reference found')
+        self.assertTrue(noreference(p, self.l1), 'Reference found')   
+        self.assertTrue(noreference(p, self.l2), 'Reference found')
 
     def test___add___2(self):
         "larry.__add___2"
@@ -72,17 +72,17 @@ class Test_binary(unittest.TestCase):
         
         # label 
         msg = printfail(self.l1.label, p.label, 'label')  
-        self.assert_(p.label == self.l1.label, msg)        
+        self.assertTrue(p.label == self.l1.label, msg)        
         
         # x
         t = 2 * self.x1
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found')           
+        self.assertTrue(noreference(p, self.l1), 'Reference found')           
         
         
     def test___add___3(self):
@@ -93,17 +93,17 @@ class Test_binary(unittest.TestCase):
         
         # label 
         msg = printfail(self.l1.label, p.label, 'label')  
-        self.assert_(p.label == self.l1.label, msg)        
+        self.assertTrue(p.label == self.l1.label, msg)        
         
         # x
         t = 2 * self.x1
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found') 
+        self.assertTrue(noreference(p, self.l1), 'Reference found') 
         
     def test___add___4(self):
         "larry.__add___4"
@@ -113,17 +113,17 @@ class Test_binary(unittest.TestCase):
         
         # label 
         msg = printfail(self.l1.label, p.label, 'label')  
-        self.assert_(p.label == self.l1.label, msg)        
+        self.assertTrue(p.label == self.l1.label, msg)        
         
         # x
         t = self.x1 + 1.0
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found') 
+        self.assertTrue(noreference(p, self.l1), 'Reference found') 
         
     def test___add___5(self):
         "larry.__add___5"
@@ -133,17 +133,17 @@ class Test_binary(unittest.TestCase):
         
         # label 
         msg = printfail(self.l1.label, p.label, 'label')  
-        self.assert_(p.label == self.l1.label, msg)        
+        self.assertTrue(p.label == self.l1.label, msg)        
         
         # x
         t = self.x1 + 1.0
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found') 
+        self.assertTrue(noreference(p, self.l1), 'Reference found') 
         
     def test___add___6(self):
         "larry.__add___6"
@@ -157,7 +157,7 @@ class Test_binary(unittest.TestCase):
         p = self.l2 + self.l2
         
         # References
-        self.assert_(noreference(p, self.l2), 'Reference found') 
+        self.assertTrue(noreference(p, self.l2), 'Reference found') 
         
     def test___add___8(self):
         "larry.__add___8"
@@ -173,18 +173,18 @@ class Test_binary(unittest.TestCase):
         # label
         label = [range(self.l1.shape[0]), range(self.l1.shape[1])]  
         msg = printfail(label, p.label, 'label')    
-        self.assert_(label == p.label, msg)        
+        self.assertTrue(label == p.label, msg)        
         
         # x
         t = 2 * self.x1 
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found')   
-        self.assert_(noreference(p, self.l2), 'Reference found')
+        self.assertTrue(noreference(p, self.l1), 'Reference found')   
+        self.assertTrue(noreference(p, self.l2), 'Reference found')
 
     def test___add___10(self):
         "larry.__add___10"
@@ -208,7 +208,7 @@ class Test_binary(unittest.TestCase):
             lab = sorted(list(lab))
             label.append(lab)   
         msg = printfail(label, p.label, 'label')    
-        self.assert_(label == p.label, msg)        
+        self.assertTrue(label == p.label, msg)        
         
         # x
         t = np.array([[ 1.0, 2.0],
@@ -216,11 +216,11 @@ class Test_binary(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found')   
-        self.assert_(noreference(p, self.l2), 'Reference found')          
+        self.assertTrue(noreference(p, self.l1), 'Reference found')   
+        self.assertTrue(noreference(p, self.l2), 'Reference found')          
 
     def test___sub___2(self):
         "larry.__sub___2"
@@ -230,17 +230,17 @@ class Test_binary(unittest.TestCase):
         
         # label 
         msg = printfail(self.l1.label, p.label, 'label')  
-        self.assert_(p.label == self.l1.label, msg)        
+        self.assertTrue(p.label == self.l1.label, msg)        
         
         # x
         t = 0 * self.x1
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found')         
+        self.assertTrue(noreference(p, self.l1), 'Reference found')         
          
     def test___sub___3(self):
         "larry.__sub___3"
@@ -250,17 +250,17 @@ class Test_binary(unittest.TestCase):
         
         # label 
         msg = printfail(self.l1.label, p.label, 'label')  
-        self.assert_(p.label == self.l1.label, msg)        
+        self.assertTrue(p.label == self.l1.label, msg)        
         
         # x
         t = 0 * self.x1
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found') 
+        self.assertTrue(noreference(p, self.l1), 'Reference found') 
         
     def test___sub___4(self):
         "larry.__sub___4"
@@ -270,17 +270,17 @@ class Test_binary(unittest.TestCase):
         
         # label 
         msg = printfail(self.l1.label, p.label, 'label')  
-        self.assert_(p.label == self.l1.label, msg)        
+        self.assertTrue(p.label == self.l1.label, msg)        
         
         # x
         t = self.x1 - 1.0
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found') 
+        self.assertTrue(noreference(p, self.l1), 'Reference found') 
         
     def test___sub___5(self):
         "larry.__sub___5"
@@ -290,17 +290,17 @@ class Test_binary(unittest.TestCase):
         
         # label 
         msg = printfail(self.l1.label, p.label, 'label')  
-        self.assert_(p.label == self.l1.label, msg)        
+        self.assertTrue(p.label == self.l1.label, msg)        
         
         # x
         t = 1.0 - self.x1
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found')
+        self.assertTrue(noreference(p, self.l1), 'Reference found')
         
     def test___sub___6(self):
         "larry.__sub___6"
@@ -315,7 +315,7 @@ class Test_binary(unittest.TestCase):
         
         # label 
         msg = printfail(self.l2.label, p.label, 'label')  
-        self.assert_(p.label == self.l2.label, msg)        
+        self.assertTrue(p.label == self.l2.label, msg)        
         
         # x
         t = self.x2
@@ -323,10 +323,10 @@ class Test_binary(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)        
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)        
         
         # References
-        self.assert_(noreference(p, self.l2), 'Reference found')         
+        self.assertTrue(noreference(p, self.l2), 'Reference found')         
 
     def test___mul___1(self):
         "larry.__mul___1"
@@ -341,7 +341,7 @@ class Test_binary(unittest.TestCase):
             lab = sorted(list(lab))
             label.append(lab)   
         msg = printfail(label, p.label, 'label')    
-        self.assert_(label == p.label, msg)                  
+        self.assertTrue(label == p.label, msg)                  
         
         # x
         t = np.array([[ 2.0, 4.0],
@@ -349,11 +349,11 @@ class Test_binary(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l3), 'Reference found')          
-        self.assert_(noreference(p, self.l2), 'Reference found')
+        self.assertTrue(noreference(p, self.l3), 'Reference found')          
+        self.assertTrue(noreference(p, self.l2), 'Reference found')
 
     def test___mul___2(self):
         "larry.__mul___2"
@@ -368,17 +368,17 @@ class Test_binary(unittest.TestCase):
             lab = sorted(list(lab))
             label.append(lab)   
         msg = printfail(label, p.label, 'label')    
-        self.assert_(label == p.label, msg)      
+        self.assertTrue(label == p.label, msg)      
         
         # x
         t = self.x1 * self.x1
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found')           
+        self.assertTrue(noreference(p, self.l1), 'Reference found')           
         
     def test___mul___3(self):
         "larry.__mul___3"
@@ -393,17 +393,17 @@ class Test_binary(unittest.TestCase):
             lab = sorted(list(lab))
             label.append(lab)   
         msg = printfail(label, p.label, 'label')    
-        self.assert_(label == p.label, msg)      
+        self.assertTrue(label == p.label, msg)      
         
         # x
         t = self.x1 * self.x1
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found') 
+        self.assertTrue(noreference(p, self.l1), 'Reference found') 
         
     def test___mul___4(self):
         "larry.__mul___4"
@@ -418,17 +418,17 @@ class Test_binary(unittest.TestCase):
             lab = sorted(list(lab))
             label.append(lab)   
         msg = printfail(label, p.label, 'label')    
-        self.assert_(label == p.label, msg)      
+        self.assertTrue(label == p.label, msg)      
         
         # x
         t = self.x1
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found') 
+        self.assertTrue(noreference(p, self.l1), 'Reference found') 
         
     def test___mul___5(self):
         "larry.__mul___5"
@@ -443,17 +443,17 @@ class Test_binary(unittest.TestCase):
             lab = sorted(list(lab))
             label.append(lab)   
         msg = printfail(label, p.label, 'label')    
-        self.assert_(label == p.label, msg)      
+        self.assertTrue(label == p.label, msg)      
         
         # x
         t = self.x1
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found') 
+        self.assertTrue(noreference(p, self.l1), 'Reference found') 
         
     def test___mul___6(self):
         "larry.__mul___6"
@@ -468,17 +468,17 @@ class Test_binary(unittest.TestCase):
         
         # label 
         msg = printfail(self.l2.label, p.label, 'label')  
-        self.assert_(p.label == self.l2.label, msg)        
+        self.assertTrue(p.label == self.l2.label, msg)        
         
         # x
         t = self.x2 * self.x2
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)            
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)            
         
         # References
-        self.assert_(noreference(p, self.l2), 'Reference found')         
+        self.assertTrue(noreference(p, self.l2), 'Reference found')         
 
     def test___div___1(self):
         "larry.__div___1"
@@ -493,7 +493,7 @@ class Test_binary(unittest.TestCase):
             lab = sorted(list(lab))
             label.append(lab)   
         msg = printfail(label, p.label, 'label')    
-        self.assert_(label == p.label, msg)        
+        self.assertTrue(label == p.label, msg)        
         
         # x
         t = np.array([[ 2.0, 1.0],
@@ -501,11 +501,11 @@ class Test_binary(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l3), 'Reference found')   
-        self.assert_(noreference(p, self.l2), 'Reference found')        
+        self.assertTrue(noreference(p, self.l3), 'Reference found')   
+        self.assertTrue(noreference(p, self.l2), 'Reference found')        
         
     def test___div___2(self):
         "larry.__div___2"
@@ -521,7 +521,7 @@ class Test_binary(unittest.TestCase):
             lab = sorted(list(lab))
             label.append(lab)   
         msg = printfail(label, p.label, 'label')    
-        self.assert_(label == p.label, msg)        
+        self.assertTrue(label == p.label, msg)        
         
         # x
         with np.errstate(invalid='ignore', divide='ignore'):
@@ -529,11 +529,11 @@ class Test_binary(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found')   
-        self.assert_(noreference(p, self.l2), 'Reference found')        
+        self.assertTrue(noreference(p, self.l1), 'Reference found')   
+        self.assertTrue(noreference(p, self.l2), 'Reference found')        
     
     def test___div___3(self):
         "larry.__div___3"
@@ -549,7 +549,7 @@ class Test_binary(unittest.TestCase):
             lab = sorted(list(lab))
             label.append(lab)   
         msg = printfail(label, p.label, 'label')    
-        self.assert_(label == p.label, msg)        
+        self.assertTrue(label == p.label, msg)        
         
         # x
         with np.errstate(invalid='ignore', divide='ignore'):
@@ -557,11 +557,11 @@ class Test_binary(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found')   
-        self.assert_(noreference(p, self.l2), 'Reference found') 
+        self.assertTrue(noreference(p, self.l1), 'Reference found')   
+        self.assertTrue(noreference(p, self.l2), 'Reference found') 
         
     def test___div___4(self):
         "larry.__div___4"
@@ -576,18 +576,18 @@ class Test_binary(unittest.TestCase):
             lab = sorted(list(lab))
             label.append(lab)   
         msg = printfail(label, p.label, 'label')    
-        self.assert_(label == p.label, msg)        
+        self.assertTrue(label == p.label, msg)        
         
         # x
         t = self.l1.x / 2.0
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found')   
-        self.assert_(noreference(p, self.l2), 'Reference found')
+        self.assertTrue(noreference(p, self.l1), 'Reference found')   
+        self.assertTrue(noreference(p, self.l2), 'Reference found')
         
     def test___div___5(self):
         "larry.__div___5"
@@ -602,18 +602,18 @@ class Test_binary(unittest.TestCase):
             lab = sorted(list(lab))
             label.append(lab)   
         msg = printfail(label, p.label, 'label')    
-        self.assert_(label == p.label, msg)        
+        self.assertTrue(label == p.label, msg)        
         
         # x
         t = 2.0 / self.l2.x
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
         
         # References
-        self.assert_(noreference(p, self.l1), 'Reference found')   
-        self.assert_(noreference(p, self.l2), 'Reference found')
+        self.assertTrue(noreference(p, self.l1), 'Reference found')   
+        self.assertTrue(noreference(p, self.l2), 'Reference found')
         
     def test___div___6(self):
         "larry.__div___6"
@@ -628,17 +628,17 @@ class Test_binary(unittest.TestCase):
         
         # label 
         msg = printfail(self.l2.label, p.label, 'label')  
-        self.assert_(p.label == self.l2.label, msg)        
+        self.assertTrue(p.label == self.l2.label, msg)        
         
         # x
         t = self.x2 / self.x2
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)            
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)            
         
         # References
-        self.assert_(noreference(p, self.l2), 'Reference found')              
+        self.assertTrue(noreference(p, self.l2), 'Reference found')              
 
     def test___div___8(self):
         "larry.__div___8"
@@ -647,8 +647,8 @@ class Test_binary(unittest.TestCase):
         p = self.l2 / self.l3
         
         # References
-        self.assert_(noreference(p, self.l2), 'Reference found')
-        self.assert_(noreference(p, self.l3), 'Reference found')
+        self.assertTrue(noreference(p, self.l2), 'Reference found')
+        self.assertTrue(noreference(p, self.l3), 'Reference found')
 
 
 class Test_reduce(unittest.TestCase):
@@ -673,7 +673,7 @@ class Test_reduce(unittest.TestCase):
         t = 5.0
         p = self.l.sum()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)
+        self.assertTrue(p == t, msg)
         
     def test_sum_2(self):
         "larry.sum_2"
@@ -684,8 +684,8 @@ class Test_reduce(unittest.TestCase):
         t = larry(x, label)
         p = self.l.sum(0)
         msg = printfail(t, p, '')
-        self.assert_((p == t).all(), msg)
-        self.assert_(noreference(p, t), 'Reference found')        
+        self.assertTrue((p == t).all(), msg)
+        self.assertTrue(noreference(p, t), 'Reference found')        
 
     def test_sum_3(self):
         "larry.sum_3"
@@ -696,26 +696,26 @@ class Test_reduce(unittest.TestCase):
         t = larry(x, label)
         p = self.l.sum(1)
         msg = printfail(t, p, '')
-        self.assert_((p == t).all(), msg)
-        self.assert_(noreference(p, t), 'Reference found')
+        self.assertTrue((p == t).all(), msg)
+        self.assertTrue(noreference(p, t), 'Reference found')
         
     def test_sum_4(self):
         "larry.sum_4"
-        self.failUnlessRaises(ValueError, self.l.sum, 3)
+        self.assertRaises(ValueError, self.l.sum, 3)
         
     def test_sum_5(self):
         "larry.sum_5"
         t = 6.0
         p = self.l2.sum()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)                         
+        self.assertTrue(p == t, msg)                         
 
     def test_prod_1(self):
         "larry.prod_1"
         t = 1.0
         p = self.l.prod()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)
+        self.assertTrue(p == t, msg)
         
     def test_prod_2(self):
         "larry.prod_2"
@@ -726,8 +726,8 @@ class Test_reduce(unittest.TestCase):
         t = larry(x, label)
         p = self.l.prod(0)
         msg = printfail(t, p, '')
-        self.assert_((p == t).all(), msg)
-        self.assert_(noreference(p, t), 'Reference found')        
+        self.assertTrue((p == t).all(), msg)
+        self.assertTrue(noreference(p, t), 'Reference found')        
 
     def test_prod_3(self):
         "larry.prod_3"
@@ -738,19 +738,19 @@ class Test_reduce(unittest.TestCase):
         t = larry(x, label)
         p = self.l.prod(1)
         msg = printfail(t, p, '')
-        self.assert_((p == t).all(), msg)
-        self.assert_(noreference(p, t), 'Reference found')
+        self.assertTrue((p == t).all(), msg)
+        self.assertTrue(noreference(p, t), 'Reference found')
         
     def test_prod_4(self):
         "larry.prod_4"
-        self.failUnlessRaises(ValueError, self.l.prod, 3)
+        self.assertRaises(ValueError, self.l.prod, 3)
         
     def test_prod_5(self):
         "larry.prod_5"
         t = 6.0
         p = self.l2.prod()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)
+        self.assertTrue(p == t, msg)
 
     def test_prod_6(self):
         "larry.prod_6"
@@ -779,7 +779,7 @@ class Test_reduce(unittest.TestCase):
         t = 1.0
         p = self.l.mean()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)
+        self.assertTrue(p == t, msg)
         
     def test_mean_2(self):
         "larry.mean_2"
@@ -788,10 +788,10 @@ class Test_reduce(unittest.TestCase):
         t = larry(x, label)
         p = self.l.mean(0)
         msg = printfail(t.x, p.x, 'x')
-        self.assert_((abs(p.x - t.x) < self.tol).all(), msg)     
+        self.assertTrue((abs(p.x - t.x) < self.tol).all(), msg)     
         msg = printfail(t.label, p.label, 'label')
-        self.assert_(p.label == t.label, msg)
-        self.assert_(noreference(p, t), 'Reference found') 
+        self.assertTrue(p.label == t.label, msg)
+        self.assertTrue(noreference(p, t), 'Reference found') 
         
     def test_mean_3(self):
         "larry.mean_3"
@@ -800,21 +800,21 @@ class Test_reduce(unittest.TestCase):
         t = larry(x, label)
         p = self.l.mean(1)
         msg = printfail(t.x, p.x, 'x')
-        self.assert_((abs(p.x - t.x) < self.tol).all(), msg)     
+        self.assertTrue((abs(p.x - t.x) < self.tol).all(), msg)     
         msg = printfail(t.label, p.label, 'label')
-        self.assert_(p.label == t.label, msg)
-        self.assert_(noreference(p, t), 'Reference found')
+        self.assertTrue(p.label == t.label, msg)
+        self.assertTrue(noreference(p, t), 'Reference found')
         
     def test_mean_4(self):
         "larry.mean_4"
-        self.failUnlessRaises(ValueError, self.l.mean, 3)
+        self.assertRaises(ValueError, self.l.mean, 3)
 
     def test_mean_5(self):
         "larry.mean_5"
         t = 2.0
         p = self.l2.mean()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)
+        self.assertTrue(p == t, msg)
         
     def test_geometric_mean_1(self):
         "larry.geometric_mean_1"
@@ -826,7 +826,7 @@ class Test_reduce(unittest.TestCase):
     def test_geometric_mean_2(self):
         "larry.geometric_mean_2"
         original = larry([0])
-        self.failUnlessRaises(ValueError, original.geometric_mean)
+        self.assertRaises(ValueError, original.geometric_mean)
         
     def test_geometric_mean_3(self):
         "larry.geometric_mean_3"
@@ -847,7 +847,7 @@ class Test_reduce(unittest.TestCase):
         t = 1.0
         p = self.l.median()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)
+        self.assertTrue(p == t, msg)
         
     def test_median_2(self):
         "larry.median_2"
@@ -856,10 +856,10 @@ class Test_reduce(unittest.TestCase):
         t = larry(x, label)
         p = self.l.median(0)
         msg = printfail(t.x, p.x, 'x')
-        self.assert_((abs(p.x - t.x) < self.tol).all(), msg)     
+        self.assertTrue((abs(p.x - t.x) < self.tol).all(), msg)     
         msg = printfail(t.label, p.label, 'label')
-        self.assert_(p.label == t.label, msg)
-        self.assert_(noreference(p, t), 'Reference found')        
+        self.assertTrue(p.label == t.label, msg)
+        self.assertTrue(noreference(p, t), 'Reference found')        
 
     def test_median_3(self):
         "larry.median_3"
@@ -868,28 +868,28 @@ class Test_reduce(unittest.TestCase):
         t = larry(x, label)
         p = self.l.median(1)
         msg = printfail(t.x, p.x, 'x')
-        self.assert_((abs(p.x - t.x) < self.tol).all(), msg)     
+        self.assertTrue((abs(p.x - t.x) < self.tol).all(), msg)     
         msg = printfail(t.label, p.label, 'label')
-        self.assert_(p.label == t.label, msg)
-        self.assert_(noreference(p, t), 'Reference found')
+        self.assertTrue(p.label == t.label, msg)
+        self.assertTrue(noreference(p, t), 'Reference found')
         
     def test_median_4(self):
         "larry.median_4"
-        self.failUnlessRaises(ValueError, self.l.median, 3)
+        self.assertRaises(ValueError, self.l.median, 3)
 
     def test_median_5(self):
         "larry.median_5"
         t = 2.0
         p = self.l2.median()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)
+        self.assertTrue(p == t, msg)
 
     def test_std_1(self):
         "larry.std_1"
         t = 0.0
         p = self.l.std()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)
+        self.assertTrue(p == t, msg)
         
     def test_std_2(self):
         "larry.std_2"
@@ -898,10 +898,10 @@ class Test_reduce(unittest.TestCase):
         t = larry(x, label)
         p = self.l.std(0)
         msg = printfail(t.x, p.x, 'x')
-        self.assert_((abs(p.x - t.x) < self.tol).all(), msg)     
+        self.assertTrue((abs(p.x - t.x) < self.tol).all(), msg)     
         msg = printfail(t.label, p.label, 'label')
-        self.assert_(p.label == t.label, msg)
-        self.assert_(noreference(p, t), 'Reference found') 
+        self.assertTrue(p.label == t.label, msg)
+        self.assertTrue(noreference(p, t), 'Reference found') 
         
     def test_std_3(self):
         "larry.std_3"
@@ -912,33 +912,33 @@ class Test_reduce(unittest.TestCase):
         t[np.isnan(t.x)] = self.nancode
         p[p.isnan()] = self.nancode          
         msg = printfail(t.x, p.x, 'x')
-        self.assert_((abs(p.x - t.x) < self.tol).all(), msg)     
+        self.assertTrue((abs(p.x - t.x) < self.tol).all(), msg)     
         msg = printfail(t.label, p.label, 'label')
-        self.assert_(p.label == t.label, msg)
-        self.assert_(noreference(p, t), 'Reference found')
+        self.assertTrue(p.label == t.label, msg)
+        self.assertTrue(noreference(p, t), 'Reference found')
         
     def test_std_4(self):
         "larry.std_4"
-        self.failUnlessRaises(ValueError, self.l.std, 3)
+        self.assertRaises(ValueError, self.l.std, 3)
 
     def test_std_5(self):
         "larry.std_5"
         t = np.sqrt(2./3)
         p = self.l2.std()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)
+        self.assertTrue(p == t, msg)
         
     def test_std_6(self):
         "larry.std_6"        
         s = larry([1, 1, 1]).std(axis=-1)
-        self.assert_(s == 0, 'Not equal')
+        self.assertTrue(s == 0, 'Not equal')
 
     def test_var_1(self):
         "larry.var_1"
         t = 0.0
         p = self.l.var()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)
+        self.assertTrue(p == t, msg)
         
     def test_var_2(self):
         "larry.var_2"
@@ -947,10 +947,10 @@ class Test_reduce(unittest.TestCase):
         t = larry(x, label)
         p = self.l.var(0)
         msg = printfail(t.x, p.x, 'x')
-        self.assert_((abs(p.x - t.x) < self.tol).all(), msg)     
+        self.assertTrue((abs(p.x - t.x) < self.tol).all(), msg)     
         msg = printfail(t.label, p.label, 'label')
-        self.assert_(p.label == t.label, msg)
-        self.assert_(noreference(p, t), 'Reference found') 
+        self.assertTrue(p.label == t.label, msg)
+        self.assertTrue(noreference(p, t), 'Reference found') 
         
     def test_var_3(self):
         "larry.var_3"
@@ -961,33 +961,33 @@ class Test_reduce(unittest.TestCase):
         t[np.isnan(t.x)] = self.nancode
         p[p.isnan()] = self.nancode          
         msg = printfail(t.x, p.x, 'x')
-        self.assert_((abs(p.x - t.x) < self.tol).all(), msg)     
+        self.assertTrue((abs(p.x - t.x) < self.tol).all(), msg)     
         msg = printfail(t.label, p.label, 'label')
-        self.assert_(p.label == t.label, msg)
-        self.assert_(noreference(p, t), 'Reference found')
+        self.assertTrue(p.label == t.label, msg)
+        self.assertTrue(noreference(p, t), 'Reference found')
         
     def test_var_4(self):
         "larry.var_4"
-        self.failUnlessRaises(ValueError, self.l.var, 3)
+        self.assertRaises(ValueError, self.l.var, 3)
 
     def test_var_5(self):
         "larry.var_5"
         t = 2./3
         p = self.l2.var()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg) 
+        self.assertTrue(p == t, msg) 
         
     def test_var_6(self):
         "larry.var_6"        
         s = larry([1, 1, 1]).var(axis=-1)
-        self.assert_(s == 0, 'Not equal')             
+        self.assertTrue(s == 0, 'Not equal')             
         
     def test_max_1(self):
         "larry.max_1"
         t = 1.0
         p = self.l.max()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)
+        self.assertTrue(p == t, msg)
         
     def test_max_2(self):
         "larry.max_2"
@@ -995,7 +995,7 @@ class Test_reduce(unittest.TestCase):
         t = larry(x)
         p = self.l.max(0)
         msg = printfail(t, p, '')
-        self.assert_((p == t).all(), msg)        
+        self.assertTrue((p == t).all(), msg)        
 
     def test_max_3(self):
         "larry.max_3"
@@ -1003,25 +1003,25 @@ class Test_reduce(unittest.TestCase):
         t = larry(x)
         p = self.l.max(1)
         msg = printfail(t, p, '')
-        self.assert_((p.x == t).all(), msg) 
+        self.assertTrue((p.x == t).all(), msg) 
         
     def test_max_4(self):
         "larry.max_4"
-        self.failUnlessRaises(ValueError, self.l.max, 3) 
+        self.assertRaises(ValueError, self.l.max, 3) 
         
     def test_max_5(self):
         "larry.max_5"
         t = 3.0
         p = self.l2.max()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)                 
+        self.assertTrue(p == t, msg)                 
 
     def test_min_1(self):
         "larry.min_1"
         t = 1.0
         p = self.l.min()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)
+        self.assertTrue(p == t, msg)
         
     def test_min_2(self):
         "larry.min_2"
@@ -1029,7 +1029,7 @@ class Test_reduce(unittest.TestCase):
         t = larry(x)
         p = self.l.min(0)
         msg = printfail(t, p, '')
-        self.assert_((p == t).all(), msg)        
+        self.assertTrue((p == t).all(), msg)        
 
     def test_min_3(self):
         "larry.min_3"
@@ -1037,18 +1037,18 @@ class Test_reduce(unittest.TestCase):
         t = larry(x)
         p = self.l.min(1)
         msg = printfail(t, p, '')
-        self.assert_((p.x == t).all(), msg) 
+        self.assertTrue((p.x == t).all(), msg) 
         
     def test_min_4(self):
         "larry.min_4"
-        self.failUnlessRaises(ValueError, self.l.min, 3)
+        self.assertRaises(ValueError, self.l.min, 3)
 
     def test_min_5(self):
         "larry.min_5"
         t = 1.0
         p = self.l2.min()
         msg = printfail(t, p, '')
-        self.assert_(p == t, msg)
+        self.assertTrue(p == t, msg)
         
     def test_lastrank_1(self):
         "larry.lastrank_1"
@@ -1060,10 +1060,10 @@ class Test_reduce(unittest.TestCase):
         t[np.isnan(t.x)] = self.nancode
         p[p.isnan()] = self.nancode          
         msg = printfail(t.x, p.x, 'x')
-        self.assert_((abs(p.x - t.x) < self.tol).all(), msg)     
+        self.assertTrue((abs(p.x - t.x) < self.tol).all(), msg)     
         msg = printfail(t.label, p.label, 'label')
-        self.assert_(p.label == t.label, msg)
-        self.assert_(noreference(p, t), 'Reference found') 
+        self.assertTrue(p.label == t.label, msg)
+        self.assertTrue(noreference(p, t), 'Reference found') 
         
     def test_lastrank_2(self):
         "larry.lastrank_2"
@@ -1075,10 +1075,10 @@ class Test_reduce(unittest.TestCase):
         t[np.isnan(t.x)] = self.nancode
         p[p.isnan()] = self.nancode          
         msg = printfail(t.x, p.x, 'x')
-        self.assert_((abs(p.x - t.x) < self.tol).all(), msg)     
+        self.assertTrue((abs(p.x - t.x) < self.tol).all(), msg)     
         msg = printfail(t.label, p.label, 'label')
-        self.assert_(p.label == t.label, msg)
-        self.assert_(noreference(p, t), 'Reference found') 
+        self.assertTrue(p.label == t.label, msg)
+        self.assertTrue(noreference(p, t), 'Reference found') 
         
     def test_lastrank_3(self):
         "larry.lastrank_3"
@@ -1089,10 +1089,10 @@ class Test_reduce(unittest.TestCase):
         t[np.isnan(t.x)] = self.nancode
         p[p.isnan()] = self.nancode          
         msg = printfail(t.x, p.x, 'x')
-        self.assert_((abs(p.x - t.x) < self.tol).all(), msg)     
+        self.assertTrue((abs(p.x - t.x) < self.tol).all(), msg)     
         msg = printfail(t.label, p.label, 'label')
-        self.assert_(p.label == t.label, msg)
-        self.assert_(noreference(p, t), 'Reference found')                        
+        self.assertTrue(p.label == t.label, msg)
+        self.assertTrue(noreference(p, t), 'Reference found')                        
 
         
 class Test_comparison(unittest.TestCase):
@@ -1117,9 +1117,9 @@ class Test_comparison(unittest.TestCase):
                       [ True, False]])
         p = self.l == 1.0
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
         
     def test_eq_2(self):
         "larry.__eq___2"
@@ -1128,9 +1128,9 @@ class Test_comparison(unittest.TestCase):
                       [ True, False]])
         p = self.l == self.y
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_eq_3(self):
         "larry.__eq___3"
@@ -1139,37 +1139,37 @@ class Test_comparison(unittest.TestCase):
                       [ True,  True]])
         p = self.l == self.l
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_eq_4(self):
         "larry.__eq___4"
         date = datetime.date(2004, 1, 1)
-        self.failUnlessRaises(TypeError, self.l.__eq__, date) 
+        self.assertRaises(TypeError, self.l.__eq__, date) 
         
     def test_eq_5(self):
         "larry.__eq___5"
         t = np.array([True, False, False])
         p = self.l2 == self.y2
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))                              
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))                              
     
     def test_eq_6(self):
         "larry.__eq___6"
         lar = la.larry([1, 2, 3])
         actual = lar == 'a'
         desired = lar.x == 'a'
-        self.assert_(actual == desired, "failed")
+        self.assertTrue(actual == desired, "failed")
     
     def test_eq_7(self):
         "larry.__eq___7"
         lar = la.larry(['a', 'b', 'c'])
         actual = lar == 1
         desired = lar.x == 1
-        self.assert_(actual == desired, "failed")
+        self.assertTrue(actual == desired, "failed")
 
     def test_ne_1(self):
         "larry.__ne___1"
@@ -1178,9 +1178,9 @@ class Test_comparison(unittest.TestCase):
                       [False,  True]])
         p = self.l != 1.0
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_ne_2(self):
         "larry.__ne___2"
@@ -1189,9 +1189,9 @@ class Test_comparison(unittest.TestCase):
                       [False,  True]])
         p = self.l != self.y
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_ne_3(self):
         "larry.__ne___3"
@@ -1200,28 +1200,28 @@ class Test_comparison(unittest.TestCase):
                       [False, False]])
         p = self.l != self.l
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_ne_4(self):
         "larry.__ne___4"
         date = datetime.date(2004, 1, 1)
-        self.failUnlessRaises(TypeError, self.l.__ne__, date)
+        self.assertRaises(TypeError, self.l.__ne__, date)
     
     def test_ne_5(self):
         "larry.__ne___5"
         lar = la.larry([1, 2, 3])
         actual = lar != 'a'
         desired = lar.x != 'a'
-        self.assert_(actual == desired, "failed")
+        self.assertTrue(actual == desired, "failed")
     
     def test_ne_6(self):
         "larry.__ne___6"
         lar = la.larry(['a', 'b', 'c'])
         actual = lar != 1
         desired = lar.x != 1
-        self.assert_(actual == desired, "failed")
+        self.assertTrue(actual == desired, "failed")
         
     def test_lt_1(self):
         "larry.__lt___1"
@@ -1230,9 +1230,9 @@ class Test_comparison(unittest.TestCase):
                       [False, False]])
         p = self.l < 1.0
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_lt_2(self):
         "larry.__lt___2"
@@ -1241,9 +1241,9 @@ class Test_comparison(unittest.TestCase):
                       [False, False]])
         p = self.l < self.y
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_lt_3(self):
         "larry.__lt___3"
@@ -1252,28 +1252,28 @@ class Test_comparison(unittest.TestCase):
                       [False, False]])
         p = self.l < self.l
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_lt_4(self):
         "larry.__lt___4"
         date = datetime.date(2004, 1, 1)
-        self.failUnlessRaises(TypeError, self.l.__lt__, date)                        
+        self.assertRaises(TypeError, self.l.__lt__, date)                        
     
     def test_lt_5(self):
         "larry.__lt___5"
         lar = la.larry([1, 2, 3])
         actual = lar < 'a'
         desired = lar.x < 'a'
-        self.assert_(actual == desired, "failed")
+        self.assertTrue(actual == desired, "failed")
     
     def test_lt_6(self):
         "larry.__lt___6"
         lar = la.larry(['a', 'b', 'c'])
         actual = lar < 1
         desired = lar.x < 1
-        self.assert_(actual == desired, "failed")
+        self.assertTrue(actual == desired, "failed")
 
     def test_gt_1(self):
         "larry.__gt___1"
@@ -1282,9 +1282,9 @@ class Test_comparison(unittest.TestCase):
                       [False,  True]])
         p = self.l > 1.0
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_gt_2(self):
         "larry.__gt___2"
@@ -1293,9 +1293,9 @@ class Test_comparison(unittest.TestCase):
                       [False,  True]])
         p = self.l > self.y
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))  
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))  
         
     def test_gt_3(self):
         "larry.__gt___3"
@@ -1304,28 +1304,28 @@ class Test_comparison(unittest.TestCase):
                       [False, False]])
         p = self.l > self.l
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_gt_4(self):
         "larry.__gt___4"
         date = datetime.date(2004, 1, 1)
-        self.failUnlessRaises(TypeError, self.l.__gt__, date) 
+        self.assertRaises(TypeError, self.l.__gt__, date) 
     
     def test_gt_5(self):
         "larry.__gt___5"
         lar = la.larry([1, 2, 3])
         actual = lar > 'a'
         desired = lar.x > 'a'
-        self.assert_(actual == desired, "failed")
+        self.assertTrue(actual == desired, "failed")
     
     def test_gt_6(self):
         "larry.__gt___6"
         lar = la.larry(['a', 'b', 'c'])
         actual = lar > 1
         desired = lar.x > 1
-        self.assert_(actual == desired, "failed")
+        self.assertTrue(actual == desired, "failed")
         
     def test_le_1(self):
         "larry.__le___1"
@@ -1334,9 +1334,9 @@ class Test_comparison(unittest.TestCase):
                       [ True, False]])
         p = self.l <= 1.0
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_le_2(self):
         "larry.__le___2"
@@ -1345,9 +1345,9 @@ class Test_comparison(unittest.TestCase):
                       [ True, False]])
         p = self.l <= self.y
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_le_3(self):
         "larry.__le___3"
@@ -1356,28 +1356,28 @@ class Test_comparison(unittest.TestCase):
                       [ True,  True]])
         p = self.l <= self.l
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_le_4(self):
         "larry.__le___4"
         date = datetime.date(2004, 1, 1)
-        self.failUnlessRaises(TypeError, self.l.__le__, date)                        
+        self.assertRaises(TypeError, self.l.__le__, date)                        
     
     def test_le_5(self):
         "larry.__le___5"
         lar = la.larry([1, 2, 3])
         actual = lar <= 'a'
         desired = lar.x <= 'a'
-        self.assert_(actual == desired, "failed")
+        self.assertTrue(actual == desired, "failed")
     
     def test_le_6(self):
         "larry.__le___6"
         lar = la.larry(['a', 'b', 'c'])
         actual = lar <= 1
         desired = lar.x <= 1
-        self.assert_(actual == desired, "failed")
+        self.assertTrue(actual == desired, "failed")
 
     def test_ge_1(self):
         "larry.__ge___1"
@@ -1386,9 +1386,9 @@ class Test_comparison(unittest.TestCase):
                       [ True,  True]])
         p = self.l >= 1.0
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_ge_2(self):
         "larry.__ge___2"
@@ -1397,9 +1397,9 @@ class Test_comparison(unittest.TestCase):
                       [ True,  True]])
         p = self.l >= self.y
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_ge_3(self):
         "larry.__ge___3"
@@ -1408,23 +1408,23 @@ class Test_comparison(unittest.TestCase):
                       [ True,  True]])
         p = self.l >= self.l
         msg = printfail(t, p.x, 'x')       
-        self.assert_((t == p.x).all(), msg) 
+        self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
     
     def test_ge_4(self):
         "larry.__ge___4"
         lar = la.larry([1, 2, 3])
         actual = lar >= 'a'
         desired = lar.x >= 'a'
-        self.assert_(actual == desired, "failed")
+        self.assertTrue(actual == desired, "failed")
     
     def test_ge_5(self):
         "larry.__ge___5"
         lar = la.larry(['a', 'b', 'c'])
         actual = lar >= 1
         desired = lar.x >= 1
-        self.assert_(actual == desired, "failed")
+        self.assertTrue(actual == desired, "failed")
 
         
 class Test_anyall(unittest.TestCase):
@@ -1449,70 +1449,70 @@ class Test_anyall(unittest.TestCase):
         t = True
         p = self.d1.any()
         msg = printfail(t, p, 'Truth')       
-        self.assert_(t == p, msg)                                 
+        self.assertTrue(t == p, msg)                                 
 
     def test_any_2(self):
         "larry.any_2"
         t = True
         p = self.d2.any()
         msg = printfail(t, p, 'Truth')       
-        self.assert_(t == p, msg)
+        self.assertTrue(t == p, msg)
         
     def test_any_3(self):
         "larry.any_3"
         t = True
         p = self.d3.any()
         msg = printfail(t, p, 'Truth')       
-        self.assert_(t == p, msg)
+        self.assertTrue(t == p, msg)
         
     def test_any_4(self):
         "larry.any_4"
         t = True
         p = self.d4.any()
         msg = printfail(t, p, 'Truth')       
-        self.assert_(t == p, msg)                
+        self.assertTrue(t == p, msg)                
 
     def test_any_5(self):
         "larry.any_5"
         t = True
         p = self.d5.any()
         msg = printfail(t, p, 'Truth')       
-        self.assert_(t == p, msg) 
+        self.assertTrue(t == p, msg) 
 
     def test_all_1(self):
         "larry.all_1"
         t = True
         p = self.d1.all()
         msg = printfail(t, p, 'Truth')       
-        self.assert_(t == p, msg)                                 
+        self.assertTrue(t == p, msg)                                 
 
     def test_all_2(self):
         "larry.all_2"
         t = False
         p = self.d2.all()
         msg = printfail(t, p, 'Truth')       
-        self.assert_(t == p, msg)
+        self.assertTrue(t == p, msg)
         
     def test_all_3(self):
         "larry.all_3"
         t = True
         p = self.d3.all()
         msg = printfail(t, p, 'Truth')       
-        self.assert_(t == p, msg)
+        self.assertTrue(t == p, msg)
         
     def test_all_4(self):
         "larry.all_4"
         t = True
         p = self.d4.all()
         msg = printfail(t, p, 'Truth')       
-        self.assert_(t == p, msg)                
+        self.assertTrue(t == p, msg)                
 
     def test_all_5(self):
         "larry.all_5"
         t = False
         p = self.d5.all()
         msg = printfail(t, p, 'Truth')       
-        self.assert_(t == p, msg)
+        self.assertTrue(t == p, msg)
 
 
 class Test_getset(unittest.TestCase):
@@ -1538,9 +1538,9 @@ class Test_getset(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
 
     def test_setitem_2(self):
         "larry.__setitem___2"
@@ -1552,9 +1552,9 @@ class Test_getset(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
 
     def test_setitem_3(self):
         "larry.__setitem___3"
@@ -1568,9 +1568,9 @@ class Test_getset(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_setitem_4(self):
         "larry.__setitem___4"
@@ -1582,9 +1582,9 @@ class Test_getset(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
 
     def test_setitem_5(self):
         "larry.__setitem___5"
@@ -1592,9 +1592,9 @@ class Test_getset(unittest.TestCase):
         p = self.l2
         p[-1] = 9
         msg = printfail(t, p.x, 'x')        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2, 3]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
         
     def test_setitem_6(self):
         "larry.__setitem___6"
@@ -1602,9 +1602,9 @@ class Test_getset(unittest.TestCase):
         p = self.l2
         p[:] = [0, 1, 2, 3]
         msg = printfail(t, p.x, 'x')        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2, 3]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))         
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))         
         
     def test_setitem_7(self):
         "larry.__setitem___7"
@@ -1612,9 +1612,9 @@ class Test_getset(unittest.TestCase):
         p = self.l2
         p[1:] = [9, 8, 7]
         msg = printfail(t, p.x, 'x')        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2, 3]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
 
     def test_setitem_8(self):
         "larry.__setitem___8"
@@ -1622,9 +1622,9 @@ class Test_getset(unittest.TestCase):
         p = self.l2
         p[:-1] = larry([9, 8, 7])
         msg = printfail(t, p.x, 'x')        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2, 3]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
 
     def test_setitem_9(self):
         "larry.__setitem___9"
@@ -1636,9 +1636,9 @@ class Test_getset(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
 
     def test_set_1(self):
         "larry.set_1"
@@ -1650,16 +1650,16 @@ class Test_getset(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label')) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label')) 
 
     def test_get_1(self):
         "larry.get_1"
         t = 3.0 
         p = self.l.get([1,0])
         msg = printfail(t, p, 'x')       
-        self.assert_((abs(t - p) < self.tol).all(), msg)
+        self.assertTrue((abs(t - p) < self.tol).all(), msg)
 
     def test_getx_1(self):
         "larry.getx_1"
@@ -1670,8 +1670,8 @@ class Test_getset(unittest.TestCase):
         msg = printfail(t, p, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p)] = self.nancode        
-        self.assert_((abs(t - p) < self.tol).all(), msg)
-        self.assert_(p is not self.x, 'reference but should be copy')                
+        self.assertTrue((abs(t - p) < self.tol).all(), msg)
+        self.assertTrue(p is not self.x, 'reference but should be copy')                
 
     def test_getx_2(self):
         "larry.getx_2"
@@ -1682,16 +1682,16 @@ class Test_getset(unittest.TestCase):
         msg = printfail(t, p, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p)] = self.nancode        
-        self.assert_((abs(t - p) < self.tol).all(), msg)
-        self.assert_(p is self.x, 'copy but should be reference')
+        self.assertTrue((abs(t - p) < self.tol).all(), msg)
+        self.assertTrue(p is self.x, 'copy but should be reference')
 
     def test_getx_3(self):
         "larry.getx_3"
         t = np.array([0, 1, 2, 3]) 
         p = self.l2.getx(copy=True)
         msg = printfail(t, p, 'x')     
-        self.assert_((abs(t - p) < self.tol).all(), msg)
-        self.assert_(p is not self.x, 'reference but should be copy')     
+        self.assertTrue((abs(t - p) < self.tol).all(), msg)
+        self.assertTrue(p is not self.x, 'reference but should be copy')     
         
     def test_fill_1(self):
         "larry.fill_1"
@@ -1703,9 +1703,9 @@ class Test_getset(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
         
     def test_pull_1(self):
         "larry.pull_1"
@@ -1743,135 +1743,135 @@ class Test_label(unittest.TestCase):
         "larry.maxlabel_1"
         t = 2
         p = self.l.maxlabel()
-        self.assert_(t == p, printfail(t, p, 'label'))  
+        self.assertTrue(t == p, printfail(t, p, 'label'))  
         
     def test_maxlabel_2(self):
         "larry.maxlabel_2"
         t = 2
         p = self.l.maxlabel(0)
-        self.assert_(t == p, printfail(t, p, 'label'))               
+        self.assertTrue(t == p, printfail(t, p, 'label'))               
 
     def test_maxlabel_3(self):
         "larry.maxlabel_3"
         t = 1
         p = self.l.maxlabel(1)
-        self.assert_(t == p, printfail(t, p, 'label'))
+        self.assertTrue(t == p, printfail(t, p, 'label'))
         
     def test_maxlabel_4(self):
         "larry.maxlabel_4"
         t = 3
         p = self.l2.maxlabel()
-        self.assert_(t == p, printfail(t, p, 'label'))         
+        self.assertTrue(t == p, printfail(t, p, 'label'))         
 
     def test_maxlabel_5(self):
         "larry.maxlabel_5"
-        self.failUnlessRaises(IndexError, self.l2.maxlabel, 1)
+        self.assertRaises(IndexError, self.l2.maxlabel, 1)
 
     def test_minlabel_1(self):
         "larry.minlabel_1"
         t = 0
         p = self.l.minlabel()
-        self.assert_(t == p, printfail(t, p, 'label'))  
+        self.assertTrue(t == p, printfail(t, p, 'label'))  
         
     def test_minlabel_2(self):
         "larry.minlabel_2"
         t = 0
         p = self.l.minlabel(0)
-        self.assert_(t == p, printfail(t, p, 'label'))               
+        self.assertTrue(t == p, printfail(t, p, 'label'))               
 
     def test_minlabel_3(self):
         "larry.minlabel_3"
         t = 0
         p = self.l.minlabel(1)
-        self.assert_(t == p, printfail(t, p, 'label'))
+        self.assertTrue(t == p, printfail(t, p, 'label'))
         
     def test_minlabel_4(self):
         "larry.minlabel_4"
         t = 0
         p = self.l2.minlabel()
-        self.assert_(t == p, printfail(t, p, 'label'))         
+        self.assertTrue(t == p, printfail(t, p, 'label'))         
 
     def test_minlabel_5(self):
         "larry.minlabel_5"
-        self.failUnlessRaises(IndexError, self.l2.minlabel, 1)        
+        self.assertRaises(IndexError, self.l2.minlabel, 1)        
         
     def test_getlabel_1(self):
         "larry.getlabel_1"
         t = [0, 1, 2]
         axis = 0
         p = self.l.getlabel(axis, copy=True)
-        self.assert_(t == p, printfail(t, p, 'label0'))
-        self.assert_(p is not self.l.label[axis], 'reference but should be copy')                  
+        self.assertTrue(t == p, printfail(t, p, 'label0'))
+        self.assertTrue(p is not self.l.label[axis], 'reference but should be copy')                  
 
     def test_getlabel_2(self):
         "larry.getlabel_2"
         t = [0, 1, 2]
         axis = 0
         p = self.l.getlabel(axis, copy=False)
-        self.assert_(t == p, printfail(t, p, 'label0'))
-        self.assert_(p is self.l.label[axis], 'copy but should be reference')
+        self.assertTrue(t == p, printfail(t, p, 'label0'))
+        self.assertTrue(p is self.l.label[axis], 'copy but should be reference')
 
     def test_getlabel_3(self):
         "larry.getlabel_3"
         t = [0, 1]
         axis = 1
         p = self.l.getlabel(axis, copy=True)
-        self.assert_(t == p, printfail(t, p, 'label0'))
-        self.assert_(p is not self.l.label[axis], 'reference but should be copy')                  
+        self.assertTrue(t == p, printfail(t, p, 'label0'))
+        self.assertTrue(p is not self.l.label[axis], 'reference but should be copy')                  
 
     def test_getlabel_4(self):
         "larry.getlabel_4"
         t = [0, 1]
         axis = 1
         p = self.l.getlabel(axis, copy=False)
-        self.assert_(t == p, printfail(t, p, 'label0'))
-        self.assert_(p is self.l.label[axis], 'copy but should be reference')  
+        self.assertTrue(t == p, printfail(t, p, 'label0'))
+        self.assertTrue(p is self.l.label[axis], 'copy but should be reference')  
 
     def test_getlabel_5(self):
         "larry.getlabel_5"
         t = [0, 1, 2, 3]
         axis = 0
         p = self.l2.getlabel(axis, copy=True)
-        self.assert_(t == p, printfail(t, p, 'label0'))
-        self.assert_(p is not self.l2.label[axis], 'reference but should be copy') 
+        self.assertTrue(t == p, printfail(t, p, 'label0'))
+        self.assertTrue(p is not self.l2.label[axis], 'reference but should be copy') 
       
     def test_labelindex_1(self):
         "larry.labelindex_1"
         t = 2
         axis = 0
         p = self.l.labelindex(2, axis)
-        self.assert_(t == p, printfail(t, p, 'label'))                 
+        self.assertTrue(t == p, printfail(t, p, 'label'))                 
 
     def test_labelindex_2(self):
         "larry.labelindex_2"
         t = 1
         axis = 1
         p = self.l.labelindex(1, axis)
-        self.assert_(t == p, printfail(t, p, 'label0'))
+        self.assertTrue(t == p, printfail(t, p, 'label0'))
 
     def test_labelindex_3(self):
         "larry.labelindex_3"
-        self.failUnlessRaises(ValueError, self.l.labelindex, 3, None)
+        self.assertRaises(ValueError, self.l.labelindex, 3, None)
         
     def test_labelindex_4(self):
         "larry.labelindex_4"
         t = 3
         axis = 0
         p = self.l2.labelindex(3, axis)
-        self.assert_(t == p, printfail(t, p, 'label'))
+        self.assertTrue(t == p, printfail(t, p, 'label'))
         
     def test_maplabel_1(self):
         "label.maplabel_1"
         d = datetime.date
         y1 = larry([1, 2], [[d(2010,1,1), d(2010,1,2)]])
         y2 = y1.maplabel(datetime.date.toordinal)
-        self.assert_(y2.label == [[733773, 733774]], 'Did not map correctly')
-        self.assert_((y2.x == np.array([1, 2])).all(), 'x values changed')
+        self.assertTrue(y2.label == [[733773, 733774]], 'Did not map correctly')
+        self.assertTrue((y2.x == np.array([1, 2])).all(), 'x values changed')
         def func(x):
             return x + 1       
         y3 = y2.maplabel(func)
-        self.assert_(y3.label == [[733774, 733775]], 'Did not map correctly')
-        self.assert_((y2.x == np.array([1, 2])).all(), 'x values changed')
+        self.assertTrue(y3.label == [[733774, 733775]], 'Did not map correctly')
+        self.assertTrue((y2.x == np.array([1, 2])).all(), 'x values changed')
 
 class Test_calc(unittest.TestCase):
     "Test calc functions of larry class"
@@ -1916,9 +1916,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x') 
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode             
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l2), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l2), 'Reference found')
 
     def test_demean_2(self):
         "larry.demean_2"
@@ -1930,9 +1930,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x') 
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode             
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l2), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l2), 'Reference found')
 
     def test_demean_3(self):
         "larry.demean_3"
@@ -1940,9 +1940,9 @@ class Test_calc(unittest.TestCase):
         label = [[0, 1, 2, 3, 4]]
         p = self.l3.demean(0)
         msg = printfail(t, p.x, 'x')            
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l3), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l3), 'Reference found')
 
     def test_demean_4(self):
         "larry.demean_4"
@@ -1950,8 +1950,8 @@ class Test_calc(unittest.TestCase):
         label = [[0, 1]]
         p = larry([1, 2]).demean(0)
         msg = printfail(t, p.x, 'x')            
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
 
     def test_demean_5(self):
         "larry.demean_5"
@@ -1970,9 +1970,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x') 
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode             
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l2), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l2), 'Reference found')
 
     def test_demedian_2(self):
         "larry.demedian_2"
@@ -1984,9 +1984,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x') 
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode             
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l2), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l2), 'Reference found')
 
     def test_demedian_3(self):
         "larry.demedian_3"
@@ -1994,9 +1994,9 @@ class Test_calc(unittest.TestCase):
         label = [[0, 1, 2, 3, 4]]
         p = self.l3.demedian(0)
         msg = printfail(t, p.x, 'x')            
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l3), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l3), 'Reference found')
 
     def test_demedian_4(self):
         "larry.demedian_4"
@@ -2004,8 +2004,8 @@ class Test_calc(unittest.TestCase):
         label = [[0, 1]]
         p = larry([1, 2]).demedian(0)
         msg = printfail(t, p.x, 'x')            
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
     
     def test_demedian_5(self):
         "larry.demedian_5"
@@ -2026,9 +2026,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x') 
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode                        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l1), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l1), 'Reference found')
 
     def test_zscore_2(self):
         "larry.zscore_2"
@@ -2042,9 +2042,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode                        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l1), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l1), 'Reference found')
         
     def test_zscore_3(self):
         "larry.zscore_3"
@@ -2056,9 +2056,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x') 
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode                        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l3), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l3), 'Reference found')
     
     def test_zscore_4(self):
         "larry.zscore_4"
@@ -2078,9 +2078,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')    
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode    
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l4), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l4), 'Reference found')
                 
     def test_push_2(self):
         "larry.push_2"
@@ -2093,9 +2093,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')    
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode    
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l4), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l4), 'Reference found')
 
     def test_push_3(self):
         "larry.push_3"
@@ -2108,9 +2108,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')    
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode    
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l4), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l4), 'Reference found')
 
 
     def test_move_sum_1(self):
@@ -2126,9 +2126,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')    
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l1), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l1), 'Reference found')
         
     def test_move_sum_2(self):
         "larry.move_sum_2"
@@ -2143,9 +2143,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')    
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l1), 'Reference found')            
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l1), 'Reference found')            
 
     def test_move_sum_3(self):
         "larry.move_sum_3"
@@ -2159,9 +2159,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')    
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l1), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l1), 'Reference found')
         
     def test_move_sum_4(self):
         "larry.move_sum_4"
@@ -2173,9 +2173,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')    
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode   
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l1), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l1), 'Reference found')
 
     def test_move_sum_5(self):
         "larry.move_sum_5"
@@ -2190,9 +2190,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x') 
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode       
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l2), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l2), 'Reference found')
         
 
     def test_move_sum_7(self):
@@ -2205,9 +2205,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode                  
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l2), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l2), 'Reference found')
    
     def test_move_sum_8(self):
         "larry.move_sum_8"
@@ -2219,9 +2219,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l2), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l2), 'Reference found')
         
     def test_move_sum_9(self):
         "larry.move_sum_9"
@@ -2231,9 +2231,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')    
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode          
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l3), 'Reference found')        
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l3), 'Reference found')        
 
     def test_move_sum_10(self):
         "larry.move_sum_10"
@@ -2250,9 +2250,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l5), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l5), 'Reference found')
         
     def test_movingsum_forward_2(self):
         "larry.movingsum_forward_2"    
@@ -2264,9 +2264,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l5), 'Reference found')       
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l5), 'Reference found')       
 
     def test_movingsum_forward_3(self):
         "larry.movingsum_forward_3"    
@@ -2278,9 +2278,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l5), 'Reference found') 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l5), 'Reference found') 
 
     def test_movingsum_forward_4(self):
         "larry.movingsum_forward_4"    
@@ -2292,9 +2292,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l5), 'Reference found') 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l5), 'Reference found') 
 
     def test_movingsum_forward_5(self):
         "larry.movingsum_forward_5"    
@@ -2306,9 +2306,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l5), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l5), 'Reference found')
  
     def test_ranking_1(self):
         "larry.ranking_1"
@@ -2555,9 +2555,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l6), 'Reference found') 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l6), 'Reference found') 
     
     def test_movingrank_2(self):
         "larry.movingrank_2"    
@@ -2569,9 +2569,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l5), 'Reference found')          
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l5), 'Reference found')          
 
     def test_movingrank_3(self):
         "larry.movingrank_3"    
@@ -2583,9 +2583,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l5), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l5), 'Reference found')
         
     def test_movingrank_4(self):
         "larry.movingrank_4"    
@@ -2598,9 +2598,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l7), 'Reference found') 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l7), 'Reference found') 
         
     def test_quantile_1(self):
         "larry.quantile_1"    
@@ -2658,9 +2658,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l4), 'Reference found') 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l4), 'Reference found') 
 
     def test_cut_missing_2(self):
         "larry.cut_missing_2" 
@@ -2673,9 +2673,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l4), 'Reference found') 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l4), 'Reference found') 
 
     def test_cut_missing_3(self):
         "larry.cut_missing_3" 
@@ -2688,9 +2688,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l4), 'Reference found') 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l4), 'Reference found') 
 
     def test_cut_missing_4(self):
         "larry.cut_missing_4" 
@@ -2701,9 +2701,9 @@ class Test_calc(unittest.TestCase):
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode               
-        self.assert_((abs(t - p.x) < self.tol).all(), msg)
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l4), 'Reference found')
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg)
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l4), 'Reference found')
 
     def test_ismissing_1(self):
         "larry.ismissing_1"
@@ -2762,10 +2762,10 @@ class Test_alignment(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [label, [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l), 'Reference found')         
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l), 'Reference found')         
 
     def test_morph_2(self):
         "larry.morph_2"
@@ -2778,10 +2778,10 @@ class Test_alignment(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2], label]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l), 'Reference found')
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l), 'Reference found')
         
     def test_morph_3(self):
         "larry.morph_3"
@@ -2794,10 +2794,10 @@ class Test_alignment(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [label, [0, 1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l), 'Reference found')         
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l), 'Reference found')         
 
     def test_morph_4(self):
         "larry.morph_4"
@@ -2807,10 +2807,10 @@ class Test_alignment(unittest.TestCase):
         axis = 0
         p = l.morph(label, axis)
         msg = printfail(t, p.x, 'x')   
-        self.assert_((t == p.x).all(), msg)
+        self.assertTrue((t == p.x).all(), msg)
         label = [label]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, l), 'Reference found')
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, l), 'Reference found')
 
     def test_morph_5(self):
         "larry.morph_5"
@@ -2820,10 +2820,10 @@ class Test_alignment(unittest.TestCase):
         axis = 0
         p = l.morph(label, axis)
         msg = printfail(t, p.x, 'x')   
-        self.assert_((t == p.x).all(), msg)
+        self.assertTrue((t == p.x).all(), msg)
         label = [label]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, l), 'Reference found')
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, l), 'Reference found')
 
     def test_morph_6(self):
         "larry.morph_6"
@@ -2834,14 +2834,14 @@ class Test_alignment(unittest.TestCase):
         axis = 0
         p = l.morph(label, axis)
         msg = printfail(t, p.x, 'x')   
-        self.assert_((t == p.x).all(), msg)
+        self.assertTrue((t == p.x).all(), msg)
         label = [label]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, l), 'Reference found')
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, l), 'Reference found')
         
     def test_morph_7(self):
         lar = larry([1, 2, 3])
-        self.failUnlessRaises(IndexError, lar.morph, [0, 0], 0)
+        self.assertRaises(IndexError, lar.morph, [0, 0], 0)
 
     def test_morph_8(self):
         "larry.morph_8"
@@ -2887,11 +2887,11 @@ class Test_alignment(unittest.TestCase):
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [[2,1,0], [1, 0]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l), 'Reference found')
-        self.assert_(noreference(p, self.l2), 'Reference found')         
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l), 'Reference found')
+        self.assertTrue(noreference(p, self.l2), 'Reference found')         
         
     def test_lag_1(self):
         "larry.lag_1"
@@ -2900,10 +2900,10 @@ class Test_alignment(unittest.TestCase):
         msg = printfail(t, p.x, 'x')       
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p.x)] = self.nancode        
-        self.assert_((abs(t - p.x) < self.tol).all(), msg) 
+        self.assertTrue((abs(t - p.x) < self.tol).all(), msg) 
         label = [[0, 1, 2], [1]]
-        self.assert_(label == p.label, printfail(label, p.label, 'label'))
-        self.assert_(noreference(p, self.l), 'Reference found')
+        self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
+        self.assertTrue(noreference(p, self.l), 'Reference found')
         
     def test_lag_2(self):
         "larry.lag_2"
@@ -2945,8 +2945,8 @@ class Test_alignment(unittest.TestCase):
         order = 'C'
         f = y.flatten(order)
         label = [[(0,), (1,), (2,)]]        
-        self.assert_(f.label == label, 'labels are wrong')
-        self.assert_((f.x == y.x.flatten(order)).all(), 'data are wrong')      
+        self.assertTrue(f.label == label, 'labels are wrong')
+        self.assertTrue((f.x == y.x.flatten(order)).all(), 'data are wrong')      
 
     def test_flatten_2(self):
         "larry.flatten_2"
@@ -2954,16 +2954,16 @@ class Test_alignment(unittest.TestCase):
         order = 'F'
         f = y.flatten(order)
         label = [[(0,), (1,), (2,)]]        
-        self.assert_(f.label == label, 'labels are wrong')
-        self.assert_((f.x == y.x.flatten(order)).all(), 'data are wrong')        
+        self.assertTrue(f.label == label, 'labels are wrong')
+        self.assertTrue((f.x == y.x.flatten(order)).all(), 'data are wrong')        
         
     def test_flatten_3(self):
         "larry.flatten_3"
         y = larry([[1, 2], [3, 4]])
         f = y.flatten()
         label = [[(0,0), (0,1), (1,0), (1,1)]]
-        self.assert_(f.label == label, 'labels are wrong')
-        self.assert_((f.x == y.x.flatten()).all(), 'data are wrong')
+        self.assertTrue(f.label == label, 'labels are wrong')
+        self.assertTrue((f.x == y.x.flatten()).all(), 'data are wrong')
 
     def test_flatten_4(self):
         "larry.flatten_4"
@@ -2971,8 +2971,8 @@ class Test_alignment(unittest.TestCase):
         order = 'F'
         f = y.flatten(order)
         label = [[(0,0), (1,0), (0,1), (1,1)]]
-        self.assert_(f.label == label, 'labels are wrong')
-        self.assert_((f.x == y.x.flatten(order)).all(), 'data are wrong')
+        self.assertTrue(f.label == label, 'labels are wrong')
+        self.assertTrue((f.x == y.x.flatten(order)).all(), 'data are wrong')
 
     def test_unflatten_1(self):
         "larry.unflatten_1"
@@ -2980,8 +2980,8 @@ class Test_alignment(unittest.TestCase):
         order = 'C'
         f = y.flatten(order).unflatten()
         label = y.label     
-        self.assert_(f.label == label, 'labels are wrong')
-        self.assert_((f.x == y.x).all(), 'data are wrong')  
+        self.assertTrue(f.label == label, 'labels are wrong')
+        self.assertTrue((f.x == y.x).all(), 'data are wrong')  
 
     def test_unflatten_2(self):
         "larry.unflatten_2"
@@ -2989,16 +2989,16 @@ class Test_alignment(unittest.TestCase):
         order = 'F'
         f = y.flatten(order).unflatten()
         label = y.label        
-        self.assert_(f.label == label, 'labels are wrong')
-        self.assert_((f.x == y.x).all(), 'data are wrong') 
+        self.assertTrue(f.label == label, 'labels are wrong')
+        self.assertTrue((f.x == y.x).all(), 'data are wrong') 
 
     def test_unflatten_3(self):
         "larry.unflatten_3"
         y = larry([[1, 2], [3, 4]])
         f = y.flatten().unflatten()
         label = y.label 
-        self.assert_(f.label == label, 'labels are wrong')
-        self.assert_((f.x == y.x).all(), 'data are wrong')
+        self.assertTrue(f.label == label, 'labels are wrong')
+        self.assertTrue((f.x == y.x).all(), 'data are wrong')
 
     def test_unflatten_4(self):
         "larry.unflatten_4"
@@ -3006,8 +3006,8 @@ class Test_alignment(unittest.TestCase):
         order = 'F'
         f = y.flatten(order).unflatten()
         label = y.label 
-        self.assert_(f.label == label, 'labels are wrong')
-        self.assert_((f.x == y.x).all(), 'data are wrong')
+        self.assertTrue(f.label == label, 'labels are wrong')
+        self.assertTrue((f.x == y.x).all(), 'data are wrong')
         
     def test_sortaxis_1(self):
         "larry.sortaxis_1"
@@ -3128,35 +3128,35 @@ class Test_random(unittest.TestCase):
         "larry.shuffle_1"
         y = self.lar.copy()
         y.shuffle(axis=None)
-        self.assert_(y.shape == self.lar.shape, 'shape changed')
-        self.assert_((y.x != self.lar.x).any(), 'No shuffling took place')
-        self.assert_(y.label == self.lar.label, 'labels changed')
+        self.assertTrue(y.shape == self.lar.shape, 'shape changed')
+        self.assertTrue((y.x != self.lar.x).any(), 'No shuffling took place')
+        self.assertTrue(y.label == self.lar.label, 'labels changed')
 
     def test_shuffle_2(self):
         "larry.shuffle_2"
         y = self.lar.copy()
         y.shuffle()
-        self.assert_(y.shape == self.lar.shape, 'shape changed')
-        self.assert_((y.x != self.lar.x).any(), 'No shuffling took place')
-        self.assert_(y.label == self.lar.label, 'labels changed')
+        self.assertTrue(y.shape == self.lar.shape, 'shape changed')
+        self.assertTrue((y.x != self.lar.x).any(), 'No shuffling took place')
+        self.assertTrue(y.label == self.lar.label, 'labels changed')
 
     def test_shufflelabel_1(self):
         "larry.shufflelabel_1"
         y = self.lar.copy()
         y.shufflelabel()
-        self.assert_(y.shape == self.lar.shape, 'shape changed')
-        self.assert_((y.x == self.lar.x).all(), 'Values shuffled')
-        self.assert_(y.label[1] == self.lar.label[1], 'labels shuffled')
-        self.assert_(y.label[0] != self.lar.label[0], 'No shuffling')      
+        self.assertTrue(y.shape == self.lar.shape, 'shape changed')
+        self.assertTrue((y.x == self.lar.x).all(), 'Values shuffled')
+        self.assertTrue(y.label[1] == self.lar.label[1], 'labels shuffled')
+        self.assertTrue(y.label[0] != self.lar.label[0], 'No shuffling')      
 
     def test_shufflelabel_2(self):
         "larry.shufflelabel_2"
         y = self.lar.copy()
         y.shufflelabel(axis=None)
-        self.assert_(y.shape == self.lar.shape, 'shape changed')
-        self.assert_((y.x == self.lar.x).all(), 'Values shuffled')
-        self.assert_(y.label[1] != self.lar.label[1], 'labels shuffled')
-        self.assert_(y.label[0] != self.lar.label[0], 'No shuffling') 
+        self.assertTrue(y.shape == self.lar.shape, 'shape changed')
+        self.assertTrue((y.x == self.lar.x).all(), 'Values shuffled')
+        self.assertTrue(y.label[1] != self.lar.label[1], 'labels shuffled')
+        self.assertTrue(y.label[0] != self.lar.label[0], 'No shuffling') 
         
 
 class Test_properties_01(unittest.TestCase):
@@ -3184,25 +3184,25 @@ class Test_properties_01(unittest.TestCase):
         "larry.shape"
         t = self.x.shape
         p = self.l.shape
-        self.assert_(t == p, printfail(t, p, 'shape'))
+        self.assertTrue(t == p, printfail(t, p, 'shape'))
 
     def test_02(self):
         "larry.ndim"
         t = self.x.ndim
         p = self.l.ndim
-        self.assert_(t == p, printfail(t, p, 'ndim'))
+        self.assertTrue(t == p, printfail(t, p, 'ndim'))
 
     def test_05(self):
         "larry.dtype"
         t = self.x.dtype
         p = self.l.dtype
-        self.assert_(t == p, printfail(t, p, 'dtype'))
+        self.assertTrue(t == p, printfail(t, p, 'dtype'))
 
     def test_06(self):
         "larry.nx"
         t = np.isfinite(self.x).sum()
         p = self.l.nx
-        self.assert_(t == p, printfail(t, p, 'nx'))
+        self.assertTrue(t == p, printfail(t, p, 'nx'))
 
     def test_07(self):
         "larry.T_2d"
@@ -3213,7 +3213,7 @@ class Test_properties_01(unittest.TestCase):
         msg = printfail(t, p, 'T')
         t.x[np.isnan(t.x)] = self.nancode
         p.x[np.isnan(p.x)] = self.nancode
-        self.assert_(t == p, msg)
+        self.assertTrue(t == p, msg)
 
     def test_08(self):
         "larry.T_1d"
@@ -3224,7 +3224,7 @@ class Test_properties_01(unittest.TestCase):
         msg = printfail(t, p, 'T')
         t.x[np.isnan(t.x)] = self.nancode
         p.x[np.isnan(p.x)] = self.nancode
-        self.assert_(t == p, msg)
+        self.assertTrue(t == p, msg)
 
     def test_09(self):
         "larry.T_"
@@ -3235,7 +3235,7 @@ class Test_properties_01(unittest.TestCase):
         msg = printfail(t, p, 'T')
         t.x[np.isnan(t.x)] = self.nancode
         p.x[np.isnan(p.x)] = self.nancode
-        self.assert_(t == p, msg)
+        self.assertTrue(t == p, msg)
 
     def test_10(self):
         "larry.T_4d"
@@ -3246,7 +3246,7 @@ class Test_properties_01(unittest.TestCase):
         msg = printfail(t, p, 'T')
         t.x[np.isnan(t.x)] = self.nancode
         p.x[np.isnan(p.x)] = self.nancode
-        self.assert_(t == p, msg)
+        self.assertTrue(t == p, msg)
         
     def test_11(self):
         t = self.l.x
@@ -3254,8 +3254,8 @@ class Test_properties_01(unittest.TestCase):
         msg = printfail(t, p, 'x')
         t[np.isnan(t)] = self.nancode
         p[np.isnan(p)] = self.nancode                  
-        self.assert_((abs(t - p) < self.tol).all(), msg)     
-        self.assert_(t is p, 'no reference found')
+        self.assertTrue((abs(t - p) < self.tol).all(), msg)     
+        self.assertTrue(t is p, 'no reference found')
 
 
 class Test_merge(unittest.TestCase):

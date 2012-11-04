@@ -23,10 +23,10 @@ class Test_func(unittest.TestCase):
         y2 = larry([[1, 2], [3, 4]], [['e', 'b'], ['f', 'd']])
         actual = union(0, y1, y2)
         desired = ['a', 'b', 'e']
-        self.assert_(actual == desired, 'union axis=0')
+        self.assertTrue(actual == desired, 'union axis=0')
         actual = union(1, y1, y2)
         desired = ['c', 'd', 'f']
-        self.assert_(actual == desired, 'union axis=1') 
+        self.assertTrue(actual == desired, 'union axis=1') 
         
     def test_intersection_1(self):
         "func.intersection_1" 
@@ -34,45 +34,45 @@ class Test_func(unittest.TestCase):
         y2 = larry([[1, 2], [3, 4]], [['e', 'b'], ['f', 'd']])
         actual = intersection(0, y1, y2)
         desired = ['b']
-        self.assert_(actual == desired, 'intersection axis=0')
+        self.assertTrue(actual == desired, 'intersection axis=0')
         actual = intersection(1, y1, y2)
         desired = ['d']
-        self.assert_(actual == desired, 'intersection axis=1') 
+        self.assertTrue(actual == desired, 'intersection axis=1') 
 
     def test_isaligned_1(self):
         "isaligned_1"
         lar1 = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
         lar2 = larry([[5, 6], [7, 8]], [['r2', 'r1'], ['c1', 'c2']])
         a = isaligned(lar1, lar2)
-        self.assert_(~a, "Should return False")
+        self.assertTrue(~a, "Should return False")
 
     def test_isaligned_2(self):
         "isaligned_2"
         lar1 = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
         lar2 = larry([[4, 5], [6, 7]], [['r2', 'r1'], ['c1', 'c2']])
         a = isaligned(lar1, lar2, axis=0)
-        self.assert_(~a, "Should return False")
+        self.assertTrue(~a, "Should return False")
     
     def test_isaligned_3(self):
         "isaligned_3"
         lar1 = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
         lar2 = larry([[5, 6], [7, 8]], [['r2', 'r1'], ['c1', 'c2']])
         a = isaligned(lar1, lar2, axis=1)
-        self.assert_(a, "Should return True")
+        self.assertTrue(a, "Should return True")
 
     def test_isaligned_4(self):
         "isaligned_4"
         lar1 = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
         lar2 = larry([5, 6], [['r1', 'r2']])
         a = isaligned(lar1, lar2, axis=0)
-        self.assert_(a, "Should return True")
+        self.assertTrue(a, "Should return True")
     
     def test_isaligned_5(self):
         "isaligned_5"
         lar1 = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
         lar2 = larry([5, 6], [['r1', 'r2']])
         a = isaligned(lar1, lar2)
-        self.assert_(~a, "Should return False")
+        self.assertTrue(~a, "Should return False")
 
     def test_panel_1(self):
         "func.panel_1" 
@@ -233,7 +233,7 @@ class Test_align_1d(unittest.TestCase):
         "align 1d test #5"
         y1 = larry([1, 2])
         y2 = larry([1, 2, 3])
-        self.failUnlessRaises(TypeError, align, y1, y2, 'outer', False)        
+        self.assertRaises(TypeError, align, y1, y2, 'outer', False)        
 
     def test_1d6(self):
         "align 1d test #6"
@@ -316,7 +316,7 @@ class Test_align_1d(unittest.TestCase):
         "align 1d test #13"
         y1 = larry([1, 2])
         y2 = larry([1, 2], [['a', 'b']])
-        self.failUnlessRaises(TypeError, align, y1, y2, 'outer', False)
+        self.assertRaises(TypeError, align, y1, y2, 'outer', False)
 
     def test_1d14(self):
         "align 1d test #14"
@@ -355,7 +355,7 @@ class Test_align_1d(unittest.TestCase):
         "align 1d test #17"
         y1 = larry([1, 2])
         y2 = larry([1, 2], [['a', 'b']])        
-        self.failUnlessRaises(TypeError, align, y1, y2, 'outer', False) 
+        self.assertRaises(TypeError, align, y1, y2, 'outer', False) 
 
     def test_1d18(self):
         "align 1d test #18"
@@ -452,7 +452,7 @@ class Test_align_2d(unittest.TestCase):
         "align 2d test #5"
         y1 = larry([[1, 2], [3, 4]])
         y2 = larry([[1, 2, 5], [3, 4, 6]])
-        self.failUnlessRaises(TypeError, align, y1, y2, 'outer', False)       
+        self.assertRaises(TypeError, align, y1, y2, 'outer', False)       
 
     def test_2d6(self):
         "align 2d test #6"
@@ -470,7 +470,7 @@ class Test_align_2d(unittest.TestCase):
         y1 = larry([[1, 2], [3, 4]])
         y2 = larry([[1, 2, 5], [3, 4, 6]])
         j = ['outer', 'inner', 'left']
-        self.failUnlessRaises(ValueError, align, y1, y2, j, False)
+        self.assertRaises(ValueError, align, y1, y2, j, False)
 
     def test_2d8(self):
         "align 2d test #8"
@@ -685,10 +685,10 @@ class Test_quick_inst(unittest.TestCase):
         ale(a, d, "lrange failed.")
 
     def test_lrange_5(self):
-        self.failUnlessRaises(ValueError, lrange, (2,), ['a', 'b', 'c'])
+        self.assertRaises(ValueError, lrange, (2,), ['a', 'b', 'c'])
 
     def test_empty_1(self):
-        self.failUnlessRaises(ValueError, empty, (2,), ['a', 'b', 'c'])
+        self.assertRaises(ValueError, empty, (2,), ['a', 'b', 'c'])
 
     def test_ones_1(self):
         a = ones(5)
