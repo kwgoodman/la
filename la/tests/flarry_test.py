@@ -171,9 +171,9 @@ class Test_func(unittest.TestCase):
     def test_unique_3(self):
         lar = larry(['a', 'b', 'b', 'c', 'a'])
         u, indices = unique(lar, return_index=True)
-        assert_array_equal(u, np.array(['a', 'b', 'c'], dtype='|S1'))
+        assert_array_equal(u, np.array(['a', 'b', 'c']))
         assert_array_equal(indices, np.array([0, 1, 3]))
-        assert_array_equal(lar[indices], np.array(['a','b','c'], dtype='|S1'))
+        assert_array_equal(lar[indices], np.array(['a','b','c']))
     
     def test_unique_4(self):
         lar = larry([1, 2, 6, 4, 2, 3, 2])
@@ -304,10 +304,10 @@ class Test_align_1d(unittest.TestCase):
     def test_1d12(self):
         "align 1d test #12"
         y1 = larry([1, 2])
-        y2 = larry([1, 2], [['a', 'b']])
+        y2 = larry([1, 2], [[3, 4]])
         a1, a2 = align(y1, y2, join='outer')
-        d1 = larry([1,   2,   nan, nan], [[0, 1, 'a', 'b']], dtype=float)
-        d2 = larry([nan, nan, 1,   2],   [[0, 1, 'a', 'b']], dtype=float)
+        d1 = larry([1,   2,   nan, nan], [[0, 1, 3, 4]], dtype=float)
+        d2 = larry([nan, nan, 1,   2],   [[0, 1, 3, 4]], dtype=float)
         msg = "align 1d fail on %s larry"
         ale(a1, d1, msg % 'left', original=y1)
         ale(a2, d2, msg % 'right', original=y2)
@@ -906,9 +906,9 @@ class Test_binaryop(unittest.TestCase):
     def test_binaryop_18(self):
         "binaryop test #18"
         y1 = larry([1, nan, nan, 1])
-        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 9]])
         actual = binaryop(np.add, y1, y2, join='outer')
-        desired = larry([2, nan, nan, nan, nan], [[0, 1, 2, 3, 'a']])
+        desired = larry([2, nan, nan, nan, nan], [[0, 1, 2, 3, 9]])
         msg = "binaryop failed"
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)
@@ -916,9 +916,9 @@ class Test_binaryop(unittest.TestCase):
     def test_binaryop_19(self):
         "binaryop test #19"
         y1 = larry([1, nan, nan, 1])
-        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 9]])
         actual = binaryop(np.add, y1, y2, join='outer', missone=0)
-        desired = larry([2, 1, nan, 1, 1], [[0, 1, 2, 3, 'a']])
+        desired = larry([2, 1, nan, 1, 1], [[0, 1, 2, 3, 9]])
         msg = "binaryop failed"
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)
@@ -926,9 +926,9 @@ class Test_binaryop(unittest.TestCase):
     def test_binaryop_20(self):
         "binaryop test #20"
         y1 = larry([1, nan, nan, 1])
-        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 9]])
         actual = binaryop(np.add, y1, y2, join='outer', missone=0, misstwo=0)
-        desired = larry([2, 1, 0, 1, 1], [[0, 1, 2, 3, 'a']], dtype=float)
+        desired = larry([2, 1, 0, 1, 1], [[0, 1, 2, 3, 9]], dtype=float)
         msg = "binaryop failed"
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)
@@ -1133,9 +1133,9 @@ class Test_add(unittest.TestCase):
     def test_add_18(self):
         "add test #18"
         y1 = larry([1, nan, nan, 1])
-        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 9]])
         actual = add(y1, y2, join='outer')
-        desired = larry([2, nan, nan, nan, nan], [[0, 1, 2, 3, 'a']])
+        desired = larry([2, nan, nan, nan, nan], [[0, 1, 2, 3, 9]])
         msg = "add failed"
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)
@@ -1143,9 +1143,9 @@ class Test_add(unittest.TestCase):
     def test_add_19(self):
         "add test #19"
         y1 = larry([1, nan, nan, 1])
-        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 9]])
         actual = add(y1, y2, join='outer', missone=0)
-        desired = larry([2, 1, nan, 1, 1], [[0, 1, 2, 3, 'a']])
+        desired = larry([2, 1, nan, 1, 1], [[0, 1, 2, 3, 9]])
         msg = "add failed"
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)
@@ -1153,9 +1153,9 @@ class Test_add(unittest.TestCase):
     def test_add_20(self):
         "add test #20"
         y1 = larry([1, nan, nan, 1])
-        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 9]])
         actual = add(y1, y2, join='outer', missone=0, misstwo=0)
-        desired = larry([2, 1, 0, 1, 1], [[0, 1, 2, 3, 'a']], dtype=float)
+        desired = larry([2, 1, 0, 1, 1], [[0, 1, 2, 3, 9]], dtype=float)
         msg = "add failed"
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)

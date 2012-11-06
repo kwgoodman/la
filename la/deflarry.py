@@ -631,7 +631,7 @@ class larry(object):
         array([False,  True], dtype=bool)
             
         """
-        if self.dtype is not bool:
+        if self.dtype.type is not np.bool_:
             raise TypeError('Only larrys with bool dtype can be inverted.')
         return larry(~self.x, self.copylabel(), validate=False)
         
@@ -789,6 +789,120 @@ class larry(object):
         if np.isscalar(other) or isinstance(other, np.ndarray):
             label = self.copylabel()
             x = other / self.x
+            return larry(x, label, validate=False)
+        raise TypeError('Input must be scalar, array, or larry.')
+
+    def __truediv__(self, other):
+        """
+        True divide a larry with another larry, Numpy array, or scalar.
+        
+        If two larrys are divided then the larrys are joined with an inner
+        join (i.e., the intersection of the labels).
+        
+        See Also
+        --------
+        la.divide: divide two larrys element-wise using given join method.        
+        
+        Examples
+        -------- 
+        
+        >>> larry([1.0, 2.0]) / larry([2.0, 3.0])
+        label_0
+            0
+            1
+        x
+        array([ 0.5       ,  0.66666667])        
+        
+        >>> y1 = larry([1,2], [['a', 'b']])
+        >>> y2 = larry([1,2], [['b', 'c']])
+        >>> y1 / y2
+        label_0
+            b
+        x
+        array([2.])        
+               
+        """    
+        if isinstance(other, larry):
+            if self.label == other.label:
+                x = self.x / other.x
+                label = self.copylabel()
+                return larry(x, label, validate=False)                          
+            else:          
+                x, y, label = self.__align(other)        
+                x = x / y
+                return larry(x, label, validate=False)
+        if np.isscalar(other) or isinstance(other, np.ndarray):
+            x = self.x / other
+            label = self.copylabel()
+            return larry(x, label, validate=False)        
+        raise TypeError('Input must be scalar, array, or larry.')
+
+    def __floordiv__(self, other):
+        """
+        Floor divide a larry with another larry, Numpy array, or scalar.
+        
+        If two larrys are divided then the larrys are joined with an inner
+        join (i.e., the intersection of the labels).
+        
+        See Also
+        --------
+        la.divide: divide two larrys element-wise using given join method.        
+        
+        Examples
+        -------- 
+        
+        >>> larry([1.0, 2.0]) // larry([2.0, 3.0])
+        label_0
+            0
+            1
+        x
+        array([ 0.,  0.])
+        
+        >>> y1 = larry([1,2], [['a', 'b']])
+        >>> y2 = larry([1,2], [['b', 'c']])
+        >>> y1 // y2
+        label_0
+            b
+        x
+        array([2])        
+               
+        """    
+        if isinstance(other, larry):
+            if self.label == other.label:
+                x = self.x // other.x
+                label = self.copylabel()
+                return larry(x, label, validate=False)                          
+            else:          
+                x, y, label = self.__align(other)        
+                x = x // y
+                return larry(x, label, validate=False)
+        if np.isscalar(other) or isinstance(other, np.ndarray):
+            x = self.x // other
+            label = self.copylabel()
+            return larry(x, label, validate=False)        
+        raise TypeError('Input must be scalar, array, or larry.')
+
+    def __rtruediv__(self, other):
+        "Right true divide a larry with a another larry, Numpy array, or scalar."
+        if isinstance(other, larry):
+            msg = 'I could not come up with a problem that used this code '
+            msg += 'so I removed it. Send me your example and I will fix.'
+            raise RuntimeError(msg)                   
+        if np.isscalar(other) or isinstance(other, np.ndarray):
+            label = self.copylabel()
+            x = other / self.x
+            return larry(x, label, validate=False)
+        raise TypeError('Input must be scalar, array, or larry.')
+
+    def __rfloordiv__(self, other):
+        "Right floor divide a larry with a another larry, Numpy array, or scalar."
+        if isinstance(other, larry):
+            msg = 'I could not come up with a problem that used this code '
+            msg += 'so I removed it. Send me your example and I will fix.'
+            raise RuntimeError(msg)                   
+        if np.isscalar(other) or isinstance(other, np.ndarray):
+            label = self.copylabel()
+            x = other // self.x
             return larry(x, label, validate=False)
         raise TypeError('Input must be scalar, array, or larry.')
         
@@ -2326,10 +2440,32 @@ class larry(object):
             raise ValueError('axis cannot be None')
         if axis >= self.ndim:
             raise IndexError('axis is out of range')
-        y = self.copy()      
-        cmd = '[(idx, z) for idx, z in enumerate(y.label[axis]) if z '
-        cmd = cmd + op + ' value]'  
-        idxlabel = eval(cmd)
+        y = self.copy()
+
+        if op == '==':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z == value]
+        elif op == '>':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z > value]
+        elif op == '<':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z < value]
+        elif op == '>=':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z >= value]
+        elif op == '<=':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z <= value]
+        elif op == '!=':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z != value]
+        elif op == 'in':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z in value]
+        elif op == 'not in':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z not in value]
         if len(idxlabel) == 0:
             return larry([])
         else:
@@ -2486,10 +2622,10 @@ class larry(object):
         1        
                         
         """
+        if axis is None:
+            raise ValueError('axis cannot be None')
         if axis >= self.ndim:
             raise IndexError('axis out of range')
-        if axis is None:
-            raise ValueError('axis cannot be None')            
         try:
             index = self.label[axis].index(name)
         except ValueError:
@@ -3351,15 +3487,15 @@ class larry(object):
         dtype1 = self.dtype       
         if dtype1 == object:
             mask1 = lar1.x != [None]
-        elif self.dtype.type == np.string_:
+        elif self.dtype.type == np.str_:
             mask1 = lar1.x != ''  
         else:
             mask1 = np.isfinite(lar1.x)
         dtype2 = other.dtype       
         if dtype2 == object:
             mask2 = lar2.x != [None]
-        elif self.dtype.type == np.string_:
-            mask2 = lar2.x != ''  
+        elif self.dtype.type == np.str_:
+            mask2 = lar2.x != ''
         else:
             mask2 = np.isfinite(lar2.x)
             

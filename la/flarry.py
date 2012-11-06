@@ -295,7 +295,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
         elif joinax == 'outer':
             if list1 == list2:
                 list3 = list(list1)
-            else:                 
+            else:
                 list3 = list(set(list1).union(list2))
                 list3.sort()
                 idx1, idx1_miss = listmap_fill(list1, list3, fill=0)

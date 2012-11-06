@@ -1259,21 +1259,7 @@ class Test_comparison(unittest.TestCase):
     def test_lt_4(self):
         "larry.__lt___4"
         date = datetime.date(2004, 1, 1)
-        self.assertRaises(TypeError, self.l.__lt__, date)                        
-    
-    def test_lt_5(self):
-        "larry.__lt___5"
-        lar = la.larry([1, 2, 3])
-        actual = lar < 'a'
-        desired = lar.x < 'a'
-        self.assertTrue(actual == desired, "failed")
-    
-    def test_lt_6(self):
-        "larry.__lt___6"
-        lar = la.larry(['a', 'b', 'c'])
-        actual = lar < 1
-        desired = lar.x < 1
-        self.assertTrue(actual == desired, "failed")
+        self.assertRaises(TypeError, self.l.__lt__, date)
 
     def test_gt_1(self):
         "larry.__gt___1"
@@ -1312,20 +1298,6 @@ class Test_comparison(unittest.TestCase):
         "larry.__gt___4"
         date = datetime.date(2004, 1, 1)
         self.assertRaises(TypeError, self.l.__gt__, date) 
-    
-    def test_gt_5(self):
-        "larry.__gt___5"
-        lar = la.larry([1, 2, 3])
-        actual = lar > 'a'
-        desired = lar.x > 'a'
-        self.assertTrue(actual == desired, "failed")
-    
-    def test_gt_6(self):
-        "larry.__gt___6"
-        lar = la.larry(['a', 'b', 'c'])
-        actual = lar > 1
-        desired = lar.x > 1
-        self.assertTrue(actual == desired, "failed")
         
     def test_le_1(self):
         "larry.__le___1"
@@ -1363,21 +1335,7 @@ class Test_comparison(unittest.TestCase):
     def test_le_4(self):
         "larry.__le___4"
         date = datetime.date(2004, 1, 1)
-        self.assertRaises(TypeError, self.l.__le__, date)                        
-    
-    def test_le_5(self):
-        "larry.__le___5"
-        lar = la.larry([1, 2, 3])
-        actual = lar <= 'a'
-        desired = lar.x <= 'a'
-        self.assertTrue(actual == desired, "failed")
-    
-    def test_le_6(self):
-        "larry.__le___6"
-        lar = la.larry(['a', 'b', 'c'])
-        actual = lar <= 1
-        desired = lar.x <= 1
-        self.assertTrue(actual == desired, "failed")
+        self.assertRaises(TypeError, self.l.__le__, date)
 
     def test_ge_1(self):
         "larry.__ge___1"
@@ -1411,21 +1369,6 @@ class Test_comparison(unittest.TestCase):
         self.assertTrue((t == p.x).all(), msg) 
         label = [[0, 1, 2], [0, 1]]
         self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
-    
-    def test_ge_4(self):
-        "larry.__ge___4"
-        lar = la.larry([1, 2, 3])
-        actual = lar >= 'a'
-        desired = lar.x >= 'a'
-        self.assertTrue(actual == desired, "failed")
-    
-    def test_ge_5(self):
-        "larry.__ge___5"
-        lar = la.larry(['a', 'b', 'c'])
-        actual = lar >= 1
-        desired = lar.x >= 1
-        self.assertTrue(actual == desired, "failed")
-
         
 class Test_anyall(unittest.TestCase):
     "Test any and all of the larry class"
@@ -3272,12 +3215,12 @@ class Test_merge(unittest.TestCase):
                np.array([[ 2.,  2.,  3.,  1.],
                          [ 3.,  2.,  2.,  1.],
                          [ 1.,  1.,  1.,  1.]]), 
-               [[1, 2, 3], ['A', 2, 3, 4]])
+               [[1, 2, 3], [9, 2, 3, 4]])
         larr = larry(
                np.array([[ 2.,  2.,  3.,  1.,  2.],
                          [ 3.,  2.,  2.,  1.,  3.],
                          [ 1.,  1.,  1.,  1.,  1.]]), 
-               [[1, 2, 3], [1, 2, 3, 4, 'A']])
+               [[1, 2, 3], [1, 2, 3, 4, 9]])
         larm = lar1.merge(lar2, update=True)
         assert_almost_equal(larr.x, larm.x)
         assert_(larr.label == larm.label)
@@ -3294,12 +3237,12 @@ class Test_merge(unittest.TestCase):
                np.array([[  2.,  nan,   3.,   1.],
                          [  3.,  nan,   2.,   1.],
                          [  1.,  nan,   1.,   6.]]), 
-               [[1, 2, 3], ['A', 2, 3, 4]])
+               [[1, 2, 3], [9, 2, 3, 4]])
         larr = larry(
                np.array([[ 2.,  2.,  3.,  1.,  2.],
                          [ 3.,  2.,  2.,  1.,  3.],
                          [ 1.,  1.,  1.,  6.,  1.]]), 
-               [[1, 2, 3], [1, 2, 3, 4, 'A']])
+               [[1, 2, 3], [1, 2, 3, 4, 9]])
         larm = lar1.merge(lar2, update=False)
         assert_almost_equal(larr.x, larm.x)
         assert_(larr.label == larm.label)
@@ -3315,12 +3258,12 @@ class Test_merge(unittest.TestCase):
                np.array([[  2.,  nan,   3.,   1.],
                          [  3.,  nan,   2.,   1.],
                          [  1.,  nan,   1.,   6.]]), 
-               [[1, 2, 3], ['A', 2, 3, 4]])
+               [[1, 2, 3], [9, 2, 3, 4]])
         larr = larry(
                np.array([[  2.,   2.,   3.,   1.,   2.],
                          [  3.,   2.,   2.,   1.,   3.],
                          [ nan,  nan,   1.,   6.,   1.]]), 
-               [[1, 2, 3], [1, 2, 3, 4, 'A']])
+               [[1, 2, 3], [1, 2, 3, 4, 9]])
         larm = lar1.merge(lar2, update=True)
         assert_almost_equal(larr.x, larm.x)
         assert_(larr.label == larm.label)

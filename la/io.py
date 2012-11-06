@@ -2,6 +2,7 @@
 
 import os
 import datetime
+import sys
 
 import numpy as np
 import h5py
@@ -226,7 +227,7 @@ class IO(object):
             # but I don't want to load the array, I just want the shape
             shape = str(self.f[key]['x'].shape)
             dtype = str(self.f[key]['x'].dtype)    
-            table.append([key, dtype, shape])         
+            table.append([key, dtype, shape])
         return indent(table, hasHeader=True, delim='  ')  
     
     @property    
@@ -321,15 +322,24 @@ class lara(object):
         self.x = group['x']
         self.label = _load_label(group, len(self.x.shape))
     
-    # Grab these methods from larry    
-    __getitem__ = larry.__getitem__.im_func
-    __setitem__ = larry.__setitem__.im_func    
-    maxlabel = larry.maxlabel.im_func
-    minlabel = larry.minlabel.im_func
-    getlabel = larry.getlabel.im_func 
-    labelindex = larry.labelindex.im_func
+    # Grab these methods from larry
+    if sys.version_info[0] < 3:
+        __getitem__ = larry.__getitem__.im_func
+        __setitem__ = larry.__setitem__.im_func    
+        maxlabel = larry.maxlabel.im_func
+        minlabel = larry.minlabel.im_func
+        getlabel = larry.getlabel.im_func 
+        labelindex = larry.labelindex.im_func
+    else:
+        __getitem__ = larry.__getitem__
+        __setitem__ = larry.__setitem__
+        maxlabel = larry.maxlabel
+        minlabel = larry.minlabel
+        getlabel = larry.getlabel
+        labelindex = larry.labelindex
+        
     shape = larry.shape
-    dtype = larry.dtype            
+    dtype = larry.dtype        
         
     @property
     def ndim(self):
