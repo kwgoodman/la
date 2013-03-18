@@ -25,6 +25,7 @@ la 0.7
 
 **Enhancements**
 
+- la now supports Python 3
 - Can now index into a larry with a 1d bool larry
 - Added setitem ability to label indexing (lix)
 
