@@ -1,7 +1,7 @@
 """
 pretty table code was copied from http://code.activestate.com/recipes/267662/
 """
-
+from __future__ import print_function
 import cStringIO, operator
 
 def indent(rows, hasHeader=False, headerChar='-', delim=' | ', justify='left',
@@ -35,14 +35,13 @@ def indent(rows, hasHeader=False, headerChar='-', delim=' | ', justify='left',
     # select the appropriate justify method
     justify = {'center':str.center, 'right':str.rjust, 'left':str.ljust}[justify.lower()]
     output=cStringIO.StringIO()
-    if separateRows: print >> output, rowSeparator
+    if separateRows: print(rowSeparator, file=output)
     for physicalRows in logicalRows:
         for row in physicalRows:
-            print >> output, \
-                prefix \
+            print(prefix \
                 + delim.join([justify(str(item),width) for (item,width) in zip(row,maxWidths)]) \
-                + postfix
-        if separateRows or hasHeader: print >> output, rowSeparator; hasHeader=False
+                + postfix, file=output)
+        if separateRows or hasHeader: print(rowSeparator, file=output); hasHeader=False
     return output.getvalue()
 
 # written by Mike Brown
@@ -84,15 +83,15 @@ if __name__ == '__main__':
        Aristidis,Papageorgopoulos,28,Senior Reseacher'''
     rows = [row.strip().split(',')  for row in data.splitlines()]
 
-    print 'Without wrapping function\n'
-    print indent([labels]+rows, hasHeader=True)
+    print('Without wrapping function\n')
+    print(indent([labels]+rows, hasHeader=True))
     # test indent with different wrapping functions
     width = 10
     for wrapper in (wrap_always,wrap_onspace,wrap_onspace_strict):
-        print 'Wrapping function: %s(x,width=%d)\n' % (wrapper.__name__,width)
-        print indent([labels]+rows, hasHeader=True, separateRows=True,
+        print('Wrapping function: %s(x,width=%d)\n' % (wrapper.__name__,width))
+        print(indent([labels]+rows, hasHeader=True, separateRows=True,
                      prefix='| ', postfix=' |',
-                     wrapfunc=lambda x: wrapper(x,width))
+                     wrapfunc=lambda x: wrapper(x,width)))
     
     # output:
     #

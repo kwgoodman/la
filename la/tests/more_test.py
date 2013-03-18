@@ -1,4 +1,4 @@
-# these are tests for use with nose using generators, not for unittest.
+"This only tests that functions run and return appropriate types (arrays, scalars)"
 
 # For support of python 2.5
 from __future__ import with_statement
@@ -62,17 +62,8 @@ def test_return_array():
         args = (xc, sectors)
         with np.errstate(invalid='ignore', divide='ignore'):
             yield check_return_array, func, args
-    
-def check_3d(func, args):
-    res = func(*args)
-    if type(res) is tuple:
-        res1 = res[0]
-    else:
-        res1 = res
-    assert_(np.shape(res1)>0, repr(func)+'does not return array for 3d')
    
 def test_3d():
-    # many of these tests fail, skip to reduce noise during testing
     x = np.array([[9.0, 3.0, nan, nan, 9.0, nan],
                   [1.0, 1.0, 1.0, nan, nan, nan],
                   [2.0, 2.0, 0.1, nan, 1.0, nan],  # 0.0 kills geometric mean
@@ -86,22 +77,22 @@ def test_3d():
         xc = x.copy()
         args = (xc,)
         with np.errstate(invalid='ignore', divide='ignore'):
-            yield check_3d, func, args
+            yield check_return_array, func, args
         
     for func in funcs_oneint:
         xc = x.copy()
         args = (xc, 2)
         with np.errstate(invalid='ignore', divide='ignore'):
-            yield check_3d, func, args
+            yield check_return_array, func, args
         
     for func in funcs_onefrac:
         xc = x.copy()
         args = (xc, -1, 0.5)
         with np.errstate(invalid='ignore', divide='ignore'):
-            yield check_3d, func, args
+            yield check_return_array, func, args
     
     for func in funcs_sect:
         xc = x.copy()
         args = (xc, sectors)
         with np.errstate(invalid='ignore', divide='ignore'):
-            yield check_3d, func, args
+            yield check_return_array, func, args

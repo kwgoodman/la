@@ -156,8 +156,8 @@ def test_empty():
 # Check that the right shape and value are returned by the reducing methods
 # when the input has a shape tuple that contains 0
 
-False = np.False_
-True = ~False
+FALSE = np.False_
+TRUE = ~FALSE
 
 def reduce_methods():
     r = [{'la': 'sum',      'np': 'sum', 'dflt': nan,   'kw': {}},
@@ -169,8 +169,8 @@ def reduce_methods():
          {'la': 'min',      'np': 'sum', 'dflt': nan,   'kw': {}},
          {'la': 'std',      'np': 'sum', 'dflt': nan,   'kw': {}},
          {'la': 'var',      'np': 'sum', 'dflt': nan,   'kw': {}},
-         {'la': 'any',      'np': 'sum', 'dflt': False, 'kw': {}},
-         {'la': 'all',      'np': 'sum', 'dflt': True,  'kw': {}},
+         {'la': 'any',      'np': 'sum', 'dflt': FALSE, 'kw': {}},
+         {'la': 'all',      'np': 'sum', 'dflt': TRUE,  'kw': {}},
          {'la': 'lastrank', 'np': 'sum', 'dflt': nan,   'kw': {}},
          {'la': 'lastrank', 'np': 'sum', 'dflt': nan,   'kw': {'decay': 10}}]
     return r
@@ -200,6 +200,7 @@ def test_reduce_shape():
                 ymethod = getattr(y, method['la'])
                 lar = ymethod(axis=axis, **method['kw'])               
                 yield ale, lar, arr, msg % (method['la'], shape, axis)             
+
 def test_50():
     "Regression #50"
     actual = larry([], dtype=np.int).sum(0)

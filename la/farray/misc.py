@@ -15,7 +15,7 @@ def geometric_mean(x, axis=-1, check_for_greater_than_zero=True):
     """
     if (x <= 0).any() and check_for_greater_than_zero:
         msg = 'All elements of x (except NaNs) must be greater than zero.'
-        raise ValueError, msg
+        raise ValueError(msg)
     x = x.copy()
     m = np.isnan(x)
     np.putmask(x, m, 1.0)
@@ -84,7 +84,7 @@ def correlation(arr1, arr2, axis=None):
     mask = np.logical_or(np.isnan(arr1), np.isnan(arr2))
     if mask.any():
         # arr1 and/or arr2 contain NaNs, so use slower NaN functions if needed
-        if axis == None:
+        if axis is None:
             x1 = arr1.flatten()
             x2 = arr2.flatten()
             idx = ~mask.flatten()
@@ -111,7 +111,7 @@ def correlation(arr1, arr2, axis=None):
             den = np.sqrt(bn.nansum(x1**2, axis) * bn.nansum(x2**2, axis))
     else:
         # Neither arr1 or arr2 contains nans, so use faster non-nan functions
-        if axis == None:
+        if axis is None:
             x1 = arr1.flatten()
             x2 = arr2.flatten()
             x1 = x1 - x1.mean()
@@ -153,7 +153,7 @@ def covMissing(R):
     normalization = np.dot(mask, mask.T)
 
     if np.any(normalization < 2):
-        raise ValueError, 'covMissing: not enough observations'
+        raise ValueError('covMissing: not enough observations')
 
     C = np.dot(R, R.T) / normalization
 

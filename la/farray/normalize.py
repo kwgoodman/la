@@ -107,7 +107,7 @@ def lastrank(x, axis=-1, decay=0.0):
         r = (g + g + e - w.flat[-1]) / 2.0
         r = r / (n - w.flat[-1])
     elif decay < 0:
-        raise ValueError, 'decay must be greater than or equal to zero.'        
+        raise ValueError('decay must be greater than or equal to zero.')
     else:
         # Special case the most common case, decay = 0, for speed
         g = (x[indlast] > x).sum(axis)
@@ -270,7 +270,7 @@ def quantile(x, q, axis=0):
 
     """
     if q < 1:
-        raise ValueError, 'q must be one or greater.'
+        raise ValueError('q must be one or greater.')
     elif q == 1:
         y = np.zeros(x.shape)
         np.putmask(y, np.isnan(x), np.nan)
@@ -279,13 +279,13 @@ def quantile(x, q, axis=0):
         if q > x.size:
             msg = 'q must be less than or equal to the number of elements '
             msg += 'in x.'
-            raise ValueError, msg
+            raise ValueError(msg)
         y = np.apply_along_axis(_quantileraw1d, 0, x.flat, q)
         y = y.reshape(x.shape)
     else:        
         if q > x.shape[axis]:
             msg = 'q must be less than or equal to the number of rows in x.'
-            raise ValueError, msg
+            raise ValueError(msg)
         y = np.apply_along_axis(_quantileraw1d, axis, x, q)
     y = y - 1.0
     y = 1.0 * y / (q - 1.0)

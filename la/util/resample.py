@@ -48,13 +48,13 @@ def cross_validation(n, kfold, shuffle=None):
             
     """
     if n < 2:
-        raise ValueError, "`n` must be two or greater."
+        raise ValueError("`n` must be two or greater.")
     if kfold < 2:
-        raise ValueError, "`kfold` must be two or greater."
+        raise ValueError("`kfold` must be two or greater.")
     if kfold > n:
-        raise ValueError, "`kfold` cannot be greater than `n`"
+        raise ValueError("`kfold` cannot be greater than `n`")
     index = range(n)
-    if shuffle == None:
+    if shuffle is None:
         np.random.shuffle(index)
     else:
         shuffle(index)
@@ -115,9 +115,9 @@ def bootstrap(n, nboot, randint=None):
             
     """
     if n < 2:
-        raise ValueError, "`n` must be at least 2"
+        raise ValueError("`n` must be at least 2")
     if nboot < 1:
-        raise ValueError, "`nboot` must be at least 1" 
+        raise ValueError("`nboot` must be at least 1")
     if randint == None:
         randint2 = np.random.randint
     else:

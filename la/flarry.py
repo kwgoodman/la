@@ -246,7 +246,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
     ndim = lar2.ndim
     if lar1.ndim != ndim:
         msg = "'lar1' and 'lar2' must have the same number of dimensions."
-        raise ValueError, msg
+        raise ValueError(msg)
         
     # Check join type    
     typejoin = type(join)
@@ -255,9 +255,9 @@ def align_raw(lar1, lar2, join='inner', cast=True):
     elif typejoin is list:
         if len(join) != ndim:
             msg = "Length of `join` list equal number of dimension of `lar1`."
-            raise ValueError, msg
+            raise ValueError(msg)
     else:
-        raise TypeError, "`join` must be a string or a list."
+        raise TypeError("`join` must be a string or a list.")
         
     # Initialize missing markers, set value later (in loop) only if needed.
     # The weird initialization value ensures a user would never pick the same 
@@ -295,7 +295,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
         elif joinax == 'outer':
             if list1 == list2:
                 list3 = list(list1)
-            else:                 
+            else:
                 list3 = list(set(list1).union(list2))
                 list3.sort()
                 idx1, idx1_miss = listmap_fill(list1, list3, fill=0)
@@ -310,7 +310,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
                             x1 = x1.astype(float)
                             miss1 = missing_marker(x1)   
                         else:                         
-                            raise TypeError, msg
+                            raise TypeError(msg)
                     index1 = [slice(None)] * ndim
                     index1[ax] = idx1_miss      
                     x1[index1] = miss1                                        
@@ -322,7 +322,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
                             x2 = x2.astype(float)
                             miss2 = missing_marker(x2)   
                         else:
-                            raise TypeError, msg
+                            raise TypeError(msg)
                     index2 = [slice(None)] * ndim
                     index2[ax] = idx2_miss                             
                     x2[index2] = miss2
@@ -345,7 +345,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
                             x2 = x2.astype(float)
                             miss2 = missing_marker(x2)   
                         else:
-                            raise TypeError, msg
+                            raise TypeError(msg)
                     index2 = [slice(None)] * ndim
                     index2[ax] = idx2_miss        
                     x2[index2] = miss2
@@ -363,7 +363,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
                             x1 = x1.astype(float)
                             miss1 = missing_marker(x1)   
                         else:
-                            raise TypeError, msg
+                            raise TypeError(msg)
                     index1 = [slice(None)] * ndim
                     index1[ax] = idx1_miss                            
                     x1[index1] = miss1 
@@ -371,7 +371,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
         elif joinax == 'skip':
             list3 = None
         else:
-            raise ValueError, 'join type not recognized'  
+            raise ValueError('join type not recognized')
         label.append(list3)
     
     return x1, x2, label, x1isview, x2isview
@@ -603,7 +603,7 @@ def union(axis, *args):
         if isinstance(arg, larry):
             rc = rc.union(arg.label[axis])
         else:
-            raise TypeError, 'One or more input is not a larry'
+            raise TypeError('One or more input is not a larry')
     rc = list(rc)
     rc.sort()
     return rc
@@ -645,7 +645,7 @@ def intersection(axis, *args):
         if isinstance(arg, larry):
             rc = rc.intersection(arg.label[axis])
         else:
-            raise TypeError, 'One or more input is not a larry'
+            raise TypeError('One or more input is not a larry')
     rc = list(rc)
     rc.sort()
     return rc    
@@ -1383,13 +1383,13 @@ def stack(mode, **kwargs):
                         
     """
     if not np.all([kwargs[key].ndim == 2 for key in kwargs]):
-        raise ValueError, 'All input larrys must be 2d'
+        raise ValueError('All input larrys must be 2d')
     if mode == 'union':
         logic = union
     elif mode == 'intersection':
         logic = intersection
     else:    
-        raise ValueError, 'mode must be union or intersection'   
+        raise ValueError('mode must be union or intersection')
     row = logic(0, *kwargs.values())
     col = logic(1, *kwargs.values())
     x = np.zeros((len(kwargs), len(row), len(col)))
@@ -1461,7 +1461,7 @@ def panel(lar):
  
     """
     if lar.ndim != 3:
-        raise ValueError, "lar must be 3d."
+        raise ValueError("lar must be 3d.")
     y = lar.copy()
     y.label = [flattenlabel([y.label[1], y.label[2]])[0], y.label[0]]
     y.x = y.x.T.reshape(-1, y.shape[0], order="F")
@@ -1495,7 +1495,7 @@ def cov(lar):
 
     """
     if lar.ndim != 2:
-        raise ValueError, 'This function only works on 2d larrys'      
+        raise ValueError('This function only works on 2d larrys')
     label = [list(lar.label[0]), list(lar.label[0])]
     x = covMissing(lar.x)
     return larry(x, label, validate=False)
@@ -1597,7 +1597,7 @@ def rand(*args, **kwargs):
     elif (len(args) == 0) and (len(kwargs) == 1) and ('rand' in kwargs):
         return randfunc()    
     else:
-        raise ValueError, 'Input parameters not recognized'
+        raise ValueError('Input parameters not recognized')
     
 def randn(*args, **kwargs):
     """
@@ -1695,7 +1695,7 @@ def randn(*args, **kwargs):
     elif (len(args) == 0) and (len(kwargs) == 1) and ('randn' in kwargs):
         return randnfunc()         
     else:
-        raise ValueError, 'Input parameters not recognized'
+        raise ValueError('Input parameters not recognized')
  
 def sortby(lar, element, axis, reverse=False):
     """

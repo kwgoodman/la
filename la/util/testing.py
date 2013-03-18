@@ -109,11 +109,11 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
     
     # Check input
     if dtype not in (True, False):
-        raise TypeError, 'dtype must be True or False.'
+        raise TypeError('dtype must be True or False.')
     if iscopy not in (True, False):
-        raise TypeError, 'iscopy must be True or False.'
+        raise TypeError('iscopy must be True or False.')
     if type(msg) is not str:
-        raise TypeError, 'msg must be a string.'        
+        raise TypeError('msg must be a string.')
             
     # Function to make section headings
     def heading(text):
@@ -127,12 +127,12 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
         
         try:
             assert_almost_equal(actual, desired)
-        except AssertionError, err:
+        except AssertionError as err:
             fail.append(heading('SCALARS') + str(err))
         if dtype: 
             try: 
                 assert_equal(type(actual), type(desired))
-            except AssertionError, err:
+            except AssertionError as err:
                 fail.append(heading('TYPE') + str(err))
                 
     elif (type(actual) == larry) + (type(desired) == larry) == 1:
@@ -140,7 +140,7 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
         # Only one of actual and desired are larrys; test failed
         try: 
             assert_equal(type(actual), type(desired))
-        except AssertionError, err:
+        except AssertionError as err:
             fail.append(heading('TYPE') + str(err))
                                                    
     else:
@@ -150,7 +150,7 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
         # label
         try:         
             assert_equal(actual.label, desired.label)
-        except AssertionError, err:
+        except AssertionError as err:
             fail.append(heading('LABEL') + str(err))       
 
         # Data array, x
@@ -167,14 +167,14 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
             else:
                 # No, so check for exactly equal
                 assert_equal(actual.x, desired.x)     
-        except AssertionError, err:
+        except AssertionError as err:
             fail.append(heading('X DATA ARRAY') + str(err))
          
         # dtype
         if dtype: 
             try: 
                 assert_equal(actual.dtype, desired.dtype)
-            except AssertionError, err:
+            except AssertionError as err:
                 fail.append(heading('DTYPE') + str(err))            
 
         # If original is not None, assert copies or views
@@ -183,13 +183,13 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
                 # Check that the larrys are copies
                 try:
                     assert_iscopy(actual, original)
-                except AssertionError, err:
+                except AssertionError as err:
                     fail.append(heading('NOT A COPY') + str(err))               
             else:
                 # Check that the larrys are views
                 try:       
                     assert_isview(actual, original)
-                except AssertionError, err:
+                except AssertionError as err:
                     text = heading('IS A COPY') + str(err)
                     fail.append(text)              
     
@@ -200,14 +200,14 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
         err_msg = err_msg.replace('\n', '\n\t')
         if len(msg):
             err_msg = heading("TEST: " + msg) + err_msg
-        raise AssertionError, err_msg       
+        raise AssertionError(err_msg)
     
 def assert_iscopy(larry1, larry2):
     "Return True if there are no shared references"
     if not isinstance(larry1, larry):
-        raise TypeError, 'Input must be a larry'
+        raise TypeError('Input must be a larry')
     if not isinstance(larry2, larry):
-        raise TypeError, 'Input must be a larry'
+        raise TypeError('Input must be a larry')
     msg = []    
     if np.may_share_memory(larry1.x, larry2.x):
         msg.append('The data arrays share a reference.')
@@ -217,14 +217,14 @@ def assert_iscopy(larry1, larry2):
     if len(msg) > 0:
         msg.insert(0, '\n')
         msg = '\n'.join(msg)
-        raise AssertionError, msg   
+        raise AssertionError(msg)   
 
 def assert_isview(larry1, larry2):
     "Return True if there are only references"
     if not isinstance(larry1, larry):
-        raise TypeError, 'Input must be a larry'
+        raise TypeError('Input must be a larry')
     if not isinstance(larry2, larry):
-        raise TypeError, 'Input must be a larry'
+        raise TypeError('Input must be a larry')
     msg = []    
     if not np.may_share_memory(larry1.x, larry2.x):
         msg.append('The data arrays do not share a reference.')
@@ -235,7 +235,7 @@ def assert_isview(larry1, larry2):
     if len(msg) > 0:
         msg.insert(0, '\n')
         msg = '\n'.join(msg)
-        raise AssertionError, msg  
+        raise AssertionError(msg)
 
 
 # Old-style testing functions -----------------------------------------------
@@ -255,11 +255,11 @@ def printfail(theory, practice, header=None):
 def noreference(larry1, larry2):
     "Return True if there are no shared references"
     if not isinstance(larry1, larry):
-        raise TypeError, 'Input must be a larry'
+        raise TypeError('Input must be a larry')
     if not isinstance(larry2, larry):
-        raise TypeError, 'Input must be a larry'
+        raise TypeError('Input must be a larry')
     if larry1.ndim != larry2.ndim:
-        raise ValueError, 'larrys must have the same dimensions'
+        raise ValueError('larrys must have the same dimensions')
     out = True
     out = out & (larry1.x is not larry2.x)
     for i in xrange(larry1.ndim):
@@ -269,14 +269,14 @@ def noreference(larry1, larry2):
 def nocopy(larry1, larry2):
     "Return True if there are only references"
     if not isinstance(larry1, larry):
-        raise TypeError, 'Input must be a larry'
+        raise TypeError('Input must be a larry')
     if not isinstance(larry2, larry):
-        raise TypeError, 'Input must be a larry'
+        raise TypeError('Input must be a larry')
     if larry1.ndim != larry2.ndim:
-        raise ValueError, 'larrys must have the same dimensions'
+        raise ValueError('larrys must have the same dimensions')
     out = True
     out = out & (larry1.x is larry2.x)
     for i in xrange(larry1.ndim):
         out = out & (larry1.label[i] is larry2.label[i])
     return out 
-                   
+

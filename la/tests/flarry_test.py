@@ -23,10 +23,10 @@ class Test_func(unittest.TestCase):
         y2 = larry([[1, 2], [3, 4]], [['e', 'b'], ['f', 'd']])
         actual = union(0, y1, y2)
         desired = ['a', 'b', 'e']
-        self.assert_(actual == desired, 'union axis=0')
+        self.assertTrue(actual == desired, 'union axis=0')
         actual = union(1, y1, y2)
         desired = ['c', 'd', 'f']
-        self.assert_(actual == desired, 'union axis=1') 
+        self.assertTrue(actual == desired, 'union axis=1') 
         
     def test_intersection_1(self):
         "func.intersection_1" 
@@ -34,45 +34,45 @@ class Test_func(unittest.TestCase):
         y2 = larry([[1, 2], [3, 4]], [['e', 'b'], ['f', 'd']])
         actual = intersection(0, y1, y2)
         desired = ['b']
-        self.assert_(actual == desired, 'intersection axis=0')
+        self.assertTrue(actual == desired, 'intersection axis=0')
         actual = intersection(1, y1, y2)
         desired = ['d']
-        self.assert_(actual == desired, 'intersection axis=1') 
+        self.assertTrue(actual == desired, 'intersection axis=1') 
 
     def test_isaligned_1(self):
         "isaligned_1"
         lar1 = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
         lar2 = larry([[5, 6], [7, 8]], [['r2', 'r1'], ['c1', 'c2']])
         a = isaligned(lar1, lar2)
-        self.assert_(~a, "Should return False")
+        self.assertTrue(~a, "Should return False")
 
     def test_isaligned_2(self):
         "isaligned_2"
         lar1 = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
         lar2 = larry([[4, 5], [6, 7]], [['r2', 'r1'], ['c1', 'c2']])
         a = isaligned(lar1, lar2, axis=0)
-        self.assert_(~a, "Should return False")
+        self.assertTrue(~a, "Should return False")
     
     def test_isaligned_3(self):
         "isaligned_3"
         lar1 = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
         lar2 = larry([[5, 6], [7, 8]], [['r2', 'r1'], ['c1', 'c2']])
         a = isaligned(lar1, lar2, axis=1)
-        self.assert_(a, "Should return True")
+        self.assertTrue(a, "Should return True")
 
     def test_isaligned_4(self):
         "isaligned_4"
         lar1 = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
         lar2 = larry([5, 6], [['r1', 'r2']])
         a = isaligned(lar1, lar2, axis=0)
-        self.assert_(a, "Should return True")
+        self.assertTrue(a, "Should return True")
     
     def test_isaligned_5(self):
         "isaligned_5"
         lar1 = larry([[1, 2], [3, 4]], [['r1', 'r2'], ['c1', 'c2']])
         lar2 = larry([5, 6], [['r1', 'r2']])
         a = isaligned(lar1, lar2)
-        self.assert_(~a, "Should return False")
+        self.assertTrue(~a, "Should return False")
 
     def test_panel_1(self):
         "func.panel_1" 
@@ -171,9 +171,9 @@ class Test_func(unittest.TestCase):
     def test_unique_3(self):
         lar = larry(['a', 'b', 'b', 'c', 'a'])
         u, indices = unique(lar, return_index=True)
-        assert_array_equal(u, np.array(['a', 'b', 'c'], dtype='|S1'))
+        assert_array_equal(u, np.array(['a', 'b', 'c']))
         assert_array_equal(indices, np.array([0, 1, 3]))
-        assert_array_equal(lar[indices], np.array(['a','b','c'], dtype='|S1'))
+        assert_array_equal(lar[indices], np.array(['a','b','c']))
     
     def test_unique_4(self):
         lar = larry([1, 2, 6, 4, 2, 3, 2])
@@ -233,7 +233,7 @@ class Test_align_1d(unittest.TestCase):
         "align 1d test #5"
         y1 = larry([1, 2])
         y2 = larry([1, 2, 3])
-        self.failUnlessRaises(TypeError, align, y1, y2, 'outer', False)        
+        self.assertRaises(TypeError, align, y1, y2, 'outer', False)        
 
     def test_1d6(self):
         "align 1d test #6"
@@ -304,10 +304,10 @@ class Test_align_1d(unittest.TestCase):
     def test_1d12(self):
         "align 1d test #12"
         y1 = larry([1, 2])
-        y2 = larry([1, 2], [['a', 'b']])
+        y2 = larry([1, 2], [[3, 4]])
         a1, a2 = align(y1, y2, join='outer')
-        d1 = larry([1,   2,   nan, nan], [[0, 1, 'a', 'b']], dtype=float)
-        d2 = larry([nan, nan, 1,   2],   [[0, 1, 'a', 'b']], dtype=float)
+        d1 = larry([1,   2,   nan, nan], [[0, 1, 3, 4]], dtype=float)
+        d2 = larry([nan, nan, 1,   2],   [[0, 1, 3, 4]], dtype=float)
         msg = "align 1d fail on %s larry"
         ale(a1, d1, msg % 'left', original=y1)
         ale(a2, d2, msg % 'right', original=y2)
@@ -316,7 +316,7 @@ class Test_align_1d(unittest.TestCase):
         "align 1d test #13"
         y1 = larry([1, 2])
         y2 = larry([1, 2], [['a', 'b']])
-        self.failUnlessRaises(TypeError, align, y1, y2, 'outer', False)
+        self.assertRaises(TypeError, align, y1, y2, 'outer', False)
 
     def test_1d14(self):
         "align 1d test #14"
@@ -355,7 +355,7 @@ class Test_align_1d(unittest.TestCase):
         "align 1d test #17"
         y1 = larry([1, 2])
         y2 = larry([1, 2], [['a', 'b']])        
-        self.failUnlessRaises(TypeError, align, y1, y2, 'outer', False) 
+        self.assertRaises(TypeError, align, y1, y2, 'outer', False) 
 
     def test_1d18(self):
         "align 1d test #18"
@@ -452,7 +452,7 @@ class Test_align_2d(unittest.TestCase):
         "align 2d test #5"
         y1 = larry([[1, 2], [3, 4]])
         y2 = larry([[1, 2, 5], [3, 4, 6]])
-        self.failUnlessRaises(TypeError, align, y1, y2, 'outer', False)       
+        self.assertRaises(TypeError, align, y1, y2, 'outer', False)       
 
     def test_2d6(self):
         "align 2d test #6"
@@ -470,7 +470,7 @@ class Test_align_2d(unittest.TestCase):
         y1 = larry([[1, 2], [3, 4]])
         y2 = larry([[1, 2, 5], [3, 4, 6]])
         j = ['outer', 'inner', 'left']
-        self.failUnlessRaises(ValueError, align, y1, y2, j, False)
+        self.assertRaises(ValueError, align, y1, y2, j, False)
 
     def test_2d8(self):
         "align 2d test #8"
@@ -685,10 +685,10 @@ class Test_quick_inst(unittest.TestCase):
         ale(a, d, "lrange failed.")
 
     def test_lrange_5(self):
-        self.failUnlessRaises(ValueError, lrange, (2,), ['a', 'b', 'c'])
+        self.assertRaises(ValueError, lrange, (2,), ['a', 'b', 'c'])
 
     def test_empty_1(self):
-        self.failUnlessRaises(ValueError, empty, (2,), ['a', 'b', 'c'])
+        self.assertRaises(ValueError, empty, (2,), ['a', 'b', 'c'])
 
     def test_ones_1(self):
         a = ones(5)
@@ -906,9 +906,9 @@ class Test_binaryop(unittest.TestCase):
     def test_binaryop_18(self):
         "binaryop test #18"
         y1 = larry([1, nan, nan, 1])
-        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 9]])
         actual = binaryop(np.add, y1, y2, join='outer')
-        desired = larry([2, nan, nan, nan, nan], [[0, 1, 2, 3, 'a']])
+        desired = larry([2, nan, nan, nan, nan], [[0, 1, 2, 3, 9]])
         msg = "binaryop failed"
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)
@@ -916,9 +916,9 @@ class Test_binaryop(unittest.TestCase):
     def test_binaryop_19(self):
         "binaryop test #19"
         y1 = larry([1, nan, nan, 1])
-        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 9]])
         actual = binaryop(np.add, y1, y2, join='outer', missone=0)
-        desired = larry([2, 1, nan, 1, 1], [[0, 1, 2, 3, 'a']])
+        desired = larry([2, 1, nan, 1, 1], [[0, 1, 2, 3, 9]])
         msg = "binaryop failed"
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)
@@ -926,9 +926,9 @@ class Test_binaryop(unittest.TestCase):
     def test_binaryop_20(self):
         "binaryop test #20"
         y1 = larry([1, nan, nan, 1])
-        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 9]])
         actual = binaryop(np.add, y1, y2, join='outer', missone=0, misstwo=0)
-        desired = larry([2, 1, 0, 1, 1], [[0, 1, 2, 3, 'a']], dtype=float)
+        desired = larry([2, 1, 0, 1, 1], [[0, 1, 2, 3, 9]], dtype=float)
         msg = "binaryop failed"
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)
@@ -1133,9 +1133,9 @@ class Test_add(unittest.TestCase):
     def test_add_18(self):
         "add test #18"
         y1 = larry([1, nan, nan, 1])
-        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 9]])
         actual = add(y1, y2, join='outer')
-        desired = larry([2, nan, nan, nan, nan], [[0, 1, 2, 3, 'a']])
+        desired = larry([2, nan, nan, nan, nan], [[0, 1, 2, 3, 9]])
         msg = "add failed"
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)
@@ -1143,9 +1143,9 @@ class Test_add(unittest.TestCase):
     def test_add_19(self):
         "add test #19"
         y1 = larry([1, nan, nan, 1])
-        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 9]])
         actual = add(y1, y2, join='outer', missone=0)
-        desired = larry([2, 1, nan, 1, 1], [[0, 1, 2, 3, 'a']])
+        desired = larry([2, 1, nan, 1, 1], [[0, 1, 2, 3, 9]])
         msg = "add failed"
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)
@@ -1153,9 +1153,9 @@ class Test_add(unittest.TestCase):
     def test_add_20(self):
         "add test #20"
         y1 = larry([1, nan, nan, 1])
-        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 'a']])
+        y2 = larry([1, 1,   nan, 1], [[0, 1, 2, 9]])
         actual = add(y1, y2, join='outer', missone=0, misstwo=0)
-        desired = larry([2, 1, 0, 1, 1], [[0, 1, 2, 3, 'a']], dtype=float)
+        desired = larry([2, 1, 0, 1, 1], [[0, 1, 2, 3, 9]], dtype=float)
         msg = "add failed"
         ale(actual, desired, msg, original=y1)
         ale(actual, desired, msg, original=y2)

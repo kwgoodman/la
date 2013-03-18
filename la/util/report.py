@@ -1,5 +1,5 @@
 "Information about your particular installation of the la package."
-
+from __future__ import print_function
 from la.external.prettytable import indent
     
 def info():
@@ -42,4 +42,4 @@ def info():
     table.append(['HDF5 archiving', io])  
     table.append(['listmap', listmap])
     table.append(['listmap_fill', listmap_fill])         
-    print indent(table, hasHeader=False, delim='  ')          
+    print(indent(table, hasHeader=False, delim='  '))

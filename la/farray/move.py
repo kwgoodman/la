@@ -52,7 +52,7 @@ def move_nanmedian(arr, window, axis=-1, method='loop'):
         y = move_func_loop(bn.nanmedian, arr, window, axis=axis)
     else:
         msg = "`method` must be 'strides' or 'loop'."
-        raise ValueError, msg
+        raise ValueError(msg)
     return y
 
 # RANKING -------------------------------------------------------------------
@@ -119,7 +119,7 @@ def move_nanranking(arr, window, axis=-1, method='strides'):
         y = move_func_loop(lastrank, arr, window, axis=axis)
     else:
         msg = "`method` must be 'strides' or 'loop'."
-        raise ValueError, msg
+        raise ValueError(msg)
     return y
 
 # GENERAL --------------------------------------------------------------------
@@ -171,17 +171,17 @@ def move_func(func, arr, window, axis=-1, method='loop', **kwargs):
         y = move_func_loop(func, arr, window, axis=axis, **kwargs)
     else:
         msg = "`method` must be 'strides' or 'loop'."
-        raise ValueError, msg
+        raise ValueError(msg)
     return y
 
 def move_func_loop(func, arr, window, axis=-1, **kwargs):
     "Generic moving window function implemented with a python loop."
-    if axis == None:
-        raise ValueError, "An `axis` value of None is not supported."
+    if axis is None:
+        raise ValueError("An `axis` value of None is not supported.")
     if window < 1:  
-        raise ValueError, "`window` must be at least 1."
+        raise ValueError("`window` must be at least 1.")
     if window > arr.shape[axis]:
-        raise ValueError, "`window` is too long."
+        raise ValueError("`window` is too long.")
     y = nans(arr.shape)
     idx1 = [slice(None)] * arr.ndim
     idx2 = list(idx1)
@@ -193,19 +193,19 @@ def move_func_loop(func, arr, window, axis=-1, **kwargs):
 
 def move_func_strides(func, arr, window, axis=-1, **kwargs):
     "Generic moving window function implemented with strides."
-    if axis == None:
-        raise ValueError, "An `axis` value of None is not supported."
+    if axis is None:
+        raise ValueError("An `axis` value of None is not supported.")
     if window < 1:  
-        raise ValueError, "`window` must be at least 1."
+        raise ValueError("`window` must be at least 1.")
     if window > arr.shape[axis]:
-        raise ValueError, "`window` is too long."
+        raise ValueError("`window` is too long.")
     ndim = arr.ndim
     as_strided = np.lib.stride_tricks.as_strided
     idx = range(ndim)
     axis = idx[axis]
     arrshape0 = tuple(arr.shape)
     if axis >= ndim:
-        raise IndexError, "`axis` is out of range."
+        raise IndexError("`axis` is out of range.")
     if ndim == 1:
         strides = arr.strides
         shape = (arr.size - window + 1, window)
@@ -233,7 +233,7 @@ def move_func_strides(func, arr, window, axis=-1, **kwargs):
         if axis > 0:
             y = y.swapaxes(0, axis)
     else:
-        raise ValueError, "Only 1d, 2d, and 3d input arrays are supported."
+        raise ValueError("Only 1d, 2d, and 3d input arrays are supported.")
     ynan = nans(arrshape0)
     index = [slice(None)] * ndim 
     index[axis] = slice(window - 1, None)
@@ -288,11 +288,11 @@ def movingsum(arr, window, skip=0, axis=-1, norm=False):
 
     # Check input
     if window < 1:  
-        raise ValueError, 'window must be at least 1'
+        raise ValueError('window must be at least 1')
     if window > arr.shape[axis]:
-        raise ValueError, 'Window is too big.'      
+        raise ValueError('Window is too big.')
     if skip > arr.shape[axis]:
-        raise IndexError, 'Your skip is too large.'
+        raise IndexError('Your skip is too large.')
     
     # Set missing values to 0
     m = ismissing(arr) 
@@ -347,9 +347,9 @@ def movingrank(x, window, axis=-1):
     If a window is all NaNs except last, this is returned as NaN
     """
     if window > x.shape[axis]:
-        raise ValueError, 'Window is too big.'
+        raise ValueError('Window is too big.')
     if window < 2:
-        raise ValueError, 'Window is too small.'
+        raise ValueError('Window is too small.')
     nt = x.shape[axis]
     mr = np.nan * np.zeros(x.shape)        
     for i in xrange(window-1, nt): 

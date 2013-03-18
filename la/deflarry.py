@@ -101,7 +101,7 @@ class larry(object):
                 x = np.asarray(x, dtype=dtype)
             except:
                 msg = "x must be array_like and dtype must be known."
-                raise ValueError, msg
+                raise ValueError(msg)
         elif dtype != None:
             x = x.astype(dtype)            
         if label is None:
@@ -109,17 +109,17 @@ class larry(object):
         if validate: 
             ndim = x.ndim
             if ndim != len(label):
-                raise ValueError, 'Exactly one label per dimension needed'
+                raise ValueError('Exactly one label per dimension needed')
             if ndim == 0:
                 # A 0d larry can be created if you comment out this ndim == 0
                 # test. The reason that 0d is not allowed is that not all
                 # methods support 0d larrys
-                raise ValueError, '0d larrys are not supported'
+                raise ValueError('0d larrys are not supported')
             for i, l in enumerate(label):
                 nlabel = len(l)
                 if x.shape[i] != nlabel:
                     msg = 'Length mismatch in label and x along axis %d'
-                    raise ValueError, msg % i
+                    raise ValueError(msg % i)
                 if len(frozenset(l)) != nlabel:
                     # We have duplicates in the label, give an example
                     count = {}
@@ -130,9 +130,9 @@ class larry(object):
                             break 
                     msg = "Elements of label not unique along axis %d. "
                     msg += "There are %d labels named `%s`."          
-                    raise ValueError, msg % (i, value, key)
+                    raise ValueError(msg % (i, value, key))
                 if type(l) is not list:
-                    raise ValueError, 'label must be a list of lists'          
+                    raise ValueError('label must be a list of lists')
         self.x = x
         self.label = label
 
@@ -345,7 +345,7 @@ class larry(object):
                         
         """
         if axis == None:
-            raise ValueError, 'axis cannot be None'
+            raise ValueError('axis cannot be None')
         y = self.copy()
         idx = np.isnan(y.x)
         np.putmask(y.x, idx, 0)
@@ -411,7 +411,7 @@ class larry(object):
                         
         """
         if axis == None:
-            raise ValueError, 'axis cannot be None'
+            raise ValueError('axis cannot be None')
         y = self.copy()
         idx = np.isnan(y.x)
         np.putmask(y.x, idx, 1)
@@ -455,7 +455,7 @@ class larry(object):
         
         """
         if lo > hi:
-            raise ValueError, 'lo should be less than or equal to hi'
+            raise ValueError('lo should be less than or equal to hi')
         y = self.copy()
         y.x.clip(lo, hi, y.x)
         return y
@@ -631,8 +631,8 @@ class larry(object):
         array([False,  True], dtype=bool)
             
         """
-        if self.dtype != bool:
-            raise TypeError, 'Only larrys with bool dtype can be inverted.'
+        if self.dtype.type is not np.bool_:
+            raise TypeError('Only larrys with bool dtype can be inverted.')
         return larry(~self.x, self.copylabel(), validate=False)
         
     # Binary Functions ------------------------------------------------------- 
@@ -684,7 +684,7 @@ class larry(object):
             x = self.x + other
             label = self.copylabel()
             return larry(x, label, validate=False)                 
-        raise TypeError, 'Input must be scalar, array, or larry.' 
+        raise TypeError('Input must be scalar, array, or larry.')
     
     __radd__ = __add__
     
@@ -729,7 +729,7 @@ class larry(object):
             x = self.x - other
             label = self.copylabel()
             return larry(x, label, validate=False)       
-        raise TypeError, 'Input must be scalar, array, or larry.'
+        raise TypeError('Input must be scalar, array, or larry.')
         
     def __rsub__(self, other):
         "Right subtract a larry with a another larry, Numpy array, or scalar."
@@ -778,19 +778,133 @@ class larry(object):
             x = self.x / other
             label = self.copylabel()
             return larry(x, label, validate=False)        
-        raise TypeError, 'Input must be scalar, array, or larry.'
+        raise TypeError('Input must be scalar, array, or larry.')
         
     def __rdiv__(self, other):
         "Right divide a larry with a another larry, Numpy array, or scalar."
         if isinstance(other, larry):
             msg = 'I could not come up with a problem that used this code '
             msg += 'so I removed it. Send me your example and I will fix.'
-            raise RuntimeError, msg                   
+            raise RuntimeError(msg)                   
         if np.isscalar(other) or isinstance(other, np.ndarray):
             label = self.copylabel()
             x = other / self.x
             return larry(x, label, validate=False)
-        raise TypeError, 'Input must be scalar, array, or larry.'
+        raise TypeError('Input must be scalar, array, or larry.')
+
+    def __truediv__(self, other):
+        """
+        True divide a larry with another larry, Numpy array, or scalar.
+        
+        If two larrys are divided then the larrys are joined with an inner
+        join (i.e., the intersection of the labels).
+        
+        See Also
+        --------
+        la.divide: divide two larrys element-wise using given join method.        
+        
+        Examples
+        -------- 
+        
+        >>> larry([1.0, 2.0]) / larry([2.0, 3.0])
+        label_0
+            0
+            1
+        x
+        array([ 0.5       ,  0.66666667])        
+        
+        >>> y1 = larry([1,2], [['a', 'b']])
+        >>> y2 = larry([1,2], [['b', 'c']])
+        >>> y1 / y2
+        label_0
+            b
+        x
+        array([2.])        
+               
+        """    
+        if isinstance(other, larry):
+            if self.label == other.label:
+                x = self.x / other.x
+                label = self.copylabel()
+                return larry(x, label, validate=False)                          
+            else:          
+                x, y, label = self.__align(other)        
+                x = x / y
+                return larry(x, label, validate=False)
+        if np.isscalar(other) or isinstance(other, np.ndarray):
+            x = self.x / other
+            label = self.copylabel()
+            return larry(x, label, validate=False)        
+        raise TypeError('Input must be scalar, array, or larry.')
+
+    def __floordiv__(self, other):
+        """
+        Floor divide a larry with another larry, Numpy array, or scalar.
+        
+        If two larrys are divided then the larrys are joined with an inner
+        join (i.e., the intersection of the labels).
+        
+        See Also
+        --------
+        la.divide: divide two larrys element-wise using given join method.        
+        
+        Examples
+        -------- 
+        
+        >>> larry([1.0, 2.0]) // larry([2.0, 3.0])
+        label_0
+            0
+            1
+        x
+        array([ 0.,  0.])
+        
+        >>> y1 = larry([1,2], [['a', 'b']])
+        >>> y2 = larry([1,2], [['b', 'c']])
+        >>> y1 // y2
+        label_0
+            b
+        x
+        array([2])        
+               
+        """    
+        if isinstance(other, larry):
+            if self.label == other.label:
+                x = self.x // other.x
+                label = self.copylabel()
+                return larry(x, label, validate=False)                          
+            else:          
+                x, y, label = self.__align(other)        
+                x = x // y
+                return larry(x, label, validate=False)
+        if np.isscalar(other) or isinstance(other, np.ndarray):
+            x = self.x // other
+            label = self.copylabel()
+            return larry(x, label, validate=False)        
+        raise TypeError('Input must be scalar, array, or larry.')
+
+    def __rtruediv__(self, other):
+        "Right true divide a larry with a another larry, Numpy array, or scalar."
+        if isinstance(other, larry):
+            msg = 'I could not come up with a problem that used this code '
+            msg += 'so I removed it. Send me your example and I will fix.'
+            raise RuntimeError(msg)                   
+        if np.isscalar(other) or isinstance(other, np.ndarray):
+            label = self.copylabel()
+            x = other / self.x
+            return larry(x, label, validate=False)
+        raise TypeError('Input must be scalar, array, or larry.')
+
+    def __rfloordiv__(self, other):
+        "Right floor divide a larry with a another larry, Numpy array, or scalar."
+        if isinstance(other, larry):
+            msg = 'I could not come up with a problem that used this code '
+            msg += 'so I removed it. Send me your example and I will fix.'
+            raise RuntimeError(msg)                   
+        if np.isscalar(other) or isinstance(other, np.ndarray):
+            label = self.copylabel()
+            x = other // self.x
+            return larry(x, label, validate=False)
+        raise TypeError('Input must be scalar, array, or larry.')
         
     def __mul__(self, other): 
         """
@@ -834,7 +948,7 @@ class larry(object):
             x = self.x * other
             label = self.copylabel()
             return larry(x, label, validate=False)   
-        raise TypeError, 'Input must be scalar, array, or larry.'
+        raise TypeError('Input must be scalar, array, or larry.')
 
     __rmul__ = __mul__
 
@@ -878,7 +992,7 @@ class larry(object):
             x = np.logical_and(self.x, other)
             label = self.copylabel()
             return larry(x, label, validate=False)
-        raise TypeError, 'Input must be scalar, array, or larry.'
+        raise TypeError('Input must be scalar, array, or larry.')
 
     __rand__ = __and__
 
@@ -922,7 +1036,7 @@ class larry(object):
             x = np.logical_or(self.x, other)
             label = self.copylabel()
             return larry(x, label, validate=False)
-        raise TypeError, 'Input must be scalar, array, or larry.'
+        raise TypeError('Input must be scalar, array, or larry.')
 
     __ror__ = __or__
 
@@ -930,7 +1044,7 @@ class larry(object):
         "Align larrys for binary operations."
         if self.ndim != other.ndim:
             msg = 'Binary operation on two larrys with different dimension'
-            raise IndexError, msg
+            raise IndexError(msg)
         label = []
         x = self.x
         y = other.x 
@@ -1370,7 +1484,7 @@ class larry(object):
         elif axis is None:
             return op(self.x, **kwargs)
         else:
-            raise ValueError, 'axis should be an integer or None'
+            raise ValueError('axis should be an integer or None')
         
     def any(self, axis=None):
         """
@@ -1579,7 +1693,7 @@ class larry(object):
             elif op == '>=':
                 x = self.x >= other           
             else:
-                raise ValueError, 'Unknown comparison operator'
+                raise ValueError('Unknown comparison operator')
             if isinstance(x, np.ndarray):
                 y = larry(x, self.copylabel(), validate=False)
             else:
@@ -1600,10 +1714,10 @@ class larry(object):
             elif op == '>=':
                 x = x >= y                              
             else:
-                raise ValueError, 'Unknown comparison operator'              
+                raise ValueError('Unknown comparison operator')
             return larry(x, label, validate=False)
         else:
-            raise TypeError, 'Input must be scalar, numpy array, or larry.'
+            raise TypeError('Input must be scalar, numpy array, or larry.')
 
     # Get and set ------------------------------------------------------------
     
@@ -1637,7 +1751,7 @@ class larry(object):
         if isscalar(index):
             index = int(index)                
             if index >= self.shape[0]:
-                raise IndexError, 'index out of range'
+                raise IndexError('index out of range')
             x = self.x[index]
             if self.ndim <= 1:
                 return x
@@ -1653,31 +1767,31 @@ class larry(object):
                     typ = type(idx)
                     if isscalar(idx):
                         if idx >= self.shape[ax]:
-                            raise IndexError, 'index out of range'
+                            raise IndexError('index out of range')
                         lab = None
                     elif typ is list or typ is tuple:
                         try:
                             lab = [self.label[ax][z] for z in idx]
                         except IndexError:
-                            raise IndexError, 'index out of range'
+                            raise IndexError('index out of range')
                         allscalar = False
                         validate = True
                     elif typ is np.ndarray:
                         if idx.ndim != 1:
                             msg = 'You can use a Numpy array for indexing, '
                             msg += 'but it must be 1d.'
-                            raise IndexError, msg
+                            raise IndexError(msg)
                         if idx.dtype.type == np.bool_:
                             try:
                                 lab = [self.label[ax][j] for j, z in
                                                           enumerate(idx) if z]
                             except IndexError:
-                                raise IndexError, 'index out of range'
+                                raise IndexError('index out of range')
                         else:
                             try:
                                 lab = [self.label[ax][z] for z in idx]
                             except IndexError:
-                                raise IndexError, 'index out of range'
+                                raise IndexError('index out of range')
                         validate = True 
                         allscalar = False
                     elif typ is slice:
@@ -1694,7 +1808,7 @@ class larry(object):
                             lab = [self.label[ax][j] for j, z in
                                                         enumerate(idx.x) if z]
                         except IndexError:
-                            raise IndexError, 'index out of range'
+                            raise IndexError('index out of range')
                         index = list(index)
                         index[ax] = index[ax].x
                         index = tuple(index)
@@ -1702,7 +1816,7 @@ class larry(object):
                         validate = True
                     else:
                         msg = 'I do not recognize the way you are indexing'
-                        raise IndexError, msg                       
+                        raise IndexError(msg)
                 else:
                     lab = self.label[ax]
                 if lab is not None:     
@@ -1728,19 +1842,19 @@ class larry(object):
             if index.ndim != 1:
                 msg = 'You can use a Numpy array for indexing, '
                 msg += 'but it must be 1d.'
-                raise IndexError, msg
+                raise IndexError(msg)
             if index.dtype.type == np.bool_:
                 try:
                     lab = [self.label[0][j] for j, z in
                                                 enumerate(index) if z]
                 except IndexError:
-                    raise IndexError, 'index out of range'
+                    raise IndexError('index out of range')
                 x = self.x[index]
             else:
                 try:
                     lab = [self.label[0][z] for z in index]
                 except IndexError:
-                    raise IndexError, 'index out of range'
+                    raise IndexError('index out of range')
                 if len(set(lab)) != len(lab):
                     raise IndexError("Duplicate labels along axis 0.")
                 x = self.x.take(index, axis=0)
@@ -1757,7 +1871,7 @@ class larry(object):
                 lab = [self.label[0][j] for j, z in
                                             enumerate(index) if z]
             except IndexError:
-                raise IndexError, 'index out of range'
+                raise IndexError('index out of range')
             label = self.copylabel()
             label[0] = lab
             x = self.x[index.x]
@@ -1992,7 +2106,7 @@ class larry(object):
                 # Could use morph to do this, if every row and column of self
                 # is in index, but I think it is better to raise an IndexError
                 msg = 'Indexing with a larry that is not aligned'
-                raise IndexError, msg    
+                raise IndexError(msg) 
         else:
             if isinstance(value, larry):
                 # TODO The line below (self[index].label) is slow. Need a
@@ -2001,7 +2115,7 @@ class larry(object):
                 if self[index].label == value.label:
                     self.x[index] = value.x
                 else:    
-                    raise IndexError, 'larrys are not aligned.'    
+                    raise IndexError('larrys are not aligned.')
             else:
                 self.x[index] = value
             
@@ -2046,7 +2160,7 @@ class larry(object):
         
         """
         if len(label) != self.ndim:
-            raise ValueError, 'Must have exactly one label per dimension'
+            raise ValueError('Must have exactly one label per dimension')
         index = []
         for i in xrange(self.ndim):
             index.append(self.labelindex(label[i], axis=i))    
@@ -2083,7 +2197,7 @@ class larry(object):
         
         """    
         if len(label) != self.ndim:
-            raise ValueError, 'Must have exactly one label per dimension'
+            raise ValueError('Must have exactly one label per dimension')
         index = []
         for i in xrange(self.ndim):
             index.append(self.labelindex(label[i], axis=i))    
@@ -2178,7 +2292,7 @@ class larry(object):
                
         """
         if axis >= self.ndim:
-            raise IndexError, 'axis out of range'
+            raise IndexError('axis out of range')
         label = self.label[axis]    
         if copy:
             label =  list(label)
@@ -2236,7 +2350,7 @@ class larry(object):
                         
         """
         if axis is None:
-            raise ValueError, 'axis cannot be None'        
+            raise ValueError('axis cannot be None')
         label = list(self.label)
         label.pop(axis)  
         idx = self.labelindex(name, axis)
@@ -2321,15 +2435,37 @@ class larry(object):
         """
         ops = ('==', '>', '<', '>=', '<=', '!=', 'in', 'not in')
         if op not in ops:
-            raise ValueError, 'Unknown op'
+            raise ValueError('Unknown op')
         if axis is None:
-            raise ValueError, 'axis cannot be None'    
+            raise ValueError('axis cannot be None')
         if axis >= self.ndim:
-            raise IndexError, 'axis is out of range' 
-        y = self.copy()      
-        cmd = '[(idx, z) for idx, z in enumerate(y.label[axis]) if z '
-        cmd = cmd + op + ' value]'  
-        idxlabel = eval(cmd)
+            raise IndexError('axis is out of range')
+        y = self.copy()
+
+        if op == '==':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z == value]
+        elif op == '>':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z > value]
+        elif op == '<':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z < value]
+        elif op == '>=':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z >= value]
+        elif op == '<=':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z <= value]
+        elif op == '!=':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z != value]
+        elif op == 'in':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z in value]
+        elif op == 'not in':
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+                        if z not in value]
         if len(idxlabel) == 0:
             return larry([])
         else:
@@ -2380,10 +2516,10 @@ class larry(object):
 
         """
         if (vacuum == True) and (self.ndim != 2):
-            raise ValueError, 'When vacuum is True, larry must be 2d'
+            raise ValueError('When vacuum is True, larry must be 2d')
         ops = ('==', '>', '<', '>=', '<=', '!=')
         if op not in ops:
-            raise ValueError, 'Unknown op'   
+            raise ValueError('Unknown op')
         y = self.copy()
         idx = eval('y.x ' + op + ' value')
         y.x[~idx] = np.nan
@@ -2486,19 +2622,19 @@ class larry(object):
         1        
                         
         """
-        if axis >= self.ndim:
-            raise IndexError, 'axis out of range'
         if axis is None:
-            raise ValueError, 'axis cannot be None'            
+            raise ValueError('axis cannot be None')
+        if axis >= self.ndim:
+            raise IndexError('axis out of range')
         try:
             index = self.label[axis].index(name)
         except ValueError:
             if exact:
-                raise IndexError, 'name not in label along axis %d' % axis
+                raise IndexError('name not in label along axis %d' % axis)
             else:
                 idx = [i for i, z in enumerate(self.label[axis]) if z <= name]
                 if len(idx) == 0:
-                    raise IndexError, 'name not in label along axis %d' % axis
+                    raise IndexError('name not in label along axis %d' % axis)
                 index = max(idx)                        
         return index
         
@@ -3151,11 +3287,11 @@ class larry(object):
         be a subset of the row labels of the group.
         """
         if not isinstance(group, larry):
-            raise TypeError, 'group must be a larry'
+            raise TypeError('group must be a larry')
         if group.ndim != 1:
-            raise ValueError, 'group must be a 1d larry'
+            raise ValueError('group must be a 1d larry')
         if len(frozenset(self.label[axis]) - frozenset(group.label[0])):
-            raise IndexError, 'label is not a subset of group label'
+            raise IndexError('label is not a subset of group label')
         g = group.morph(self.label[axis], 0)
         g = g.x.tolist()
         return g 
@@ -3204,7 +3340,7 @@ class larry(object):
             
         """
         if axis >= self.ndim:
-            raise IndexError, 'axis out of range'
+            raise IndexError('axis out of range')
         if self.label[axis] == label:
             return self.copy()
         else:    
@@ -3285,7 +3421,7 @@ class larry(object):
         
         """
         if self.ndim != lar.ndim:
-            raise IndexError, 'larrys must be of the same dimension.'
+            raise IndexError('larrys must be of the same dimension.')
         if self.ndim == 0:
             y = self.copy()
         else:
@@ -3337,7 +3473,7 @@ class larry(object):
 
         ndim = self.ndim
         if ndim != other.ndim:
-            raise IndexError, 'larrys must be of the same dimension.'
+            raise IndexError('larrys must be of the same dimension.')
         lar1 = self
         lar2 = other
         for ax in range(ndim):
@@ -3351,22 +3487,22 @@ class larry(object):
         dtype1 = self.dtype       
         if dtype1 == object:
             mask1 = lar1.x != [None]
-        elif self.dtype.type == np.string_:
+        elif self.dtype.type == np.str_:
             mask1 = lar1.x != ''  
         else:
             mask1 = np.isfinite(lar1.x)
         dtype2 = other.dtype       
         if dtype2 == object:
             mask2 = lar2.x != [None]
-        elif self.dtype.type == np.string_:
-            mask2 = lar2.x != ''  
+        elif self.dtype.type == np.str_:
+            mask2 = lar2.x != ''
         else:
             mask2 = np.isfinite(lar2.x)
             
         # Trap cases that merge cannot handle
         if dtype1 in (np.string_, object) or dtype2 in (np.string_, object):
             if dtype1 != dtype2:
-                raise TypeError, 'Incompatible dtypes'             
+                raise TypeError('Incompatible dtypes')
 
         # Check for overlap if requested             
         if (not update) and np.logical_and(mask1, mask2).any():
@@ -3466,7 +3602,7 @@ class larry(object):
                         
         """
         if axis is None:
-            raise IndexError, 'axis cannot be None.'
+            raise IndexError('axis cannot be None.')
         if nlag > 0:
             y = self.copy()
             y.label[axis] = y.label[axis][nlag:]
@@ -4258,7 +4394,7 @@ class larry(object):
         
         # Check input
         if self.ndim != 1:
-            raise ValueError, 'Only 1d larrys can be unflattened.'
+            raise ValueError('Only 1d larrys can be unflattened.')
             
         if self.shape == (0,):            
             return larry([])
@@ -4266,7 +4402,7 @@ class larry(object):
             # Determine labels, shape, and index into array
             if not isscalar(self.x.flat[0]):
                 msg = 'Only scalar dtype is currently supported.'
-                raise NotImplementedError, msg 
+                raise NotImplementedError(msg)
             labels = zip(*self.label[0])
             x, label = fromlists(self.x, labels)     
             return larry(x, label)
@@ -4320,7 +4456,7 @@ class larry(object):
                    
         """
         if axis is None:
-            raise ValueError, "`axis` cannot be None."
+            raise ValueError("`axis` cannot be None.")
         x = self.getx(copy=True)
         x = np.expand_dims(x, axis)
         lab = self.copylabel()
@@ -4751,7 +4887,7 @@ class larry(object):
         if ndim not in (1, 2):
             msg = "Only 1d and 2d larrys supported; "
             msg +="try the IO function or tocsv method."
-            raise ValueError, msg
+            raise ValueError(msg)
 
         # Open file if needed
         if type(file) == str:
@@ -4794,7 +4930,7 @@ class larry(object):
             if opened:
                 f.close()
             msg = "Please report this bug; the code should never reach here."
-            raise RuntimeError, msg
+            raise RuntimeError(msg)
 
         # Close file if opened (i.e., if file was a str)
         if opened:
@@ -4895,7 +5031,7 @@ class Lix(object):
         elif 0 in y.shape:
             msg = 'lix does not support shapes that contain 0 '
             msg += 'such as (0,) and (2, 0 ,3).'
-            raise ValueError, msg
+            raise ValueError(msg)
         typ = type(index)
         if typ == list:
             # Example: lar.lix[['a', 'b', 'c']]
@@ -4915,7 +5051,7 @@ class Lix(object):
             elif len(index) < y.ndim:
                 index3 = list(index) + [slice(None)] * (y.ndim - len(index))
             else:
-                raise IndexError, 'Invalid index'
+                raise IndexError('Invalid index')
             for ax, idx in enumerate(index3):
                 typ = type(idx)
                 if typ == list:
@@ -4933,7 +5069,7 @@ class Lix(object):
                 elif isscalar(idx):
                     index2.append([idx])
                 else:
-                    raise IndexError, 'Unsupported indexing operation.'
+                    raise IndexError('Unsupported indexing operation.')
             x = np.squeeze(y.x[np.ix_(*index2)])
             if x.ndim == 0:
                 return x[()]
@@ -4943,7 +5079,7 @@ class Lix(object):
             # Example: lar.lix[0]
             return y[index]
         else:
-            raise IndexError, 'Unsupported indexing operation.'
+            raise IndexError('Unsupported indexing operation.')
 
     def __setitem__(self2, index, value):
         # Note: getitem uses the same (slightly modified) code
@@ -4954,7 +5090,7 @@ class Lix(object):
         elif 0 in y.shape:
             msg = 'lix does not support shapes that contain 0 '
             msg += 'such as (0,) and (2, 0 ,3).'
-            raise ValueError, msg
+            raise ValueError(msg)
         typ = type(index)
         if typ == list:
             # Example: lar.lix[['a', 'b', 'c']]
@@ -4974,7 +5110,7 @@ class Lix(object):
             elif len(index) < y.ndim:
                 index3 = list(index) + [slice(None)] * (y.ndim - len(index))
             else:
-                raise IndexError, 'Invalid index'
+                raise IndexError('Invalid index')
             for ax, idx in enumerate(index3):
                 typ = type(idx)
                 if typ == list:
@@ -4992,14 +5128,14 @@ class Lix(object):
                 elif isscalar(idx):
                     index2.append([idx])
                 else:
-                    raise IndexError, 'Unsupported indexing operation.'
+                    raise IndexError('Unsupported indexing operation.')
             if isinstance(value, larry):
                 if value.ndim != len(index2):
-                    raise IndexError, '`value` has wrong ndim'
+                    raise IndexError('`value` has wrong ndim')
                 for ax, ix2 in enumerate(index2):
                     lab = [y.label[ax][i] for i in ix2]
                     if lab != value.label[ax]:
-                        raise IndexError, 'larry labels are not aligned'
+                        raise IndexError('larry labels are not aligned')
                 y.x[np.ix_(*index2)] = value.x
             else:
                 y.x[np.ix_(*index2)] = value
@@ -5007,7 +5143,7 @@ class Lix(object):
             # Example: lar.lix[0]
             y[index] = value
         else:
-            raise IndexError, 'Unsupported indexing operation.'
+            raise IndexError('Unsupported indexing operation.')
     
 def slicemaker(index, labelindex, axis): 
     "Convert a slice that may contain labels to a slice with indices."
@@ -5017,22 +5153,22 @@ def slicemaker(index, labelindex, axis):
         start = None
     elif type(index.start) is list:
         if len(index.start) > 1:
-            raise ValueError, msg2 % 'start'    
+            raise ValueError(msg2 % 'start')
         start = labelindex(index.start[0], axis=axis)
     elif isscalar(index.start):
         start = index.start
     else:
-        raise ValueError, msg1 % 'start'    
+        raise ValueError(msg1 % 'start')
     if index.stop is None:
         stop = None
     elif type(index.stop) is list:
         if len(index.stop) > 1:
-            raise ValueError, msg2 % 'start'    
+            raise ValueError(msg2 % 'start')
         stop = labelindex(index.stop[0], axis=axis)
     elif isscalar(index.stop):
         stop = index.stop                                                  
     else:
-        raise ValueError, msg1 % 'stop'
+        raise ValueError(msg1 % 'stop')
     return slice(start, stop, index.step)        
 
 def labels2indices(label, labels):
@@ -5040,5 +5176,5 @@ def labels2indices(label, labels):
     try:
         indices = map(label.index, labels)
     except ValueError:
-        raise ValueError, 'Could not map label to index value.'
+        raise ValueError('Could not map label to index value.')
     return indices  

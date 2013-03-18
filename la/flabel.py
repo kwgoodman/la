@@ -171,7 +171,7 @@ def flattenlabel(label, order='C'):
     
     """
     if order not in ('C', 'F'):
-        raise ValueError, "order must be 'C' or 'F'"
+        raise ValueError("order must be 'C' or 'F'")
     label = list(label)
     if order == 'C':
         label = label[::-1]

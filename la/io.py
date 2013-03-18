@@ -2,6 +2,7 @@
 
 import os
 import datetime
+import sys
 
 import numpy as np
 import h5py
@@ -192,17 +193,17 @@ class IO(object):
                 return lara(self.f[key])
             else:
                 msg = "%s is in the archive but it is not a larry." 
-                raise KeyError, msg % key   
+                raise KeyError(msg % key)
         else:
-            raise KeyError, "A larry named %s is not in the archive." % key   
+            raise KeyError("A larry named %s is not in the archive." % key)
         
     def __setitem__(self, key, value):
         
         # Make sure the data looks OK before saving
         if type(key) != str:
-            raise TypeError, 'key must be a string of type str.'        
+            raise TypeError('key must be a string of type str.')
         if not isinstance(value, larry):
-            raise TypeError, 'value must be a larry.'
+            raise TypeError('value must be a larry.')
         
         # Does an item (larry or otherwise) with given key already exist? If
         # so delete. Note that self.f.keys() [all keys] is used instead of
@@ -226,7 +227,7 @@ class IO(object):
             # but I don't want to load the array, I just want the shape
             shape = str(self.f[key]['x'].shape)
             dtype = str(self.f[key]['x'].dtype)    
-            table.append([key, dtype, shape])         
+            table.append([key, dtype, shape])
         return indent(table, hasHeader=True, delim='  ')  
     
     @property    
@@ -321,15 +322,24 @@ class lara(object):
         self.x = group['x']
         self.label = _load_label(group, len(self.x.shape))
     
-    # Grab these methods from larry    
-    __getitem__ = larry.__getitem__.im_func
-    __setitem__ = larry.__setitem__.im_func    
-    maxlabel = larry.maxlabel.im_func
-    minlabel = larry.minlabel.im_func
-    getlabel = larry.getlabel.im_func 
-    labelindex = larry.labelindex.im_func
+    # Grab these methods from larry
+    if sys.version_info[0] < 3:
+        __getitem__ = larry.__getitem__.im_func
+        __setitem__ = larry.__setitem__.im_func    
+        maxlabel = larry.maxlabel.im_func
+        minlabel = larry.minlabel.im_func
+        getlabel = larry.getlabel.im_func 
+        labelindex = larry.labelindex.im_func
+    else:
+        __getitem__ = larry.__getitem__
+        __setitem__ = larry.__setitem__
+        maxlabel = larry.maxlabel
+        minlabel = larry.minlabel
+        getlabel = larry.getlabel
+        labelindex = larry.labelindex
+        
     shape = larry.shape
-    dtype = larry.dtype            
+    dtype = larry.dtype        
         
     @property
     def ndim(self):
@@ -402,9 +412,9 @@ def save(file, lar, key):
 
     # Check input
     if type(lar) != larry:
-        raise TypeError, 'lar must be a larry.'
+        raise TypeError('lar must be a larry.')
     if type(key) != str:
-        raise TypeError, 'key must be a string.'    
+        raise TypeError('key must be a string.')    
     
     # Get a h5py.File instance
     f, opened = _openfile(file)
@@ -473,12 +483,12 @@ def load(file, key):
     
     # Check input
     if type(key) != str:
-        raise TypeError, 'key must be a string.'    
+        raise TypeError('key must be a string.')
     f, opened = _openfile(file)
     if key not in f:
-        raise KeyError, "A larry named '%s' is not in archive." % key
+        raise KeyError("A larry named '%s' is not in archive." % key)
     if not _is_archived_larry(f[key]):
-        raise KeyError, 'key (%s) is not a larry.' % key
+        raise KeyError('key (%s) is not a larry.' % key)
         
     # Load larry    
     group = f[key]
@@ -531,12 +541,12 @@ def delete(file, key):
     
     # Check input
     if type(key) != str:
-        raise TypeError, 'key must be a string.'    
+        raise TypeError('key must be a string.')
     f, opened = _openfile(file)
     if key not in f:
-        raise KeyError, "A larry named '%s' is not in archive." % key
+        raise KeyError("A larry named '%s' is not in archive." % key)
     if not _is_archived_larry(f[key]):
-        raise KeyError, 'key (%s) is not a larry.' % key    
+        raise KeyError('key (%s) is not a larry.' % key)
     
     # Delete
     del f[key]               
@@ -587,7 +597,7 @@ def is_archived_larry(file, key):
     if key in f:
         answer = _is_archived_larry(f[key])
     else:
-        raise ValueError, 'key (%s) is not in archive.' % str(key)    
+        raise ValueError('key (%s) is not in archive.' % str(key))
     if opened:
         f.close()                
     return answer
@@ -624,12 +634,12 @@ def _load_label(group, ndim):
 def _list2array(x):
     "Convert list to array if elements are of the same type, raise otherwise."
     if type(x) != list:
-        raise TypeError, 'x must be a list'
+        raise TypeError('x must be a list')
     type0 = type(x[0])
     if not all([type(i)==type0 for i in x]):
         msg = 'Elements of a label along any one dimension must be of the '
         msg += 'same type.'  
-        raise TypeError, msg
+        raise TypeError(msg)
     datetime_type = 'not_datetime'
     dtype = None
     if type0 == datetime.date:
@@ -670,7 +680,7 @@ def _openfile(file):
         opened = True
     else:
         msg = "file must be a h5py.File object or a string (path)."
-        raise TypeError, msg    
+        raise TypeError(msg)
     return f, opened                 
 
 def _is_archived_larry(obj):
@@ -696,7 +706,7 @@ def _create_nested_groups(f, path):
         else:
             if not isinstance(f[group], h5py.Group):
                 msg = '%s already exists and is not a h5.py.Group object.'
-                raise ValueError, msg % group   
+                raise ValueError(msg % group)
                    
 def datetime2tuple(dt):
     "Convert datetime.datetime to tuple; tzinfo, if any, is lost."
@@ -705,7 +715,7 @@ def datetime2tuple(dt):
 
 def tuple2datetime(i):
     "Convert tuple to a datetime.datetime object."
-    return datetime.datetime(*i)    
+    return datetime.datetime(*i)
 
 def time2tuple(t):
     "Convert datetime.time to tuple; tzinfo, if any, is lost."
@@ -714,4 +724,4 @@ def time2tuple(t):
 def tuple2time(i):
     "Convert tuple to a datetime.time object."
     return datetime.time(*i)
-    
+
