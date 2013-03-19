@@ -240,9 +240,6 @@ def move_func_strides(func, arr, window, axis=-1, **kwargs):
     ynan[index] = y
     return ynan
 
-# DEPRECATED ----------------------------------------------------------------
-
-@np.deprecate(new_name='move_nansum')
 def movingsum(arr, window, skip=0, axis=-1, norm=False):
     """
     Moving sum ignoring NaNs, optionally normalized for missing (NaN) data.

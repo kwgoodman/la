@@ -32,6 +32,7 @@ la 0.7
 **Breakage from la 0.6**
 
 - Numpy array version of move_median() removed since bottleneck now used
+- deprecated lar.movingsum() removed (use the faster lar.move_sum() instead)
 
 **Bug fixes**
 

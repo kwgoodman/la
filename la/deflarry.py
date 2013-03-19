@@ -10,7 +10,7 @@ from la.flabel import listmap, listmap_fill, flattenlabel
 from la.util.misc import isscalar, fromlists
 from la.farray import (group_ranking, group_mean, group_median, shuffle,
                        push, quantile, ranking, lastrank, movingsum_forward,
-                       movingsum, geometric_mean, demean, demedian, zscore)
+                       geometric_mean, demean, demedian, zscore)
 from la.farray import (move_nanmedian, move_nanranking, move_func)
 
 
@@ -3052,12 +3052,6 @@ class larry(object):
         x = move_func(func, self.x, window, axis=axis, method=method)
         return larry(x, self.copylabel(), validate=False)
 
-    @np.deprecate(new_name='move_sum')
-    def movingsum(self, window, axis=-1, norm=False):
-        y = self.copy()
-        y.x = movingsum(y.x, window, axis=axis, norm=norm)
-        return y
-        
     def movingsum_forward(self, window, skip=0, axis=-1, norm=False):    
         """Movingsum in the forward direction skipping skip dates"""      
         y = self.copy()
