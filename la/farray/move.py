@@ -7,7 +7,7 @@ from la.missing import nans, ismissing
 from la.farray import lastrank
 
 __all__ = ['move_nanmedian', 'move_func', 'move_nanranking',
-           'movingsum', 'movingsum_forward', 'movingrank'] #Last row deprecated
+           'movingsum_forward'] #Last row deprecated
 
 
 # MEDIAN --------------------------------------------------------------------
@@ -335,24 +335,3 @@ def movingsum_forward(x, window, skip=0, axis=-1, norm=False):
     flip_index[axis] = slice(None, None, -1)
     msf = movingsum(x[flip_index], window, skip=skip, axis=axis, norm=norm)
     return msf[flip_index]
-
-def movingrank(x, window, axis=-1):
-    """Moving rank (normalized to -1 and 1) of a given window along axis.
-
-    Normalized for missing (NaN) data.
-    A data point with NaN data is returned as NaN
-    If a window is all NaNs except last, this is returned as NaN
-    """
-    if window > x.shape[axis]:
-        raise ValueError('Window is too big.')
-    if window < 2:
-        raise ValueError('Window is too small.')
-    nt = x.shape[axis]
-    mr = np.nan * np.zeros(x.shape)        
-    for i in xrange(window-1, nt): 
-        index1 = [slice(None)] * x.ndim 
-        index1[axis] = i
-        index2 = [slice(None)] * x.ndim 
-        index2[axis] = slice(i-window+1, i+1, None)
-        mr[index1] = np.squeeze(lastrank(x[index2], axis=axis))
-    return mr

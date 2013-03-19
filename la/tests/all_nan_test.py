@@ -19,7 +19,7 @@ def functions():
               'zscore', 'geometric_mean'],
          (0,): ['cumsum', 'cumprod', 'ranking', 'lastrank'],
          (1,): ['power', 'move_sum', 'movingsum_forward'],
-         (2,): ['movingrank', 'quantile']} 
+         (2,): ['move_ranking', 'quantile']}
     return f                   
                         
 def test_all_nan(): 

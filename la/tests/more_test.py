@@ -8,13 +8,12 @@ from numpy.testing import assert_  # could look for nose
 nan = np.nan
 
 from la.farray import (push, geometric_mean, lastrank,
-                       movingrank, movingsum_forward,
-                       quantile, ranking, group_mean, group_median,
-                       group_ranking)
+                       movingsum_forward, quantile, ranking,
+                       group_mean, group_median, group_ranking)
 
 # Functions to test
 funcs_one = [geometric_mean, lastrank, ranking]
-funcs_oneint = [movingrank, movingsum_forward, quantile, push]
+funcs_oneint = [movingsum_forward, quantile, push]
 funcs_onefrac = [lastrank]
 funcs_sect = [group_mean, group_median, group_ranking]
 

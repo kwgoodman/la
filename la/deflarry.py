@@ -1612,7 +1612,7 @@ class larry(object):
         See Also
         --------
         la.larry.ranking: Rank elements treating NaN as missing. 
-        la.larry.movingrank: Moving rank in a given window along axis.
+        la.larry.move_ranking: Moving rank in a given window along axis.
                 
         Examples
         -------- 
@@ -3057,17 +3057,7 @@ class larry(object):
         y = self.copy()
         y.x = movingsum_forward(y.x, window, skip=skip, axis=axis, norm=norm)
         return y
-    
-    @np.deprecate(new_name='move_ranking')                        
-    def movingrank(self, window, axis=-1):
-        """Moving rank (normalized to -1 and 1) of a given window along axis.
 
-        Normalized for missing (NaN) data.
-        A data point with NaN data is returned as NaN
-        If a window is all NaNs except last, this is returned as NaN
-        """
-        return self.move_ranking(window, axis=axis)
-        
     # Calc ------------------------------------------------------------------
 
     def demean(self, axis=None):

@@ -14,7 +14,6 @@ def getfuncs(argint, argfrac, argsector):
     funcs = [('geometric_mean'        , (), ()),
              ('lastrank'              , (), ()),
              ('ranking'               , (), ()),
-             ('movingrank'            , (argint,), ()),
              ('movingsum_forward'     , (argint,), ()),
              ('quantile'              , (argint,), ()),
              ('push'                  , (argint,), ()),

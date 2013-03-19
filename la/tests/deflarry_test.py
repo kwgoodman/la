@@ -2490,10 +2490,10 @@ class Test_calc(unittest.TestCase):
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
-    def test_movingrank_1(self):
-        "larry.movingrank_1"    
+    def test_move_ranking_1(self):
+        "larry.move_ranking_1"
         t = self.x6 
-        p = self.l6.movingrank(2)
+        p = self.l6.move_ranking(2)
         label = [range(2), range(5)]
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
@@ -2502,12 +2502,12 @@ class Test_calc(unittest.TestCase):
         self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
         self.assertTrue(noreference(p, self.l6), 'Reference found') 
     
-    def test_movingrank_2(self):
-        "larry.movingrank_2"    
+    def test_move_ranking_2(self):
+        "larry.move_ranking_2"
         t = np.array([[  nan,  nan,  nan,-1.0,1.0],
                       [  nan,1.0,1.0,-1.0,-1.0]]) 
         with np.errstate(invalid='ignore', divide='ignore'):
-            p = self.l5.movingrank(2)
+            p = self.l5.move_ranking(2)
         label = [range(2), range(5)]
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
@@ -2516,12 +2516,12 @@ class Test_calc(unittest.TestCase):
         self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
         self.assertTrue(noreference(p, self.l5), 'Reference found')          
 
-    def test_movingrank_3(self):
-        "larry.movingrank_3"    
+    def test_move_ranking_3(self):
+        "larry.move_ranking_3"
         t = np.array([[nan,  nan,  nan,  nan,  nan],
                       [1.0,  nan,  1.0,  0.0,  -1.0]])
         with np.errstate(invalid='ignore', divide='ignore'):
-            p = self.l5.movingrank(2, axis=0)
+            p = self.l5.move_ranking(2, axis=0)
         label = [range(2), range(5)]
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
@@ -2530,13 +2530,13 @@ class Test_calc(unittest.TestCase):
         self.assertTrue(label == p.label, printfail(label, p.label, 'label'))
         self.assertTrue(noreference(p, self.l5), 'Reference found')
         
-    def test_movingrank_4(self):
-        "larry.movingrank_4"    
+    def test_move_ranking_4(self):
+        "larry.move_ranking_4"
         t = np.array([[nan,  nan],
                       [nan,  1.0],
                       [nan, -1.0]])
         with np.errstate(invalid='ignore', divide='ignore'):
-            p = self.l7.movingrank(2)
+            p = self.l7.move_ranking(2)
         label = [range(3), range(2)]
         msg = printfail(t, p.x, 'x')  
         t[np.isnan(t)] = self.nancode
