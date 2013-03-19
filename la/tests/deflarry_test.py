@@ -148,7 +148,7 @@ class Test_binary(unittest.TestCase):
     def test___add___6(self):
         "larry.__add___6"
         p = self.l1
-        self.failUnlessRaises(TypeError, p.__add__, datetime.date(2007, 1, 1))
+        self.assertRaises(TypeError, p.__add__, datetime.date(2007, 1, 1))
         
     def test___add___7(self):
         "larry.__add___7"
@@ -162,7 +162,7 @@ class Test_binary(unittest.TestCase):
     def test___add___8(self):
         "larry.__add___8"
         p = self.l1
-        self.failUnlessRaises(IndexError, p.__add__, self.l4)                                                 
+        self.assertRaises(IndexError, p.__add__, self.l4)
 
     def test___add___9(self):
         "larry.__add___9"
@@ -305,7 +305,7 @@ class Test_binary(unittest.TestCase):
     def test___sub___6(self):
         "larry.__sub___6"
         p = self.l1
-        self.failUnlessRaises(TypeError, p.__add__, datetime.date(2007, 1, 1))
+        self.assertRaises(TypeError, p.__add__, datetime.date(2007, 1, 1))
         
     def test___sub___7(self):
         "larry.__sub___7"
@@ -458,7 +458,7 @@ class Test_binary(unittest.TestCase):
     def test___mul___6(self):
         "larry.__mul___6"
         p = self.l2
-        self.failUnlessRaises(TypeError, p.__mul__, datetime.date(2007, 1, 1))
+        self.assertRaises(TypeError, p.__mul__, datetime.date(2007, 1, 1))
         
     def test___mul___7(self):
         "larry.__mul___7"
@@ -618,7 +618,7 @@ class Test_binary(unittest.TestCase):
     def test___div___6(self):
         "larry.__div___6"
         p = self.l2
-        self.failUnlessRaises(TypeError, p.__div__, datetime.date(2007, 1, 1))
+        self.assertRaises(TypeError, p.__div__, datetime.date(2007, 1, 1))
         
     def test___div___7(self):
         "larry.__div___7"
