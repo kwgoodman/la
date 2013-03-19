@@ -168,7 +168,7 @@ class Test_sector_oth(unittest.TestCase):
         desired = ['a', 'b', 'c']
         actual = unique_group(sectors)
         msg = printfail(desired, actual)   
-        self.assert_(desired == actual, msg)      
+        self.assertTrue(desired == actual, msg)      
 
     
 # Normalize functions -------------------------------------------------------
@@ -417,7 +417,7 @@ class Test_geometric_mean(unittest.TestCase):
         desired = 1e200
         actual = geometric_mean(x)
         msg = printfail(desired, actual)
-        self.assert_((abs(desired - actual) < 1e187).all(), msg)         
+        self.assertTrue((abs(desired - actual) < 1e187).all(), msg)         
         
 class Test_movingsum_forward(unittest.TestCase):
     "Test farray.movingsum_forward"
@@ -495,58 +495,68 @@ class Test_correlation(unittest.TestCase):
         "farray.correlation_1"
         x = np.array([])
         y = np.array([])
-        corr = correlation(x, y) 
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y) 
         aae(corr, np.nan, err_msg="Empty correlation should be NaN")
         
     def test_correlation_2(self):
         "farray.correlation_2"        
         x = np.array([nan, nan])
         y = np.array([nan, nan])
-        corr = correlation(x, y) 
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y) 
         aae(corr, np.nan, err_msg="All NaN correlation should be NaN")
         
     def test_correlation_3(self):
         "farray.correlation_3"
         x = self.a1[0,:]
         y = self.a2[0,:]
-        corr = correlation(x, y) 
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y) 
         aae(corr, np.nan, err_msg="Correlation undefined")
         x = self.b1[0,:]
         y = self.b2[0,:]
-        corr = correlation(x, y) 
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y) 
         aae(corr, np.nan, err_msg="Correlation undefined")        
 
     def test_correlation_4(self):
         "farray.correlation_4"
         x = self.a1[1,:]
         y = self.a2[1,:]
-        corr = correlation(x, y) 
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y) 
         aae(corr, 1, err_msg="Perfect +1 correation")
         x = self.b1[1,:]
         y = self.b2[1,:]
-        corr = correlation(x, y) 
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y) 
         aae(corr, 1, err_msg="Perfect +1 correation")
 
     def test_correlation_5(self):
         "farray.correlation_5"
         x = self.a1[2,:]
         y = self.a2[2,:]
-        corr = correlation(x, y) 
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y) 
         aae(corr, -1, err_msg="Perfect -1 correation")
         x = self.b1[2,:]
         y = self.b2[2,:]
-        corr = correlation(x, y) 
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y) 
         aae(corr, -1, err_msg="Perfect -1 correation")
 
     def test_correlation_6(self):
         "farray.correlation_6"
         x = self.a1[3,:]
         y = self.a2[3,:]
-        corr = correlation(x, y) 
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y) 
         aae(corr, -0.5, err_msg="-0.5 correation")
         x = self.b1[3,:]
         y = self.b2[3,:]
-        corr = correlation(x, y) 
+        with np.errstate(invalid='ignore'):
+            corr = correlation(x, y) 
         aae(corr, -0.5, err_msg="-0.5 correation")
 
     def test_correlation_7(self):
