@@ -56,9 +56,12 @@ def test_dtype():
         lar1 = larry(list(data), dtype=dtype)           # larry does dtype
         lar2 = larry(np.array(list(data), dtype=dtype)) # array does dtype
         yield ale, lar1, lar2, msg % (dtype, 'list')
-        lar1 = larry(np.array(list(data)), dtype=dtype) # larry does dtype
-        lar2 = larry(np.array(list(data), dtype=dtype)) # array does dtype
-        yield ale, lar1, lar2, msg % (dtype, 'array')         
+        if dtype != str:
+            # Bug in numpy 1.7.0 makes the following block fail on dtype=str
+            # See https://github.com/numpy/numpy/issues/3159
+            lar1 = larry(np.array(list(data)), dtype=dtype) # larry does dtype
+            lar2 = larry(np.array(list(data), dtype=dtype)) # array does dtype
+            yield ale, lar1, lar2, msg % (dtype, 'array')
 
 # --------------------------------------------------------------------------
 

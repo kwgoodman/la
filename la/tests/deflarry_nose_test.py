@@ -512,9 +512,12 @@ def test_astype_dtype():
     data = [0, 1, 2]
     msg = 'larry.astype failed on dtype %s'
     for dtype in dtypes:
-        lar1 = larry(list(data), dtype=dtype)    # larry does dtype
-        lar2 = larry(list(data)).astype(dtype)   # astype does dtype
-        yield ale, lar1, lar2, msg % dtype
+        if dtype != str:
+            # Bug in numpy 1.7.0 makes the following block fail on dtype=str
+            # See https://github.com/numpy/numpy/issues/3159
+            lar1 = larry(list(data), dtype=dtype)    # larry does dtype
+            lar2 = larry(list(data)).astype(dtype)   # astype does dtype
+            yield ale, lar1, lar2, msg % dtype
         
 # --------------------------------------------------------------------------
 
