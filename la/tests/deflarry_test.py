@@ -3529,29 +3529,6 @@ class Test_vacuum(unittest.TestCase):
         assert_almost_equal(larv.x, larr.x)
         assert_(larv.label == larr.label)
  
-           
-def suite():
-    s = []
-    u = unittest.TestLoader().loadTestsFromTestCase
-    s.append(u(Test_init))
-    s.append(u(Test_unary))
-    s.append(u(Test_binary))
-    s.append(u(Test_reduce))
-    s.append(u(Test_comparison)) 
-    s.append(u(Test_anyall))
-    s.append(u(Test_getset))
-    s.append(u(Test_label))
-    s.append(u(Test_calc))
-    s.append(u(Test_alignment))
-    s.append(u(Test_properties_01))      
-    return unittest.TestSuite(s)
-
-def run():
-    unittest.TextTestRunner(verbosity=2).run(suite())
-    
-if __name__ == '__main__':
-    run()   
-
 # take test -----------------------------------------------------------------
 
 # Make sure larry.take gives the same result as larry.__getitem__.

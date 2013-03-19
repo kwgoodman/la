@@ -95,19 +95,6 @@ class Test_io(unittest.TestCase):
         actual = io['desired'][:]
         assert_larry_equal(actual, desired)
         
-def testsuite():
-    s = []
-    u = unittest.TestLoader().loadTestsFromTestCase
-    s.append(u(Test_io))
-    return unittest.TestSuite(s)
-
-def run():   
-    suite = testsuite()
-    unittest.TextTestRunner(verbosity=2).run(suite)
-    
-if __name__ == '__main__':
-    run()           
-        
 # nose tests ----------------------------------------------------------------
 
 def datetime_test():

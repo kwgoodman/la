@@ -38,17 +38,3 @@ def test_isa():
         yield assert_equal, isfloat(key), value[1], msg
         msg = '\nisscalar(' + str(key) + ')'
         yield assert_equal, isscalar(key), (value[0] or value[1]), msg
-                        
-def suite():
-    s = []
-    u = unittest.TestLoader().loadTestsFromTestCase
-    s.append(u(Test_misc))
-    return unittest.TestSuite(s)
-
-def run():   
-    suite = suite()
-    unittest.TextTestRunner(verbosity=2).run(suite)
-    
-if __name__ == '__main__':
-    run()           
-

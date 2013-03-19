@@ -198,19 +198,3 @@ class Test_ismissing(unittest.TestCase):
     def test_ismissing_9a(self):
         "afunc.ismissing_9a"
         assert_equal(ismissing(np.array([True])), np.array([False])) 
-
-# Unit tests ----------------------------------------------------------------        
-    
-def suite():
-
-    unit = unittest.TestLoader().loadTestsFromTestCase
-    s = []
-    s.append(unit(Test_nans)) 
-    s.append(unit(Test_missing_marker))
-    s.append(unit(Test_ismissing))             
-    return unittest.TestSuite(s)
-
-def run():   
-    suite = testsuite()
-    unittest.TextTestRunner(verbosity=2).run(suite)
-
