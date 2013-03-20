@@ -1,8 +1,9 @@
 "Test larry methods for proper handling of empty larrys"
 
 import numpy as np
-from numpy.testing import assert_
+from numpy.testing import assert_, assert_equal
 
+import la
 from la import larry, nan
 from la.util.testing import assert_larry_equal as ale
 
@@ -169,8 +170,8 @@ def reduce_methods():
          {'la': 'min',      'np': 'sum', 'dflt': nan,   'kw': {}},
          {'la': 'std',      'np': 'sum', 'dflt': nan,   'kw': {}},
          {'la': 'var',      'np': 'sum', 'dflt': nan,   'kw': {}},
-         {'la': 'any',      'np': 'sum', 'dflt': FALSE, 'kw': {}},
-         {'la': 'all',      'np': 'sum', 'dflt': TRUE,  'kw': {}},
+         {'la': 'any',      'np': 'any', 'dflt': FALSE, 'kw': {}},
+         {'la': 'all',      'np': 'all', 'dflt': TRUE,  'kw': {}},
          {'la': 'lastrank', 'np': 'sum', 'dflt': nan,   'kw': {}},
          {'la': 'lastrank', 'np': 'sum', 'dflt': nan,   'kw': {'decay': 10}}]
     return r
@@ -206,3 +207,12 @@ def test_50():
     actual = larry([], dtype=np.int).sum(0)
     desired = np.nan
     ale(actual, desired, "Regression #50")
+
+def test_65():
+    "Regression #65"
+    actual = la.ones((0,1)).any(axis=1).dtype
+    desired = np.ones((0,1)).any(axis=1).dtype
+    assert_equal(actual, desired, "lar.any() returned wrong dtype")
+    actual = la.ones((0,1)).all(axis=1).dtype
+    desired = np.ones((0,1)).all(axis=1).dtype
+    assert_equal(actual, desired, "lar.all() returned wrong dtype")

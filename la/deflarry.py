@@ -1468,7 +1468,11 @@ class larry(object):
             if len(shape) == 0:
                 return default
             else:
-                x = np.empty(shape, dtype=self.dtype)
+                if op == np.any or op == np.all:
+                    dtype = bool
+                else:
+                    dtype = self.dtype
+                x = np.empty(shape, dtype=dtype)
                 x.fill(default)
                 label = self.copylabel()
                 label.pop(axis)
