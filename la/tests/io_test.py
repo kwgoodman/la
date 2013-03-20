@@ -31,12 +31,12 @@ class Test_io(unittest.TestCase):
         io = IO(self.filename)
         x = larry([1,2,3]) 
         io['x'] = x
-        self.assert_('x' in io, 'key missing')
-        self.assert_((x == io['x'][:]).all(), 'save and load difference')
-        self.assert_(['x'] == io.keys(), 'keys are different')
-        self.assert_(x.dtype == io['x'].dtype, 'dtype changed')
+        self.assertTrue('x' in io, 'key missing')
+        self.assertTrue((x == io['x'][:]).all(), 'save and load difference')
+        self.assertTrue(['x'] == io.keys(), 'keys are different')
+        self.assertTrue(x.dtype == io['x'].dtype, 'dtype changed')
         del io['x']
-        self.assert_(io.keys() == [], 'key still present')
+        self.assertTrue(io.keys() == [], 'key still present')
         
     def test_io_2(self):
         "io_repack"
@@ -48,8 +48,8 @@ class Test_io(unittest.TestCase):
         io.repack()
         fs2 = io.freespace
         sp2 = io.space
-        self.assert_(fs2 < fs1, 'repack did not reduce freespace')
-        self.assert_(sp2 < sp1, 'repack did not reduce space')
+        self.assertTrue(fs2 < fs1, 'repack did not reduce freespace')
+        self.assertTrue(sp2 < sp1, 'repack did not reduce space')
         
     def test_io_3(self):
         "io_keys"
@@ -61,7 +61,7 @@ class Test_io(unittest.TestCase):
         keys = io.keys()
         keys.sort()
         theory = ['1', '1/2/3/4', '2']
-        self.assert_(keys == theory, 'keys do not match')
+        self.assertTrue(keys == theory, 'keys do not match')
         
     def test_io_4(self):
         "io_dates"

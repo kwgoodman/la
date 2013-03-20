@@ -14,7 +14,7 @@ class Test_misc(unittest.TestCase):
     def test_randstring_1(self):
         "util.misc.randstring_1"
         rs = randstring(4)
-        self.assert_(len(rs) == 4, 'Wrong length string.')
+        self.assertTrue(len(rs) == 4, 'Wrong length string.')
 
 def test_isa():
     "util.misc.isint, isfloat, isscalar"
