@@ -29,10 +29,6 @@ summary statistics.
     contains fast moving window functions.
 
 ------------
-             
-.. autofunction:: la.farray.move_median
-
-------------
 
 .. autofunction:: la.farray.move_nanmedian
 

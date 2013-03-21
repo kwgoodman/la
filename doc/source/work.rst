@@ -114,6 +114,16 @@ with labels that are not unique::
         raise ValueError, msg % (i, value, key)
     ValueError: Elements of label not unique along axis 0. There are 2 labels named `a`.
 
+.. note::
+    **Python 3 users**
+
+    Many operations on larrys sort the labels (see :ref:`alignment`). Since
+    each axis label is just a Python list, that list must be sortable.
+    Python 3 is less forgiving on which objects are sortable. For example
+    the list [1, 2, 'c'] is sortable in Python 2 but not Python 3. Using
+    the above list as an axis label in Python 3 will raise an error as soon
+    as an operation requires the sorting of the label.
+
 The shape of the data array must agree with the shape of the label. Let's try
 to create a larry whose data shape does not agree with the label shape::
 
@@ -741,6 +751,8 @@ Assignment by indexing is the same as with Numpy arrays::
 
 You can also assign values by updating them with the
 :meth:`merge <la.larry.merge>` method. See :ref:`merge` for details.
+
+.. _alignment:
 
 Alignment
 ---------

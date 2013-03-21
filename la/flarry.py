@@ -1793,7 +1793,7 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
   
     See Also
     --------
-    empty, ones, zeros
+    la.empty, la.ones, la.zeros
   
     Examples
     --------
@@ -1876,7 +1876,7 @@ def empty(shape=None, label=None, dtype=None, order='C'):
     
     See Also
     --------
-    zeros, ones, lrange
+    la.zeros, la.ones, la.lrange
     
     Examples
     --------
@@ -1958,7 +1958,7 @@ def ones(shape=None, label=None, dtype=None, order='C'):
     
     See Also
     --------
-    empty, zeros, lrange
+    la.empty, la.zeros, la.lrange
     
     Examples
     --------
@@ -2035,7 +2035,7 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
     
     See Also
     --------
-    empty, ones, lrange
+    la.empty, la.ones, la.lrange
 
     Examples
     --------
