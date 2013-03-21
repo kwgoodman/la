@@ -16,6 +16,7 @@ CLASSIFIERS = ["Development Status :: 4 - Beta",
                "Operating System :: OS Independent",
                "Programming Language :: Cython",
                "Programming Language :: Python",
+               "Programming Language :: Python :: 3",
                "Topic :: Scientific/Engineering"]
 
 description = "Label the rows, columns, any dimension, of your NumPy arrays."
