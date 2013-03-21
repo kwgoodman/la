@@ -126,7 +126,13 @@ def assert_larry_equal(actual, desired, msg='', dtype=True, original=None,
         # Both actual and desired are scalars
         
         try:
-            assert_almost_equal(actual, desired)
+            try:
+                assert_equal(actual, desired)
+            except:
+                # The following line gives a warning in py3/nose
+                # when the inputs are np.bool_. That's why we try
+                # assert_equal first (above)
+                assert_almost_equal(actual, desired)
         except AssertionError as err:
             fail.append(heading('SCALARS') + str(err))
         if dtype: 
