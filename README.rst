@@ -69,18 +69,16 @@ Install
 
 Requirements:
 
-======================== ====================================================
-la                       Python 2.7, 3.2 NumPy 1.6.2, 1.7.0 Bottleneck 0.7.0
-Unit tests               nose
-======================== ====================================================
+- Python 2.7 or 3.2
+- NumPy 1.6.2 or 1.7.0
+- Bottleneck 0.7.0
+- nose (for unit tests)
 
 Optional:
 
-============================= ================================================
-Archive larrys in HDF5        h5py, HDF 1.8
-Compile for speed boost       gcc or MinGW
-lar.ranking(norm='gaussian')  SciPy
-============================= ================================================
+- h5py, HDF 1.8 (archive larrys in HDF5)
+- gcc or MinGW (compile for speed boost)
+- SciPy (lar.ranking(norm='gaussian'))
 
 You can download the `latest version of la <http://pypi.python.org/pypi/la>`_
 and `Bottleneck <http://pypi.python.org/pypi/Bottleneck>`_ from the Python
