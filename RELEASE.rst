@@ -28,6 +28,7 @@ la 0.7
 - la now supports Python 3 (thanks to Benjamin Root for initial porting)
 - Can now index into a larry with a 1d bool larry
 - Added setitem ability to label indexing (lix)
+- C files generated with Cython 0.18 instead of 0.15.1
 
 **Breakage from la 0.6**
 
