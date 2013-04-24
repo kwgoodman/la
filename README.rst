@@ -11,7 +11,7 @@ Here's larry in schematic form::
                 'AAPL'   209.19   207.87   210.11
             y = 'IBM'    129.03   130.39   130.55
                 'DELL'    14.82    15.11    14.94
-                
+
 The larry above is stored internally as a `Numpy <http://scipy.org>`_
 array and a list of lists::
 
@@ -19,7 +19,7 @@ array and a list of lists::
         y.x = np.array([[209.19, 207.87, 210.11],
                         [129.03, 130.39, 130.55],
                         [ 14.82,  15.11,  14.94]])               
-    
+
 A larry can have any number of dimensions except zero. Here, for example, is
 one way to create a one-dimensional larry::
 
@@ -28,15 +28,15 @@ one way to create a one-dimensional larry::
     
 In the statement above the list is converted to a Numpy array and the labels
 default to ``range(n)``, where *n* in this case is 3.
-    
+
 larry has built-in methods such as **ranking, merge, shuffle, move_sum,
 zscore, demean, lag** as well as typical Numpy methods like **sum, max, std,
 sign, clip**. NaNs are treated as missing data.
-    
+
 Alignment by label is automatic when you add (or subtract, multiply, divide)
 two larrys. You can also specify the join method (inner, outer, left, right)
 for binary operations on two larrys with unaligned labels.
-    
+
 You can archive larrys in HDF5 format using **save** and **load** or using a
 dictionary-like interface::
 
@@ -52,9 +52,9 @@ doesn't change the shape or ordering of the array, then you can use it on a
 larry, *y*, like this::
 
                            y.x = myfunc(y.x)
-    
+
 larry adds the convenience of labels, provides many built-in methods, and
-let's you use your existing array functions.       
+let's you use your existing array functions.
 
 License
 =======
@@ -70,7 +70,7 @@ Install
 Requirements:
 
 - Python 2.7 or 3.2
-- NumPy 1.6.2 or 1.7.0
+- NumPy 1.6.2 or 1.7.1
 - Bottleneck 0.7.0
 - nose (for unit tests)
 
@@ -83,7 +83,7 @@ Optional:
 You can download the `latest version of la <http://pypi.python.org/pypi/la>`_
 and `Bottleneck <http://pypi.python.org/pypi/Bottleneck>`_ from the Python
 Package Index.
-            
+
 **GNU/Linux, Mac OS X et al.**
 
 To install ``la``::
@@ -132,16 +132,16 @@ Python functions::
 
     >>> la.info()
     la version      0.7.0
-    la file         /usr/local/lib/python2.6/dist-packages/la/__init__.pyc
-    NumPy           1.6.2
-    Bottleneck      0.6.0
-    HDF5 archiving  Available (h5py 2.0.0)      
+    la file         /usr/local/lib/python2.7/dist-packages/la/__init__.pyc
+    NumPy           1.7.1
+    Bottleneck      0.7.0
+    HDF5 archiving  Available (h5py 2.1.2)
     listmap         Faster C version
-    listmap_fill    Faster C version    
-    
+    listmap_fill    Faster C version
+
 Since ``la`` can run in a pure python mode, you can use ``la`` by just saving
-it and making sure that python can find it.    
-    
+it and making sure that python can find it.
+
 URLs
 ====
 
