@@ -39,7 +39,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'la'
-copyright = u'2010, Archipel Asset Management AB'
+copyright = u'2008-2013 Berkeley Analytics LLC'
 
 # Grab version from la/version.py
 ver_file = os.path.join('..', '..', 'la', 'version.py')
