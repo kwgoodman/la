@@ -376,7 +376,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
     
     return x1, x2, label, x1isview, x2isview
 
-def align_axis(lars, axis=0, join='inner', flag=False):
+def align_axis(lars, axis=0, join='inner'):
     """
     Align many larrys along potentially different axes.
 
