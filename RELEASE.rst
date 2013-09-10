@@ -28,7 +28,7 @@ la 0.7
 - la now supports Python 3 (thanks to Benjamin Root for initial porting)
 - Can now index into a larry with a 1d bool larry
 - Added setitem ability to label indexing (lix)
-- C files generated with Cython 0.18 instead of 0.15.1
+- C files generated with Cython 0.19.1 instead of 0.15.1
 
 **Breakage from la 0.6**
 
@@ -84,18 +84,18 @@ la 0.6
 **Bug fixes**
 
 - #14 larry.lag() gives wrong output when nlag=0
-- #20 Indexing chokes on lar[:,3:2]  
+- #20 Indexing chokes on lar[:,3:2]
 - #21 Merging two larrys chokes when one is empty
 - #22 Morphing an empty larry chokes lar.morph()
-- #31 la.panel() gives wrong output 
+- #31 la.panel() gives wrong output
 - #35 larry([1, 2]) == 'a' did not return a bool like numpy does
-- #38 Indexing single element of larry with object dtype  
+- #38 Indexing single element of larry with object dtype
 - #39 move_func(myfunc) did not pass kwargs to myfunc when method='loop'
 - #49 setup.py does not install module to load yahoo finance data
 - #50 la.larry([], dtype=np.int).sum(0), and similar reductions, choke
 - #51 -la.larry([True, False]) returns wrong answer
 
-la 0.5 
+la 0.5
 ------
 
 *Release date: 2011-04-28*
@@ -124,7 +124,7 @@ Bottleneck package (http://pypi.python.org/pypi/Bottleneck).
 
 **Enhancements**
 
-- Add optional `ddof` input parameter to larry.std() and larry.var() 
+- Add optional `ddof` input parameter to larry.std() and larry.var()
 - Cut import time by 15%
 
 **Breakage from la 0.4**
@@ -143,8 +143,8 @@ Bottleneck package (http://pypi.python.org/pypi/Bottleneck).
 - #5 la.farray.lastrank() choked on empty array input
 - #7 larry.quantile() choked on axis=None
 - #8 demean, demedian, zscore choked on 1d input when axis=-1
-- #9 cross_validation docstring refers to old name of function (cv) 
-- #10 Unit tests: "Warning: invalid value encountered in..." 
+- #9 cross_validation docstring refers to old name of function (cv)
+- #10 Unit tests: "Warning: invalid value encountered in..."
 
 la 0.4
 ------
@@ -192,7 +192,7 @@ la.align(), which aligns two larrys, were also added.
 - func.py and afunc.py renamed flarry.py and farray.py to match new flabel.py.
   Broke: "from la.func import stack"; Did not break: "from la import stack"
 - Default binary operators (+, -, ...) no longer raise an error when no labels
-  overlap 
+  overlap
 
 **Bug fixes**
 
@@ -272,7 +272,7 @@ la 0.2
 - #518106: la.larry.fromdict({}) failed
 - #518114: fromlist([]) and fromtuples([]) failed
 - #518135: keep_label crashed when there was nothing to keep
-- #518210: sum, std, var returned NaN for empty larrys; now return 0.0 
+- #518210: sum, std, var returned NaN for empty larrys; now return 0.0
 - #518215: unflatten crashed on an empty larry
 - #518442: sum, std, var returned NaN for shapes that contain zero: (2, 0, 3)
 - #568175: larry.std(axis=-1) and var crashed on negative axis input
