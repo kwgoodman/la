@@ -13,31 +13,31 @@ from la import larry
 
 __all__ = ['IO', 'save', 'load', 'repack', 'is_archived_larry',
            'archive_directory']
-       
+
 
 class IO(object):
     "Save and load larrys in HDF5 format using a dictionary-like interface."
-    
+
     def __init__(self, filename, max_freespace=np.inf):
         """
         Save and load larrys in HDF5 format using a dictionary-like interface.
-        
+
         Dictionaries are made up of (key, value) pairs. In an IO object, a
         key is the name of a larry. The value part of the dictionary is a
         larry when saving data and is a lara, a larry-like archive object,
         when loading data.
-        
+
         (h5py has the same duality. When saving, the values are Numpy arrays;
         when loading the values are h5py Dataset objects.)
-        
+
         To convert a lara into a larry just index into the lara.
-        
+
         The reason why loading does not return a larry is that you may not
         want to load the entire larry which could, for example, be very large.
-        
+
         A lara loads the labels but does not load the array data until you
         index into it.
-        
+
         Each larry is stored in a HDF5 group. The group is assigned an
         attribute named 'larry' which is set to True. Inside the group is a
         HDF5 dataset containing the data (named 'x') and one dataset for each
@@ -45,12 +45,12 @@ class IO(object):
         named 'price' is stored in a group called 'price' that contains a
         dataset called 'x' (the price) and two datasets called '0' and '1'
         (the labels).
-        
+
         Before saving, the labels are converted to Numpy arrays, one array for
         each dimension. Therefore, to save a larry in HDF5 format, the
         elements of a label along any one dimension must be of the same type
-        and that type must be supported by HDF5.     
-        
+        and that type must be supported by HDF5.
+
         Parameters
         ----------
         filename : str
@@ -63,16 +63,16 @@ class IO(object):
             repack. Repack means to transfer all the larrys to a new archive
             (with the same name) and delete the old archive. HDF5 does not
             reuse the freespace across openening and closing of the archive.
-            
+
         Returns
         -------
             A dictionary-like IO object.
-            
+
         See Also
         --------
         la.save : Save larrys without a dictionary-like interface.
-        la.load : Load larrys without a dictionary-like interface.  
-            
+        la.load : Load larrys without a dictionary-like interface.
+
         Notes
         -----
         - Because the archive interface is dictionary-like, data will be
@@ -83,23 +83,23 @@ class IO(object):
           a limitation of the HDF5 format, not a limitation of the IO class
           or h5py. You can repack the archive with the repack method or have
           it done automatically for you: see `freespace` above.
-          
+
         Examples
-        -------- 
+        --------
         Save a larry in the archive:
-             
+
         >>> import la
         >>> io = la.IO('/tmp/dataset.hdf5')
         >>> io['x'] = la.larry([1,2,3])  # <-- Save
-        
+
         Examine the contents of the archive:
-        
-        >>> io   
+
+        >>> io
         larry  dtype  shape
         ------------------
         x      int64  (3,)
-        
-        Overwrite the contents of x in the archive: 
+
+        Overwrite the contents of x in the archive:
 
         >>> io['x'] = la.larry([4.0])  # <-- Overwrite
 
@@ -111,31 +111,31 @@ class IO(object):
         >>> type(y[:])
             <class 'la.deflarry.larry'>
         >>> type(y[2:])
-            <class 'la.deflarry.larry'> 
-            
-        Test if x is in the archive:           
-        
+            <class 'la.deflarry.larry'>
+
+        Test if x is in the archive:
+
         >>> 'x' in io
-            True    
+            True
         >>> del io['x']  # <-- Delete (unlink)
         >>> 'x' in io
-            False             
-            
-        """   
+            False
+
+        """
         self.f = h5py.File(filename)
         self.max_freespace = max_freespace
-        
+
     def keys(self):
         "Return a list of larry names (keys) in archive."
         return archive_directory(self.f)
-        
+
     def values(self):
         "Return a list of larry objects (values) in archive."
         return [self[key] for key in self]
-        
+
     def items(self):
         "Return a list of all (key, value) pairs."
-        return [(key, self[key]) for key in self]          
+        return [(key, self[key]) for key in self]
 
     def iterkeys(self):
         "An iterator over the keys."
@@ -146,78 +146,78 @@ class IO(object):
         "An iterator over the values."
         for key in self:
             yield self[key]
-        
+
     def iteritems(self):
         "An iterator over (key, value) items."
         for key in self:
-            yield (key, self[key])                
-            
+            yield (key, self[key])
+
     def has_key(self, key):
         "True if key is in archive, False otherwise."
         return key in self
-        
+
     def clear(self):
         """
         Warning: this will delete (unlink) all larrys from the archive!
         """
         for key in self:
             self.__delitem__(key)
-        self._repack_conditional() 
-        
+        self._repack_conditional()
+
     def merge(self, key, lar, update=False):
         """
         Merge, or optionally update, a larry with a second larry.
-        
+
         See larry.merge for details.
-        
+
         Note: the entire larry is loaded from the archive, merged with `lar`
         and then the merged larry is saved back to the archive. The resize
         function of h5py is not used. In other words, this function might not
         be practical for very large larrys.
-        
+
         """
         lar1 = self[key][:]
         lar2 = lar1.merge(lar, update=update)
         del self.f[key]
-        self[key] = lar2 
+        self[key] = lar2
 
     def __iter__(self):
         return iter(self.keys())
-        
+
     def __len__(self):
         return len(self.keys())
-        
+
     def __getitem__(self, key):
         if key in self.f:
-            if _is_archived_larry(self.f[key]): 
+            if _is_archived_larry(self.f[key]):
                 return lara(self.f[key])
             else:
-                msg = "%s is in the archive but it is not a larry." 
+                msg = "%s is in the archive but it is not a larry."
                 raise KeyError(msg % key)
         else:
             raise KeyError("A larry named %s is not in the archive." % key)
-        
+
     def __setitem__(self, key, value):
-        
+
         # Make sure the data looks OK before saving
         if type(key) != str:
             raise TypeError('key must be a string of type str.')
         if not isinstance(value, larry):
             raise TypeError('value must be a larry.')
-        
+
         # Does an item (larry or otherwise) with given key already exist? If
         # so delete. Note that self.f.keys() [all keys] is used instead of
         # self.keys() [keys that are larrys].
         if key in self.f.keys():
-            self.__delitem__(key)              
-        
+            self.__delitem__(key)
+
         # If you've made it this far the data looks OK so save it
         save(self.f, value, key)
-        
+
     def __delitem__(self, key):
-        delete(self.f, key)        
-        self._repack_conditional()          
-        
+        delete(self.f, key)
+        self._repack_conditional()
+
     def __repr__(self):
         table = [['larry', 'dtype', 'shape']]
         keys = self.keys()
@@ -226,17 +226,17 @@ class IO(object):
             # Code would be neater if I wrote shape = str(self[key].shape)
             # but I don't want to load the array, I just want the shape
             shape = str(self.f[key]['x'].shape)
-            dtype = str(self.f[key]['x'].dtype)    
+            dtype = str(self.f[key]['x'].dtype)
             table.append([key, dtype, shape])
-        return indent(table, hasHeader=True, delim='  ')  
-    
-    @property    
+        return indent(table, hasHeader=True, delim='  ')
+
+    @property
     def space(self):
         "The number of bytes used by the archive."
         self.f.flush()
         return self.f.fid.get_filesize()
 
-    @property         
+    @property
     def freespace(self):
         "The number of bytes of freespace in the archive."
         self.f.flush()
@@ -249,51 +249,51 @@ class IO(object):
                 size += value.id.get_storage_size()
         self.f.visititems(sizefinder)
         return self.space - size
-        
+
     def repack(self):
         "Repack archive to remove freespace."
         self.f = repack(self.f)
-        
+
     def _repack_conditional(self):
         "Repack if `max_freespace` is exceeded."
         if np.isfinite(self.max_freespace):
             if self.freespace() > self.max_freespace:
-                self.f = self.repack() 
-                
-    @property    
+                self.f = self.repack()
+
+    @property
     def filename(self):
         "filename of archive."
-        return self.f.filename                
-                              
+        return self.f.filename
+
 class lara(object):
     """
     Meet lara, she's a larry-like archive object.
-    
+
     larry stores its data in a numpy array and a list (labels). lara stores
     its data in a h5py Dataset object and a list (labels).
-    
+
     The reason for this class is that you may want to extract only part of the
     data from a larry in your archive. If you index into a lara you will get
     a larry back and only the data needed will be loaded from the archive.
-    
+
     The values in the dictionary-like archive object, IO, are laras. You
     would not generally create your own lara; IO does that for you.
-    
+
     """
 
     def __init__(self, group):
         """
         Meet lara, she's a larry-like archive object.
-        
+
         Parameters
         ----------
         group : h5py.Group
             An instance of the h5py Group object that contains a larry.
-            
+
         Example
         -------
         First let's make an archive and save a larry in it:
-        
+
         >>> import la
         >>> io = la.IO('/tmp/data.hdf5')
         >>> io['x'] = la.larry([1,2,3,4])
@@ -301,34 +301,34 @@ class lara(object):
         Next load the data from the archive:
 
         >>> y = io['x']
-        
+
         Actually, only the labels are loaded. y is a lara object:
-        
+
         >>> type(y)
             <class 'la.io.io.lara'>
         >>> type(y.x)
             <class 'h5py.highlevel.Dataset'>
         >>> type(y.label)
             <type 'list'>
-      
+
         To convert y into a larry just index into y:
-            
+
         >>> type(y[:])
             <class 'la.deflarry.larry'>
         >>> type(y[2:])
-            <class 'la.deflarry.larry'>  
-        
+            <class 'la.deflarry.larry'>
+
         """
         self.x = group['x']
         self.label = _load_label(group, len(self.x.shape))
-    
+
     # Grab these methods from larry
     if sys.version_info[0] < 3:
         __getitem__ = larry.__getitem__.im_func
-        __setitem__ = larry.__setitem__.im_func    
+        __setitem__ = larry.__setitem__.im_func
         maxlabel = larry.maxlabel.im_func
         minlabel = larry.minlabel.im_func
-        getlabel = larry.getlabel.im_func 
+        getlabel = larry.getlabel.im_func
         labelindex = larry.labelindex.im_func
     else:
         __getitem__ = larry.__getitem__
@@ -337,20 +337,20 @@ class lara(object):
         minlabel = larry.minlabel
         getlabel = larry.getlabel
         labelindex = larry.labelindex
-        
+
     shape = larry.shape
-    dtype = larry.dtype        
-        
+    dtype = larry.dtype
+
     @property
     def ndim(self):
         "Number of dimensions."
-        return len(self.shape)                       
+        return len(self.shape)
 
     @property
     def size(self):
         "Number of elements."
         return np.prod(self.shape, dtype=int)
-        
+
 # Archive functions ---------------------------------------------------------
 
 def save(file, lar, key):
@@ -364,18 +364,18 @@ def save(file, lar, key):
     named 'price' is stored in a group called 'price' that contains a
     dataset called 'x' (the price) and two datasets called '0' and '1'
     (the labels).
-    
+
     Before saving, the labels are converted to Numpy arrays, one array for
     each dimension. Therefore, to save a larry in HDF5 format, the
     elements of a label along any one dimension must be of the same type
     and that type must be supported by HDF5.
-    
+
     If all labels along an axis are dates of type datetime.date, then the
     dates are converted to integers before saving and the HDF5 Dataset used
     to store that label is assigned an attribute name 'datetime_type' which is set
     to 'date'. When loading the larry, the dates will automatically be
     converted back to datetime.date dates.
-    
+
     Similarly, if the labels are of type datetime.time, then we convert to
     integers and set the attribute to 'date' when saving and automatically
     convert back to datetime.time when loading.
@@ -383,7 +383,7 @@ def save(file, lar, key):
     Finally, if the labels are datetime.datetime then the attribute is set
     to 'datetime' and the labels are converted to tuples when saving and
     back to datetime.datetime when loading.
-    
+
     Parameters
     ----------
     file : str or h5py.File
@@ -392,36 +392,36 @@ def save(file, lar, key):
         Data to save.
     key : str
         Name of larry.
-        
+
     See Also
     --------
     la.load : Load larrys without a dictionary-like interface.
-    la.IO : A dictionary-like interface to the archive.    
-        
+    la.IO : A dictionary-like interface to the archive.
+
     Examples
     --------
     Create a larry:
-    
+
     >>> x = la.larry([1, 2, 3])
 
     Save the larry:
 
-    >>> la.save('/tmp/x.hdf5', x, 'x')        
- 
+    >>> la.save('/tmp/x.hdf5', x, 'x')
+
     """
 
     # Check input
     if type(lar) != larry:
         raise TypeError('lar must be a larry.')
     if type(key) != str:
-        raise TypeError('key must be a string.')    
-    
+        raise TypeError('key must be a string.')
+
     # Get a h5py.File instance
     f, opened = _openfile(file)
-    
+
     # Do we need to create any intermediate groups?
-    _create_nested_groups(f, key)  
-        
+    _create_nested_groups(f, key)
+
     # Save larry
     fkey = f[key]
     fkey.attrs['larry'] = True
@@ -429,13 +429,13 @@ def save(file, lar, key):
     for i in range(lar.ndim):
         fkey[str(i)], datetime_type = _list2array(lar.label[i])
         fkey[str(i)].attrs['datetime_type'] = datetime_type
-    
-    # Close if file is a filename   
+
+    # Close if file is a filename
     if opened:
         f.close()
     else:
-        f.flush()    
-        
+        f.flush()
+
 def load(file, key):
     """
     Load a larry from a HDF5 archive.
@@ -447,40 +447,40 @@ def load(file, key):
     named 'price' is stored in a group called 'price' that contains a
     dataset called 'x' (the price) and two datasets called '0' and '1'
     (the labels).
-    
+
     Parameters
     ----------
     file : str or h5py.File
         Filename or h5py.File object of the archive.
     key : str
         Name of larry.
-        
+
     Returns
-    ------- 
+    -------
     out : larry
-        Returns the larry from the archive.   
-        
+        Returns the larry from the archive.
+
     See Also
     --------
     la.save : Save larrys without a dictionary-like interface.
-    la.IO : A dictionary-like interface to the archive.  
-        
+    la.IO : A dictionary-like interface to the archive.
+
     Examples
     --------
     Create a larry:
-    
+
     >>> x = la.larry([1, 2, 3])
 
     Save the larry:
 
     >>> la.save('/tmp/x.hdf5', x, 'x')
-    
+
     Now load it:
-    
-    >>> y = la.load('/tmp/x.hdf5', 'x')            
- 
+
+    >>> y = la.load('/tmp/x.hdf5', 'x')
+
     """
-    
+
     # Check input
     if type(key) != str:
         raise TypeError('key must be a string.')
@@ -489,56 +489,56 @@ def load(file, key):
         raise KeyError("A larry named '%s' is not in archive." % key)
     if not _is_archived_larry(f[key]):
         raise KeyError('key (%s) is not a larry.' % key)
-        
-    # Load larry    
+
+    # Load larry
     group = f[key]
     x = group['x'][:]
-    label = _load_label(group, x.ndim)                 
-                     
-    # Close if file is a filename   
+    label = _load_label(group, x.ndim)
+
+    # Close if file is a filename
     if opened:
         f.close()
-        
+
     return larry(x, label)
-    
+
 def delete(file, key):
     """
     Delete a larry from a HDF5 archive.
-    
+
     Parameters
     ----------
     file : str or h5py.File
         Filename or h5py.File object of the archive.
     key : str
         Name of larry.
-        
+
     Returns
-    ------- 
+    -------
     out : None
-        Nothing is returned, just None.   
-        
+        Nothing is returned, just None.
+
     See Also
     --------
     la.save : Save larrys without a dictionary-like interface.
     la.load : Load larrys without a dictionary-like interface.
-    la.IO : A dictionary-like interface to the archive.  
-        
+    la.IO : A dictionary-like interface to the archive.
+
     Examples
     --------
     Create a larry:
-    
+
     >>> x = la.larry([1, 2, 3])
 
     Save the larry:
 
     >>> la.save('/tmp/x.hdf5', x, 'x')
-    
+
     Now delete it:
-    
-    >>> la.delete('/tmp/x.hdf5', 'x')            
- 
+
+    >>> la.delete('/tmp/x.hdf5', 'x')
+
     """
-    
+
     # Check input
     if type(key) != str:
         raise TypeError('key must be a string.')
@@ -547,33 +547,33 @@ def delete(file, key):
         raise KeyError("A larry named '%s' is not in archive." % key)
     if not _is_archived_larry(f[key]):
         raise KeyError('key (%s) is not a larry.' % key)
-    
+
     # Delete
-    del f[key]               
-                     
-    # Close if file is a filename   
+    del f[key]
+
+    # Close if file is a filename
     if opened:
-        f.close()        
-    
+        f.close()
+
 def repack(file):
     """
     Repack archive to remove freespace.
-    
+
     Parameters
     ----------
     file : h5py File or str
         A h5py File instance of an archive such as h5py.File('/tmp/data.hdf5')
         or a filename.
-        
+
     Returns
     -------
     file : h5py File or None
         If the input is a h5py.File then a h5py File instance of the
         repacked archive is returned. The input File instance will no longer
-        be useable. If the input was a filename, then None is returned. 
+        be useable. If the input was a filename, then None is returned.
 
     """
-    f1, opened = _openfile(file) 
+    f1, opened = _openfile(file)
     filename1 = f1.filename
     filename2 = filename1 + '_repack_tmp_' + randstring(4)
     f2 = h5py.File(filename2)
@@ -583,14 +583,14 @@ def repack(file):
     f2.close()
     filename_tmp = filename1 + '_repack_rename_tmp_' + randstring(4)
     os.rename(filename1, filename_tmp)
-    os.rename(filename2, filename1) 
+    os.rename(filename2, filename1)
     if opened:
-        f = None  
+        f = None
     else:
         f = h5py.File(filename1)
     os.remove(filename_tmp)
-    return f   
-    
+    return f
+
 def is_archived_larry(file, key):
     "True if the key (larry name) is in the archive, False otherwise."
     f, opened = _openfile(file)
@@ -599,12 +599,12 @@ def is_archived_larry(file, key):
     else:
         raise ValueError('key (%s) is not in archive.' % str(key))
     if opened:
-        f.close()                
+        f.close()
     return answer
-    
+
 def archive_directory(file):
     "Return a list of the keys (larry names) in the archive."
-    f, opened = _openfile(file) 
+    f, opened = _openfile(file)
     keys = []
     def append_larrys(name, obj):
         if _is_archived_larry(obj):
@@ -612,36 +612,42 @@ def archive_directory(file):
     f.visititems(append_larrys)
     if opened:
         f.close()
-    return keys            
-    
+    return keys
+
 # Utility functions for internal use ----------------------------------------
 
 def _load_label(group, ndim):
     "Load larry labels from archive given the hpy5.Group object of the larry."
     label = []
     for i in range(ndim):
-        labellist = group[str(i)][:].tolist()
-        datetime_type = group[str(i)].attrs['datetime_type']
-        if datetime_type == 'date':
-            labellist = map(datetime.date.fromordinal, labellist)
-        elif datetime_type == 'time':
-            labellist = map(tuple2time, labellist)
-        elif datetime_type == 'datetime':
-            labellist = map(tuple2datetime, labellist)
+        g = group[str(i)]
+        if g.size == 0:
+            labellist = []
+        else:
+            labellist = g[:].tolist()
+            datetime_type = group[str(i)].attrs['datetime_type']
+            if datetime_type == 'date':
+                labellist = map(datetime.date.fromordinal, labellist)
+            elif datetime_type == 'time':
+                labellist = map(tuple2time, labellist)
+            elif datetime_type == 'datetime':
+                labellist = map(tuple2datetime, labellist)
         label.append(labellist)
-    return label                     
+    return label
 
 def _list2array(x):
     "Convert list to array if elements are of the same type, raise otherwise."
     if type(x) != list:
         raise TypeError('x must be a list')
+    datetime_type = 'not_datetime'
+    dtype = None
+    if len(x) == 0:
+        return np.array([]), datetime_type
     type0 = type(x[0])
     if not all([type(i)==type0 for i in x]):
         msg = 'Elements of a label along any one dimension must be of the '
-        msg += 'same type.'  
+        msg += 'same type.'
         raise TypeError(msg)
-    datetime_type = 'not_datetime'
-    dtype = None
     if type0 == datetime.date:
         x = map(datetime.date.toordinal, x)
         datetime_type = 'date'
@@ -654,23 +660,23 @@ def _list2array(x):
         datetime_type = 'datetime'
         dtype = ','.join(["i4" for i in range(len(x[0]))])
     return np.asarray(x, dtype=dtype), datetime_type
-    
+
 def _openfile(file):
     """
     Open an archive if input is a path.
-    
+
     Parameters
     ----------
     file : str or h5py.File
         Filename or h5py.File instance of the archive.
-        
+
     Returns
-    ------- 
+    -------
     f : h5py.File
         Returns a h5py.File instance.
     opened : bool
-        True is `file` is a path; False if `file` is a h5py.File object.   
-    
+        True is `file` is a path; False if `file` is a h5py.File object.
+
     """
     if isinstance(file, h5py.File):
         f = file
@@ -681,7 +687,7 @@ def _openfile(file):
     else:
         msg = "file must be a h5py.File object or a string (path)."
         raise TypeError(msg)
-    return f, opened                 
+    return f, opened
 
 def _is_archived_larry(obj):
     "True if obj is an archived larry, False otherwise."
@@ -692,9 +698,9 @@ def _is_archived_larry(obj):
                     ndim = len(obj['x'].shape)
                     labels = map(str, range(ndim))
                     if all([label in obj for label in labels]):
-                        return True               
+                        return True
     return False
-    
+
 def _create_nested_groups(f, path):
     "Create a nested set of groups."
     groups = path.split('/')
@@ -707,7 +713,7 @@ def _create_nested_groups(f, path):
             if not isinstance(f[group], h5py.Group):
                 msg = '%s already exists and is not a h5.py.Group object.'
                 raise ValueError(msg % group)
-                   
+
 def datetime2tuple(dt):
     "Convert datetime.datetime to tuple; tzinfo, if any, is lost."
     return (dt.year, dt.month, dt.day, dt.hour, dt.minute, dt.second,

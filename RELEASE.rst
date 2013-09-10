@@ -41,6 +41,7 @@ la 0.7
 - #59 Proper int promotion in larry.cumsum() and larry.cumprod()
 - #62 la.cov() overwrites NaNs in input array
 - #65 lar.any() and lar.all() return wrong dtype with size=0 input
+- #68 h5py prevents archiving of empty larrys
 
 Older versions
 ==============
