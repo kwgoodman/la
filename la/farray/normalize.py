@@ -225,7 +225,7 @@ def push(x, n, axis=-1):
 def _quantileraw1d(xi, q):
     y = np.nan * np.asarray(xi)
     idx = np.where(np.isfinite(xi))[0]
-    xi = xi[idx,:]
+    xi = xi[idx]
     nx = idx.size
     if nx:
         jdx = xi.argsort(axis=0).argsort(axis=0)
@@ -235,7 +235,7 @@ def _quantileraw1d(xi, q):
         kdx = np.concatenate((-1 * np.ones((1, kdx.shape[1])), kdx), 0)
         kdx[-1, 0] = nx
         for j in xrange(1, q+1):
-            mdx[(jdx > kdx[j-1]) & (jdx <= kdx[j]),:] = j
+            mdx[(jdx > kdx[j-1]) & (jdx <= kdx[j])] = j
         y[idx] = mdx
     return y
 
