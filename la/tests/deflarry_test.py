@@ -999,11 +999,10 @@ class Test_reduce(unittest.TestCase):
 
     def test_max_3(self):
         "larry.max_3"
-        x = np.array([1.0, 1.0])
+        x = np.array([1.0, 1.0, 1.0])
         t = larry(x)
         p = self.l.max(1)
-        msg = printfail(t, p, '')
-        self.assertTrue((p.x == t).all(), msg) 
+        ale(p, t)
         
     def test_max_4(self):
         "larry.max_4"
@@ -1028,16 +1027,14 @@ class Test_reduce(unittest.TestCase):
         x = np.array([1.0, 1.0])
         t = larry(x)
         p = self.l.min(0)
-        msg = printfail(t, p, '')
-        self.assertTrue((p == t).all(), msg)        
+        ale(p, t)
 
     def test_min_3(self):
         "larry.min_3"
-        x = np.array([1.0, 1.0])
+        x = np.array([1.0, 1.0, 1.0])
         t = larry(x)
         p = self.l.min(1)
-        msg = printfail(t, p, '')
-        self.assertTrue((p.x == t).all(), msg) 
+        ale(p, t)
         
     def test_min_4(self):
         "larry.min_4"
