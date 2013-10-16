@@ -180,6 +180,15 @@ class IO(object):
         lar2 = lar1.merge(lar, update=update)
         del self.f[key]
         self[key] = lar2
+        
+    def close(self):
+        self.f.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
 
     def __iter__(self):
         return iter(self.keys())
