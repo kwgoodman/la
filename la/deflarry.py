@@ -1,5 +1,7 @@
 "Labeled array class"
 
+import sys
+
 import csv
 
 import numpy as np
@@ -4749,7 +4751,10 @@ class larry(object):
         array([ 1.,  2.,  3.])
         
         """
-        fid = open(filename, 'w')
+        if sys.version_info[0] < 3:
+            fid = open(filename, 'w')
+        else:
+            fid = open(filename, 'w', newline='')
         writer = csv.writer(fid, delimiter=delimiter)
         writer.writerows(self.totuples())
         fid.close()                   
