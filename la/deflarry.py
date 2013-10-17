@@ -1,7 +1,6 @@
 "Labeled array class"
 
 import sys
-
 import csv
 
 import numpy as np

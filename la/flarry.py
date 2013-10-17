@@ -1351,7 +1351,7 @@ def stack(mode, **kwargs):
     Returns
     -------
     out : larry
-        Returns a 3d larry.
+        Returns a 3d larry. The labels along all 3 dimenstions will be sorted.
         
     Raises
     ------
@@ -1366,8 +1366,8 @@ def stack(mode, **kwargs):
     >>> y2 = la.larry([[5, 6], [7, 8]])
     >>> la.stack('union', name1=y1, othername=y2)
     label_0
-        othername
         name1
+        othername
     label_1
         0
         1
@@ -1375,11 +1375,11 @@ def stack(mode, **kwargs):
         0
         1
     x
-    array([[[ 5.,  6.],
-            [ 7.,  8.]],
+    array([[[ 1.,  2.],
+            [ 3.,  4.]],
     .
-           [[ 1.,  2.],
-            [ 3.,  4.]]])    
+           [[ 5.,  6.],
+            [ 7.,  8.]]])
                         
     """
     if not np.all([kwargs[key].ndim == 2 for key in kwargs]):
@@ -1392,9 +1392,12 @@ def stack(mode, **kwargs):
         raise ValueError('mode must be union or intersection')
     row = logic(0, *kwargs.values())
     col = logic(1, *kwargs.values())
+    row.sort()
+    col.sort()
     x = np.zeros((len(kwargs), len(row), len(col)))
     zlabel = []
-    for i, key in enumerate(kwargs):
+    keys = sorted(kwargs.keys())
+    for i, key in enumerate(keys):
         y = kwargs[key]
         y = y.morph(row, 0)
         y = y.morph(col, 1)

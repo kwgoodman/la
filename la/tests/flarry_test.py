@@ -129,11 +129,11 @@ class Test_func(unittest.TestCase):
         y1 = larry([[1, 2], [3, 4]])
         y2 = larry([[5, 6], [7, 8]])
         actual = stack('union', name1=y1, othername=y2)
-        x = np.array([[[ 5.,  6.],
-                       [ 7.,  8.]],
-                      [[ 1.,  2.],
-                       [ 3.,  4.]]]) 
-        label = [['othername', 'name1'], [0, 1], [0, 1]]
+        x = np.array([[[ 1.,  2.],
+                       [ 3.,  4.]],
+                      [[ 5.,  6.],
+                       [ 7.,  8.]]]) 
+        label = [['name1', 'othername'], [0, 1], [0, 1]]
         desired = larry(x, label)
         ale(actual, desired, msg='stack test #1')              
         

@@ -35,6 +35,7 @@ la 0.7
 - Numpy array version of move_median() removed since bottleneck now used
 - deprecated lar.movingsum() removed (use faster lar.move_sum() instead)
 - deprecated lar.movingrank() removed (use faster lar.move_ranking() instead)
+- la.stack() now sorts labels
 
 **Bug fixes**
 
@@ -42,6 +43,8 @@ la 0.7
 - #62 la.cov() overwrites NaNs in input array
 - #65 lar.any() and lar.all() return wrong dtype with size=0 input
 - #68 h5py prevents archiving of empty larrys
+- #69, #70 Unit test failures on Windows
+- #71 la.stack() Python 3.3 unit test failure
 
 Older versions
 ==============

@@ -69,7 +69,7 @@ Install
 
 Requirements:
 
-- Python 2.7 or 3.2
+- Python 2.7, 3.2, or 3.3
 - NumPy 1.6.2 or 1.7.1
 - Bottleneck 0.7.0
 - nose (for unit tests)
