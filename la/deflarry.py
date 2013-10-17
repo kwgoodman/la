@@ -6,7 +6,7 @@ import csv
 import numpy as np
 import bottleneck as bn
 
-from la.missing import ismissing, missing_marker, nans  
+from la.missing import ismissing, missing_marker, nans
 from la.flabel import listmap, listmap_fill, flattenlabel
 from la.util.misc import isscalar, fromlists
 from la.farray import (group_ranking, group_mean, group_median, shuffle,
@@ -21,7 +21,7 @@ class larry(object):
     def __init__(self, x, label=None, dtype=None, validate=True):
         """
         Meet larry, he's a labeled array.
-        
+
         Parameters
         ----------
         x : numpy array_like
@@ -34,13 +34,13 @@ class larry(object):
             (default) integers will be used to label the the row, columns,
             etc.
         dtype : data-type, optional
-            The desired data type of the larry.         
+            The desired data type of the larry.
         validate : bool, optional
             Check the integrity of the larry by checking that the dimensions
             of the data match the dimension of the label, that the labels are
             unique along each axis, and so on. This check adds time to the
             creation of a larry. The default is the check the integrity.
-                        
+
         Raises
         ------
         ValueError
@@ -49,18 +49,18 @@ class larry(object):
             elements in label are not unique along each dimension, or if the
             elements of label are not lists, or if the number of dimensions
             is zero.
-            
+
         Notes
         -----
         larry does not copy the data array if it is a Numpy array or if
         np.asarray() does not make a copy such as when the data array is a
         Numpy matrix. However, if you change the dtype of the data array, a
-        copy is made. Similarly the label is not copied.            
-            
+        copy is made. Similarly the label is not copied.
+
         Examples
         --------
         The labels default to range(n):
-        
+
         >>> larry([6, 7, 8])
         label_0
             0
@@ -81,16 +81,16 @@ class larry(object):
             three
         x
         array([1, 2, 3])
-        
+
         The dtype can be specified:
-        
+
         >>> larry([0, 1, 2], dtype=bool)
         label_0
             0
             1
             2
         x
-        array([False,  True,  True], dtype=bool)            
+        array([False,  True,  True], dtype=bool)
 
         """
         if type(x) is not np.ndarray:
@@ -104,10 +104,10 @@ class larry(object):
                 msg = "x must be array_like and dtype must be known."
                 raise ValueError(msg)
         elif dtype != None:
-            x = x.astype(dtype)            
+            x = x.astype(dtype)
         if label is None:
             label = [range(z) for z in x.shape]
-        if validate: 
+        if validate:
             ndim = x.ndim
             if ndim != len(label):
                 raise ValueError('Exactly one label per dimension needed')
@@ -128,26 +128,26 @@ class larry(object):
                         count[li] = count.get(li, 0) + 1
                     for key, value in count.iteritems():
                         if value > 1:
-                            break 
+                            break
                     msg = "Elements of label not unique along axis %d. "
-                    msg += "There are %d labels named `%s`."          
+                    msg += "There are %d labels named `%s`."
                     raise ValueError(msg % (i, value, key))
                 if type(l) is not list:
                     raise ValueError('label must be a list of lists')
         self.x = x
         self.label = label
 
-    # Unary functions --------------------------------------------------------  
+    # Unary functions --------------------------------------------------------
 
     def log(self):
         """
         Element by element base e logarithm.
-        
+
         Returns
         -------
         out : larry
             Returns a copy with log of x values.
-        
+
         Examples
         --------
         >>> y = larry([1, 2, 3])
@@ -159,23 +159,23 @@ class larry(object):
         x
         array([ 0.        ,  0.69314718,  1.09861229])
         >>>
-        
+
         """
         x = np.log(self.x)
         label = self.copylabel()
-        return larry(x, label, validate=False) 
+        return larry(x, label, validate=False)
 
     def exp(self):
         """
         Element by element exponential.
-        
+
         Returns
         -------
         out : larry
             Returns a copy with exp of x values.
 
         Examples
-        --------            
+        --------
         >>> y = larry([1, 2, 3])
         >>> y.exp()
         label_0
@@ -183,24 +183,24 @@ class larry(object):
             1
             2
         x
-        array([  2.71828183,   7.3890561 ,  20.08553692])            
-                
+        array([  2.71828183,   7.3890561 ,  20.08553692])
+
         """
         x = np.exp(self.x)
         label = self.copylabel()
         return larry(x, label, validate=False)
-        
+
     def sqrt(self):
         """
         Element by element square root.
-        
+
         Returns
         -------
         out : larry
             Returns a copy with square root of x values.
 
         Examples
-        --------            
+        --------
         >>> y = larry([1, 4, 9])
         >>> y.sqrt()
         label_0
@@ -209,7 +209,7 @@ class larry(object):
             2
         x
         array([ 1.,  2.,  3.])
-                
+
         """
         x = np.sqrt(self.x)
         label = self.copylabel()
@@ -218,14 +218,14 @@ class larry(object):
     def sign(self):
         """
         Element by element sign of the element.
-        
+
         Returns -1 if x < 0; 0 if x == 0, and 1 if x > 0.
-        
+
         Returns
         -------
         out : larry
             Returns a copy with the sign of the values.
-            
+
         Examples
         --------
         >>> y = larry([-1, 2, -3, 4])
@@ -237,21 +237,21 @@ class larry(object):
             3
         x
         array([-1,  1, -1,  1])
-                
+
         """
         x = np.sign(self.x)
         label = self.copylabel()
         return larry(x, label, validate=False)
-        
-    def power(self, q):               
+
+    def power(self, q):
         """
         Element by element x**q.
-                
+
         Parameters
         ----------
         q : scalar
             The power to raise to.
-        
+
         Returns
         -------
         out : larry
@@ -267,57 +267,57 @@ class larry(object):
             2
         x
         array([1, 4, 9])
-                
+
         """
         x = np.power(self.x, q)
         label = self.copylabel()
         return larry(x, label, validate=False)
-        
+
     def __pow__(self, q):
         """
         Element by element x**q.
-                
+
         Parameters
         ----------
         q : scalar
             The power to raise to.
-        
+
         Returns
         -------
         out : larry
             Returns a copy with x values to the qth power.
-                
+
         """
-        return self.power(q)           
-        
-    def cumsum(self, axis): 
+        return self.power(q)
+
+    def cumsum(self, axis):
         """
         Cumulative sum, ignoring NaNs.
-        
+
         Parameters
         ----------
         axis : int
             axis to cumsum along, no default. None is not allowed.
-            
+
         Returns
         -------
         out : larry
-            Returns a copy with cumsum along axis.  
-            
+            Returns a copy with cumsum along axis.
+
         Raises
         ------
         ValueError
             If axis is None.
-            
+
         See Also
         --------
         la.larry.sum: Sum of values along axis, ignoring NaNs.
-        
+
         Notes
         -----
         NaNs are ignored except for when all elements in a cumsum are NaN.
         In that case, a NaN is returned.
-            
+
         Examples
         --------
         >>> y = larry([1, 2, 3])
@@ -328,9 +328,9 @@ class larry(object):
             2
         x
         array([1, 3, 6])
-        
+
         If all elements are NaN along the specified axis then NaN is returned:
-        
+
         >>> from la import nan
         >>> y = larry([[nan, 2], [nan,  4]])
         >>> y.cumsum(axis=0)
@@ -343,7 +343,7 @@ class larry(object):
         x
         array([[ NaN,   2.],
                [ NaN,   6.]])
-                        
+
         """
         if axis == None:
             raise ValueError('axis cannot be None')
@@ -353,37 +353,37 @@ class larry(object):
         y.x = y.x.cumsum(axis)
         if idx.any():
             np.putmask(y.x, idx, np.nan)
-        return y        
+        return y
 
-    def cumprod(self, axis): 
+    def cumprod(self, axis):
         """
         Cumulative product, ignoring NaNs.
-        
+
         Parameters
         ----------
         axis : int
             axis to find the cumulative product along, no default. None is
             not allowed.
-            
+
         Returns
         -------
         out : larry
-            Returns a copy with cumprod along axis.  
-            
+            Returns a copy with cumprod along axis.
+
         Raises
         ------
         ValueError
             If axis is None.
-            
+
         See Also
         --------
         la.larry.prod: Product of values along axis, ignoring NaNs.
-        
+
         Notes
         -----
         NaNs are ignored except for when all elements in a cumprod are NaN.
-        In that case, a NaN is returned.            
-            
+        In that case, a NaN is returned.
+
         Examples
         --------
         >>> y = larry([1, 2, 3])
@@ -394,9 +394,9 @@ class larry(object):
             2
         x
         array([1, 2, 6])
-        
+
         If all elements are NaN along the specified axis then NaN is returned:
-        
+
         >>> from la import nan
         >>> y = larry([[nan, 2], [nan,  4]])
         >>> y.cumprod(axis=0)
@@ -408,8 +408,8 @@ class larry(object):
             1
         x
         array([[ NaN,   2.],
-               [ NaN,   8.]])                               
-                        
+               [ NaN,   8.]])
+
         """
         if axis == None:
             raise ValueError('axis cannot be None')
@@ -429,19 +429,19 @@ class larry(object):
         ----------
         lo : scalar
             All data values less than `lo` are set to `lo`.
-        hi : scalar    
+        hi : scalar
             All data values greater than `hi` are set to `hi`.
-                        
+
         Returns
         -------
         out : larry
-            Returns a copy with x values clipped.       
-            
+            Returns a copy with x values clipped.
+
         Raises
         ------
         ValueError
             If `lo` is greater than `hi`.
-            
+
         Examples
         --------
         >>> y = larry([1, 2, 3, 4])
@@ -452,29 +452,29 @@ class larry(object):
             2
             3
         x
-        array([2, 2, 3, 3])                    
-        
+        array([2, 2, 3, 3])
+
         """
         if lo > hi:
             raise ValueError('lo should be less than or equal to hi')
         y = self.copy()
         y.x.clip(lo, hi, y.x)
         return y
-        
+
     def __neg__(self):
         "Return a copy with each element switched with its negative."
         label = self.copylabel()
         x = self.x.__neg__()
         return larry(x, label, validate=False)
-    
+
     def __pos__(self):
         "Return a copy."
         return self.copy()
-        
+
     def abs(self):
         """
         Absolute value of x.
-        
+
         Returns
         -------
         out : larry
@@ -491,24 +491,24 @@ class larry(object):
             3
         x
         array([1, 2, 3, 4])
-       
+
         """
         y = self.copy()
         np.absolute(y.x, y.x)
         return y
-        
+
     def __abs__(self):
         """
         Absolute value of x.
-        
+
         Returns
         -------
         out : larry
             Returns a copy with the absolute values of the x data.
-       
-        """    
+
+        """
         return self.abs()
-        
+
     def isnan(self):
         """
         Returns a bool larry with NaNs replaced by True, non-NaNs False.
@@ -517,7 +517,7 @@ class larry(object):
         -------
         out : larry
             Returns a copy with NaNs replaced by True, non-NaNs False.
-        
+
         Examples
         --------
         >>> import la
@@ -534,7 +534,7 @@ class larry(object):
         """
         label = self.copylabel()
         x = np.isnan(self.x)
-        return larry(x, label, validate=False)                             
+        return larry(x, label, validate=False)
 
     def isfinite(self):
         """
@@ -546,7 +546,7 @@ class larry(object):
             Returns a copy with NaNs and Inf replaced by True, others False.
 
         Examples
-        --------        
+        --------
         >>> import la
         >>> y = larry([-la.inf, 1.0, la.nan, la.inf])
         >>> y.isfinite()
@@ -557,12 +557,12 @@ class larry(object):
             3
         x
         array([False,  True, False, False], dtype=bool)
-        
-        """    
+
+        """
         label = self.copylabel()
         x = np.isfinite(self.x)
         return larry(x, label, validate=False)
-        
+
     def isinf(self):
         """
         Returns a bool larry with -Inf and Inf replaced by True, others False.
@@ -571,7 +571,7 @@ class larry(object):
         -------
         out : larry
             Returns a copy with -Inf and Inf replaced by True, others False.
-        
+
         Examples
         --------
         >>> import la
@@ -584,21 +584,21 @@ class larry(object):
             3
         x
         array([ True, False, False,  True], dtype=bool)
-        
-        """    
+
+        """
         label = self.copylabel()
         x = np.isinf(self.x)
-        return larry(x, label, validate=False) 
-        
+        return larry(x, label, validate=False)
+
     def __invert__(self):
         """
         Element by element inverting of True to False and False to True.
-        
+
         Raises
         ------
         TypeError
             If larry does not have bool dtype.
-            
+
         Examples
         --------
         >>> y = larry([True, False])
@@ -608,19 +608,19 @@ class larry(object):
             1
         x
         array([False,  True], dtype=bool)
-            
+
         """
         return self.invert()
-        
+
     def invert(self):
         """
         Element by element inverting of True to False and False to True.
-        
+
         Raises
         ------
         TypeError
             If larry does not have bool dtype.
-            
+
         Examples
         --------
         >>> y = larry([True, False])
@@ -630,30 +630,30 @@ class larry(object):
             1
         x
         array([False,  True], dtype=bool)
-            
+
         """
         if self.dtype.type is not np.bool_:
             raise TypeError('Only larrys with bool dtype can be inverted.')
         return larry(~self.x, self.copylabel(), validate=False)
-        
-    # Binary Functions ------------------------------------------------------- 
-    
+
+    # Binary Functions -------------------------------------------------------
+
     # We need this to take care of radd and rsub when a matrix is on the left-
     # hand side. Without it, the matrix object will use broadcasting, treating
     # larry objects as scalars.
-    __array_priority__ = 10                      
-        
+    __array_priority__ = 10
+
     def __add__(self, other):
         """
         Sum a larry with another larry, Numpy array, or scalar.
-        
+
         If two larrys are added then the larrys are joined with an inner join
         (i.e., the intersection of the labels).
-        
+
         See Also
         --------
         la.add: Sum of two larrys using given join and fill methods.
-        
+
         Examples
         --------
         >>> larry([1.0, 2.0]) + larry([2.0, 3.0])
@@ -661,45 +661,45 @@ class larry(object):
             0
             1
         x
-        array([ 3.,  5.])        
-        
+        array([ 3.,  5.])
+
         >>> y1 = larry([1,2], [['a', 'b']])
         >>> y2 = larry([1,2], [['b', 'c']])
         >>> y1 + y2
         label_0
             b
         x
-        array([3])        
-        
+        array([3])
+
         """
         if isinstance(other, larry):
             if self.label == other.label:
                 x = self.x + other.x
                 label = self.copylabel()
-                return larry(x, label, validate=False)                        
-            else:       
+                return larry(x, label, validate=False)
+            else:
                 x, y, label = self.__align(other)
                 x = x + y
                 return larry(x, label, validate=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x + other
             label = self.copylabel()
-            return larry(x, label, validate=False)                 
+            return larry(x, label, validate=False)
         raise TypeError('Input must be scalar, array, or larry.')
-    
+
     __radd__ = __add__
-    
+
     def __sub__(self, other):
         """
         Subtract a larry from another larry, Numpy array, or scalar.
-        
+
         If two larrys are subtracted then the larrys are joined with an inner
         join (i.e., the intersection of the labels).
-        
+
         See Also
         --------
         la.subtract: Difference of two larrys using given join and fill methods.
-        
+
         Examples
         --------
         >>> larry([1.0, 2.0]) - larry([2.0, 3.0])
@@ -707,86 +707,86 @@ class larry(object):
             0
             1
         x
-        array([-1., -1.])        
-        
+        array([-1., -1.])
+
         >>> y1 = larry([1,2], [['a', 'b']])
         >>> y2 = larry([1,2], [['b', 'c']])
         >>> y1 - y2
         label_0
             b
         x
-        array([1])        
-        """   
+        array([1])
+        """
         if isinstance(other, larry):
             if self.label == other.label:
                 x = self.x - other.x
                 label = self.copylabel()
-                return larry(x, label, validate=False)                          
-            else:          
-                x, y, label = self.__align(other)        
+                return larry(x, label, validate=False)
+            else:
+                x, y, label = self.__align(other)
                 x = x - y
                 return larry(x, label, validate=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x - other
             label = self.copylabel()
-            return larry(x, label, validate=False)       
+            return larry(x, label, validate=False)
         raise TypeError('Input must be scalar, array, or larry.')
-        
+
     def __rsub__(self, other):
         "Right subtract a larry with a another larry, Numpy array, or scalar."
-        return -self.__sub__(other)       
+        return -self.__sub__(other)
 
     def __div__(self, other):
         """
         Divide a larry with another larry, Numpy array, or scalar.
-        
+
         If two larrys are divided then the larrys are joined with an inner
         join (i.e., the intersection of the labels).
-        
+
         See Also
         --------
-        la.divide: divide two larrys element-wise using given join method.        
-        
+        la.divide: divide two larrys element-wise using given join method.
+
         Examples
-        -------- 
-        
+        --------
+
         >>> larry([1.0, 2.0]) / larry([2.0, 3.0])
         label_0
             0
             1
         x
-        array([ 0.5       ,  0.66666667])        
-        
+        array([ 0.5       ,  0.66666667])
+
         >>> y1 = larry([1,2], [['a', 'b']])
         >>> y2 = larry([1,2], [['b', 'c']])
         >>> y1 / y2
         label_0
             b
         x
-        array([2])        
-               
-        """    
+        array([2])
+
+        """
         if isinstance(other, larry):
             if self.label == other.label:
                 x = self.x / other.x
                 label = self.copylabel()
-                return larry(x, label, validate=False)                          
-            else:          
-                x, y, label = self.__align(other)        
+                return larry(x, label, validate=False)
+            else:
+                x, y, label = self.__align(other)
                 x = x / y
                 return larry(x, label, validate=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x / other
             label = self.copylabel()
-            return larry(x, label, validate=False)        
+            return larry(x, label, validate=False)
         raise TypeError('Input must be scalar, array, or larry.')
-        
+
     def __rdiv__(self, other):
         "Right divide a larry with a another larry, Numpy array, or scalar."
         if isinstance(other, larry):
             msg = 'I could not come up with a problem that used this code '
             msg += 'so I removed it. Send me your example and I will fix.'
-            raise RuntimeError(msg)                   
+            raise RuntimeError(msg)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             label = self.copylabel()
             x = other / self.x
@@ -796,91 +796,91 @@ class larry(object):
     def __truediv__(self, other):
         """
         True divide a larry with another larry, Numpy array, or scalar.
-        
+
         If two larrys are divided then the larrys are joined with an inner
         join (i.e., the intersection of the labels).
-        
+
         See Also
         --------
-        la.divide: divide two larrys element-wise using given join method.        
-        
+        la.divide: divide two larrys element-wise using given join method.
+
         Examples
-        -------- 
-        
+        --------
+
         >>> larry([1.0, 2.0]) / larry([2.0, 3.0])
         label_0
             0
             1
         x
-        array([ 0.5       ,  0.66666667])        
-        
+        array([ 0.5       ,  0.66666667])
+
         >>> y1 = larry([1,2], [['a', 'b']])
         >>> y2 = larry([1,2], [['b', 'c']])
         >>> y1 / y2
         label_0
             b
         x
-        array([2.])        
-               
-        """    
+        array([2.])
+
+        """
         if isinstance(other, larry):
             if self.label == other.label:
                 x = self.x / other.x
                 label = self.copylabel()
-                return larry(x, label, validate=False)                          
-            else:          
-                x, y, label = self.__align(other)        
+                return larry(x, label, validate=False)
+            else:
+                x, y, label = self.__align(other)
                 x = x / y
                 return larry(x, label, validate=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x / other
             label = self.copylabel()
-            return larry(x, label, validate=False)        
+            return larry(x, label, validate=False)
         raise TypeError('Input must be scalar, array, or larry.')
 
     def __floordiv__(self, other):
         """
         Floor divide a larry with another larry, Numpy array, or scalar.
-        
+
         If two larrys are divided then the larrys are joined with an inner
         join (i.e., the intersection of the labels).
-        
+
         See Also
         --------
-        la.divide: divide two larrys element-wise using given join method.        
-        
+        la.divide: divide two larrys element-wise using given join method.
+
         Examples
-        -------- 
-        
+        --------
+
         >>> larry([1.0, 2.0]) // larry([2.0, 3.0])
         label_0
             0
             1
         x
         array([ 0.,  0.])
-        
+
         >>> y1 = larry([1,2], [['a', 'b']])
         >>> y2 = larry([1,2], [['b', 'c']])
         >>> y1 // y2
         label_0
             b
         x
-        array([2])        
-               
-        """    
+        array([2])
+
+        """
         if isinstance(other, larry):
             if self.label == other.label:
                 x = self.x // other.x
                 label = self.copylabel()
-                return larry(x, label, validate=False)                          
-            else:          
-                x, y, label = self.__align(other)        
+                return larry(x, label, validate=False)
+            else:
+                x, y, label = self.__align(other)
                 x = x // y
                 return larry(x, label, validate=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x // other
             label = self.copylabel()
-            return larry(x, label, validate=False)        
+            return larry(x, label, validate=False)
         raise TypeError('Input must be scalar, array, or larry.')
 
     def __rtruediv__(self, other):
@@ -888,7 +888,7 @@ class larry(object):
         if isinstance(other, larry):
             msg = 'I could not come up with a problem that used this code '
             msg += 'so I removed it. Send me your example and I will fix.'
-            raise RuntimeError(msg)                   
+            raise RuntimeError(msg)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             label = self.copylabel()
             x = other / self.x
@@ -900,24 +900,24 @@ class larry(object):
         if isinstance(other, larry):
             msg = 'I could not come up with a problem that used this code '
             msg += 'so I removed it. Send me your example and I will fix.'
-            raise RuntimeError(msg)                   
+            raise RuntimeError(msg)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             label = self.copylabel()
             x = other // self.x
             return larry(x, label, validate=False)
         raise TypeError('Input must be scalar, array, or larry.')
-        
-    def __mul__(self, other): 
+
+    def __mul__(self, other):
         """
         Multiply a larry with another larry, Numpy array, or scalar.
 
         If two larrys are multiplied then the larrys are joined with an inner
         join (i.e., the intersection of the labels).
-        
+
         See Also
         --------
         la.multiply: Multiply two larrys element-wise using given join method.
-        
+
         Examples
         --------
         >>> larry([1.0, 2.0]) * larry([2.0, 3.0])
@@ -925,30 +925,30 @@ class larry(object):
             0
             1
         x
-        array([ 2.,  6.])        
-         
+        array([ 2.,  6.])
+
         >>> y1 = larry([1,2], [['a', 'b']])
         >>> y2 = larry([1,2], [['b', 'c']])
         >>> y1 * y2
         label_0
             b
         x
-        array([2])        
-                
-        """      
+        array([2])
+
+        """
         if isinstance(other, larry):
             if self.label == other.label:
                 x = self.x * other.x
                 label = self.copylabel()
-                return larry(x, label, validate=False)                          
-            else:           
+                return larry(x, label, validate=False)
+            else:
                 x, y, label = self.__align(other)
                 x = x * y
                 return larry(x, label, validate=False)
         if np.isscalar(other) or isinstance(other, np.ndarray):
             x = self.x * other
             label = self.copylabel()
-            return larry(x, label, validate=False)   
+            return larry(x, label, validate=False)
         raise TypeError('Input must be scalar, array, or larry.')
 
     __rmul__ = __mul__
@@ -956,12 +956,12 @@ class larry(object):
     def __and__(self, other):
         """
         Logical and a larry with another larry, Numpy array, or scalar.
-        
+
         Notes
         -----
         Numpy defines & as bitwise_and; here & is defined as
         numpy.logical_and.
-        
+
         Examples
         --------
         >>> (larry([1.0, 2.0]) > 1) & (larry([2.0, 3.0]) > 1)
@@ -969,27 +969,27 @@ class larry(object):
             0
             1
         x
-        array([False,  True], dtype=bool)        
-        
+        array([False,  True], dtype=bool)
+
         >>> y1 = larry([1,2], [['a', 'b']])
         >>> y2 = larry([1,2], [['b', 'c']])
         >>> (y1 > 0) & (y2 > 0)
         label_0
             b
         x
-        array([ True], dtype=bool)                 
-        
-        """    
+        array([ True], dtype=bool)
+
+        """
         if isinstance(other, larry):
             if self.label == other.label:
                 x = np.logical_and(self.x, other.x)
                 label = self.copylabel()
-                return larry(x, label, validate=False)                      
-            else:          
+                return larry(x, label, validate=False)
+            else:
                 x, y, label = self.__align(other)
                 x = np.logical_and(x, y)
                 return larry(x, label, validate=False)
-        if np.isscalar(other) or isinstance(other, np.ndarray):            
+        if np.isscalar(other) or isinstance(other, np.ndarray):
             x = np.logical_and(self.x, other)
             label = self.copylabel()
             return larry(x, label, validate=False)
@@ -1000,7 +1000,7 @@ class larry(object):
     def __or__(self, other):
         """
         Logical or a larry with another larry, Numpy array, or scalar.
-        
+
         Notes
         -----
         Numpy defines | as bitwise_or; here & is defined as
@@ -1013,8 +1013,8 @@ class larry(object):
             0
             1
         x
-        array([ True,  True], dtype=bool)        
-        
+        array([ True,  True], dtype=bool)
+
         >>> y1 = larry([1,2], [['a', 'b']])
         >>> y2 = larry([1,2], [['b', 'c']])
         >>> (y1 > 0) | (y2 > 0)
@@ -1022,18 +1022,18 @@ class larry(object):
             b
         x
         array([ True], dtype=bool)
-                        
-        """     
+
+        """
         if isinstance(other, larry):
             if self.label == other.label:
                 x = np.logical_or(self.x, other.x)
                 label = self.copylabel()
-                return larry(x, label, validate=False)                      
-            else:          
+                return larry(x, label, validate=False)
+            else:
                 x, y, label = self.__align(other)
                 x = np.logical_or(x, y)
                 return larry(x, label, validate=False)
-        if np.isscalar(other) or isinstance(other, np.ndarray):            
+        if np.isscalar(other) or isinstance(other, np.ndarray):
             x = np.logical_or(self.x, other)
             label = self.copylabel()
             return larry(x, label, validate=False)
@@ -1048,8 +1048,8 @@ class larry(object):
             raise IndexError(msg)
         label = []
         x = self.x
-        y = other.x 
-        ax = -1           
+        y = other.x
+        ax = -1
         for ls, lo in zip(self.label, other.label):
             ax += 1
             if ls == lo:
@@ -1060,12 +1060,12 @@ class larry(object):
                 ids = listmap(ls, lab)
                 ido = listmap(lo, lab)
                 x = x.take(ids, ax)
-                y = y.take(ido, ax)    
+                y = y.take(ido, ax)
             label.append(lab)
         return x, y, label
-                  
+
     # Reduce functions -------------------------------------------------------
-        
+
     def sum(self, axis=None):
         """
         Sum of values along axis, ignoring NaNs.
@@ -1074,21 +1074,21 @@ class larry(object):
         ----------
         axis : {None, integer}, optional
             Axis to sum along or sum over all (None, default).
-            
+
         Returns
         -------
         d : {larry, scalar}
             When axis is an integer a larry is returned. When axis is None
             (default) a scalar is returned (assuming larry contains scalars).
-            
+
         Raises
         ------
         ValueError
             If axis is not an integer or None.
-            
+
         Examples
         --------
-        >>> from la import nan 
+        >>> from la import nan
         >>> y = larry([[nan, 2], [3,  4]])
         >>> y.sum()
         9.0
@@ -1098,9 +1098,9 @@ class larry(object):
             1
         x
         array([ 3.,  6.])
-                    
-        """   
-        return self.__reduce(bn.nansum, axis=axis)    
+
+        """
+        return self.__reduce(bn.nansum, axis=axis)
 
     def prod(self, axis=None):
         """
@@ -1111,27 +1111,27 @@ class larry(object):
         axis : {None, int}, optional
             Axis to find the product along or find the product over a
             all axes (None, default).
-            
+
         Returns
         -------
         d : {larry, scalar}
             Returns a larry or a scalar. When axis is None (default) the larry
             is flattened and a scalar, the product of all elements, is
             returned; when larry is 1d and axis=0 a scalar is returned.
-            
+
         See Also
         --------
-        la.larry.cumprod: Cumulative product, ignoring NaNs.  
+        la.larry.cumprod: Cumulative product, ignoring NaNs.
 
         Notes
         -----
         NaNs are ignored except for when all elements in a product are NaN.
         In that case, a NaN is returned. Also the product of an empty
         larry is NaN.
-            
+
         Examples
         --------
-        >>> from la import nan        
+        >>> from la import nan
         >>> y = larry([[nan, 2], [3,  4]])
         >>> y.prod()
         24.0
@@ -1141,10 +1141,10 @@ class larry(object):
             1
         x
         array([ 3.,  8.])
-        
+
         If all elements are NaN along the specified axis then NaN is returned:
-        
-        >>> from la import nan 
+
+        >>> from la import nan
         >>> y = larry([[nan, 2], [nan,  4]])
         >>> y.prod(axis=0)
         label_0
@@ -1152,7 +1152,7 @@ class larry(object):
             1
         x
         array([ NaN,   8.])
-                    
+
         """
         y = self.copy()
         idx = np.isnan(y.x)
@@ -1164,7 +1164,7 @@ class larry(object):
                 y = np.nan
         else:
             np.putmask(y.x, idx, np.nan)
-        return y 
+        return y
 
     def mean(self, axis=None):
         """
@@ -1192,11 +1192,11 @@ class larry(object):
             0
             1
         x
-        array([ 3.,  3.])       
-                    
+        array([ 3.,  3.])
+
         """
         return self.__reduce(bn.nanmean, axis=axis)
-        
+
     def geometric_mean(self, axis=None, check_for_greater_than_zero=True):
         """
         Geometric mean of values along axis, ignoring NaNs.
@@ -1208,7 +1208,7 @@ class larry(object):
             geometric mean (None, default).
         check_for_greater_than_zero : bool
             If True (default) an exception is raised if any element is zero or
-            less.    
+            less.
 
         Returns
         -------
@@ -1226,8 +1226,8 @@ class larry(object):
             0
             1
         x
-        array([ 3.        ,  2.82842712])      
-                    
+        array([ 3.        ,  2.82842712])
+
         """
         return self.__reduce(geometric_mean, axis=axis,
                       check_for_greater_than_zero=check_for_greater_than_zero)
@@ -1241,13 +1241,13 @@ class larry(object):
         axis : {None, integer}, optional
             Axis to find the median along (0 or 1) or the global median (None,
             default).
-            
+
         Returns
         -------
         d : {larry, scalar}
             When axis is an integer a larry is returned. When axis is None
             (default) a scalar is returned (assuming larry contains scalars).
-            
+
         Raises
         ------
         ValueError
@@ -1265,10 +1265,10 @@ class larry(object):
             1
         x
         array([ 3.,  3.])
-                    
+
         """
-        return self.__reduce(bn.nanmedian, axis=axis) 
-            
+        return self.__reduce(bn.nanmedian, axis=axis)
+
     def std(self, axis=None, ddof=0):
         """
         Standard deviation of values along axis, ignoring NaNs.
@@ -1281,9 +1281,9 @@ class larry(object):
         An example of a one-pass algorithm:
 
             >>> np.sqrt((arr*arr).mean() - arr.mean()**2)
-        
-        An example of a two-pass algorithm:    
-        
+
+        An example of a two-pass algorithm:
+
             >>> np.sqrt(((arr - arr.mean())**2).mean())
 
         Note in the two-pass algorithm the mean must be found (first pass)
@@ -1305,15 +1305,15 @@ class larry(object):
         d : {larry, scalar}
             When axis is an integer a larry is returned. When axis is None
             (default) a scalar is returned (assuming larry contains scalars).
-            
+
         Raises
         ------
         ValueError
             If axis is not an integer or None.
 
         Examples
-        -------- 
-        >>> from la import nan 
+        --------
+        >>> from la import nan
         >>> y = larry([[nan, 2], [3,  4]])
         >>> y.std()
         0.81649658092772603
@@ -1322,15 +1322,15 @@ class larry(object):
             0
             1
         x
-        array([ 0.,  1.])  
-                         
-        """      
-        return self.__reduce(bn.nanstd, axis=axis, ddof=ddof)  
-        
+        array([ 0.,  1.])
+
+        """
+        return self.__reduce(bn.nanstd, axis=axis, ddof=ddof)
+
     def var(self, axis=None, ddof=0):
         """
         Variance of values along axis, ignoring NaNs.
-        
+
         `float64` intermediate and return values are used for integer inputs.
 
         Instead of a faster one-pass algorithm, a more stable two-pass
@@ -1339,9 +1339,9 @@ class larry(object):
         An example of a one-pass algorithm:
 
             >>> np.sqrt((arr*arr).mean() - arr.mean()**2)
-        
-        An example of a two-pass algorithm:    
-        
+
+        An example of a two-pass algorithm:
+
             >>> np.sqrt(((arr - arr.mean())**2).mean())
 
         Note in the two-pass algorithm the mean must be found (first pass)
@@ -1362,14 +1362,14 @@ class larry(object):
         d : {larry, scalar}
             When axis is an integer a larry is returned. When axis is None
             (default) a scalar is returned (assuming larry contains scalars).
-            
+
         Raises
         ------
         ValueError
             If axis is not an integer or None.
 
         Examples
-        -------- 
+        --------
         >>> from la import nan
         >>> y = larry([[nan, 2], [3,  4]])
         >>> y.var()
@@ -1380,10 +1380,10 @@ class larry(object):
             1
         x
         array([ 0.,  1.])
-                    
-        """         
-        return self.__reduce(bn.nanvar, axis=axis, ddof=ddof)  
-                            
+
+        """
+        return self.__reduce(bn.nanvar, axis=axis, ddof=ddof)
+
     def max(self, axis=None):
         """
         Maximum values along axis, ignoring NaNs.
@@ -1393,20 +1393,20 @@ class larry(object):
         axis : {None, integer}, optional
             Axis to find the max along (integer) or the global max (None,
             default).
-            
+
         Returns
         -------
         d : {larry, scalar}
             When axis is an integer a larry is returned. When axis is None
             (default) a scalar is returned (assuming larry contains scalars).
-            
+
         Raises
         ------
         ValueError
             If axis is not an integer or None.
 
         Examples
-        -------- 
+        --------
         >>> from la import nan
         >>> y = larry([[nan, 2], [3,  4]])
         >>> y.max()
@@ -1417,10 +1417,10 @@ class larry(object):
             1
         x
         array([ 3.,  4.])
-                    
-        """            
-        return self.__reduce(bn.nanmax, axis=axis)             
-           
+
+        """
+        return self.__reduce(bn.nanmax, axis=axis)
+
     def min(self, axis=None):
         """
         Minimum values along axis, ignoring NaNs.
@@ -1430,20 +1430,20 @@ class larry(object):
         axis : {None, integer}, optional
             Axis to find the min along (integer) or the global min (None,
             default).
-            
+
         Returns
         -------
         d : {larry, scalar}
             When axis is an integer a larry is returned. When axis is None
             (default) a scalar is returned (assuming larry contains scalars).
-            
+
         Raises
         ------
         ValueError
             If axis is not an integer or None.
 
         Examples
-        -------- 
+        --------
         >>> from la import nan
         >>> y = larry([[nan, 2], [3,  4]])
         >>> y.min()
@@ -1454,9 +1454,9 @@ class larry(object):
             1
         x
         array([ 3.,  2.])
-                    
+
         """
-        return self.__reduce(bn.nanmin, axis=axis)  
+        return self.__reduce(bn.nanmin, axis=axis)
 
     def __reduce(self, op, default=np.nan, **kwargs):
         axis = kwargs['axis']
@@ -1482,15 +1482,15 @@ class larry(object):
             x = op(self.x, **kwargs)
             if np.isscalar(x):
                 return x
-            else:    
+            else:
                 label = self.copylabel()
                 label.pop(axis)
-                return larry(x, label, validate=False)      
+                return larry(x, label, validate=False)
         elif axis is None:
             return op(self.x, **kwargs)
         else:
             raise ValueError('axis should be an integer or None')
-        
+
     def any(self, axis=None):
         """
         True if any element along specified axis is True; False otherwise.
@@ -1499,21 +1499,21 @@ class larry(object):
         ----------
         axis : {int, None}, optional
             The axis over which to reduce the truth. By default (axis=None)
-            the larry is flattened before the truth is found. 
-        
+            the larry is flattened before the truth is found.
+
         Returns
         -------
         out : {larry, True, False}
             If `axis` is None then returns True if any data element of the
             larry (not including the label) is True; False otherwise. If
             `axis` is an integer then a bool larry is returned.
-            
+
         Notes
         -----
-        As in Numpy, NaN is True since it is not equal to 0.    
+        As in Numpy, NaN is True since it is not equal to 0.
 
         Examples
-        -------- 
+        --------
         >>> y = larry([[1, 2], [3,  4]]) < 2
         >>> y
         label_0
@@ -1533,33 +1533,33 @@ class larry(object):
             1
         x
         array([ True, False], dtype=bool)
-        
+
         """
         return self.__reduce(np.any, default=np.False_, axis=axis)
-        
+
     def all(self, axis=None):
         """
         True if all elements along specified axis are True; False otherwise.
-        
+
         Parameters
         ----------
         axis : {int, None}, optional
             The axis over which to reduce the truth. By default (axis=None)
-            the larry is flattened before the truth is found.      
-        
+            the larry is flattened before the truth is found.
+
         Returns
         -------
         out : {larry, True, False}
             If `axis` is None then returns True if all data elements of the
             larry (not including the label) are True; False otherwise. If
             `axis` is an integer then a bool larry is returned.
-            
+
         Notes
         -----
-        As in Numpy, NaN is True since it is not equal to 0.                    
+        As in Numpy, NaN is True since it is not equal to 0.
 
         Examples
-        -------- 
+        --------
         >>> y = larry([[1, 2], [3,  4]]) > 1
         >>> y
         label_0
@@ -1579,24 +1579,24 @@ class larry(object):
             1
         x
         array([False,  True], dtype=bool)
-        
+
         """
-        return self.__reduce(np.all, default=~np.False_, axis=axis) 
-            
+        return self.__reduce(np.all, default=~np.False_, axis=axis)
+
     def lastrank(self, axis=-1, decay=0):
         """
         The ranking of the last element along the axis, ignoring NaNs.
-        
+
         The ranking is normalized to be between -1 and 1 instead of the more
         common 1 and N. The results are adjusted for ties. Suitably slicing
         the output of the `ranking` method will give the same result as
-        `lastrank`. The only difference is that `lastrank` is faster.   
+        `lastrank`. The only difference is that `lastrank` is faster.
 
         Parameters
         ----------
         axis : int, optional
             The axis over which to rank. By default (axis=-1) the ranking
-            (and reducing) is performed over the last axis.          
+            (and reducing) is performed over the last axis.
         decay : scalar, optional
             Exponential decay strength. Cannot be negative. The default
             (decay=0) is no decay. In normal ranking (decay=0) all elements
@@ -1605,84 +1605,84 @@ class larry(object):
             exponentially decayed ranking the ordering of the elements
             influences the ranking: elements nearer the last element get more
             weight.
-            
+
         Returns
         -------
         d : larry
             In the case of, for example, a 2d larry of shape (n, m) and
             axis=1, the output will contain the rank (normalized to be between
             -1 and 1 and adjusted for ties) of the the last element of each
-            row. The output in this example will have shape (n,). 
-            
+            row. The output in this example will have shape (n,).
+
         See Also
         --------
-        la.larry.ranking: Rank elements treating NaN as missing. 
+        la.larry.ranking: Rank elements treating NaN as missing.
         la.larry.move_ranking: Moving rank in a given window along axis.
-                
+
         Examples
-        -------- 
+        --------
         Create a larry:
-                     
+
         >>> y1 = larry([1, 2, 3])
-        
+
         What is the rank of the last element (the value 3 in this example)?
         It is the largest element so the rank is 1.0:
-        
+
         >>> y1.lastrank()
         1.0
-        
+
         Now let's try an example where the last element has the smallest
         value:
-        
+
         >>> y2 = larry([3, 2, 1])
         >>> y2.lastrank()
         -1.0
-        
+
         Here's an example where the last element is not the minimum or maximum
         value:
-        
+
         >>> y3 = larry([1, 3, 4, 5, 2])
         >>> y3.lastrank()
         -0.5
-        
+
         Finally, let's add a large decay. The decay means that the elements
         closest to the last element receive the most weight. Because the
         decay is large, the first element (the value 1) doesn't get any weight
         and therefore the last element (2) becomes the smallest element:
-        
+
         >>> y3.lastrank(decay=10)
         -1.0
-                    
+
         """
         return self.__reduce(lastrank, axis=axis, decay=decay)
-        
+
     # Comparision ------------------------------------------------------------
-        
+
     def __eq__(self, other):
         "Element by element equality (==) comparison."
-        return self.__compare(other, '==')                   
+        return self.__compare(other, '==')
 
     def __ne__(self, other):
         "Element by element inequality (!=) comparison."
-        return self.__compare(other, '!=')                       
+        return self.__compare(other, '!=')
 
     def __lt__(self, other):
-        "Element by element 'less than' (<) comparison."    
-        return self.__compare(other, '<')  
+        "Element by element 'less than' (<) comparison."
+        return self.__compare(other, '<')
 
     def __gt__(self, other):
-        "Element by element 'greater than' (>) comparison."    
-        return self.__compare(other, '>') 
+        "Element by element 'greater than' (>) comparison."
+        return self.__compare(other, '>')
 
     def __le__(self, other):
-        "Element by element 'less than or equal to' (<=) comparison."    
-        return self.__compare(other, '<=') 
+        "Element by element 'less than or equal to' (<=) comparison."
+        return self.__compare(other, '<=')
 
     def __ge__(self, other):
-        "Element by element 'greater than or equal to' (>=) comparison."     
-        return self.__compare(other, '>=') 
-  
-    def __compare(self, other, op):         
+        "Element by element 'greater than or equal to' (>=) comparison."
+        return self.__compare(other, '>=')
+
+    def __compare(self, other, op):
         if (np.isscalar(other) or isinstance(other, np.ndarray) or
             (type(other) == list) or (type(other) == tuple)):
             if op == '==':
@@ -1690,13 +1690,13 @@ class larry(object):
             elif op == '!=':
                 x = self.x != other
             elif op == '<':
-                x = self.x < other           
+                x = self.x < other
             elif op == '>':
-                x = self.x > other           
+                x = self.x > other
             elif op == '<=':
-                x = self.x <= other           
+                x = self.x <= other
             elif op == '>=':
-                x = self.x >= other           
+                x = self.x >= other
             else:
                 raise ValueError('Unknown comparison operator')
             if isinstance(x, np.ndarray):
@@ -1713,11 +1713,11 @@ class larry(object):
             elif op == '<':
                 x = x < y
             elif op == '>':
-                x = x > y            
+                x = x > y
             elif op == '<=':
-                x = x <= y            
+                x = x <= y
             elif op == '>=':
-                x = x >= y                              
+                x = x >= y
             else:
                 raise ValueError('Unknown comparison operator')
             return larry(x, label, validate=False)
@@ -1725,10 +1725,10 @@ class larry(object):
             raise TypeError('Input must be scalar, numpy array, or larry.')
 
     # Get and set ------------------------------------------------------------
-    
+
     def __getitem__(self, index):
         """Index into a larry.
-        
+
         Examples
         --------
         >>> y = larry([[1, 2], [3,  4]])
@@ -1749,12 +1749,12 @@ class larry(object):
         x
         array([[2],
                [4]])
-        
+
         """
         validate = True
         typidx = type(index)
         if isscalar(index):
-            index = int(index)                
+            index = int(index)
             if index >= self.shape[0]:
                 raise IndexError('index out of range')
             x = self.x[index]
@@ -1797,10 +1797,10 @@ class larry(object):
                                 lab = [self.label[ax][z] for z in idx]
                             except IndexError:
                                 raise IndexError('index out of range')
-                        validate = True 
+                        validate = True
                         allscalar = False
                     elif typ is slice:
-                        lab = self.label[ax][idx] 
+                        lab = self.label[ax][idx]
                         allscalar = False
                     elif typ is larry:
                         if idx.dtype.type != np.bool_:
@@ -1824,7 +1824,7 @@ class larry(object):
                         raise IndexError(msg)
                 else:
                     lab = self.label[ax]
-                if lab is not None:     
+                if lab is not None:
                     label.append(lab)
             x = self.x[index]
             if allscalar:
@@ -1842,7 +1842,7 @@ class larry(object):
             label[0] = lab
             x = self.x.take(index, axis=0)
             validate = False
-        elif typidx is np.ndarray:    
+        elif typidx is np.ndarray:
             validate = False
             if index.ndim != 1:
                 msg = 'You can use a Numpy array for indexing, '
@@ -1864,7 +1864,7 @@ class larry(object):
                     raise IndexError("Duplicate labels along axis 0.")
                 x = self.x.take(index, axis=0)
             label = self.copylabel()
-            label[0] = lab                 
+            label[0] = lab
         elif typidx is larry:
             if index.dtype.type != np.bool_:
                 raise IndexError("If index is larry it must of bool dtype")
@@ -1880,7 +1880,7 @@ class larry(object):
             label = self.copylabel()
             label[0] = lab
             x = self.x[index.x]
-        else:        
+        else:
             msg = 'Only slice, integer, and seq (list, tuple, 1d array,'
             msg = msg + ' 1d bool larry) indexing supported'
             raise IndexError(msg)
@@ -1889,12 +1889,12 @@ class larry(object):
     def take(self, indices, axis):
         """
         A copy of the specified elements of a larry along an axis.
-        
+
         This method does the same thing as "fancy" indexing (indexing larrys
         using lists or Numpy arrays); however, it can be easier to use if you
         need elements along a given axis. It is also faster in many
         situations.
-        
+
         Parameters
         ----------
         indices : sequence
@@ -1902,17 +1902,17 @@ class larry(object):
             1d Numpy array or any other iterable object.
         axis : int
             The axis over which to select values.
-        
+
         Returns
         -------
         lar : larry
             A copy of the specified elements of a larry along the specifed
             axis.
-        
+
         Examples
         --------
         Take elements at index 0 and 2 from a 1d larry:
-        
+
         >>> y = larry([1, 2, 3])
         >>> y.take([0, 2], axis=0)
         label_0
@@ -1920,7 +1920,7 @@ class larry(object):
             2
         x
         array([1, 3])
-        
+
         Take columns 0 and 2 from a 2d larry:
 
         >>> y = la.rand(2, 3)
@@ -1936,7 +1936,7 @@ class larry(object):
                [ 0.75024392,  0.92896999]])
 
         The above is equivalent to (but faster than):
- 
+
         >>> y[:, [0, 2]]
         label_0
             0
@@ -1947,7 +1947,7 @@ class larry(object):
         x
         array([[ 0.07887698,  0.44490303],
                [ 0.75024392,  0.92896999]])
-       
+
         """
         label = self.copylabel()
         labelaxis = label[axis]
@@ -1958,32 +1958,32 @@ class larry(object):
         x = self.x.take(indices, axis)
         return larry(x, label, validate=False)
 
-    @property    
+    @property
     def lix(self):
         """
         Index into a larry using labels or index numbers or both.
-        
+
         In order to distinguish between labels and indices, label elements
         must be wrapped in a list while indices (integers) cannot be wrapped
         in a list. If you wrap indices in a list they will be interpreted as
         label elements.
-        
+
         When indexing with multi-element lists of labels along more than one
         axes, rectangular indexing is used instead of fancy indexing. Note
         that the corresponding situation with NumPy arrays would produce
         fancy indexing.
-        
+
         Slicing can be done with labels or indices or a combination of the
         two. A single element along an axis can be selected with a label or
         the index value. Several elements along an axis can be selected with
         a multi-element list of labels. Lists of indices are not allowed.
-        
+
         Examples
         --------
-        
+
         Let's start by making a larry that we can use to demonstrate idexing
         by label:
-        
+
         >>> y = larry(range(6), [['a', 'b', 3, 4, 'e', 'f']])
 
         We can select the first element of the larry using the index value, 0,
@@ -1993,9 +1993,9 @@ class larry(object):
         0
         >>> y.lix[['a']]
         0
-        
+
         We can slice with index values or with labels:
-        
+
         >>> y.lix[0:]
         label_0
             a
@@ -2006,7 +2006,7 @@ class larry(object):
             f
         x
         array([0, 1, 2, 3, 4, 5])
-        
+
         >>> y.lix[['a']:]
         label_0
             a
@@ -2017,7 +2017,7 @@ class larry(object):
             f
         x
         array([0, 1, 2, 3, 4, 5])
-         
+
         >>> y.lix[['a']:['e']]
         label_0
             a
@@ -2026,7 +2026,7 @@ class larry(object):
             4
         x
         array([0, 1, 2, 3])
-        
+
         >>> y.lix[['a']:['e']:2]
         label_0
             a
@@ -2046,7 +2046,7 @@ class larry(object):
             4
         x
         array([0, 1, 2, 3])
-        
+
         >>> y.lix[['a']:[4]]
         label_0
             a
@@ -2054,9 +2054,9 @@ class larry(object):
             3
         x
         array([0, 1, 2])
-        
+
         Here's a demonstration of rectangular indexing:
-        
+
         >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
         >>> y.lix[['a', 'b'], ['c', 'd']]
         label_0
@@ -2068,25 +2068,25 @@ class larry(object):
         x
         array([[1, 2],
                [3, 4]])
-               
+
         The rectangular indexing above is very different from how Numpy arrays
-        behave. The corresponding example with a NumyPy array:       
+        behave. The corresponding example with a NumyPy array:
 
         >>> x = np.array([[1, 2], [3, 4]])
         >>> x[[0, 1], [0, 1]]
-        array([1, 4])       
-        
-        """                       
+        array([1, 4])
+
+        """
         return Lix(self)
-        
+
     def __setitem__(self, index, value):
         """
         Assign values to a subset of a larry using indexing to select subset.
-        
+
         Examples
         --------
         Let's set all elements of a larry with values less then 3 to zero:
-                
+
         >>> import numpy as np
         >>> x = np.array([[1, 2], [3, 4]])
         >>> label = [['a', 'b'], [8, 10]]
@@ -2102,7 +2102,7 @@ class larry(object):
         x
         array([[0, 0],
                [3, 4]])
-        
+
         """
         if isinstance(index, larry):
             if self.label == index.label:
@@ -2111,7 +2111,7 @@ class larry(object):
                 # Could use morph to do this, if every row and column of self
                 # is in index, but I think it is better to raise an IndexError
                 msg = 'Indexing with a larry that is not aligned'
-                raise IndexError(msg) 
+                raise IndexError(msg)
         else:
             if isinstance(value, larry):
                 # TODO The line below (self[index].label) is slow. Need a
@@ -2119,17 +2119,17 @@ class larry(object):
                 # Then use that function in getitem
                 if self[index].label == value.label:
                     self.x[index] = value.x
-                else:    
+                else:
                     raise IndexError('larrys are not aligned.')
             else:
                 self.x[index] = value
-            
+
     def set(self, label, value):
         """
         Set one x element given a list of label names.
-        
+
         Give one label name (not label index) for each dimension.
-        
+
         Parameters
         ----------
         label : {list, tuple}
@@ -2137,17 +2137,17 @@ class larry(object):
             for row label 'a' and column label 7: ('a', 7).
         value : Float, string, etc.
             Value to place in the single cell specified by label.
-            
+
         Returns
         -------
         None
-        
+
         Raises
         ------
         ValueError
             If the length of label is not equal to the number of dimensions of
-            larry.        
-        
+            larry.
+
         Examples
         --------
         >>> y = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
@@ -2162,62 +2162,62 @@ class larry(object):
         x
         array([[ 1, 99],
                [ 3,  4]])
-        
+
         """
         if len(label) != self.ndim:
             raise ValueError('Must have exactly one label per dimension')
         index = []
         for i in xrange(self.ndim):
-            index.append(self.labelindex(label[i], axis=i))    
-        self.x[tuple(index)] = value        
+            index.append(self.labelindex(label[i], axis=i))
+        self.x[tuple(index)] = value
 
     def get(self, label):
         """
         Get one x element given a list of label names.
-        
+
         Give one label name (not label index) for each dimension.
-        
+
         Parameters
         ----------
         label : {list, tuple}
             List or tuple of one label name for each dimension. For example,
             for row label 'a' and column label 7: ('a', 7).
-            
+
         Returns
         -------
         out : scalar, string, etc.
             Value of the single cell specified by label.
-        
+
         Raises
         ------
         ValueError
             If the length of label is not equal to the number of dimensions of
-            larry.        
+            larry.
 
         Examples
         --------
         >>> y = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
         >>> y.get(['r0', 'c1'])
         2
-        
-        """    
+
+        """
         if len(label) != self.ndim:
             raise ValueError('Must have exactly one label per dimension')
         index = []
         for i in xrange(self.ndim):
-            index.append(self.labelindex(label[i], axis=i))    
+            index.append(self.labelindex(label[i], axis=i))
         return self.x[tuple(index)]
-                
+
     def getx(self, copy=True):
         """
         Return a copy of the x data or a reference to it.
-        
+
         Parameters
         ----------
         copy : {True, False}, optional
             Return a copy (True, default) of the x values or a reference
             (False) to it.
-            
+
         Returns
         -------
         out : array
@@ -2234,41 +2234,41 @@ class larry(object):
         >>> x = y.getx(copy=False)
         >>> x is y.x
         True
-               
+
         """
         if copy:
             return self.x.copy()
         else:
             return self.x
-            
+
     @property
     def A(self):
         """
         Return a reference to the underlying Numpy array.
-        
+
         Examples
         --------
         >>> y = larry([1, 2, 3])
         >>> y.A
         array([1, 2, 3])
         >>> type(y.A)
-        <type 'numpy.ndarray'>        
-        
+        <type 'numpy.ndarray'>
+
         """
-        return self.x            
-                    
+        return self.x
+
     def getlabel(self, axis, copy=True):
         """
         Return a copy of the label or a reference to it.
-        
+
         Parameters
         ----------
         axis : int
-            The `axis` identifies the label you wish to get.         
+            The `axis` identifies the label you wish to get.
         copy : {True, False}, optional
             Return a copy (True, default) of the label or a reference (False)
             to it.
-            
+
         Returns
         -------
         out : list
@@ -2277,15 +2277,15 @@ class larry(object):
         Examples
         --------
         Get a copy of the label:
-        
+
         >>> y = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
         >>> y.getlabel(axis=0)
         ['r0', 'r1']
         >>> y.getlabel(axis=1)
         ['c0', 'c1']
-        
+
         The difference between a copy and a reference to the label:
-        
+
         >>> label = y.getlabel(0)
         >>> label == y.label[0]
         True
@@ -2293,41 +2293,41 @@ class larry(object):
         False
         >>> label = y.getlabel(0, copy=False)
         >>> label is y.label[0]
-        True        
-               
+        True
+
         """
         if axis >= self.ndim:
             raise IndexError('axis out of range')
-        label = self.label[axis]    
+        label = self.label[axis]
         if copy:
             label =  list(label)
-        return label            
-            
+        return label
+
     def pull(self, name, axis):
         """
         Pull out the values for a given label name along a specified axis.
-        
+
         A view of the data (but a copy of the label) is returned and the
         dimension is reduced by one.
-        
+
         Parameters
         ----------
         name : scalar, string, etc.
             Label name.
         axis : integer
             The axis the label name is in.
-            
+
         Returns
         -------
         out : {view of larry, scalar}
             A view of the larry with the dimension reduced by one is returned
             unless the larry is alread 1d, then a scalar is returned.
-            
+
         Raises
         ------
         ValueError
             If the axis is None.
-            
+
         Examples
         --------
         >>> y = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
@@ -2352,33 +2352,33 @@ class larry(object):
         x
         array([[1, 2],
                [3, 4]])
-                        
+
         """
         if axis is None:
             raise ValueError('axis cannot be None')
         label = list(self.label)
-        label.pop(axis)  
+        label.pop(axis)
         idx = self.labelindex(name, axis)
-        index = [slice(None)] * self.ndim 
+        index = [slice(None)] * self.ndim
         index[axis] = idx
         x = self.x[index]
         if x.shape == (1,):
             return x[0]
-        return larry(x, label)            
-        
+        return larry(x, label)
+
     def fill(self, fill_value):
         """
         Inplace filling of data array with specified value.
-        
+
         Parameters
         ----------
         fill_value : {scalar, string, etc}
             Value to replace every element of the data array.
-            
+
         Returns
         -------
         out : None
-        
+
         Examples
         --------
         >>> y = larry([0, 1])
@@ -2388,21 +2388,21 @@ class larry(object):
             0
             1
         x
-        array([9, 9])        
-                
+        array([9, 9])
+
         """
         self.x.fill(fill_value)
-        
+
     def keep_label(self, op, value, axis):
         """
         Keep labels (and corresponding values) that satisfy conditon.
-        
+
         Keep labels that satify:
-        
+
                             label[`axis`] `op` `value`,
-                       
-        where `op` can be '==', '>', '<', '>=', '<=', '!=', 'in', 'not in'.               
-        
+
+        where `op` can be '==', '>', '<', '>=', '<=', '!=', 'in', 'not in'.
+
         Parameters
         ----------
         op : string
@@ -2413,20 +2413,20 @@ class larry(object):
             then value is an integer.
         axis : integer
             axis over which to test condiction.
-        
+
         Returns
         -------
         out : larry
             Returns a copy with only the labels and corresponding values that
             satisfy the specified condition.
-            
+
         Raises
         ------
         ValueError
             If `op` is unknown or if `axis` is None.
         IndexError
             If `axis` is out of range.
-            
+
         Examples
         --------
         >>> y = larry([1, 2, 3, 4], [['a', 'b', 'c', 'd']])
@@ -2435,7 +2435,7 @@ class larry(object):
             a
             b
         x
-        array([1, 2])                    
+        array([1, 2])
 
         """
         ops = ('==', '>', '<', '>=', '<=', '!=', 'in', 'not in')
@@ -2448,28 +2448,28 @@ class larry(object):
         y = self.copy()
 
         if op == '==':
-            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis])
                         if z == value]
         elif op == '>':
-            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis])
                         if z > value]
         elif op == '<':
-            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis])
                         if z < value]
         elif op == '>=':
-            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis])
                         if z >= value]
         elif op == '<=':
-            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis])
                         if z <= value]
         elif op == '!=':
-            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis])
                         if z != value]
         elif op == 'in':
-            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis])
                         if z in value]
         elif op == 'not in':
-            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis]) 
+            idxlabel = [(idx, z) for idx, z in enumerate(y.label[axis])
                         if z not in value]
         if len(idxlabel) == 0:
             return larry([])
@@ -2480,21 +2480,21 @@ class larry(object):
             index[axis] = list(idx)
             y.x = y.x[index]
             return y
-        
+
     def keep_x(self, op, value, vacuum=True):
         """
         Keep labels (and corresponding values) that satisfy conditon.
-        
+
         Set x values that do not satify the condition to NaN. Then, if
         vacuum is True, rows and columns with all NaNs will be removed. If
-        vacuum is True, larry must be 2d. 
-        
+        vacuum is True, larry must be 2d.
+
         Note that when vacuum is True, all rows and columns with all NaNs
         (even if they already had all NaNs in the row or column before this
         function was called) will be removed.
-        
+
         The op can be '==', '>', '<', '>=', '<=', '!='.
-        
+
         Parameters
         ----------
         op : string
@@ -2505,19 +2505,19 @@ class larry(object):
         vacuum : {True, False}, optional
             Vacuum larry after conditionally setting data values to NaN. False
             is the default.
-        
+
         Returns
         -------
         out : larry
             Returns a copy with only the labels and corresponding values that
             satisfy the specified condition.
-            
+
         Raises
         ------
         ValueError
             If op is unknown or if axis is None.
         IndexError
-            If axis is out of range.        
+            If axis is out of range.
 
         """
         if (vacuum == True) and (self.ndim != 2):
@@ -2530,34 +2530,34 @@ class larry(object):
         y.x[~idx] = np.nan
         if vacuum:
             y = y.vacuum()
-        return y         
-                    
+        return y
+
     # label operations -------------------------------------------------------
-        
+
     def maxlabel(self, axis=None):
         """
         Maximum label value along the specified axis.
-        
+
         Parameters
         ----------
         axis : {int, None}, optional
             The axis over which to find the maximum label. By default (None)
             the search for the maximum label element is performed along all
             axes.
-            
+
         Returns
         -------
         out : scalar, string, etc.
             The maximum label element along the specified axis.
-            
+
         Examples
         --------
         What is the maximum label value in the following larry?
-        
+
         >>> y = larry([1, 2, 3], [['a', 'z', 'w']])
         >>> y.maxlabel()
-        'z'               
-        
+        'z'
+
         """
         if axis is None:
             return max([max(z) for z in self.label])
@@ -2567,37 +2567,37 @@ class larry(object):
     def minlabel(self, axis=None):
         """
         Minimum label value along the specified axis.
-        
+
         Parameters
         ----------
         axis : {int, None}, optional
             The axis over which to find the minimum label. By default (None)
             the search for the minimum label element is performed along all
             axes.
-            
+
         Returns
         -------
         out : scalar, string, etc.
             The minimum label element along the specified axis.
-            
+
         Examples
         --------
         What is the minimum label value in the following larry?
-        
+
         >>> y = larry([1, 2, 3], [['a', 'z', 'w']])
         >>> y.minlabel()
-        'a'               
-        
+        'a'
+
         """
         if axis is None:
             return min([min(z) for z in self.label])
         else:
             return min([z for z in self.label[axis]])
-        
+
     def labelindex(self, name, axis, exact=True):
         """
         Return index of given label element along specified axis.
-        
+
         Parameters
         ----------
         name : str, datetime.date, int, etc.
@@ -2610,7 +2610,7 @@ class larry(object):
             and if a perfect match is not found then the index of the nearest
             label is returned. Nearest is defined as the closest that is equal
             or smaller.
-            
+
         Returns
         -------
         idx : int
@@ -2620,12 +2620,12 @@ class larry(object):
         --------
         What column number (starting from 0) of the following 2d larry is
         labeled 'west'?
-        
+
         >>> from la import larry
-        >>> y = larry([[1, 2], [3, 4]], [['north', 'south'], ['east', 'west']])        
+        >>> y = larry([[1, 2], [3, 4]], [['north', 'south'], ['east', 'west']])
         >>> y.labelindex('west', axis=1)
-        1        
-                        
+        1
+
         """
         if axis is None:
             raise ValueError('axis cannot be None')
@@ -2640,13 +2640,13 @@ class larry(object):
                 idx = [i for i, z in enumerate(self.label[axis]) if z <= name]
                 if len(idx) == 0:
                     raise IndexError('name not in label along axis %d' % axis)
-                index = max(idx)                        
+                index = max(idx)
         return index
-        
+
     def maplabel(self, func, axis=None, copy=True):
         """
         Apply given function to each element of label along specified axis.
-        
+
         Parameters
         ----------
         func : function
@@ -2655,57 +2655,57 @@ class larry(object):
             Axis along which to apply the function.
         copy : bool
             Whether to return a copy (True, default) or to return a reference.
-            
+
         Returns
         -------
         y : larry
             A copy or a reference (dending on the value of `copy`) of the
             larry with the given function applied to the specified labels.
-                    
+
         Examples
-        -------- 
-        Create a larry with dates in the label:        
-        
+        --------
+        Create a larry with dates in the label:
+
         >>> import datetime
         >>> d = datetime.date
         >>> y = larry([1, 2], [[d(2010,1,1), d(2010,1,2)]])
-        
+
         Convert the dates in the label to integers:
-        
+
         >>> y.maplabel(datetime.date.toordinal)
         label_0
             733773
             733774
         x
         array([1, 2])
-        
+
         Convert the dates in the label to strings:
-               
+
         >>> y.maplabel(str)
         label_0
             2010-01-01
             2010-01-02
         x
         array([1, 2])
-                                  
+
         """
         if copy:
             y = self.copy()
         else:
-            y = self    
+            y = self
         if axis is None:
             for ax in range(y.ndim):
                 y.label[ax] = map(func, y.label[ax])
         else:
             y.label[axis] = map(func, y.label[axis])
-        return y                    
-    
+        return y
+
     # Moving window statistics ----------------------------------------------
 
     def move_sum(self, window, axis=-1):
         """
         Moving window sum along the specified axis, ignoring NaNs.
-        
+
         Parameters
         ----------
         window : int
@@ -2720,11 +2720,11 @@ class larry(object):
             The moving sum along the specified axis, ignoring NaNs. (A window
             with all NaNs returns NaN for the window sum.) The output has the
             same shape as the input.
-            
+
         Examples
         --------
         >>> lar = larry([1, 2, la.nan, 4])
-        >>> lar.move_sum(window=2) 
+        >>> lar.move_sum(window=2)
         label_0
             0
             1
@@ -2740,7 +2740,7 @@ class larry(object):
     def move_mean(self, window, axis=-1):
         """
         Moving window mean along the specified axis, ignoring NaNs.
-        
+
         Parameters
         ----------
         window : int
@@ -2755,11 +2755,11 @@ class larry(object):
             The moving mean along the specified axis, ignoring NaNs. (A window
             with all NaNs returns NaN for the window mean.) The output has the
             same shape as the input.
-        
+
         Examples
         --------
         >>> lar = larry([1, 2, la.nan, 4])
-        >>> lar.move_mean(window=2)  
+        >>> lar.move_mean(window=2)
         label_0
             0
             1
@@ -2767,7 +2767,7 @@ class larry(object):
             3
         x
         array([ NaN,  1.5,  2. ,  4. ])
-            
+
         """
         x = bn.move_nanmean(self.x, window, axis=axis)
         return larry(x, self.copylabel(), validate=False)
@@ -2775,7 +2775,7 @@ class larry(object):
     def move_std(self, window, axis=-1):
         """
         Moving window standard deviation along specified axis, ignoring NaNs.
-        
+
         Parameters
         ----------
         window : int
@@ -2784,7 +2784,7 @@ class larry(object):
             The axis over which to perform the moving standard deviation.
             By default the moving standard deviation is taken over the last
             axis (-1).
-       
+
         Returns
         -------
         y : larry
@@ -2795,7 +2795,7 @@ class larry(object):
         Examples
         --------
         >>> lar = larry([1, 2, la.nan, 4, 5])
-        >>> lar.move_std(window=3) 
+        >>> lar.move_std(window=3)
         label_0
             0
             1
@@ -2804,7 +2804,7 @@ class larry(object):
             4
         x
         array([ NaN,  NaN,  0.5,  1. ,  0.5])
-        
+
         """
         x = bn.move_nanstd(self.x, window, axis=axis)
         return larry(x, self.copylabel(), validate=False)
@@ -2812,7 +2812,7 @@ class larry(object):
     def move_min(self, window, axis=-1):
         """
         Moving window minimum along the specified axis, ignoring NaNs.
-        
+
         Parameters
         ----------
         window : int
@@ -2831,7 +2831,7 @@ class larry(object):
         Examples
         --------
         >>> lar = larry([1, 2, la.nan, 4])
-        >>> lar.move_min(window=2) 
+        >>> lar.move_min(window=2)
         label_0
             0
             1
@@ -2847,7 +2847,7 @@ class larry(object):
     def move_max(self, window, axis=-1):
         """
         Moving window maximum along the specified axis, ignoring NaNs.
-        
+
         Parameters
         ----------
         window : int
@@ -2866,7 +2866,7 @@ class larry(object):
         Examples
         --------
         >>> lar = larry([1, 2, la.nan, 4])
-        >>> lar.move_max(window=2) 
+        >>> lar.move_max(window=2)
         label_0
             0
             1
@@ -2886,8 +2886,8 @@ class larry(object):
         The output is normalized to be between -1 and 1. For example, with a
         window width of 3 (and with no ties), the possible output values are
         -1, 0, 1.
-        
-        Ties are broken by averaging the rankings. See the examples below. 
+
+        Ties are broken by averaging the rankings. See the examples below.
 
         Parameters
         ----------
@@ -2917,7 +2917,7 @@ class larry(object):
         [-1., 0., 1.]:
 
         >>> lar = larry([1, 2, 6, 4, 5, 3])
-        >>> lar.move_ranking(window=3) 
+        >>> lar.move_ranking(window=3)
         label_0
             0
             1
@@ -2931,7 +2931,7 @@ class larry(object):
         Ties are broken by averaging the rankings of the tied elements:
 
         >>> lar = larry([1, 2, 1, 1, 1, 2])
-        >>> lar.move_ranking(window=3) 
+        >>> lar.move_ranking(window=3)
         label_0
             0
             1
@@ -2944,9 +2944,9 @@ class larry(object):
 
         In a monotonically increasing sequence, the moving window ranking is
         always equal to 1:
-        
+
         >>> lar = larry([1, 2, 3, 4, 5])
-        >>> lar.move_ranking(window=3) 
+        >>> lar.move_ranking(window=3)
         label_0
             0
             1
@@ -2963,7 +2963,7 @@ class larry(object):
     def move_median(self, window, axis=-1, method='loop'):
         """
         Moving window median along the specified axis, ignoring NaNs.
-        
+
         Parameters
         ----------
         window : int
@@ -2997,7 +2997,7 @@ class larry(object):
             4
         x
         array([ NaN,  1.5,  2. ,  4. ,  4.5])
-        
+
         """
         x = move_nanmedian(self.x, window, axis=axis, method=method)
         return larry(x, self.copylabel(), validate=False)
@@ -3005,7 +3005,7 @@ class larry(object):
     def move_func(self, func, window, axis=-1, method='loop', **kwargs):
         """
         Generic moving window function along the specified axis.
-        
+
         Parameters
         ----------
         func : function
@@ -3057,8 +3057,8 @@ class larry(object):
         x = move_func(func, self.x, window, axis=axis, method=method)
         return larry(x, self.copylabel(), validate=False)
 
-    def movingsum_forward(self, window, skip=0, axis=-1, norm=False):    
-        """Movingsum in the forward direction skipping skip dates"""      
+    def movingsum_forward(self, window, skip=0, axis=-1, norm=False):
+        """Movingsum in the forward direction skipping skip dates"""
         y = self.copy()
         y.x = movingsum_forward(y.x, window, skip=skip, axis=axis, norm=norm)
         return y
@@ -3068,7 +3068,7 @@ class larry(object):
     def demean(self, axis=None):
         """
         Subtract the mean along the specified axis.
-        
+
         Parameters
         ----------
         axis : {int, None}, optional
@@ -3091,25 +3091,25 @@ class larry(object):
             3
         x
         array([-1.5, -0.5,  0.5,  1.5])
-            
+
         """
         return larry(demean(self.x, axis), self.copylabel(), validate=False)
 
     def demedian(self, axis=None):
         """
         Subtract the median along the specified axis.
-        
+
         Parameters
         ----------
         axis : {int, None}, optional
             The axis along which to remove the median. The default (None) is
             to subtract the median of the flattened larry.
-        
+
         Returns
         -------
         y : larry
             A copy with the median along the specified axis removed.
-        
+
         Examples
         --------
         >>> y = larry([1, 2, 3, 4])
@@ -3121,25 +3121,25 @@ class larry(object):
             3
         x
         array([-1.5, -0.5,  0.5,  1.5])
-            
+
         """
         return larry(demedian(self.x, axis), self.copylabel(), validate=False)
-        
+
     def zscore(self, axis=None):
         """
         Z-score along the specified axis.
-        
+
         Parameters
         ----------
         axis : {int, None}, optional
             The axis along which to take the z-score. The default (None) is
             to find the z-score of the flattened larry.
-        
+
         Returns
         -------
         y : larry
             A copy normalized with the Z-score along the specified axis.
-        
+
         Examples
         --------
         >>> y = larry([1, 2, 3])
@@ -3150,10 +3150,10 @@ class larry(object):
             2
         x
         array([-1.22474487,  0.        ,  1.22474487])
-            
+
         """
         return larry(zscore(self.x, axis), self.copylabel(), validate=False)
-      
+
     def ranking(self, axis=0, norm='-1,1'):
         """
         Rank elements treating NaN as missing and averaging ties.
@@ -3169,14 +3169,14 @@ class larry(object):
                 '-1,1'      Scale zero to N-1 ranking to be between -1 and 1
                 'gaussian'  Rank data then scale to a Gaussian distribution
                 ==========  ================================================
-            The default ranking is '-1,1'.    
-            
+            The default ranking is '-1,1'.
+
         Returns
         -------
         y : larry
             The ranked data. The dtype of the output is always np.float even
             if the dtype of the input is int.
-            
+
         Notes
         -----
         If there is only one non-NaN value along the given axis, then that
@@ -3184,7 +3184,7 @@ class larry(object):
         For example, if the input is array([1.0, nan]), then 1.0 is set to
         zero for the '-1,1' and 'gaussian' normalizations and is set to 0.5
         (mean of 0 and 1) for the '0,N-1' normalization.
-        
+
         For '0,N-1' normalization, note that N is x.shape[axis] even if there
         are NaNs. That ensures that when ranking along the columns of a 2d
         array, for example, the output will have the same min and max along
@@ -3228,17 +3228,17 @@ class larry(object):
             5
         x
         array([-1., -1.,  0.,  0.,  1.,  1.])
-            
+
         """
         label = self.copylabel()
-        x = quantile(self.x, q, axis=axis)       
+        x = quantile(self.x, q, axis=axis)
         return larry(x, label, validate=False)
-        
-    # Group calc -------------------------------------------------------------  
-                 
+
+    # Group calc -------------------------------------------------------------
+
     def group_ranking(self, group, axis=0):
         """Group (e.g. sector) ranking along columns.
-        
+
         The row labels of the object must be a subset of the row labels of the
         group.
         """
@@ -3246,32 +3246,32 @@ class larry(object):
         aligned_group_list = y._group_align(group, axis=axis)
         y.x = group_ranking(y.x, aligned_group_list, axis=axis)
         return y
-            
+
     def group_mean(self, group, axis=0):
         """Group (e.g. sector) mean along columns (zero axis).
-        
+
         The row labels of the object must be a subset of the row labels of the
         group.
-        """        
-        y = self.copy() 
+        """
+        y = self.copy()
         aligned_group_list = y._group_align(group, axis=axis)
         y.x = group_mean(y.x, aligned_group_list, axis=axis)
         return y
-        
+
     def group_median(self, group, axis=0):
         """Group (e.g. sector) median along columns (zero axis).
-        
+
         The row labels of the object must be a subset of the row labels of the
         group.
-        """ 
+        """
         y = self.copy()
-        aligned_group_list = y._group_align(group, axis=axis)   
+        aligned_group_list = y._group_align(group, axis=axis)
         y.x = group_median(y.x, aligned_group_list, axis=axis)
         return y
-    
+
     def _group_align(self, group, axis=0):
         """Return a row aligned group list (e.g. sector list) of values.
-        
+
         group must have exactly one column. The row labels of the object must
         be a subset of the row labels of the group.
         """
@@ -3283,38 +3283,38 @@ class larry(object):
             raise IndexError('label is not a subset of group label')
         g = group.morph(self.label[axis], 0)
         g = g.x.tolist()
-        return g 
-                                                                 
-    # Alignment --------------------------------------------------------------     
+        return g
+
+    # Alignment --------------------------------------------------------------
     def morph(self, label, axis):
         """
         Reorder the elements along the specified axis.
-        
+
         If an element in `label` does not exist in the larry, NaNs will be
         used for float dtype, None will be used for object dtype, and ''
         will be used for string (np.string_) dtype. All other dtype, such as
         int and bool, will be cast to float if there are any elements in
         `label` does not exist in the larry.
-        
+
         Parameters
         ----------
         label : list
             Desired ordering of elements along specified axis.
         axis : int
             axis along which to perform the reordering.
-        
+
         Returns
         -------
         out : larry
-            A reordered copy.       
-        
+            A reordered copy.
+
         See Also
         --------
         la.larry.morph_like: Morph along all axes to align with given larry.
         la.larry.merge: Merge, or optionally update, a larry with a second
                         larry.
         la.align: Align two larrys using one of five join methods.
-            
+
         Examples
         --------
         >>> y = larry([1, 2, 3], [['a', 'b', 'c']])
@@ -3325,15 +3325,15 @@ class larry(object):
             a
             c
         x
-        array([  2.,  NaN,   1.,   3.])                    
-            
+        array([  2.,  NaN,   1.,   3.])
+
         """
         if axis >= self.ndim:
             raise IndexError('axis out of range')
         if self.label[axis] == label:
             return self.copy()
-        else:    
-            idx, idx_miss = listmap_fill(self.label[axis], label)           
+        else:
+            idx, idx_miss = listmap_fill(self.label[axis], label)
             if len(idx) == len(idx_miss):
                 # None of the elements we want are in the input larry
                 shape = list(self.x.shape)
@@ -3344,7 +3344,7 @@ class larry(object):
                 else:
                     x = self.x
                 x = nans(shape, dtype=x.dtype)
-            else:    
+            else:
                 x = self.x.take(idx, axis)
                 if len(idx_miss) > 0:
                     index = [slice(None)] * self.ndim
@@ -3353,41 +3353,41 @@ class larry(object):
                     if miss == NotImplemented:
                         x = x.astype(float)
                         miss = missing_marker(x)
-                    x[index] = miss      
+                    x[index] = miss
             lab = self.copylabel()
             if len(set(label)) != len(label):
                 raise IndexError("`label` contains duplicates")
             lab[axis] = list(label)
         return larry(x, lab, validate=False)
-        
+
     def morph_like(self, lar):
         """
         Morph along all axes to align with given larry.
 
         If label elements in `lar` do not exist in the larry, then a fill
         value is used to mark the missing values. See `morph` for details.
-        
+
         Parameters
-        ---------- 
+        ----------
         lar : larry
             The target larry to align to.
-            
+
         Returns
         -------
         lar : larry
             A morphed larry that is aligned with the input larry, `lar`.
-            
+
         See Also
         --------
         la.larry.morph: Reorder the elements along the specified axis.
         la.larry.merge: Merge, or optionally update, a larry with a second
                         larry.
-        la.align: Align two larrys using one of five join methods.                            
+        la.align: Align two larrys using one of five join methods.
 
         Examples
         --------
         Align y1 to y2:
-        
+
         >>> y1 = larry([1, 2], [['a', 'b']])
         >>> y2 = larry([3, 2, 1], [['c', 'b', 'a']])
 
@@ -3400,14 +3400,14 @@ class larry(object):
         array([ NaN,   2.,   1.])
 
         Align y2 to y1:
-       
+
         >>> y2.morph_like(y1)
         label_0
             a
             b
         x
         array([ 1.,  2.])
-        
+
         """
         if self.ndim != lar.ndim:
             raise IndexError('larrys must be of the same dimension.')
@@ -3416,13 +3416,13 @@ class larry(object):
         else:
             y = self
         for i in range(self.ndim):
-            y = y.morph(lar.getlabel(i), axis=i)     
-        return y        
+            y = y.morph(lar.getlabel(i), axis=i)
+        return y
 
     def merge(self, other, update=False):
         """
         Merge, or optionally update, a larry with a second larry.
-     
+
         Parameters
         ----------
         other : larry
@@ -3433,17 +3433,17 @@ class larry(object):
             larrys. An overlap is defined as a common label in both larrys
             that contains a finite value in both larrys. If `update` is True
             then the overlapped values in the current larry will be
-            overwritten with the values in `other`.            
-     
+            overwritten with the values in `other`.
+
         Returns
         -------
         lar1 : larry
             The merged larry.
-            
+
         Notes
         -----
         If either larry has dtype of object or np.string_ then both larrys
-        must have the same dtype, otherwise a TypeError is raised.   
+        must have the same dtype, otherwise a TypeError is raised.
 
         Examples
         --------
@@ -3457,7 +3457,7 @@ class larry(object):
             d
         x
         array([ 1.,  2.,  3.,  4.])
-     
+
         """
 
         ndim = self.ndim
@@ -3471,49 +3471,49 @@ class larry(object):
                 mergelabel = sorted(mergelabel)
                 lar1 = lar1.morph(mergelabel, ax)
                 lar2 = lar2.morph(mergelabel, ax)
-     
-        # Mask       
-        dtype1 = self.dtype       
+
+        # Mask
+        dtype1 = self.dtype
         if dtype1 == object:
             mask1 = lar1.x != [None]
         elif self.dtype.type == np.str_:
-            mask1 = lar1.x != ''  
+            mask1 = lar1.x != ''
         else:
             mask1 = np.isfinite(lar1.x)
-        dtype2 = other.dtype       
+        dtype2 = other.dtype
         if dtype2 == object:
             mask2 = lar2.x != [None]
         elif self.dtype.type == np.str_:
             mask2 = lar2.x != ''
         else:
             mask2 = np.isfinite(lar2.x)
-            
+
         # Trap cases that merge cannot handle
         if dtype1 in (np.string_, object) or dtype2 in (np.string_, object):
             if dtype1 != dtype2:
                 raise TypeError('Incompatible dtypes')
 
-        # Check for overlap if requested             
+        # Check for overlap if requested
         if (not update) and np.logical_and(mask1, mask2).any():
             raise ValueError('Overlapping values')
         else:
             if mask2.any():
                 np.putmask(lar1.x, mask2, lar2.x)
-     
+
         return lar1
-        
+
     def squeeze(self):
         """
         Remove all length-1 dimensions and corresponding labels.
-        
+
         Note that a view (reference) is returned, not a copy.
-        
+
         Returns
         -------
         out : larry
             Returns a view with all length-1 dimensions and corresponding
             labels removed.
-            
+
         Examples
         --------
         >>> y = larry([[1, 2]], [['row'], ['c1', 'c2']])
@@ -3530,20 +3530,20 @@ class larry(object):
             c1
             c2
         x
-        array([1, 2])             
-        
+        array([1, 2])
+
         """
         idx = [i for i, z in enumerate(self.shape) if z != 1]
         label = []
         for i in idx:
-            label.append(self.label[i])    
+            label.append(self.label[i])
         x = self.x.squeeze()
         return larry(x, label, validate=False)
 
     def lag(self, nlag, axis=-1):
         """
         Lag the values along the specified axis.
-        
+
         Parameters
         ----------
         nlag : int
@@ -3552,19 +3552,19 @@ class larry(object):
             forward).
         axis : int
             The axis to lag along. The default is -1.
-            
+
         Returns
         -------
         out : larry
             A lagged larry is returned.
-            
+
         Raises
         ------
         ValueError
-            If nlag < 0.        
+            If nlag < 0.
         IndexError
-            If the axis is None. 
-            
+            If the axis is None.
+
         Examples
         --------
         Create a larry:
@@ -3588,7 +3588,7 @@ class larry(object):
             b
         x
         array([3, 4])
-                        
+
         """
         if axis is None:
             raise IndexError('axis cannot be None.')
@@ -3596,13 +3596,13 @@ class larry(object):
             y = self.copy()
             y.label[axis] = y.label[axis][nlag:]
             index = [slice(None)] * self.ndim
-            index[axis] = slice(0, -nlag)            
+            index[axis] = slice(0, -nlag)
             y.x = y.x[index]
         elif nlag < 0:
             y = self.copy()
             y.label[axis] = y.label[axis][:nlag]
             index = [slice(None)] * self.ndim
-            index[axis] = slice(-nlag, None)            
+            index[axis] = slice(-nlag, None)
             y.x = y.x[index]
         elif nlag == 0:
             y = self.copy()
@@ -3613,25 +3613,25 @@ class larry(object):
     def sortaxis(self, axis=None, reverse=False):
         """
         Sort data (and label) according to label along specified axis.
-        
+
         Parameters
         ----------
         axis : {int, None}, optional
             The axis to sort along. The default (None) is to sort all axes.
         reverse : {True, False}, optional
             Sort in descending order (True) or ascending order (False). The
-            default is to sort in ascending order. 
-            
+            default is to sort in ascending order.
+
         Returns
         -------
         y : larry
             A sorted copy of the larry.
-            
+
         Examples
-        -------- 
+        --------
         Let's make a larry that we can use to demonstrate the `sortaxis`
-        method: 
-                 
+        method:
+
         >>> y = larry([[4, 3], [2, 1]], [['b', 'a'], ['d', 'c']])
         >>> y
         label_0
@@ -3656,10 +3656,10 @@ class larry(object):
         x
         array([[1, 2],
                [3, 4]])
-        
+
         You can also sort in reverse order (although in this particular
         example the larry is already in reverse order):
-        
+
         >>> y.sortaxis(reverse=True)
         label_0
             b
@@ -3683,43 +3683,43 @@ class larry(object):
         x
         array([[2, 1],
                [4, 3]])
-               
+
         """
         if axis is None:
             axes = range(self.ndim)
         else:
             axes = [axis]
         y = self
-        shape = self.shape    
+        shape = self.shape
         for ax in axes:
-            if shape[ax] > 1:        
+            if shape[ax] > 1:
                 index = sorted(self.label[ax], reverse=reverse)
                 y = y.morph(index, ax)
             else:
                 y = y.copy()
         return y
-        
+
     def flipaxis(self, axis=None, copy=True):
         """
         Reverse the order of the elements along the specified axis.
-        
+
         Parameters
         ----------
         axis : {int, None}, optional
             The axis to flip. The default (None) is to flip all axes.
         copy : {True, False}, optional
             If True (default) return a copy; if False return a view.
-            
+
         Returns
         -------
         y : larry
             A copy or view (depending on the value of `copy`) of the larry
             that has been flipped.
-            
+
         Examples
         --------
         Create a larry:
-        
+
         >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
         >>> y
         label_0
@@ -3731,8 +3731,8 @@ class larry(object):
         x
         array([[1, 2],
                [3, 4]])
-               
-        Flip all axes:       
+
+        Flip all axes:
 
         >>> y.flipaxis()
         label_0
@@ -3744,8 +3744,8 @@ class larry(object):
         x
         array([[4, 3],
                [2, 1]])
-               
-        Flip axis 0 only:       
+
+        Flip axis 0 only:
 
         >>> y.flipaxis(axis=0)
         label_0
@@ -3756,8 +3756,8 @@ class larry(object):
             d
         x
         array([[3, 4],
-               [1, 2]])            
-        
+               [1, 2]])
+
         """
         if copy:
             y = self.copy()
@@ -3767,39 +3767,39 @@ class larry(object):
             axes = range(self.ndim)
         else:
             axes = [axis]
-        flip = slice(None, None, -1)    
-        for ax in axes:                
-            y.label[ax] = y.label[ax][flip]    
+        flip = slice(None, None, -1)
+        for ax in axes:
+            y.label[ax] = y.label[ax][flip]
             index = [slice(None)] * y.ndim
             index[ax] = flip
-            y.x = y.x[index] 
-        return y               
-        
+            y.x = y.x[index]
+        return y
+
     # Shuffle ----------------------------------------------------------------
-    
+
     def shuffle(self, axis=0):
         """
         Shuffle the data inplace along the specified axis.
-        
+
         Unlike numpy's shuffle, this shuffle takes an axis argument. The
         ordering of the labels is not changed, only the data is shuffled.
-        
+
         Parameters
         ----------
         axis : {int, None}, optional
             The axis to shuffle the data along. Default is axis 0. If None,
             then the data will be shuffled along all axes.
-            
+
         Returns
         -------
         out : None
             The data are shuffled inplace.
-            
+
         See Also
         --------
         la.larry.shufflelabel : Shuffle the label inplace along the specified
-                                axis.             
-            
+                                axis.
+
         Examples
         --------
         >>> y = larry([[1, 2], [3,  4]], [['north', 'south'], ['east', 'west']])
@@ -3814,18 +3814,18 @@ class larry(object):
         x
         array([[3, 4],
                [1, 2]])
-        
+
         """
         if axis is None:
             for ax in range(self.ndim):
-                shuffle(self.x, ax) 
+                shuffle(self.x, ax)
         else:
             shuffle(self.x, axis)
-        
+
     def shufflelabel(self, axis=0):
         """
         Shuffle the label inplace along the specified axis.
-        
+
         Parameters
         ----------
         axis : {int, None}, optional
@@ -3833,16 +3833,16 @@ class larry(object):
             then the labels will be shuffled along all axes, where each
             label axis will still contain the same set of labels (labels
             from one axis will not be shuffle to another axis).
-            
+
         Returns
         -------
         out : None
             The labels are shuffled inplace.
-            
+
         See Also
         --------
-        la.larry.shuffle : Shuffle the data inplace along the specified axis.    
-            
+        la.larry.shuffle : Shuffle the data inplace along the specified axis.
+
         Examples
         --------
         >>> y = larry([[1, 2], [3,  4]], [['north', 'south'], ['east', 'west']])
@@ -3856,21 +3856,21 @@ class larry(object):
             east
         x
         array([[3, 4],
-               [1, 2]])                    
-        
+               [1, 2]])
+
         """
         if axis is None:
             for ax in range(self.ndim):
-                np.random.shuffle(self.label[ax]) 
+                np.random.shuffle(self.label[ax])
         else:
             np.random.shuffle(self.label[axis])
-            
+
     # Missing ----------------------------------------------------------------
 
     def ismissing(self):
         """
         A bool larry with element-wise marking of missing values.
-            
+
         Returns
         -------
         y : larry
@@ -3878,37 +3878,37 @@ class larry(object):
             corresponding element of the larry is missing; otherwise False.
 
         Examples
-        --------  
+        --------
         Floats:
-               
+
         >>> larry([1.0, la.nan]).ismissing()
         label_0
             0
             1
         x
         array([False,  True], dtype=bool)
-        
+
         Strings:
-        
+
         >>> larry(['string', '']).ismissing()
         label_0
             0
             1
         x
         array([False,  True], dtype=bool)
-        
+
         Objects:
-        
+
         >>> larry(['', None], dtype=object).ismissing()
         label_0
             0
             1
         x
         array([False,  True], dtype=bool)
-        
+
         bool and int dtype do not support missing values so always return
         False:
-        
+
         >>> larry([0, 1]).ismissing()
         label_0
             0
@@ -3921,9 +3921,9 @@ class larry(object):
             0
             1
         x
-        array([False, False], dtype=bool)        
-        
-        """   
+        array([False, False], dtype=bool)
+
+        """
         label = self.copylabel()
         x = ismissing(self)
         return larry(x, label, validate=False)
@@ -3931,7 +3931,7 @@ class larry(object):
     def cut_missing(self, fraction, axis=None):
         """
         Cut rows and columns that contain too many NaNs.
-        
+
         Parameters
         ----------
         fraction : scalar
@@ -3941,17 +3941,17 @@ class larry(object):
             Look for missing data along this axis. So for axis=0, the missing
             data along columns are checked and columns are cut. For axis=1,
             the missing data along rows are checked and rows are cut.
-            
+
         Returns
         -------
         out : larry
-            Returns a copy with rows or columns with lots of missing data cut.                
-            
-        """    
-        
+            Returns a copy with rows or columns with lots of missing data cut.
+
+        """
+
         y = self.copy()
         ndim = y.ndim
-        
+
         if axis is None:
             axes = range(ndim)
         else:
@@ -3966,28 +3966,28 @@ class larry(object):
                 sl[ax] = slice(None)
                 idxsl.append(np.arange(y.shape[ax])[sl])
                 continue
-            
+
             # Find all nans over all other axes
             xtmp = np.rollaxis(np.isfinite(y.x), ax, 0)
             count = np.ones(xtmp.shape)
             for _ in range(ndim-1):
                 xtmp = xtmp.sum(-1)
                 count = count.sum(-1)
-    
+
             xtmp = xtmp > (1.0 - fraction) * count
             labsnew.append([y.label[ax][ii] for ii in np.nonzero(xtmp)[0]])
             sl[ax] = slice(None)
             idxsl.append(np.nonzero(xtmp)[0][sl])
-        
+
         y.x = y.x[idxsl]
         y.label = labsnew
-        
-        if y.x.size == 0: 
+
+        if y.x.size == 0:
             # Empty larry left over
             return larry(np.array([]))
         else:
             return y
-            
+
     def push(self, window, axis=-1):
         """Fill missing values (NaNs) with most recent non-missing values if
         recent, where recent is defined by the window. The filling proceeds
@@ -3996,35 +3996,35 @@ class larry(object):
         label = self.copylabel()
         x = push(self.x, window, axis=axis)
         return larry(x, label, validate=False)
-        
+
     def vacuum(self, axis=None):
         """
         Remove all rows and/or columns that contain all NaNs.
-                     
+
         Parameters
         ----------
         axis : None or int or tuple of int
             Remove columns (0) or rows (1) or both (None, default) that
             contain no finite values, for nd arrays see Notes.
-            
+
         Returns
         -------
         out : larry
             Return a copy with rows and/or columns removed that contain all
-            NaNs.  
-            
+            NaNs.
+
         Notes
         -----
-        
-        For nd arrays, axis can also be a tuple. In this case, all other 
+
+        For nd arrays, axis can also be a tuple. In this case, all other
         axes are checked for nans. If the corresponding slice of the array
         contains only nans then the slice is removed.
-                
-        """        
+
+        """
 
         y = self.copy()
         ndim = y.ndim
-        
+
         if axis is None:
             axes = range(ndim)
         elif not hasattr(axis, '__iter__'):
@@ -4035,7 +4035,7 @@ class larry(object):
             axes = axis
             # Change meaning of axes to axes not in original axes
             axes = [a for a in range(ndim) if a not in axes]
-        
+
         idxsl = []
         labsnew = []
         for ax in range(ndim):
@@ -4045,34 +4045,34 @@ class larry(object):
                 sl[ax] = slice(None)
                 idxsl.append(np.arange(y.shape[ax])[sl])
                 continue
-            
+
             # Find all nans over all other axes
             xtmp = np.rollaxis(np.isfinite(y.x), ax, 0)
             for _ in range(ndim-1):
                 xtmp = xtmp.any(-1)
-    
+
             labsnew.append([y.label[ax][ii] for ii in np.nonzero(xtmp)[0]])
             sl[ax] = slice(None)
             idxsl.append(np.nonzero(xtmp)[0][sl])
-        
+
         y.x = y.x[idxsl]
         y.label = labsnew
-        return y        
-        
+        return y
+
     def nan_replace(self, replace_with=0):
         """
         Replace NaNs.
-        
+
         Parameters
         ----------
         replace_with : scalar
             Value to replace NaNs with.
-                        
+
         Returns
         -------
         out : larry
-            Returns a copy with NaNs replaced.     
-                    
+            Returns a copy with NaNs replaced.
+
         """
         y = self.copy()
         bn.replace(y.x, np.nan, replace_with)
@@ -4084,14 +4084,14 @@ class larry(object):
     def nx(self):
         """
         Number of finite values (not NaN, -Inf, or Inf) in the larry.
-        
+
         Examples
-        --------        
+        --------
         >>> from la import nan
         >>> y = larry([1, 2, nan])
         >>> y.nx
         2
-        
+
         """
         return np.isfinite(self.x).sum()
 
@@ -4099,14 +4099,14 @@ class larry(object):
     def size(self):
         """
         Number of elements in the larry.
-        
+
         Examples
-        --------   
+        --------
         >>> from la import nan
         >>> y = larry([1, 2, nan])
         >>> y.size
         3
-        
+
         """
         return self.x.size
 
@@ -4114,62 +4114,62 @@ class larry(object):
     def shape(self):
         """
         Shape of the larry as a tuple.
-        
+
         Examples
-        --------   
+        --------
         >>> from la import nan
         >>> y = larry([1, 2, nan])
         >>> y.shape
-        (3,)       
+        (3,)
         """
         return self.x.shape
-        
+
     @property
     def ndim(self):
         """
         Number of dimensions in the larry.
-        
+
         Examples
-        --------   
+        --------
         >>> from la import nan
         >>> y = larry([1, 2, nan])
         >>> y.ndim
-        1          
+        1
         """
         return self.x.ndim
-        
+
     @property
     def dtype(self):
         """
         The dtype of the elements (not the labels) in the larry.
-        
+
         Examples
-        --------   
+        --------
         >>> from la import nan
         >>> y = larry([1, 2, nan])
         >>> y.dtype
-        dtype('float64')         
+        dtype('float64')
         """
         return self.x.dtype
-        
+
     def astype(self, dtype):
         """
         Copy of larry cast to specified type.
-        
+
         Parameters
         ----------
         dtype: string or data-type
             Typecode or data-type to which the larry is cast.
-            
+
         Returns
         -------
         y : larry
             A copy of the larry, cast to the specified type.
-            
+
         Examples
         --------
         Create a larry with float dtype:
-        
+
         >>> y = la.larry([1, 2, 2.5])
         >>> y
         label_0
@@ -4178,9 +4178,9 @@ class larry(object):
             2
         x
         array([ 1. ,  2. ,  2.5])
-        
+
         Cast the float larry to int:
-        
+
         >>> y.astype(int)
         label_0
             0
@@ -4188,19 +4188,19 @@ class larry(object):
             2
         x
         array([1, 2, 2])
-                
+
         """
         label = self.copylabel()
         x = self.x.astype(dtype)
         return larry(x, label, validate=False)
-        
+
     @property
     def T(self):
         """
         Returns a transposed copy of the larry.
 
         Examples
-        --------        
+        --------
         >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
         >>> y
         label_0
@@ -4222,33 +4222,33 @@ class larry(object):
         x
         array([[1, 3],
                [2, 4]])
-               
+
         """
         y = self.copy()
         y.x = y.x.T
         y.label = y.label[::-1]
-        return y 
-        
+        return y
+
     def swapaxes(self, axis1, axis2):
         """
         Swap the two specified axes.
-        
+
         Parameters
         ----------
         axis1 : int
             First axis. This axis will become the `axis2`.
-        axis2 : int    
+        axis2 : int
             Second axis. This axis will become the `axis1`.
-            
+
         Returns
         -------
         y : larry
             A larry with the specified axes swapped.
-            
+
         Examples
         --------
         First create a (3,2) larry:
-        
+
         >>> y = larry([[0, 1], [2, 3], [4, 5]])
         >>> y
         label_0
@@ -4262,9 +4262,9 @@ class larry(object):
         array([[0, 1],
                [2, 3],
                [4, 5]])
-        
+
         Then swap axes 0 and 1 (i.e., take the transpose):
-        
+
         >>> y.swapaxes(1,0)
         label_0
             0
@@ -4276,19 +4276,19 @@ class larry(object):
         x
         array([[0, 2, 4],
                [1, 3, 5]])
-                        
+
         """
         y = self.copy()
         y.label[axis1], y.label[axis2] =  y.label[axis2], y.label[axis1]
         y.x = np.swapaxes(y.x, axis1, axis2)
         return y
-            
+
     def flatten(self, order='C'):
         """
         Return a copy of the larry after collapsing into one dimension.
-        
+
         The elements of the label become tuples.
-        
+
         Parameters
         ----------
         order : {'C', 'F'}, optional
@@ -4300,11 +4300,11 @@ class larry(object):
         y : larry
             A copy of the input larry, collapsed to one dimension where the
             labels are tuples.
-            
+
         See also
         --------
-        la.larry.unflatten : Return an unflattened copy of larry.            
-            
+        la.larry.unflatten : Return an unflattened copy of larry.
+
         Examples
         --------
         >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
@@ -4318,7 +4318,7 @@ class larry(object):
         x
         array([[1, 2],
                [3, 4]])
-               
+
         >>> y.flatten()
         label_0
             ('a', 'c')
@@ -4327,34 +4327,34 @@ class larry(object):
             ('b', 'd')
         x
         array([1, 2, 3, 4])
-   
+
         """
         label = flattenlabel(self.label, order)
         x = self.x.flatten(order)
         return larry(x, label, validate=False)
-        
+
     def unflatten(self):
         """
         Return an unflattened copy of larry.
-        
+
         The larry to be unflattened must be in flattened form: 1d and label
         elements must be tuples containing the label elements of the
         corresponding data array element. Refer to the example below to see
         what a flattened array looks like.
-        
+
         Returns
         -------
         y : larry
-                    
+
         See also
         --------
         la.larry.flatten : Return a copy of the larry collapsed into one
                            dimension.
-        
+
         Examples
         --------
         First create a flattened larry:
-        
+
         >>> y = larry([[1, 2], [3, 4]], [['r0', 'r1'], ['c0', 'c1']])
         >>> yf = y.flatten()
         >>> yf
@@ -4365,9 +4365,9 @@ class larry(object):
             ('r1', 'c1')
         x
         array([1, 2, 3, 4])
-        
+
         Then unflatten it:
-        
+
         >>> yf.unflatten()
         label_0
             r0
@@ -4378,14 +4378,14 @@ class larry(object):
         x
         array([[ 1.,  2.],
                [ 3.,  4.]])
-        
+
         """
-        
+
         # Check input
         if self.ndim != 1:
             raise ValueError('Only 1d larrys can be unflattened.')
-            
-        if self.shape == (0,):            
+
+        if self.shape == (0,):
             return larry([])
         else:
             # Determine labels, shape, and index into array
@@ -4393,13 +4393,13 @@ class larry(object):
                 msg = 'Only scalar dtype is currently supported.'
                 raise NotImplementedError(msg)
             labels = zip(*self.label[0])
-            x, label = fromlists(self.x, labels)     
+            x, label = fromlists(self.x, labels)
             return larry(x, label)
-                        
+
     def insertaxis(self, axis, label):
         """
         Insert a new axis at the specified position.
-        
+
         Parameters
         ----------
         axis : int
@@ -4407,17 +4407,17 @@ class larry(object):
         label : str, scalar, object, etc
             The label element of the new axis. The length of the new axis is
             always 1, so only one label element is needed.
-            
+
         Returns
         -------
         y : larry
             A copy of the larry with a new axis inserted in the specified
             position.
-            
+
         Examples
         --------
         Create a 1d larry and then insert a new axis in position 0:
-                  
+
         >>> y = larry([1, 2, 3])
         >>> y.insertaxis(0, 'NEW')
         label_0
@@ -4430,7 +4430,7 @@ class larry(object):
         array([[1, 2, 3]])
 
         Try inserting a new axis in position 1:
-         
+
         >>> y.insertaxis(1, 'NEW')
         label_0
             0
@@ -4442,7 +4442,7 @@ class larry(object):
         array([[1],
                [2],
                [3]])
-                   
+
         """
         if axis is None:
             raise ValueError("`axis` cannot be None.")
@@ -4454,16 +4454,16 @@ class larry(object):
         elif int(axis) < -1:
             ax = axis + 1
         else:
-            ax = axis        
+            ax = axis
         lab.insert(ax, [label])
-        return larry(x, lab)            
-        
+        return larry(x, lab)
+
     # Conversion -------------------------------------------------------------
 
     def totuples(self):
         """
         Convert to a flattened list of tuples.
-        
+
         See Also
         --------
         la.larry.fromtuples : Convert a list of tuples to a larry.
@@ -4471,13 +4471,13 @@ class larry(object):
         la.larry.todict : Convert to a dictionary.
         la.larry.tocsv : Save larry to a csv file.
         la.larry.tofile : Save 1d or 2d larry to text file.
-        
+
         Examples
         --------
         >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
         >>> y.totuples()
-        [('a', 'c', 1), ('a', 'd', 2), ('b', 'c', 3), ('b', 'd', 4)]       
-        
+        [('a', 'c', 1), ('a', 'd', 2), ('b', 'c', 3), ('b', 'd', 4)]
+
         """
         yf = self.flatten()
         z = zip(*yf.label[0])
@@ -4488,37 +4488,37 @@ class larry(object):
     def fromtuples(data):
         """
         Convert a list of tuples to a larry.
-        
+
         The input data, if there are N dimensions and M data points, should have
         this form::
-        
+
          [(label0_1, label1_1, ..., labelN_1, value_1),
          (label0_2, label1_2, ..., labelN_2, value_2),
          ...
          (label0_M, label1_M, ..., labelN_M, value_M)]
-        
+
         Parameters
         ----------
         data : list of tuples
             The input must be a list of tuples where each tuple represents one
-            data point in the larry: (label0, label1, ..., labelN, value)   
-            
+            data point in the larry: (label0, label1, ..., labelN, value)
+
         Returns
         -------
         y : larry
             A larry constructed from `data` is returned.
-            
+
         See Also
         --------
         la.larry.totuples : Convert to a flattened list of tuples.
         la.larry.fromlist : Convert a list of tuples to a larry.
         la.larry.fromdict : Convert a dictionary to a larry.
-        la.larry.fromcsv : Load a larry from a csv file. 
+        la.larry.fromcsv : Load a larry from a csv file.
 
         Examples
         --------
         Convert a list of label, value pairs to a larry:
-        
+
         >>> data = [('r0', 'c0', 1), ('r0', 'c1', 2), ('r1', 'c0', 3), ('r1', 'c1', 4)]
         >>> larry.fromtuples(data)
         label_0
@@ -4530,10 +4530,10 @@ class larry(object):
         x
         array([[ 1.,  2.],
                [ 3.,  4.]])
-                
+
         What happens if we throw out the last data point? The missing value
-        becomes NaN:       
-                
+        becomes NaN:
+
         >>> data = data[:-1]
         >>> larry.fromtuples(data)
         label_0
@@ -4545,22 +4545,22 @@ class larry(object):
         x
         array([[  1.,   2.],
                [  3.,  NaN]])
-                
-        """        
-        if len(data) == 0:        
-            return larry([])                   
-        else:            
+
+        """
+        if len(data) == 0:
+            return larry([])
+        else:
             # Split data into label and x
             labels = zip(*data)
-            xs = labels.pop(-1)               
-            # Determine labels, shape, and index into array	
-            x, label = fromlists(xs, labels)          
-            return larry(x, label) 
-        
+            xs = labels.pop(-1)
+            # Determine labels, shape, and index into array
+            x, label = fromlists(xs, labels)
+            return larry(x, label)
+
     def tolist(self):
         """
         Convert to a flattened list.
-        
+
         See Also
         --------
         la.larry.fromlist : Convert a flattened list to a larry.
@@ -4568,16 +4568,16 @@ class larry(object):
         la.larry.todict : Convert to a dictionary.
         la.larry.tocsv : Save larry to a csv file.
         la.larry.tofile : Save 1d or 2d larry to text file.
-        
+
         Examples
         --------
         >>> y = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
         >>> y.tolist()
-        [[1, 2, 3, 4], [('a', 'c'), ('a', 'd'), ('b', 'c'), ('b', 'd')]]       
-        
+        [[1, 2, 3, 4], [('a', 'c'), ('a', 'd'), ('b', 'c'), ('b', 'd')]]
+
         """
         yf = self.flatten()
-        return [yf.x.tolist(), yf.label[0]]                                   
+        return [yf.x.tolist(), yf.label[0]]
 
     @staticmethod
     def fromlist(data):
@@ -4591,25 +4591,25 @@ class larry(object):
             [(label0_1, label1_1, ..., labelN_1),
             (label0_2, label1_2, ..., labelN_2),
             ...
-            (label0_M, label1_M, ..., labelN_M)]]    
-        
+            (label0_M, label1_M, ..., labelN_M)]]
+
         Parameters
         ----------
         data : list
             The input must be a list such as that returned by larry.tolist. See
-            the example below.  
-            
+            the example below.
+
         Returns
         -------
         y : larry
             A larry constructed from `data` is returned.
-            
+
         See Also
         --------
         la.larry.tolist : Convert to a flattened list.
         la.larry.fromtuples : Convert a list of tuples to a larry.
         la.larry.fromdict : Convert a dictionary to a larry.
-        la.larry.fromcsv : Load a larry from a csv file.   
+        la.larry.fromcsv : Load a larry from a csv file.
 
         Examples
         --------
@@ -4624,36 +4624,36 @@ class larry(object):
         x
         array([[ 1.,  2.],
                [ 3.,  4.]])
-               
+
         """
-        if len(data) == 0:            
-            return larry([])           
-        else:    
-            x, label = fromlists(data[0], zip(*data[1]))      
-            return larry(x, label)             
+        if len(data) == 0:
+            return larry([])
+        else:
+            x, label = fromlists(data[0], zip(*data[1]))
+            return larry(x, label)
 
     def todict(self):
         """
         Convert to a dictionary.
-        
+
         See Also
         --------
         la.larry.totuples : Convert to a flattened list of tuples.
         la.larry.tolist : Convert to a flattened list.
         la.larry.tocsv : Save larry to a csv file.
         la.larry.tofile : Save 1d or 2d larry to text file.
-        
+
         Examples
         --------
         >>> y = larry([[1.0, 2.0], [3.0, 4.0]], [['a', 'b'], ['c', 'd']])
         >>> y.todict()
-        {('b', 'c'): 3.0, ('a', 'd'): 2.0, ('a', 'c'): 1.0, ('b', 'd'): 4.0}     
-        
+        {('b', 'c'): 3.0, ('a', 'd'): 2.0, ('a', 'c'): 1.0, ('b', 'd'): 4.0}
+
         """
         ylist = self.tolist()
         return dict(zip(ylist[1], ylist[0]))
 
-    @staticmethod    
+    @staticmethod
     def fromdict(data):
         """
         Convert a dictionary to a larry.
@@ -4664,25 +4664,25 @@ class larry(object):
             {(label0_1, label1_1, ..., labelN_1): value_1,
             (label0_2, label1_2, ..., labelN_2): value_2,
             ...
-            (label0_M, label1_M, ..., labelN_M): value_M}   
-        
+            (label0_M, label1_M, ..., labelN_M): value_M}
+
         Parameters
         ----------
         data : dict
             The input must be a dictionary such as that returned by
-            larry.todict See the example below. 
-            
+            larry.todict See the example below.
+
         Returns
         -------
         y : larry
             A larry constructed from `data` is returned.
-            
+
         See Also
         --------
-        la.larry.todict : Convert to a dictionary. 
+        la.larry.todict : Convert to a dictionary.
         la.larry.fromtuples : Convert a list of tuples to a larry.
         la.larry.fromlist : Convert a list of tuples to a larry.
-        la.larry.fromcsv : Load a larry from a csv file. 
+        la.larry.fromcsv : Load a larry from a csv file.
 
         Examples
         --------
@@ -4697,28 +4697,28 @@ class larry(object):
         x
         array([[ 1.,  2.],
                [ 3.,  4.]])
-               
-        """ 
+
+        """
         return larry.fromlist([data.values(), data.keys()])
-        
+
     def tocsv(self, filename, delimiter=','):
         """
         Save larry to a csv file.
-        
+
         The type information of the labels will be lost. So if a label element
         is, for example, an integer, a round trip (`tocsv` followed by
         `fromcsv`) will convert it to an integer. You can use the `maplabel`
         method to convert it back to an integer.
-        
+
         As you can see from above, the tocsv and fromcvs methods are fragile.
-        A more robust archiving solution is given by the IO class.        
-        
+        A more robust archiving solution is given by the IO class.
+
         The format of the csv file is::
 
             label0, label1, ..., labelN, value
             label0, label1, ..., labelN, value
             label0, label1, ..., labelN, value
-        
+
         Parameters
         ----------
         filname : str
@@ -4732,13 +4732,13 @@ class larry(object):
         la.larry.fromcsv : Load a larry from a csv file.
         la.larry.tofile : Save 1d or 2d larry to text file.
         la.IO: Save and load larrys in HDF5 format using a dictionary-like
-               interface.         
+               interface.
         la.larry.totuples : Convert to a flattened list of tuples.
         la.larry.tolist : Convert to a flattened list.
         la.larry.todict : Convert to a dictionary.
-            
+
         Examples
-        --------        
+        --------
         >>> y = larry([1, 2, 3], [['a', 'b', 'c']])
         >>> y.tocsv('/tmp/lar.csv')
         >>> larry.fromcsv('/tmp/lar.csv')
@@ -4748,7 +4748,7 @@ class larry(object):
             c
         x
         array([ 1.,  2.,  3.])
-        
+
         """
         if sys.version_info[0] < 3:
             fid = open(filename, 'w')
@@ -4756,34 +4756,34 @@ class larry(object):
             fid = open(filename, 'w', newline='')
         writer = csv.writer(fid, delimiter=delimiter)
         writer.writerows(self.totuples())
-        fid.close()                   
+        fid.close()
 
     @staticmethod
     def fromcsv(filename, delimiter=',', skiprows=0):
         """
         Load a larry from a csv file.
-        
+
         The type information of the labels is not contained in a csv file.
         Therefore, a label element that was, for example, an integer, will
         be converted to a string after a round trip (`tocsv` followed by
         `fromcsv`). You can use the `maplabel` methods to convert it back to
         an integer.
-        
+
         Integer data values will be converted to floats.
-        
+
         If a data value is missing, a ValueError will be raised. One label
         element per axis can be missing; the missing label element will be
         replace with the empty string ''.
-        
+
         As you can see from above, the tocsv and fromcvs methods are fragile.
         A more robust archiving solution is given by the IO class.
-        
+
         The format of the csv file is::
 
             label0, label1, ..., labelN, value
             label0, label1, ..., labelN, value
             label0, label1, ..., labelN, value
-        
+
         Parameters
         ----------
         filname : str
@@ -4792,13 +4792,13 @@ class larry(object):
             The delimiter used to separate the labels elements from eachother
             and from the values.
         skiprows : int, optional
-            Skip the first `skiprows` lines. No rows are skipped by default.          
-            
+            Skip the first `skiprows` lines. No rows are skipped by default.
+
         Raises
         ------
         ValueError
             If a data value is missing in the csv file.
-            
+
         See Also
         --------
         la.larry.tocsv : Save larry to a csv file.
@@ -4806,10 +4806,10 @@ class larry(object):
                interface.
         la.larry.fromtuples : Convert a list of tuples to a larry.
         la.larry.fromlist : Convert a flattened list to a larry.
-        la.larry.fromdict : Convert a dictionary to a larry.      
-            
+        la.larry.fromdict : Convert a dictionary to a larry.
+
         Examples
-        --------        
+        --------
         >>> y = larry([1, 2, 3], [['a', 'b', 'c']])
         >>> y.tocsv('/tmp/lar.csv')
         >>> larry.fromcsv('/tmp/lar.csv')
@@ -4819,19 +4819,19 @@ class larry(object):
             c
         x
         array([ 1.,  2.,  3.])
-        
+
         """
         fid = open(filename, 'r')
         reader = csv.reader(fid, delimiter=delimiter)
         [reader.next() for i in range(skiprows)]
         data = [row for row in reader]
         fid.close()
-        return larry.fromtuples(data) 
-    
+        return larry.fromtuples(data)
+
     def tofile(self, file, delimiter=','):
         """
         Save 1d or 2d larry to text file (overwrites file if already exists).
-        
+
         Parameters
         ----------
         file : {str, file object}
@@ -4843,12 +4843,12 @@ class larry(object):
         See Also
         --------
         la.IO: Save and load larrys in HDF5 format using a dictionary-like
-               interface.         
+               interface.
         la.larry.tocsv : Save larry to a csv file.
         la.larry.totuples : Convert to a flattened list of tuples.
         la.larry.tolist : Convert to a flattened list.
         la.larry.todict : Convert to a dictionary.
-            
+
         Examples
         --------
         Create a larry:
@@ -4873,7 +4873,7 @@ class larry(object):
         r2,3,4
 
         """
-        
+
         # Check number of dimensions in larry
         ndim = self.ndim
         if ndim not in (1, 2):
@@ -4898,7 +4898,7 @@ class larry(object):
                 f.write(line)
 
         elif ndim == 2:
-            
+
             # Column labels
             f.write(delimiter)
             line = []
@@ -4907,7 +4907,7 @@ class larry(object):
             line = delimiter.join(line)
             line += '\n'
             f.write(line)
-            
+
             # Row labels and array data
             for i in range(self.shape[0]):
                 line = [str(self.label[0][i])]
@@ -4916,7 +4916,7 @@ class larry(object):
                 line = delimiter.join(line)
                 line += '\n'
                 f.write(line)
-        
+
         else:
 
             if opened:
@@ -4928,16 +4928,16 @@ class larry(object):
         if opened:
             f.close()
 
-               
+
     # Copy -------------------------------------------------------------------
-          
+
     def copy(self):
         """
         Return a copy of a larry.
 
         Examples
         --------
-        >>> y = larry([1, 2], [['a', 'b']])        
+        >>> y = larry([1, 2], [['a', 'b']])
         >>> z = y.copy()
         >>> z
         label_0
@@ -4945,41 +4945,41 @@ class larry(object):
             b
         x
         array([1, 2])
-            
+
         """
         label = [list(z) for z in self.label]
         x = self.x.copy()
         return larry(x, label, validate=False)
-        
+
     def copylabel(self):
         """
         Return a copy of a larry's label.
-        
+
         Examples
-        --------        
-        >>> y = larry([1, 2], [['a', 'b']])        
+        --------
+        >>> y = larry([1, 2], [['a', 'b']])
         >>> label = y.copylabel()
         >>> label
         [['a', 'b']]
-        
+
         """
         return [list(z) for z in self.label]
-        
+
     def copyx(self):
         """Return a copy of a larry's data as a Numpy array.
 
         Examples
-        --------        
-        >>> y = larry([1, 2], [['a', 'b']])  
+        --------
+        >>> y = larry([1, 2], [['a', 'b']])
         >>> x = y.copyx()
         >>> x
         array([1, 2])
-        
+
         """
-        return self.x.copy()    
-        
+        return self.x.copy()
+
     # Print ------------------------------------------------------------------
-                
+
     def __repr__(self):
 
         x = []
@@ -4998,22 +4998,22 @@ class larry(object):
                 x.append(pad + str(self.label[i][-1]) + '\n')
             else:
                 for l in label:
-                    x.append(pad + str(l) + '\n')       
-        
+                    x.append(pad + str(l) + '\n')
+
         # x
         x.append('x\n')
         x.append(repr(self.x))
-        return ''.join(x)        
+        return ''.join(x)
 
 
 # Label indexing support functions for the lix method ------------------------
 
 class Lix(object):
     "Utility class for the lix method."
-    
+
     def __init__(self2, self):
         self2.lar = self
-        
+
     def __getitem__(self2, index):
         # Note: setitem uses the same (slightly modified) code
         # So if you update this code update setitem as well
@@ -5065,7 +5065,7 @@ class Lix(object):
             x = np.squeeze(y.x[np.ix_(*index2)])
             if x.ndim == 0:
                 return x[()]
-            else:    
+            else:
                 return larry(x, label)
         elif isscalar(index):
             # Example: lar.lix[0]
@@ -5136,8 +5136,8 @@ class Lix(object):
             y[index] = value
         else:
             raise IndexError('Unsupported indexing operation.')
-    
-def slicemaker(index, labelindex, axis): 
+
+def slicemaker(index, labelindex, axis):
     "Convert a slice that may contain labels to a slice with indices."
     msg1 = 'The %s element of a slice must be a list or a scalar.'
     msg2 = 'The %s element of the slice contains more than one item.'
@@ -5158,10 +5158,10 @@ def slicemaker(index, labelindex, axis):
             raise ValueError(msg2 % 'start')
         stop = labelindex(index.stop[0], axis=axis)
     elif isscalar(index.stop):
-        stop = index.stop                                                  
+        stop = index.stop
     else:
         raise ValueError(msg1 % 'stop')
-    return slice(start, stop, index.step)        
+    return slice(start, stop, index.step)
 
 def labels2indices(label, labels):
     "Convert list of labels to indices"
@@ -5169,4 +5169,4 @@ def labels2indices(label, labels):
         indices = map(label.index, labels)
     except ValueError:
         raise ValueError('Could not map label to index value.')
-    return indices  
+    return indices

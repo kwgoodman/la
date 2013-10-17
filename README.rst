@@ -18,14 +18,14 @@ array and a list of lists::
         y.label = [['AAPL', 'IBM', 'DELL'], [date1, date2, date3]]
         y.x = np.array([[209.19, 207.87, 210.11],
                         [129.03, 130.39, 130.55],
-                        [ 14.82,  15.11,  14.94]])               
+                        [ 14.82,  15.11,  14.94]])
 
 A larry can have any number of dimensions except zero. Here, for example, is
 one way to create a one-dimensional larry::
 
     >>> import la
     >>> y = la.larry([1, 2, 3])
-    
+
 In the statement above the list is converted to a Numpy array and the labels
 default to ``range(n)``, where *n* in this case is 3.
 
@@ -44,7 +44,7 @@ dictionary-like interface::
     >>> io['y'] = y   # <--- save
     >>> z = io['y']   # <--- load
     >>> del io['y']   # <--- delete from archive
-       
+
 For the most part larry acts like a Numpy array. And, whenever you want,
 you have direct access to the Numpy array that holds your data. For
 example if you have a function, *myfunc*, that works on Numpy arrays and
@@ -90,7 +90,7 @@ To install ``la``::
 
     $ python setup.py build
     $ sudo python setup.py install
-    
+
 Or, if you wish to specify where ``la`` is installed, for example inside
 ``/usr/local``::
 
@@ -123,7 +123,7 @@ After you have installed ``la``, run the suite of unit tests::
     Ran 2996 tests in 9.225s
     OK
     <nose.result.TextTestResult run=2996 errors=0 failures=0>
-    
+
 The ``la`` package contains C extensions that speed up common alignment
 operations such as adding two unaligned larrys. If the C extensions don't
 compile when you build ``la`` then there's an automatic fallback to python

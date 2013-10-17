@@ -15,10 +15,10 @@ __all__ = ['align', 'align_axis', 'align_raw', 'lrange', 'empty', 'ones',
 
 # Alignment -----------------------------------------------------------------
 
-def align(lar1, lar2, join='inner', cast=True):    
+def align(lar1, lar2, join='inner', cast=True):
     """
     Align two larrys using one of five join methods.
-    
+
     Parameters
     ----------
     lar1 : larry
@@ -30,7 +30,7 @@ def align(lar1, lar2, join='inner', cast=True):
     join : {'inner', 'outer', 'left', 'right', 'skip', list}, optional
         The join method used to align the two larrys. The default join method
         along each axis is 'inner', i.e., the intersection of the labels. If
-        `join` is a list of strings then the length of the list should be the 
+        `join` is a list of strings then the length of the list should be the
         same as the number of dimensions of the two larrys. The first element
         in the list is the join method for axis=0, the second element is the
         join method for axis=1, and so on. The 'skip' join method means to
@@ -44,23 +44,23 @@ def align(lar1, lar2, join='inner', cast=True):
         TypeError will be raised for int and bool dtype input if the join
         introduces new rows, columns, etc. An inner join will never introduce
         new rows, columns, etc.
-        
+
     Returns
     -------
     lar3 : larry
         A copy of the aligned version of `lar1`.
     lar4 : larry
-        A copy of the aligned version of `lar2`.                     
-    
+        A copy of the aligned version of `lar2`.
+
     See Also
     --------
     la.isaligned: Return True if two larrys are aligned along specified axis.
     la.align_raw: Low level version of la.align.
-        
+
     Examples
     --------
     Create two larrys:
-    
+
     >>> lar1 = larry([1, 2])
     >>> lar2 = larry([1, 2, 3])
 
@@ -97,14 +97,14 @@ def align(lar1, lar2, join='inner', cast=True):
         1
         2
     x
-    array([1, 2, 3])                              
+    array([1, 2, 3])
 
     """
-    
+
     # Align
     x1, x2, label, x1isview, x2isview = align_raw(lar1, lar2, join=join,
                                                    cast=cast)
-    
+
     # Convert x1 array to larry
     label1 = []
     for j, lab in enumerate(label):
@@ -112,7 +112,7 @@ def align(lar1, lar2, join='inner', cast=True):
             label1.append(list(lar1.label[j]))
         else:
             label1.append(list(lab))
-    if x1isview:    
+    if x1isview:
         x1 = x1.copy()
     lar3 = larry(x1, label1, validate=False)
 
@@ -123,21 +123,21 @@ def align(lar1, lar2, join='inner', cast=True):
             label2.append(list(lar2.label[j]))
         else:
             label2.append(list(lab))
-    if x2isview:    
+    if x2isview:
         x2 = x2.copy()
     lar4 = larry(x2, label2, validate=False)
 
     return lar3, lar4
 
-def align_raw(lar1, lar2, join='inner', cast=True):    
+def align_raw(lar1, lar2, join='inner', cast=True):
     """
     Align two larrys but return Numpy arrays and label instead of larrys.
-    
+
     This function is the same as la.align() except that instead of returning
     two larrys, the components of the two larrys are returned (two Numpy
     arrays, a label, and flags for whether the two Numpy arrays are views of
     the data arrays of the corresponding input larrys).
-    
+
     Parameters
     ----------
     lar1 : larry
@@ -149,7 +149,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
     join : {'inner', 'outer', 'left', 'right', 'skip', list}, optional
         The join method used to align the two larrys. The default join method
         along each axis is 'inner', i.e., the intersection of the labels. If
-        `join` is a list of strings then the length of the list should be the 
+        `join` is a list of strings then the length of the list should be the
         same as the number of dimensions of the two larrys. The first element
         in the list is the join method for axis=0, the second element is the
         join method for axis=1, and so on. The 'skip' join method means to
@@ -163,7 +163,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
         TypeError will be raised for int and bool dtype input if the join
         introduces new rows, columns, etc. An inner join will never introduce
         new rows, columns, etc.
-        
+
     Returns
     -------
     x1 : ndarray
@@ -177,26 +177,26 @@ def align_raw(lar1, lar2, join='inner', cast=True):
         True if x1 is a view of lar1.x; False otherwise. A view of lar1.x is
         retuned if the labels of `lar1` and `lar2` are the same along all
         axes; otherwise a copy is returned.
-    x2isview : bool           
+    x2isview : bool
         True if x2 is a view of lar2.x; False otherwise.  A view of lar2.x is
         retuned if the labels of `lar1` and `lar2` are the same along all
         axes; otherwise a copy is returned.
-        
+
     See Also
     --------
     la.align: Align two larrys using one of five join methods.
     la.isaligned: Return True if two larrys are aligned along specified axis.
-        
+
     Notes
     -----
     The returned Numpy arrays are views of the corresponding input larrys if
     the labels of the two input larrys are the same along all axes. If the
-    labels are not the same along any axis then a copy is returned.     
-       
+    labels are not the same along any axis then a copy is returned.
+
     Examples
     --------
     Create two larrys:
-    
+
     >>> y1 = larry([1, 2])
     >>> y2 = larry([1, 2, 3])
 
@@ -228,27 +228,27 @@ def align_raw(lar1, lar2, join='inner', cast=True):
     False
     >>> x2isview
     False
-    
+
     If the labels are already aligned, then a view of the data array is
     returned:
-    
+
     >>> lar1 = larry([1, 2])
     >>> lar2 = larry([3, 4])
     >>> x1, x2, label, x1isview, x2isview = la.flarry._align_raw(lar1, lar2)
     >>> x1isview
     True
     >>> x2isview
-    True                                 
+    True
 
     """
-    
+
     # Check number of dimensions
     ndim = lar2.ndim
     if lar1.ndim != ndim:
         msg = "'lar1' and 'lar2' must have the same number of dimensions."
         raise ValueError(msg)
-        
-    # Check join type    
+
+    # Check join type
     typejoin = type(join)
     if typejoin is str:
         join = [join] * ndim
@@ -258,14 +258,14 @@ def align_raw(lar1, lar2, join='inner', cast=True):
             raise ValueError(msg)
     else:
         raise TypeError("`join` must be a string or a list.")
-        
+
     # Initialize missing markers, set value later (in loop) only if needed.
-    # The weird initialization value ensures a user would never pick the same 
+    # The weird initialization value ensures a user would never pick the same
     undefined = 'aB!@12#E~=-'
     miss1 = undefined
     miss2 = undefined
-        
-    # For loop initialization                         
+
+    # For loop initialization
     label = []
     x1 = lar1.x
     x2 = lar2.x
@@ -273,13 +273,13 @@ def align_raw(lar1, lar2, join='inner', cast=True):
     label2 = lar2.label
     x1isview = True
     x2isview = True
-    
-    # Loop: align one axis at a time 
-    msg = "`fill` type not compatible with larry dtype"     
-    for ax in range(ndim):    
+
+    # Loop: align one axis at a time
+    msg = "`fill` type not compatible with larry dtype"
+    for ax in range(ndim):
         list1 = label1[ax]
         list2 = label2[ax]
-        joinax = join[ax]        
+        joinax = join[ax]
         if joinax == 'inner':
             if list1 == list2:
                 list3 = list(list1)
@@ -291,7 +291,7 @@ def align_raw(lar1, lar2, join='inner', cast=True):
                 x1 = x1.take(idx1, ax)
                 x2 = x2.take(idx2, ax)
                 x1isview = False
-                x2isview = False   
+                x2isview = False
         elif joinax == 'outer':
             if list1 == list2:
                 list3 = list(list1)
@@ -301,38 +301,38 @@ def align_raw(lar1, lar2, join='inner', cast=True):
                 idx1, idx1_miss = listmap_fill(list1, list3, fill=0)
                 idx2, idx2_miss = listmap_fill(list2, list3, fill=0)
                 x1 = x1.take(idx1, ax)
-                x2 = x2.take(idx2, ax) 
+                x2 = x2.take(idx2, ax)
                 if len(idx1_miss) > 0:
                     if miss1 == undefined:
                         miss1 = missing_marker(lar1)
                     if miss1 == NotImplemented:
                         if cast:
                             x1 = x1.astype(float)
-                            miss1 = missing_marker(x1)   
-                        else:                         
+                            miss1 = missing_marker(x1)
+                        else:
                             raise TypeError(msg)
                     index1 = [slice(None)] * ndim
-                    index1[ax] = idx1_miss      
-                    x1[index1] = miss1                                        
+                    index1[ax] = idx1_miss
+                    x1[index1] = miss1
                 if len(idx2_miss) > 0:
                     if miss2 == undefined:
                         miss2 = missing_marker(lar2)
                     if miss2 == NotImplemented:
                         if cast:
                             x2 = x2.astype(float)
-                            miss2 = missing_marker(x2)   
+                            miss2 = missing_marker(x2)
                         else:
                             raise TypeError(msg)
                     index2 = [slice(None)] * ndim
-                    index2[ax] = idx2_miss                             
+                    index2[ax] = idx2_miss
                     x2[index2] = miss2
                 x1isview = False
-                x2isview = False                     
+                x2isview = False
         elif joinax == 'left':
             list3 = list(list1)
             if list1 != list2:
                 idx2, idx2_miss = listmap_fill(list2, list3, fill=0)
-                x2 = x2.take(idx2, ax) 
+                x2 = x2.take(idx2, ax)
                 if len(idx2_miss) > 0:
                     if miss2 == undefined:
                         miss2 = missing_marker(lar2)
@@ -343,37 +343,37 @@ def align_raw(lar1, lar2, join='inner', cast=True):
                             miss2 = missing_marker(lar2)
                         if cast:
                             x2 = x2.astype(float)
-                            miss2 = missing_marker(x2)   
+                            miss2 = missing_marker(x2)
                         else:
                             raise TypeError(msg)
                     index2 = [slice(None)] * ndim
-                    index2[ax] = idx2_miss        
+                    index2[ax] = idx2_miss
                     x2[index2] = miss2
-                x2isview = False                    
+                x2isview = False
         elif joinax == 'right':
             list3 = list(list2)
-            if list1 != list2:            
+            if list1 != list2:
                 idx1, idx1_miss = listmap_fill(list1, list3, fill=0)
-                x1 = x1.take(idx1, ax) 
+                x1 = x1.take(idx1, ax)
                 if len(idx1_miss) > 0:
                     if miss1 == undefined:
                         miss1 = missing_marker(lar1)
                     if miss1 == NotImplemented:
                         if cast:
                             x1 = x1.astype(float)
-                            miss1 = missing_marker(x1)   
+                            miss1 = missing_marker(x1)
                         else:
                             raise TypeError(msg)
                     index1 = [slice(None)] * ndim
-                    index1[ax] = idx1_miss                            
-                    x1[index1] = miss1 
+                    index1[ax] = idx1_miss
+                    x1[index1] = miss1
                 x1isview = False
         elif joinax == 'skip':
             list3 = None
         else:
             raise ValueError('join type not recognized')
         label.append(list3)
-    
+
     return x1, x2, label, x1isview, x2isview
 
 def align_axis(lars, axis=0, join='inner'):
@@ -411,7 +411,7 @@ def align_axis(lars, axis=0, join='inner'):
     >>> l1 = la.larry([1, 2, 3, 4], [['a', 'b', 'c', 'd']])
     >>> l2 = la.larry([[4, 5], [6, 7]], [['x', 'y'], ['c', 'd']])
     >>> l3 = la.larry([8, 9, 10], [['c', 'd', 'e']])
-    
+
     Align the first axis of the first larry with the second axis of the
     second larry using an inner join:
 
@@ -432,7 +432,7 @@ def align_axis(lars, axis=0, join='inner'):
     x
     array([[4, 5],
            [6, 7]])
-    
+
     Align the first axis of two larrys with an outer join:
 
     >>> a1, a2 = la.align_axis([l1, l3], join='outer')
@@ -502,14 +502,14 @@ def align_axis(lars, axis=0, join='inner'):
         label = lars[-1].label[axis[-1]]
     else:
         label = frozenset(lars[0].label[axis[0]])
-        if join == 'inner': 
+        if join == 'inner':
             for i, lar in enumerate(lars[1:]):
                 label = label.intersection(lar.label[axis[i]])
         elif join == 'outer':
             for i, lar in enumerate(lars[1:]):
                 label = label.union(lar.label[axis[i]])
         label = list(label)
-        label.sort() 
+        label.sort()
     lars_out = []
 
     # Create output
@@ -537,10 +537,10 @@ def isaligned(lar1, lar2, axis=None):
     -------
     y : bool
         Returns True if labels are aligned; False if labels are not aligned.
-    
+
     See Also
     --------
-    la.align: Align two larrys using one of five join methods.   
+    la.align: Align two larrys using one of five join methods.
 
     Examples
     --------
@@ -560,7 +560,7 @@ def isaligned(lar1, lar2, axis=None):
 
     >>> la.isaligned(lar1, lar2, axis=1)
     True
-    
+
     """
     if axis is None:
         return lar1.label == lar2.label
@@ -570,25 +570,25 @@ def isaligned(lar1, lar2, axis=None):
 def union(axis, *args):
     """
     Union of labels along specified axis.
-    
+
     Parameters
     ----------
     axis : int
         The axis along which to take the union of the labels.
     args : larrys
         The larrys (separated by commas) over which the union is taken.
-        
+
     Returns
     -------
     out : list
         A list containing the union of the labels.
-        
+
     See Also
     --------
     la.intersection : Intersection of labels along specified axis.
-    
+
     Examples
-    --------            
+    --------
     >>> import la
     >>> y1 = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
     >>> y2 = larry([[1, 2], [3, 4]], [['e', 'b'], ['f', 'd']])
@@ -596,7 +596,7 @@ def union(axis, *args):
     ['a', 'b', 'e']
     >>> la.union(1, y1, y2)
     ['c', 'd', 'f']
-    
+
     """
     rc = frozenset([])
     for arg in args:
@@ -611,25 +611,25 @@ def union(axis, *args):
 def intersection(axis, *args):
     """
     Sorted list containing the intersection of labels along specified axis.
-    
+
     Parameters
     ----------
     axis : int
         The axis along which to take the intersection of the labels.
     args : larrys
         The larrys (separated by commas) over which the intersection is taken.
-        
+
     Returns
     -------
     out : list
         A sorted list containing the intersection of the labels.
-        
+
     See Also
     --------
     la.union : Union of labels along specified axis.
-    
+
     Examples
-    --------            
+    --------
     >>> import la
     >>> y1 = larry([[1, 2], [3, 4]], [['a', 'b'], ['c', 'd']])
     >>> y2 = larry([[1, 2], [3, 4]], [['e', 'b'], ['f', 'd']])
@@ -637,7 +637,7 @@ def intersection(axis, *args):
     ['b']
     >>> la.intersection(1, y1, y2)
     ['d']
-    
+
     """
     rc = frozenset(args[0].label[axis])
     for i in xrange(1, len(args)):
@@ -648,7 +648,7 @@ def intersection(axis, *args):
             raise TypeError('One or more input is not a larry')
     rc = list(rc)
     rc.sort()
-    return rc    
+    return rc
 
 # Binary-- -----------------------------------------------------------------
 
@@ -656,7 +656,7 @@ def binaryop(func, lar1, lar2, join='inner', cast=True, missone='ignore',
              misstwo='ignore', **kwargs):
     """
     Binary operation on two larrys using given function and join method.
-    
+
     Parameters
     ----------
     func : function
@@ -684,7 +684,7 @@ def binaryop(func, lar1, lar2, join='inner', cast=True, missone='ignore',
         new rows, columns, etc are created. If cast is set to False, then a
         TypeError will be raised for int and bool dtype input if the join
         introduces new rows, columns, etc. An inner join will never introduce
-        new rows, columns, etc.   
+        new rows, columns, etc.
     missone : {scalar, 'ignore'}, optional
         By default ('ignore') no special treatment of missing values is made.
         If, however, `missone` is set to something other than 'ignore', such
@@ -696,50 +696,50 @@ def binaryop(func, lar1, lar2, join='inner', cast=True, missone='ignore',
         By default ('ignore') no special treatment of missing values is made.
         If, however, `misstwo` is set to something other than 'ignore', such
         as 0, then all elements that are missing in both larrys are replaced
-        by `misstwo`.  
+        by `misstwo`.
     **kwargs : Keyword arguments, optional
         Keyword arguments to pass to `func`. The keyword arguments passed to
         `func` cannot have the following keys: join, cast, missone, misstwo.
-        
+
     Returns
     -------
     lar3 : larry
         The result of the binary operation.
-        
+
     See Also
     --------
-    la.align: Align two larrys using one of five join methods.  
-        
+    la.align: Align two larrys using one of five join methods.
+
     Examples
     --------
     Create two larrys:
-    
+
     >>> from la import nan
     >>> lar1 = larry([1,   2, nan], [['a', 'b', 'c']])
     >>> lar2 = larry([1, nan, nan], [['a', 'b', 'dd']])
-    
+
     The default is an inner join (note that lar1 and lar2 have two labels in
     common):
-    
+
     >>> la.binaryop(np.add, lar1, lar2)
     label_0
         a
         b
     x
     array([  2.,  NaN])
-        
+
     If one data element is missing in one larry but not in the other, then you
-    can replace the missing value with `missone` (here 0):     
-        
+    can replace the missing value with `missone` (here 0):
+
     >>> la.binaryop(np.add, lar1, lar2, missone=0)
     label_0
         a
         b
     x
     array([ 2.,  2.])
-        
-    An outer join: 
-    
+
+    An outer join:
+
     >>> la.binaryop(np.add, lar1, lar2, join='outer')
     label_0
         a
@@ -748,9 +748,9 @@ def binaryop(func, lar1, lar2, join='inner', cast=True, missone='ignore',
         dd
     x
     array([  2.,  NaN,  NaN,  NaN])
-    
+
     An outer join with single and double missing values replaced by zero:
-        
+
     >>> la.binaryop(np.add, lar1, lar2, join='outer', missone=0, misstwo=0)
     label_0
         a
@@ -758,40 +758,40 @@ def binaryop(func, lar1, lar2, join='inner', cast=True, missone='ignore',
         c
         dd
     x
-    array([ 2.,  2.,  0.,  0.])                               
+    array([ 2.,  2.,  0.,  0.])
 
     """
-    
+
     # Align
     x1, x2, label, ign1, ign2 = align_raw(lar1, lar2, join=join, cast=cast)
-    
+
     # Replacing missing values is slow, so only do if requested
     if missone != 'ignore' or misstwo != 'ignore':
         miss1 = ismissing(x1)
         miss2 = ismissing(x2)
-    if missone != 'ignore':    
+    if missone != 'ignore':
         missone1 = miss1 & ~miss2
         if missone1.any():
             np.putmask(x1, missone1, missone)
-        missone2 = miss2 & ~miss1    
+        missone2 = miss2 & ~miss1
         if missone2.any():
             np.putmask(x2, missone2, missone)
-    if misstwo != 'ignore':            
-        misstwo12 = miss1 & miss2    
+    if misstwo != 'ignore':
+        misstwo12 = miss1 & miss2
         if misstwo12.any():
             np.putmask(x1, misstwo12, misstwo)
             np.putmask(x2, misstwo12, misstwo)
-            
+
     # Binary function
     x = func(x1, x2, **kwargs)
-    
+
     return larry(x, label, validate=False)
-    
+
 def add(lar1, lar2, join='inner', cast=True, missone='ignore',
         misstwo='ignore'):
     """
-    Sum of two larrys using given join and fill methods. 
-    
+    Sum of two larrys using given join and fill methods.
+
     Parameters
     ----------
     lar1 : larry
@@ -815,7 +815,7 @@ def add(lar1, lar2, join='inner', cast=True, missone='ignore',
         new rows, columns, etc are created. If cast is set to False, then a
         TypeError will be raised for int and bool dtype input if the join
         introduces new rows, columns, etc. An inner join will never introduce
-        new rows, columns, etc.   
+        new rows, columns, etc.
     missone : {scalar, 'ignore'}, optional
         By default ('ignore') no special treatment of missing values is made.
         If, however, `missone` is set to something other than 'ignore', such
@@ -828,40 +828,40 @@ def add(lar1, lar2, join='inner', cast=True, missone='ignore',
         If, however, `misstwo` is set to something other than 'ignore', such
         as 0, then all elements that are missing in both larrys are replaced
         by `misstwo`.
-               
+
     Returns
     -------
     y : larry
         The sum of the two larrys, `lar1` and `lar2`.
-        
+
     See Also
     --------
     la.larry.__add__: Sum a larry with another larry, Numpy array, or scalar.
     la.binaryop: Binary operation on two larrys using given function.
-    
+
     Notes
     -----
     This is a convenience function that calls la.binaryop() with `func` set
-    to numpy.add.  
-        
+    to numpy.add.
+
     Examples
     --------
     Create two larrys:
-    
+
     >>> from la import nan
     >>> lar1 = larry([1,   2, nan], [['a', 'b', 'c']])
     >>> lar2 = larry([1, nan, nan], [['a', 'b', 'dd']])
-    
+
     The default is an inner join (note that lar1 and lar2 have two labels in
     common):
-    
+
     >>> la.add(lar1, lar2)
     label_0
         a
         b
     x
     array([  2.,  NaN])
-    
+
     which is the same result you get with lar1 + lar2:
 
     >>> lar1 + lar2
@@ -869,20 +869,20 @@ def add(lar1, lar2, join='inner', cast=True, missone='ignore',
         a
         b
     x
-    array([  2.,  NaN])    
-        
+    array([  2.,  NaN])
+
     If one data element is missing in one larry but not in the other, then you
-    can replace the missing value with `missone` (here 0):     
-        
+    can replace the missing value with `missone` (here 0):
+
     >>> la.add(lar1, lar2, missone=0)
     label_0
         a
         b
     x
     array([ 2.,  2.])
-        
-    An outer join: 
-    
+
+    An outer join:
+
     >>> la.add(lar1, lar2, join='outer')
     label_0
         a
@@ -891,9 +891,9 @@ def add(lar1, lar2, join='inner', cast=True, missone='ignore',
         dd
     x
     array([  2.,  NaN,  NaN,  NaN])
-    
+
     An outer join with single and double missing values replaced by zero:
-        
+
     >>> la.add(lar1, lar2, join='outer', missone=0, misstwo=0)
     label_0
         a
@@ -901,17 +901,17 @@ def add(lar1, lar2, join='inner', cast=True, missone='ignore',
         c
         dd
     x
-    array([ 2.,  2.,  0.,  0.])                               
+    array([ 2.,  2.,  0.,  0.])
 
-    """    
+    """
     return binaryop(np.add, lar1, lar2, join=join, cast=cast, missone=missone,
                     misstwo=misstwo)
 
 def subtract(lar1, lar2, join='inner', cast=True, missone='ignore',
              misstwo='ignore'):
     """
-    Difference of two larrys using given join and fill methods. 
-    
+    Difference of two larrys using given join and fill methods.
+
     Parameters
     ----------
     lar1 : larry
@@ -935,7 +935,7 @@ def subtract(lar1, lar2, join='inner', cast=True, missone='ignore',
         new rows, columns, etc are created. If cast is set to False, then a
         TypeError will be raised for int and bool dtype input if the join
         introduces new rows, columns, etc. An inner join will never introduce
-        new rows, columns, etc.   
+        new rows, columns, etc.
     missone : {scalar, 'ignore'}, optional
         By default ('ignore') no special treatment of missing values is made.
         If, however, `missone` is set to something other than 'ignore', such
@@ -948,40 +948,40 @@ def subtract(lar1, lar2, join='inner', cast=True, missone='ignore',
         If, however, `misstwo` is set to something other than 'ignore', such
         as 0, then all elements that are missing in both larrys are replaced
         by `misstwo`.
-               
+
     Returns
     -------
     y : larry
         The difference of the two larrys, `lar1` and `lar2`.
-        
+
     See Also
     --------
     la.larry.__sub__: Subtract a larry from another larry, array, or scalar.
     la.binaryop: Binary operation on two larrys using given function.
-    
+
     Notes
     -----
     This is a convenience function that calls la.binaryop() with `func` set
-    to numpy.subtract.  
-        
+    to numpy.subtract.
+
     Examples
     --------
     Create two larrys:
-    
+
     >>> from la import nan
     >>> lar1 = larry([1,   2, nan], [['a', 'b', 'c']])
     >>> lar2 = larry([1, nan, nan], [['a', 'b', 'dd']])
-    
+
     The default is an inner join (note that lar1 and lar2 have two labels in
     common):
-    
+
     >>> la.subtract(lar1, lar2)
     label_0
         a
         b
     x
     array([  0.,  NaN])
-    
+
     which is the same result you get with lar1 - lar2:
 
     >>> lar1 - lar2
@@ -990,19 +990,19 @@ def subtract(lar1, lar2, join='inner', cast=True, missone='ignore',
         b
     x
     array([  0.,  NaN])
-      
+
     If one data element is missing in one larry but not in the other, then you
-    can replace the missing value with `missone` (here 0):     
-        
+    can replace the missing value with `missone` (here 0):
+
     >>> la.subtract(lar1, lar2, missone=0)
     label_0
         a
         b
     x
     array([ 0.,  2.])
-        
-    An outer join: 
-    
+
+    An outer join:
+
     >>> la.subtract(lar1, lar2, join='outer')
     label_0
         a
@@ -1011,9 +1011,9 @@ def subtract(lar1, lar2, join='inner', cast=True, missone='ignore',
         dd
     x
     array([  0.,  NaN,  NaN,  NaN])
-    
+
     An outer join with single and double missing values replaced by zero:
-        
+
     >>> la.subtract(lar1, lar2, join='outer', missone=0, misstwo=0)
     label_0
         a
@@ -1021,17 +1021,17 @@ def subtract(lar1, lar2, join='inner', cast=True, missone='ignore',
         c
         dd
     x
-    array([ 0.,  2.,  0.,  0.])                               
+    array([ 0.,  2.,  0.,  0.])
 
-    """    
+    """
     return binaryop(np.subtract, lar1, lar2, join=join, cast=cast,
                     missone=missone, misstwo=misstwo)
-                    
+
 def multiply(lar1, lar2, join='inner', cast=True, missone='ignore',
              misstwo='ignore'):
     """
     Multiply two larrys element-wise using given join and fill methods.
-    
+
     Parameters
     ----------
     lar1 : larry
@@ -1055,7 +1055,7 @@ def multiply(lar1, lar2, join='inner', cast=True, missone='ignore',
         new rows, columns, etc are created. If cast is set to False, then a
         TypeError will be raised for int and bool dtype input if the join
         introduces new rows, columns, etc. An inner join will never introduce
-        new rows, columns, etc.   
+        new rows, columns, etc.
     missone : {scalar, 'ignore'}, optional
         By default ('ignore') no special treatment of missing values is made.
         If, however, `missone` is set to something other than 'ignore', such
@@ -1068,40 +1068,40 @@ def multiply(lar1, lar2, join='inner', cast=True, missone='ignore',
         If, however, `misstwo` is set to something other than 'ignore', such
         as 0, then all elements that are missing in both larrys are replaced
         by `misstwo`.
-               
+
     Returns
     -------
     y : larry
         The element-wise product of the two larrys, `lar1` and `lar2`.
-        
+
     See Also
     --------
     la.larry.__mul__: Multiply a larry with another larry, array, or scalar.
     la.binaryop: Binary operation on two larrys using given function.
-    
+
     Notes
     -----
     This is a convenience function that calls la.binaryop() with `func` set
-    to numpy.multiply.  
-        
+    to numpy.multiply.
+
     Examples
     --------
     Create two larrys:
-    
+
     >>> from la import nan
     >>> lar1 = larry([1,   2, nan], [['a', 'b', 'c']])
     >>> lar2 = larry([1, nan, nan], [['a', 'b', 'dd']])
-    
+
     The default is an inner join (note that lar1 and lar2 have two labels in
     common):
-    
+
     >>> la.multiply(lar1, lar2)
     label_0
         a
         b
     x
     array([  1.,  NaN])
-    
+
     which is the same result you get with lar1 * lar2:
 
     >>> lar1 * lar2
@@ -1110,19 +1110,19 @@ def multiply(lar1, lar2, join='inner', cast=True, missone='ignore',
         b
     x
     array([  1.,  NaN])
-      
+
     If one data element is missing in one larry but not in the other, then you
-    can replace the missing value with `missone` (here 1):     
-        
+    can replace the missing value with `missone` (here 1):
+
     >>> la.multiply(lar1, lar2, missone=1)
     label_0
         a
         b
     x
     array([ 1.,  2.])
-        
-    An outer join: 
-    
+
+    An outer join:
+
     >>> la.multiply(lar1, lar2, join='outer')
     label_0
         a
@@ -1131,9 +1131,9 @@ def multiply(lar1, lar2, join='inner', cast=True, missone='ignore',
         dd
     x
     array([  1.,  NaN,  NaN,  NaN])
-    
-    An outer join with single and double missing values replaced by one:       
-        
+
+    An outer join with single and double missing values replaced by one:
+
     >>> la.multiply(lar1, lar2, join='outer', missone=1, misstwo=1)
     label_0
         a
@@ -1141,17 +1141,17 @@ def multiply(lar1, lar2, join='inner', cast=True, missone='ignore',
         c
         dd
     x
-    array([ 1.,  2.,  1.,  1.])                               
+    array([ 1.,  2.,  1.,  1.])
 
-    """    
+    """
     return binaryop(np.multiply, lar1, lar2, join=join, cast=cast,
-                    missone=missone, misstwo=misstwo)                    
+                    missone=missone, misstwo=misstwo)
 
 def divide(lar1, lar2, join='inner', cast=True, missone='ignore',
            misstwo='ignore'):
     """
     Divide two larrys element-wise using given join and fill methods.
-    
+
     Parameters
     ----------
     lar1 : larry
@@ -1175,7 +1175,7 @@ def divide(lar1, lar2, join='inner', cast=True, missone='ignore',
         new rows, columns, etc are created. If cast is set to False, then a
         TypeError will be raised for int and bool dtype input if the join
         introduces new rows, columns, etc. An inner join will never introduce
-        new rows, columns, etc.   
+        new rows, columns, etc.
     missone : {scalar, 'ignore'}, optional
         By default ('ignore') no special treatment of missing values is made.
         If, however, `missone` is set to something other than 'ignore', such
@@ -1188,40 +1188,40 @@ def divide(lar1, lar2, join='inner', cast=True, missone='ignore',
         If, however, `misstwo` is set to something other than 'ignore', such
         as 0, then all elements that are missing in both larrys are replaced
         by `misstwo`.
-               
+
     Returns
     -------
     y : larry
         The element-wise quotient of the two larrys, `lar1` and `lar2`.
-        
+
     See Also
     --------
     la.larry.__div__: Multiply a larry with another larry, array, or scalar.
     la.binaryop: Binary operation on two larrys using given function.
-    
+
     Notes
     -----
     This is a convenience function that calls la.binaryop() with `func` set
-    to numpy.divide.  
-        
+    to numpy.divide.
+
     Examples
     --------
     Create two larrys:
-    
+
     >>> from la import nan
     >>> lar1 = larry([1,   2, nan], [['a', 'b', 'c']])
     >>> lar2 = larry([1, nan, nan], [['a', 'b', 'dd']])
-    
+
     The default is an inner join (note that lar1 and lar2 have two labels in
     common):
-    
+
     >>> la.divide(lar1, lar2)
     label_0
         a
         b
     x
     array([  1.,  NaN])
-    
+
     which is the same result you get with lar1 / lar2:
 
     >>> lar1 / lar2
@@ -1230,19 +1230,19 @@ def divide(lar1, lar2, join='inner', cast=True, missone='ignore',
         b
     x
     array([  1.,  NaN])
-      
+
     If one data element is missing in one larry but not in the other, then you
-    can replace the missing value with `missone` (here 1):     
-        
+    can replace the missing value with `missone` (here 1):
+
     >>> la.divide(lar1, lar2, missone=1)
     label_0
         a
         b
     x
     array([ 1.,  2.])
-        
-    An outer join: 
-    
+
+    An outer join:
+
     >>> la.divide(lar1, lar2, join='outer')
     label_0
         a
@@ -1251,9 +1251,9 @@ def divide(lar1, lar2, join='inner', cast=True, missone='ignore',
         dd
     x
     array([  1.,  NaN,  NaN,  NaN])
-    
-    An outer join with single and double missing values replaced by one:       
-        
+
+    An outer join with single and double missing values replaced by one:
+
     >>> la.divide(lar1, lar2, join='outer', missone=1, misstwo=1)
     label_0
         a
@@ -1261,9 +1261,9 @@ def divide(lar1, lar2, join='inner', cast=True, missone='ignore',
         c
         dd
     x
-    array([ 1.,  2.,  1.,  1.])                               
+    array([ 1.,  2.,  1.,  1.])
 
-    """    
+    """
     return binaryop(np.divide, lar1, lar2, join=join, cast=cast,
                     missone=missone, misstwo=misstwo)
 
@@ -1272,12 +1272,12 @@ def divide(lar1, lar2, join='inner', cast=True, missone='ignore',
 def unique(lar, return_index=False, return_inverse=False):
     """
     Find the unique elements of a larry.
-    
+
     Returns the sorted unique elements of a larry as a Numpy array. There are
     two optional outputs in addition to the unique elements: the indices of the
     input larry that give the unique values, and the indices of the unique array
     that reconstruct the input array.
-    
+
     Parameters
     ----------
     ar : larry
@@ -1288,7 +1288,7 @@ def unique(lar, return_index=False, return_inverse=False):
     return_inverse : bool, optional
         If True, also return the indices of the unique larry that can be used
         to reconstruct `lar`.
-    
+
     Returns
     -------
     unique : ndarray
@@ -1299,7 +1299,7 @@ def unique(lar, return_index=False, return_inverse=False):
     unique_inverse : ndarray, optional
         The indices to reconstruct the (flattened) original larry from the
         unique array. Only provided if `return_inverse` is True.
-    
+
     Examples
     --------
     >>> la.unique(larry([1, 1, 2, 2, 3, 3]))
@@ -1307,9 +1307,9 @@ def unique(lar, return_index=False, return_inverse=False):
     >>> lar = larry([[1, 1], [2, 3]])
     >>> la.unique(lar)
     array([1, 2, 3])
-    
+
     Return the indices of the original larry that give the unique values:
-    
+
     >>> lar = larry(['a', 'b', 'b', 'c', 'a'])
     >>> u, indices = la.unique(lar, return_index=True)
     >>> u
@@ -1320,10 +1320,10 @@ def unique(lar, return_index=False, return_inverse=False):
     >>> lar[indices]
     array(['a', 'b', 'c'],
            dtype='|S1')
-    
+
     Reconstruct the input array (the data portion of the larry, not the label
     portion) from the unique values:
-    
+
     >>> lar = larry([1, 2, 6, 4, 2, 3, 2])
     >>> u, indices = la.unique(lar, return_inverse=True)
     >>> u
@@ -1338,7 +1338,7 @@ def unique(lar, return_index=False, return_inverse=False):
 
 def stack(mode, **kwargs):
     """Stack 2d larrys to make a 3d larry.
-    
+
     Parameters
     ----------
     mode : {'union', 'intersection'}
@@ -1347,18 +1347,18 @@ def stack(mode, **kwargs):
     kwargs : name=larry
         Variable length input listing the z axis name and larry. For example,
         stack('union', distance=x, temperature=y, pressure=z)
-        
+
     Returns
     -------
     out : larry
         Returns a 3d larry. The labels along all 3 dimenstions will be sorted.
-        
+
     Raises
     ------
     ValueError
         If mode is not union or intersection or if any of the input larrys are
         not 2d.
-        
+
     Examples
     --------
     >>> import la
@@ -1380,7 +1380,7 @@ def stack(mode, **kwargs):
     .
            [[ 5.,  6.],
             [ 7.,  8.]]])
-                        
+
     """
     if not np.all([kwargs[key].ndim == 2 for key in kwargs]):
         raise ValueError('All input larrys must be 2d')
@@ -1388,7 +1388,7 @@ def stack(mode, **kwargs):
         logic = union
     elif mode == 'intersection':
         logic = intersection
-    else:    
+    else:
         raise ValueError('mode must be union or intersection')
     row = logic(0, *kwargs.values())
     col = logic(1, *kwargs.values())
@@ -1404,28 +1404,28 @@ def stack(mode, **kwargs):
         x[i] = y.x
         zlabel.append(key)
     label = [zlabel, row, col]
-    return larry(x, label) 
-    
+    return larry(x, label)
+
 def panel(lar):
     """
     Convert a 3d larry of shape (n, m, k) to a 2d larry of shape (m*k, n).
-    
+
     Parameters
     ----------
     lar : 3d larry
         The input must be a 3d larry.
-        
+
     Returns
     -------
     y : 2d larry
         If the input larry has shape (n, m, k) then a larry of shape (m*k, n)
         is returned.
-        
+
     See Also
     --------
     la.larry.swapaxes : Swap the two specified axes.
-    la.larry.flatten : Collapsing into one dimension.  
-        
+    la.larry.flatten : Collapsing into one dimension.
+
     Examples
     --------
     First make a 3d larry:
@@ -1433,7 +1433,7 @@ def panel(lar):
     >>> x = np.ones((2,2)).cumsum(0) - 1
     >>> lar = la.larry(x, [['r1', 'r2'], ['c1', 'c2']])
     >>> lar = lar.insertaxis(0, "name")
-    >>> lar 
+    >>> lar
     label_0
         name
     label_1
@@ -1448,7 +1448,7 @@ def panel(lar):
 
     Then make a panel:
 
-    >>> la.panel(lar) 
+    >>> la.panel(lar)
     label_0
         ('r1', 'c1')
         ('r1', 'c2')
@@ -1461,7 +1461,7 @@ def panel(lar):
            [ 0.],
            [ 1.],
            [ 1.]])
- 
+
     """
     if lar.ndim != 3:
         raise ValueError("lar must be 3d.")
@@ -1473,28 +1473,28 @@ def panel(lar):
 def cov(lar):
     """
     Covariance matrix adjusted for missing (NaN) values.
-    
+
     Note: Only works on 2d larrys.
-    
+
     The mean of each row is assumed to be zero. So rows are not demeaned
     and therefore the covariance is normalized by the number of columns,
-    not by the number of columns minus 1.        
-    
+    not by the number of columns minus 1.
+
     Parameters
     ----------
     lar : larry
         The larry you want to find the covariance of.
-        
+
     Returns
     -------
     out : larry
         For 2d input of shape (N, T), for example, returns a NxN covariance
         matrix.
-        
+
     Raises
     ------
     ValueError
-        If input is not 2d    
+        If input is not 2d
 
     """
     if lar.ndim != 2:
@@ -1503,14 +1503,14 @@ def cov(lar):
     x = covMissing(lar.x)
     return larry(x, label, validate=False)
 
-# Random -----------------------------------------------------------    
-    
+# Random -----------------------------------------------------------
+
 def rand(*args, **kwargs):
     """
     Random samples from a uniform distribution in a given shape.
-    
+
     The random samples are from a uniform distribution over ``[0, 1)``.
-    
+
     Parameters
     ----------
     args : `n` ints, optional
@@ -1522,28 +1522,28 @@ def rand(*args, **kwargs):
         match the `n` integers passed in or, optionally, you can pass in the
         label without the `n` shape integers. If rand is passed in then that
         will be used to generate the random numbers. In that way you can set
-        the state of the random number generator outside of this function.  
-    
+        the state of the random number generator outside of this function.
+
     Returns
     -------
     Z : larry or float
         A ``(d1, ..., dn)``-shaped larry of floating-point samples from
         a uniform distribution, or a single such float if no parameters were
         supplied.
-    
+
     See Also
     --------
     la.randn : Random samples from the "standard normal" distribution.
-    
+
     Examples
     --------
     A single random sample:
-    
+
     >>> la.rand()
     0.64323350463488804
-    
+
     A shape (2, 2) random larry:
-    
+
     >>> la.rand(2, 2)
     label_0
         0
@@ -1554,9 +1554,9 @@ def rand(*args, **kwargs):
     x
     array([[ 0.09277439,  0.94194077],
            [ 0.72887997,  0.41124147]])
-           
+
     A shape (2, 2) random larry with given labels:
-           
+
     >>> la.rand(label=[['row1', 'row2'], ['col1', 'col2']])
     label_0
         row1
@@ -1567,10 +1567,10 @@ def rand(*args, **kwargs):
     x
     array([[ 0.3449072 ,  0.40397174],
            [ 0.7791279 ,  0.86084403]])
-           
+
     Results are repeatable if you set the state of the random number generator
     outside of la.rand:
-           
+
     >>> import numpy as np
     >>> rs = np.random.RandomState([1, 2, 3])
     >>> la.randn(randn=rs.randn)
@@ -1582,33 +1582,33 @@ def rand(*args, **kwargs):
     0.89858244820995015
     >>> la.randn(randn=rs.randn)
     0.25528876596298244
-        
+
     """
     if 'rand' in kwargs:
         randfunc = kwargs['rand']
         kwargs = dict(kwargs)
         del kwargs['rand']
     else:
-        randfunc = np.random.rand   
+        randfunc = np.random.rand
     if len(args) > 0:
         return larry(randfunc(*args), **kwargs)
     elif 'label' in kwargs:
         n = [len(z) for z in kwargs['label']]
-        return larry(randfunc(*n), **kwargs)     
+        return larry(randfunc(*n), **kwargs)
     elif (len(args) == 0) and (len(kwargs) == 0):
         return randfunc()
     elif (len(args) == 0) and (len(kwargs) == 1) and ('rand' in kwargs):
-        return randfunc()    
+        return randfunc()
     else:
         raise ValueError('Input parameters not recognized')
-    
+
 def randn(*args, **kwargs):
     """
     Random samples from the "standard normal" distribution in a given shape.
-    
+
     The random samples are from a "normal" (Gaussian) distribution of mean 0
     and variance 1.
-    
+
     Parameters
     ----------
     args : `n` ints, optional
@@ -1620,28 +1620,28 @@ def randn(*args, **kwargs):
         match the `n` integers passed in or, optionally, you can pass in the
         label without the `n` shape integers. If randn is passed in then that
         will be used to generate the random numbers. In that way you can set
-        the state of the random number generator outside of this function.  
-    
+        the state of the random number generator outside of this function.
+
     Returns
     -------
     Z : larry or float
         A ``(d1, ..., dn)``-shaped larry of floating-point samples from
         the standard normal distribution, or a single such float if
         no parameters were supplied.
-    
+
     See Also
     --------
     la.rand : Random values from a uniform distribution in a given shape.
-    
+
     Examples
     --------
-    A single random sample:    
-    
+    A single random sample:
+
     >>> la.randn()
     0.33086946957034052
-    
-    A shape (2, 2) random larry:    
-    
+
+    A shape (2, 2) random larry:
+
     >>> la.randn(2, 2)
     label_0
         0
@@ -1652,9 +1652,9 @@ def randn(*args, **kwargs):
     x
     array([[-0.08182341,  0.79768108],
            [-0.23584547,  1.80118376]])
-           
-    A shape (2, 2) random larry with given labels:           
-           
+
+    A shape (2, 2) random larry with given labels:
+
     >>> la.randn(label=[['row1', 'row2'], ['col1', 'col2']])
     label_0
         row1
@@ -1680,33 +1680,33 @@ def randn(*args, **kwargs):
     0.89858244820995015
     >>> la.randn(randn=rs.randn)
     0.25528876596298244
-    
+
     """
     if 'randn' in kwargs:
         randnfunc = kwargs['randn']
         kwargs = dict(kwargs)
-        del kwargs['randn']        
+        del kwargs['randn']
     else:
-        randnfunc = np.random.randn   
+        randnfunc = np.random.randn
     if len(args) > 0:
         return larry(randnfunc(*args), **kwargs)
     elif 'label' in kwargs:
         n = [len(z) for z in kwargs['label']]
-        return larry(randnfunc(*n), **kwargs)     
+        return larry(randnfunc(*n), **kwargs)
     elif (len(args) == 0) and (len(kwargs) == 0):
         return randnfunc()
     elif (len(args) == 0) and (len(kwargs) == 1) and ('randn' in kwargs):
-        return randnfunc()         
+        return randnfunc()
     else:
         raise ValueError('Input parameters not recognized')
- 
+
 def sortby(lar, element, axis, reverse=False):
     """
     Sort 2d larry by the row or column corresponding to given label element.
-    
+
     Parameters
     ----------
-    lar : larry 
+    lar : larry
         A 2d input larry to be sorted.
     element : str
         The label element specifying the row or column by which to sort.
@@ -1716,12 +1716,12 @@ def sortby(lar, element, axis, reverse=False):
     reverse : bool, optional
         Keyword indicating whether to sort in ascending order (False) or
         descending order (True). The default is to sort in ascending order.
-    
+
     Returns
     -------
     lar2 : larry
         A sorted copy of the larry.
-    
+
     Examples
     --------
     Create a larry:
@@ -1793,23 +1793,23 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
         a ``(d1, ..., dn)``-shaped larry of consecutive integers (or spaced
         `step` apart if such a keyword argument is used), labeled either by
         integers or by the labels supplied.
-  
+
     See Also
     --------
     la.empty, la.ones, la.zeros
-  
+
     Examples
     --------
     A basic, 1d lrange using the 'dtype' argument:
-    
-    >>> la.lrange(3, dtype='f4') 
+
+    >>> la.lrange(3, dtype='f4')
     label_0
         0
         1
         2
     x
     array([0.0, 1.0, 2.0], dtype=np.float32)
- 
+
     A multi-dimensional lrange:
 
     >>> la.lrange((2,3,3))
@@ -1832,7 +1832,7 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
            [[ 9, 10, 11],
             [12, 13, 14],
             [15, 16, 17]]])
-    
+
     Using the `label` keyword:
 
     >>> la.lrange(label=[['a', 'b']])
@@ -1841,7 +1841,7 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
         b
     x
     array([0, 1])
-    
+
     """
     if label is not None:
         shape = [len(lab) for lab in label]
@@ -1856,14 +1856,14 @@ def lrange(shape=None, label=None, start=0, step=1, dtype=None):
 def empty(shape=None, label=None, dtype=None, order='C'):
     """
     Return a new larry of given shape and type, without initializing entries.
-    
+
     Parameters
     ----------
     shape : {int, tuple}, optional
         If `shape` is not given, then `label` must be supplied. If `shape` is
         an int, output will be one-dimensional.
     label : list, optional
-        List of lists, a label for the larry produced. 
+        List of lists, a label for the larry produced.
     dtype : data-type, optional
         The desired data-type for the array, e.g., `numpy.int8`.  Default is
         `numpy.float64`.
@@ -1876,16 +1876,16 @@ def empty(shape=None, label=None, dtype=None, order='C'):
     lar : larry
         a ``(d1, ..., dn)``-shaped larry of uninitialized values, labeled either
         by integers or by the labels supplied.
-    
+
     See Also
     --------
     la.zeros, la.ones, la.lrange
-    
+
     Examples
     --------
     A basic, 1d larry using the 'dtype' argument:
-    
-    >>> la.empty(3, dtype='i4') 
+
+    >>> la.empty(3, dtype='i4')
     label_0
         0
         1
@@ -1894,9 +1894,9 @@ def empty(shape=None, label=None, dtype=None, order='C'):
         4
     x
     array([0, -7, 987], dtype=np.int32)
- 
+
     A multi-dimensional larry:
-    
+
     >>> la.empty(2, 3, 3)
     label_0
         0
@@ -1916,7 +1916,7 @@ def empty(shape=None, label=None, dtype=None, order='C'):
            [[ 3.2e-254,  0e0,  0e0],
             [     0e0.,  0e0,  0e0],
             [     0e0,   0e0,  0e0]]])
-    
+
     Using the 'label' argument:
 
     >>> la.empty(label=[['a', 'b']])
@@ -1925,7 +1925,7 @@ def empty(shape=None, label=None, dtype=None, order='C'):
         b
     x
     array([0e0, -3.2e-256])
-    
+
     """
     if label is not None:
         shape = [len(lab) for lab in label]
@@ -1938,7 +1938,7 @@ def empty(shape=None, label=None, dtype=None, order='C'):
 def ones(shape=None, label=None, dtype=None, order='C'):
     """
     Return a new larry of given shape and type, filled with ones.
-    
+
     Parameters
     ----------
     shape : {int, tuple}, optional
@@ -1958,23 +1958,23 @@ def ones(shape=None, label=None, dtype=None, order='C'):
     lar : larry
         a ``(d1, ..., dn)``-shaped larry of ones, labeled either by
         integers or by the labels supplied.
-    
+
     See Also
     --------
     la.empty, la.zeros, la.lrange
-    
+
     Examples
     --------
     A basic, 1d larry using the 'dtype' argument:
-    
-    >>> la.ones(3, dtype='i4') 
+
+    >>> la.ones(3, dtype='i4')
     label_0
         0
         1
         2
     x
     array([1, 1, 1], dtype=np.int32)
- 
+
     A multi-dimensional larry:
 
     >>> la.ones(2, 3, 3)
@@ -1997,7 +1997,7 @@ def ones(shape=None, label=None, dtype=None, order='C'):
            [[ 1.,  1.,  1.],
             [ 1.,  1.,  1.],
             [ 1.,  1.,  1.]]])
-    
+
     Using the 'label' argument:
 
     >>> la.ones(label=[['a', 'b']])
@@ -2006,7 +2006,7 @@ def ones(shape=None, label=None, dtype=None, order='C'):
         b
     x
     array([1., 1.])
-    
+
     """
     lar = empty(shape, label, dtype, order)
     lar.x.fill(1)
@@ -2015,8 +2015,8 @@ def ones(shape=None, label=None, dtype=None, order='C'):
 def zeros(shape=None, label=None, dtype=None, order='C'):
     """
     Return a new larry of given shape and type, filled with zeros.
-    
-    Parameters 
+
+    Parameters
     ----------
     shape : {int, tuple}, optional
         If `shape` is not given, then `label` must be supplied. If `shape` is
@@ -2035,7 +2035,7 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
     lar : larry
         a ``(d1, ..., dn)``-shaped larry of zeros, labeled either by
         integers or by the labels supplied.
-    
+
     See Also
     --------
     la.empty, la.ones, la.lrange
@@ -2043,15 +2043,15 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
     Examples
     --------
     A basic, 1d larry using the 'dtype' argument:
-    
-    >>> la.zeros(3, dtype='i4') 
+
+    >>> la.zeros(3, dtype='i4')
     label_0
         0
         1
         2
     x
     array([0, 0, 0], dtype=np.int32)
- 
+
     A multi-dimensional larry:
 
     >>> la.zeros(2, 3, 3)
@@ -2074,7 +2074,7 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
            [[ 0.,  0.,  0.],
             [ 0.,  0.,  0.],
             [ 0.,  0.,  0.]]])
-    
+
     Using the 'label' argument:
 
     >>> la.zeros(label=[['a', 'b']])
@@ -2083,7 +2083,7 @@ def zeros(shape=None, label=None, dtype=None, order='C'):
         b
     x
     array([0., 0.])
-    
+
     """
     lar = empty(shape, label, dtype, order)
     lar.x.fill(0)
