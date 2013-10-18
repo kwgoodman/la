@@ -103,7 +103,7 @@ def align(lar1, lar2, join='inner', cast=True):
 
     # Align
     x1, x2, label, x1isview, x2isview = align_raw(lar1, lar2, join=join,
-                                                   cast=cast)
+                                                  cast=cast)
 
     # Convert x1 array to larry
     label1 = []
@@ -1392,8 +1392,6 @@ def stack(mode, **kwargs):
         raise ValueError('mode must be union or intersection')
     row = logic(0, *kwargs.values())
     col = logic(1, *kwargs.values())
-    row.sort()
-    col.sort()
     x = np.zeros((len(kwargs), len(row), len(col)))
     zlabel = []
     keys = sorted(kwargs.keys())
