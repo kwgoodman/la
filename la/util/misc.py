@@ -210,4 +210,3 @@ def fromlists(xs, labels):
         x.fill(np.nan)
         x[index] = xs 
     return x, label 
-

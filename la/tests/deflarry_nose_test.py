@@ -2,8 +2,12 @@
 # For support of python 2.5
 from __future__ import with_statement
 
+try:
+    from cStringIO import StringIO
+except ImportError: # Python 3
+    from io import StringIO
+
 from copy import deepcopy
-from StringIO import StringIO
 
 import numpy as np
 nan = np.nan

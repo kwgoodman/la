@@ -25,7 +25,7 @@ def functions():
 def test_all_nan(): 
     "Test larry methods for proper handling of all NaN input"      
     err_msg = "%s did not return NaN"
-    for parameters, methods in functions().iteritems():
+    for parameters, methods in functions().items():
         for method in methods:
             with np.errstate(invalid='ignore', divide='ignore'):
                 actual = getattr(lar(), method)(*parameters)                    

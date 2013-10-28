@@ -3538,7 +3538,7 @@ def take_test():
         y = la.rand(*shape)
         for axis in range(y.ndim):
             for i in range(1, y.shape[axis]):
-                idx = range(i)[::-1]
+                idx = list(range(i))[::-1]
                 ytake = y.take(idx, axis=axis)
                 index = [slice(None)] * y.ndim
                 index[axis] = idx

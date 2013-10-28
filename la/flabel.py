@@ -1,13 +1,6 @@
 "label (list of lists) functions"
 
 try:
-    import itertools.izip as zip
-except ImportError:  # Python 3
-    pass
-
-import numpy as np
-
-try:
     # The c version is faster...
     from la.cflabel import listmap
 except ImportError:

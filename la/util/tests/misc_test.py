@@ -30,7 +30,7 @@ def test_isa():
     t[(np.array(1)[()], 6)]   = (True,  False)
     t[(np.array(1.1)[()], 7)] = (False, True)
     t[(1j, 8)]                = (False, False)
-    for key, value in t.iteritems():
+    for key, value in t.items():
         key = key[0]
         msg = '\nisint(' + str(key) + ')'
         yield assert_equal, isint(key), value[0], msg

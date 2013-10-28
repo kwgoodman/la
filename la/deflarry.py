@@ -126,7 +126,7 @@ class larry(object):
                     count = {}
                     for li in l:
                         count[li] = count.get(li, 0) + 1
-                    for key, value in count.iteritems():
+                    for key, value in count.items():
                         if value > 1:
                             break
                     msg = "Elements of label not unique along axis %d. "
@@ -2695,9 +2695,9 @@ class larry(object):
             y = self
         if axis is None:
             for ax in range(y.ndim):
-                y.label[ax] = map(func, y.label[ax])
+                y.label[ax] = list(map(func, y.label[ax]))
         else:
-            y.label[axis] = map(func, y.label[axis])
+            y.label[axis] = list(map(func, y.label[axis]))
         return y
 
     # Moving window statistics ----------------------------------------------
@@ -4480,9 +4480,9 @@ class larry(object):
 
         """
         yf = self.flatten()
-        z = zip(*yf.label[0])
+        z = list(zip(*yf.label[0]))
         z.append(yf.x.tolist())
-        return zip(*z)
+        return list(zip(*z))
 
     @staticmethod
     def fromtuples(data):
@@ -4551,7 +4551,7 @@ class larry(object):
             return larry([])
         else:
             # Split data into label and x
-            labels = zip(*data)
+            labels = list(zip(*data))
             xs = labels.pop(-1)
             # Determine labels, shape, and index into array
             x, label = fromlists(xs, labels)
@@ -4629,7 +4629,7 @@ class larry(object):
         if len(data) == 0:
             return larry([])
         else:
-            x, label = fromlists(data[0], zip(*data[1]))
+            x, label = fromlists(data[0], list(zip(*data[1])))
             return larry(x, label)
 
     def todict(self):
@@ -4699,7 +4699,7 @@ class larry(object):
                [ 3.,  4.]])
 
         """
-        return larry.fromlist([data.values(), data.keys()])
+        return larry.fromlist([list(data.values()), list(data.keys())])
 
     def tocsv(self, filename, delimiter=','):
         """
@@ -5166,7 +5166,7 @@ def slicemaker(index, labelindex, axis):
 def labels2indices(label, labels):
     "Convert list of labels to indices"
     try:
-        indices = map(label.index, labels)
+        indices = list(map(label.index, labels))
     except ValueError:
         raise ValueError('Could not map label to index value.')
     return indices

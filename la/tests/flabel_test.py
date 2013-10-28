@@ -20,7 +20,7 @@ def listmap_test():
     msg = "listmap failed on list1=%s and list2=%s and ignore_unmappable=%s"
     for i in range(100):
         np.random.shuffle(list2)
-        idx1 = map(list1.index, list2)
+        idx1 = list(map(list1.index, list2))
         idx2 = listmap(list1, list2)
         ignore_unmappable = False
         yield assert_equal, idx1, idx2, msg % (list1, list2, ignore_unmappable)
@@ -34,7 +34,7 @@ def listmap_unmappable_test():
         list1 = list(range(6))
         list2 = list(range(5))
         np.random.shuffle(list2)
-        idx1 = map(list1.index, list2)
+        idx1 = list(map(list1.index, list2))
         list2 = ['unmappable #1'] + list2 + ['unmappable #2']
         ignore_unmappable = True
         idx2 = listmap(list1, list2, ignore_unmappable=ignore_unmappable)
@@ -56,7 +56,7 @@ def listmap_fill_test():
     msg = "listmap_fill failed on list1=%s and list2=%s"
     for i in range(100):
         np.random.shuffle(list2)
-        idx1 = map(list1.index, list2)
+        idx1 = list(map(list1.index, list2))
         idx2, ignore = listmap_fill(list1, list2)
         yield assert_equal, idx1, idx2, msg % (list1, list2)            
         

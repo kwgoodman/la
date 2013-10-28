@@ -636,11 +636,11 @@ def _load_label(group, ndim):
             labellist = g[:].tolist()
             datetime_type = group[str(i)].attrs['datetime_type']
             if datetime_type == 'date':
-                labellist = map(datetime.date.fromordinal, labellist)
+                labellist = list(map(datetime.date.fromordinal, labellist))
             elif datetime_type == 'time':
-                labellist = map(tuple2time, labellist)
+                labellist = list(map(tuple2time, labellist))
             elif datetime_type == 'datetime':
-                labellist = map(tuple2datetime, labellist)
+                labellist = list(map(tuple2datetime, labellist))
         label.append(labellist)
     return label
 
@@ -658,14 +658,14 @@ def _list2array(x):
         msg += 'same type.'
         raise TypeError(msg)
     if type0 == datetime.date:
-        x = map(datetime.date.toordinal, x)
+        x = list(map(datetime.date.toordinal, x))
         datetime_type = 'date'
     elif type0 == datetime.time:
-        x = map(time2tuple, x)
+        x = list(map(time2tuple, x))
         datetime_type = 'time'
         dtype = "i4,i4,i4,i4"
     elif type0 == datetime.datetime:
-        x = map(datetime2tuple, x)
+        x = list(map(datetime2tuple, x))
         datetime_type = 'datetime'
         dtype = ','.join(["i4" for i in range(len(x[0]))])
     return np.asarray(x, dtype=dtype), datetime_type

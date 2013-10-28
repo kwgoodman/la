@@ -53,7 +53,7 @@ def cross_validation(n, kfold, shuffle=None):
         raise ValueError("`kfold` must be two or greater.")
     if kfold > n:
         raise ValueError("`kfold` cannot be greater than `n`")
-    index = range(n)
+    index = list(range(n))
     if shuffle is None:
         np.random.shuffle(index)
     else:

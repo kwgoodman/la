@@ -186,7 +186,7 @@ def test_reduce_shape():
     msg = 'larry.%s failed for shape %s and axis %s'
     for method in reduce_methods():
         for shape in get_shapes():
-            axeslist = [None] + range(len(shape))
+            axeslist = [None] + list(range(len(shape)))
             for axis in axeslist:
                 arr = np.zeros(shape)
                 npmethod = getattr(arr, method['np'])
