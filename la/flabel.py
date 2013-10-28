@@ -77,7 +77,7 @@ except ImportError:
         [0, 1]
                   
         """
-        list1map = dict(zip(list1, xrange(len(list1))))
+        list1map = dict(zip(list1, range(len(list1))))
         if ignore_unmappable:
             idx = [list1map[i] for i in list2 if i in list1map]
         else:
@@ -154,7 +154,7 @@ except ImportError:
         [3]
         
         """
-        list1map = dict(zip(list1, xrange(len(list1))))
+        list1map = dict(zip(list1, range(len(list1))))
         index_missing = []
         index = [fill] * len(list2)
         i = -1

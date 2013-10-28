@@ -106,7 +106,7 @@ class larry(object):
         elif dtype != None:
             x = x.astype(dtype)
         if label is None:
-            label = [range(z) for z in x.shape]
+            label = [list(range(z)) for z in x.shape]
         if validate:
             ndim = x.ndim
             if ndim != len(label):
@@ -1766,7 +1766,7 @@ class larry(object):
             validate = False
             label = []
             allscalar = True
-            for ax in xrange(self.ndim):
+            for ax in range(self.ndim):
                 if ax < len(index):
                     idx = index[ax]
                     typ = type(idx)
@@ -2167,7 +2167,7 @@ class larry(object):
         if len(label) != self.ndim:
             raise ValueError('Must have exactly one label per dimension')
         index = []
-        for i in xrange(self.ndim):
+        for i in range(self.ndim):
             index.append(self.labelindex(label[i], axis=i))
         self.x[tuple(index)] = value
 
@@ -2204,7 +2204,7 @@ class larry(object):
         if len(label) != self.ndim:
             raise ValueError('Must have exactly one label per dimension')
         index = []
-        for i in xrange(self.ndim):
+        for i in range(self.ndim):
             index.append(self.labelindex(label[i], axis=i))
         return self.x[tuple(index)]
 

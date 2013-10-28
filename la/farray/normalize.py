@@ -208,7 +208,7 @@ def push(x, n, axis=-1):
     fidx = np.isfinite(y)
     recent = np.nan * np.ones(y.shape[:-1])  
     count = np.nan * np.ones(y.shape[:-1])          
-    for i in xrange(y.shape[-1]):
+    for i in range(y.shape[-1]):
         idx = (i - count) > n
         recent[idx] = np.nan
         idx = ~fidx[...,i]
@@ -234,7 +234,7 @@ def _quantileraw1d(xi, q):
         kdx = kdx.cumsum(axis=0)
         kdx = np.concatenate((-1 * np.ones((1, kdx.shape[1])), kdx), 0)
         kdx[-1, 0] = nx
-        for j in xrange(1, q+1):
+        for j in range(1, q+1):
             mdx[(jdx > kdx[j-1]) & (jdx <= kdx[j])] = j
         y[idx] = mdx
     return y

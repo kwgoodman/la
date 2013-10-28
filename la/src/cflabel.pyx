@@ -66,18 +66,18 @@ def listmap(list list1, list list2, bool ignore_unmappable=False):
     cdef int i, n1 = len(list1), n2 = len(list2)
     cdef dict list1map = {}
     cdef list idx
-    for i in xrange(n1):
+    for i in range(n1):
         list1map[list1[i]] = i 
     if ignore_unmappable:
         idx = []
-        for i in xrange(n2):
+        for i in range(n2):
             try:
                 idx.append(list1map[list2[i]]) 
             except KeyError:
                 pass       
     else:
         idx = [0] * n2
-        for i in xrange(n2):
+        for i in range(n2):
             idx[i] = list1map[list2[i]]
     return idx
     
@@ -145,9 +145,9 @@ def listmap_fill(list list1, list list2, int fill=0):
     cdef int i, n1 = len(list1), n2 = len(list2)
     cdef dict list1map = {}
     cdef list index = [fill] * n2, index_missing = []
-    for i in xrange(n1):
+    for i in range(n1):
         list1map[list1[i]] = i
-    for i in xrange(n2):
+    for i in range(n2):
         try:
             index[i] = list1map[list2[i]]
         except KeyError:

@@ -15,8 +15,8 @@ from la.flabel import listmap, listmap_fill
 
 def listmap_test():
     "listmap test"
-    list1 = range(6)
-    list2 = range(5)
+    list1 = list(range(6))
+    list2 = list(range(5))
     msg = "listmap failed on list1=%s and list2=%s and ignore_unmappable=%s"
     for i in range(100):
         np.random.shuffle(list2)
@@ -31,8 +31,8 @@ def listmap_unmappable_test():
     "listmap unmappable test"
     msg = "listmap failed on list1=%s and list2=%s and ignore_unmappable=%s"
     for i in range(100):
-        list1 = range(6)
-        list2 = range(5)
+        list1 = list(range(6))
+        list2 = list(range(5))
         np.random.shuffle(list2)
         idx1 = map(list1.index, list2)
         list2 = ['unmappable #1'] + list2 + ['unmappable #2']
@@ -51,8 +51,8 @@ def listmap_fill_test():
     #                     idx = map(list1.index, list2)
     #
     # when there are no items in list2 that are not in list1 
-    list1 = range(6)
-    list2 = range(5)
+    list1 = list(range(6))
+    list2 = list(range(5))
     msg = "listmap_fill failed on list1=%s and list2=%s"
     for i in range(100):
         np.random.shuffle(list2)

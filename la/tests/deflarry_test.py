@@ -45,7 +45,7 @@ class Test_binary(unittest.TestCase):
 
         # label
         label = []
-        for i in xrange(self.l1.ndim):
+        for i in range(self.l1.ndim):
             lab = set(self.l1.label[i]) & set(self.l2.label[i])
             lab = sorted(list(lab))
             label.append(lab)
@@ -171,7 +171,7 @@ class Test_binary(unittest.TestCase):
         p = self.l1 + self.l1
 
         # label
-        label = [range(self.l1.shape[0]), range(self.l1.shape[1])]
+        label = [list(range(self.l1.shape[0])), list(range(self.l1.shape[1]))]
         msg = printfail(label, p.label, 'label')
         self.assertTrue(label == p.label, msg)
 
@@ -203,7 +203,7 @@ class Test_binary(unittest.TestCase):
 
         # label
         label = []
-        for i in xrange(self.l1.ndim):
+        for i in range(self.l1.ndim):
             lab = set(self.l1.label[i]) & set(self.l2.label[i])
             lab = sorted(list(lab))
             label.append(lab)
@@ -336,7 +336,7 @@ class Test_binary(unittest.TestCase):
 
         # label
         label = []
-        for i in xrange(self.l1.ndim):
+        for i in range(self.l1.ndim):
             lab = set(self.l1.label[i]) & set(self.l2.label[i])
             lab = sorted(list(lab))
             label.append(lab)
@@ -363,7 +363,7 @@ class Test_binary(unittest.TestCase):
 
         # label
         label = []
-        for i in xrange(self.l1.ndim):
+        for i in range(self.l1.ndim):
             lab = set(self.l1.label[i])
             lab = sorted(list(lab))
             label.append(lab)
@@ -388,7 +388,7 @@ class Test_binary(unittest.TestCase):
 
         # label
         label = []
-        for i in xrange(self.l1.ndim):
+        for i in range(self.l1.ndim):
             lab = set(self.l1.label[i])
             lab = sorted(list(lab))
             label.append(lab)
@@ -413,7 +413,7 @@ class Test_binary(unittest.TestCase):
 
         # label
         label = []
-        for i in xrange(self.l1.ndim):
+        for i in range(self.l1.ndim):
             lab = set(self.l1.label[i])
             lab = sorted(list(lab))
             label.append(lab)
@@ -438,7 +438,7 @@ class Test_binary(unittest.TestCase):
 
         # label
         label = []
-        for i in xrange(self.l1.ndim):
+        for i in range(self.l1.ndim):
             lab = set(self.l1.label[i])
             lab = sorted(list(lab))
             label.append(lab)
@@ -488,7 +488,7 @@ class Test_binary(unittest.TestCase):
 
         # label
         label = []
-        for i in xrange(self.l1.ndim):
+        for i in range(self.l1.ndim):
             lab = set(self.l1.label[i]) & set(self.l2.label[i])
             lab = sorted(list(lab))
             label.append(lab)
@@ -516,7 +516,7 @@ class Test_binary(unittest.TestCase):
 
         # label
         label = []
-        for i in xrange(self.l1.ndim):
+        for i in range(self.l1.ndim):
             lab = set(self.l1.label[i])
             lab = sorted(list(lab))
             label.append(lab)
@@ -544,7 +544,7 @@ class Test_binary(unittest.TestCase):
 
         # label
         label = []
-        for i in xrange(self.l1.ndim):
+        for i in range(self.l1.ndim):
             lab = set(self.l1.label[i])
             lab = sorted(list(lab))
             label.append(lab)
@@ -571,7 +571,7 @@ class Test_binary(unittest.TestCase):
 
         # label
         label = []
-        for i in xrange(self.l1.ndim):
+        for i in range(self.l1.ndim):
             lab = set(self.l1.label[i])
             lab = sorted(list(lab))
             label.append(lab)
@@ -597,7 +597,7 @@ class Test_binary(unittest.TestCase):
 
         # label
         label = []
-        for i in xrange(self.l2.ndim):
+        for i in range(self.l2.ndim):
             lab = set(self.l2.label[i])
             lab = sorted(list(lab))
             label.append(lab)
@@ -678,7 +678,7 @@ class Test_reduce(unittest.TestCase):
     def test_sum_2(self):
         "larry.sum_2"
         x = self.x.copy()
-        label = [range(x.shape[1])]
+        label = [list(range(x.shape[1]))]
         x[np.isnan(x)] = 0
         x = x.sum(0)
         t = larry(x, label)
@@ -690,7 +690,7 @@ class Test_reduce(unittest.TestCase):
     def test_sum_3(self):
         "larry.sum_3"
         x = self.x.copy()
-        label = [range(x.shape[0])]
+        label = [list(range(x.shape[0]))]
         x[np.isnan(x)] = 0
         x = x.sum(1)
         t = larry(x, label)
@@ -720,7 +720,7 @@ class Test_reduce(unittest.TestCase):
     def test_prod_2(self):
         "larry.prod_2"
         x = self.x.copy()
-        label = [range(x.shape[1])]
+        label = [list(range(x.shape[1]))]
         x[np.isnan(x)] = 1
         x = x.prod(0)
         t = larry(x, label)
@@ -732,7 +732,7 @@ class Test_reduce(unittest.TestCase):
     def test_prod_3(self):
         "larry.prod_3"
         x = self.x.copy()
-        label = [range(x.shape[0])]
+        label = [list(range(x.shape[0]))]
         x[np.isnan(x)] = 1
         x = x.prod(1)
         t = larry(x, label)
@@ -784,7 +784,7 @@ class Test_reduce(unittest.TestCase):
     def test_mean_2(self):
         "larry.mean_2"
         x = np.array([1.0, 1.0])
-        label = [range(x.shape[0])]
+        label = [list(range(x.shape[0]))]
         t = larry(x, label)
         p = self.l.mean(0)
         msg = printfail(t.x, p.x, 'x')
@@ -796,7 +796,7 @@ class Test_reduce(unittest.TestCase):
     def test_mean_3(self):
         "larry.mean_3"
         x = np.array([1.0, 1.0, 1.0])
-        label = [range(x.size)]
+        label = [list(range(x.size))]
         t = larry(x, label)
         p = self.l.mean(1)
         msg = printfail(t.x, p.x, 'x')
@@ -852,7 +852,7 @@ class Test_reduce(unittest.TestCase):
     def test_median_2(self):
         "larry.median_2"
         x = np.array([1.0, 1.0])
-        label = [range(x.shape[0])]
+        label = [list(list(range(x.shape[0])))]
         t = larry(x, label)
         p = self.l.median(0)
         msg = printfail(t.x, p.x, 'x')
@@ -864,7 +864,7 @@ class Test_reduce(unittest.TestCase):
     def test_median_3(self):
         "larry.median_3"
         x = np.array([1.0, 1.0, 1.0])
-        label = [range(x.size)]
+        label = [list(range(x.size))]
         t = larry(x, label)
         p = self.l.median(1)
         msg = printfail(t.x, p.x, 'x')
@@ -894,7 +894,7 @@ class Test_reduce(unittest.TestCase):
     def test_std_2(self):
         "larry.std_2"
         x = np.array([0.0, 0.0])
-        label = [range(x.shape[0])]
+        label = [list(range(x.shape[0]))]
         t = larry(x, label)
         p = self.l.std(0)
         msg = printfail(t.x, p.x, 'x')
@@ -906,7 +906,7 @@ class Test_reduce(unittest.TestCase):
     def test_std_3(self):
         "larry.std_3"
         x = np.array([0.0, 0.0, 0.0])
-        label = [range(x.size)]
+        label = [list(range(x.size))]
         t = larry(x, label)
         p = self.l.std(1)
         t[np.isnan(t.x)] = self.nancode
@@ -943,7 +943,7 @@ class Test_reduce(unittest.TestCase):
     def test_var_2(self):
         "larry.var_2"
         x = np.array([0.0, 0.0])
-        label = [range(x.shape[0])]
+        label = [list(range(x.shape[0]))]
         t = larry(x, label)
         p = self.l.var(0)
         msg = printfail(t.x, p.x, 'x')
@@ -955,7 +955,7 @@ class Test_reduce(unittest.TestCase):
     def test_var_3(self):
         "larry.var_3"
         x = np.array([0.0, 0.0, 0.0])
-        label = [range(x.size)]
+        label = [list(range(x.size))]
         t = larry(x, label)
         p = self.l.var(1)
         t[np.isnan(t.x)] = self.nancode
@@ -1377,7 +1377,7 @@ class Test_anyall(unittest.TestCase):
         self.x4 = np.array([[True, True]])
         self.x5 = np.array([[True, False]])
 
-        label = [range(self.x1.shape[0]), range(self.x1.shape[1])]
+        label = [list(range(self.x1.shape[0])), list(range(self.x1.shape[1]))]
         self.d1 = larry(self.x1, label)
         self.d2 = larry(self.x2)
         self.d3 = larry(self.x3, label)
@@ -2261,7 +2261,7 @@ class Test_calc(unittest.TestCase):
                       [ 1.0,   1.0,   1.0,   0.0,   nan]])
         with np.errstate(invalid='ignore', divide='ignore'):
             p = lx.ranking(axis=0)
-        label = [range(3), range(5)]
+        label = [list(range(3)), list(range(5))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2276,7 +2276,7 @@ class Test_calc(unittest.TestCase):
                       [ 1.0,   1.0,   1.0,   0.0,   nan]])
         with np.errstate(invalid='ignore', divide='ignore'):
             p = lx.ranking()
-        label = [range(3), range(5)]
+        label = [list(range(3)), list(range(5))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2292,7 +2292,7 @@ class Test_calc(unittest.TestCase):
                       [ 0.0,   0.0,   0.0,   0.0,   nan],
                       [ 1.0,   0.0,   0.5,  -0.5,  -1.0]])
         p = lx.ranking(axis=1)
-        label = [range(4), range(5)]
+        label = [list(range(4)), list(range(5))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2302,7 +2302,7 @@ class Test_calc(unittest.TestCase):
         lx = larry(x)
         t = np.array([[1.0],[-1.0], [0.0]])
         p = lx.ranking(axis=0)
-        label = [range(3), range(1)]
+        label = [list(range(3)), list(range(1))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2313,7 +2313,7 @@ class Test_calc(unittest.TestCase):
         t = np.array([[0.0], [0.0], [0.0]])
         with np.errstate(invalid='ignore', divide='ignore'):
             p = lx.ranking(axis=1)
-        label = [range(3), range(1)]
+        label = [list(range(3)), list(range(1))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2330,7 +2330,7 @@ class Test_calc(unittest.TestCase):
                       [ 0.0,   1.0,   0.5, -1.0,   0.0]])
         with np.errstate(invalid='ignore', divide='ignore'):
             p = lx.ranking()
-        label = [range(4), range(5)]
+        label = [list(range(4)), list(range(5))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2346,7 +2346,7 @@ class Test_calc(unittest.TestCase):
                       [-1.0/3, 2.0/3, -1.0,  2.0/3,   nan],
                       [ 0.0,   1.0 ,   0.0,  0.0  ,  -1.0]])
         p = lx.ranking(1)
-        label = [range(4), range(5)]
+        label = [list(range(4)), list(range(5))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2362,7 +2362,7 @@ class Test_calc(unittest.TestCase):
                       [ 2.0/3,  1.0/3,  2.0/3,   0.0],
                       [ 2.0/3,    1.0,  2.0/3,   1.0]])
         p = lx.ranking(0)
-        label = [range(4), range(4)]
+        label = [list(range(4)), list(range(4))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2380,7 +2380,7 @@ class Test_calc(unittest.TestCase):
                       [ 2.0/3,    1.0,  2.0/3,   1.0]])
         t = t.T
         p = lx.ranking(1)
-        label = [range(4), range(4)]
+        label = [list(range(4)), list(range(4))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2394,7 +2394,7 @@ class Test_calc(unittest.TestCase):
         t = np.array([[ nan],
                       [ nan],
                       [ nan]])
-        label = [range(3), range(1)]
+        label = [list(range(3)), list(range(1))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2408,7 +2408,7 @@ class Test_calc(unittest.TestCase):
         t = np.array([[ nan, nan],
                       [ nan, nan],
                       [ nan, nan]])
-        label = [range(3), range(2)]
+        label = [list(range(3)), list(range(2))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2418,7 +2418,7 @@ class Test_calc(unittest.TestCase):
         lx = larry(x)
         p = lx.ranking(1)
         t = np.array([[ nan, nan, nan]])
-        label = [range(1), range(3)]
+        label = [list(range(1)), list(range(3))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2428,7 +2428,7 @@ class Test_calc(unittest.TestCase):
         lx = larry(x)
         p = lx.ranking(0)
         t = np.array([-1.0, 1.0, 0.0])
-        label = [range(3)]
+        label = [list(range(3))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2438,7 +2438,7 @@ class Test_calc(unittest.TestCase):
         lx = larry(x)
         p = lx.ranking(0)
         t = np.array([-1.0, nan, 0.0, 1.0])
-        label = [range(4)]
+        label = [list(range(4))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2448,7 +2448,7 @@ class Test_calc(unittest.TestCase):
         lx = larry(x)
         p = lx.ranking(None)
         t = np.array([-1.0, nan, 0.0, 1.0])
-        label = [range(4)]
+        label = [list(range(4))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2465,7 +2465,7 @@ class Test_calc(unittest.TestCase):
                       [ 1.0,  1.0,   -1.0,   1.0],
                       [ 1.0,  1.0,   -1.0,   1.0]])
         t *= 8.0 / 15
-        label = [range(4), range(4)]
+        label = [list(range(4)), list(range(4))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2483,7 +2483,7 @@ class Test_calc(unittest.TestCase):
                       [ 1.0,  nan,   -1.0,   1.0],
                       [ 1.0,  0.0,   -1.0,   1.0]])
         t *= 8.0 / 13
-        label = [range(4), range(4)]
+        label = [list(range(4)), list(range(4))]
         t = la.larry(t, label)
         ale(p, t, original=lx)
 
@@ -2491,7 +2491,7 @@ class Test_calc(unittest.TestCase):
         "larry.move_ranking_1"
         t = self.x6
         p = self.l6.move_ranking(2)
-        label = [range(2), range(5)]
+        label = [list(range(2)), list(range(5))]
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode
@@ -2505,7 +2505,7 @@ class Test_calc(unittest.TestCase):
                       [  nan,1.0,1.0,-1.0,-1.0]])
         with np.errstate(invalid='ignore', divide='ignore'):
             p = self.l5.move_ranking(2)
-        label = [range(2), range(5)]
+        label = [list(range(2)), list(range(5))]
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode
@@ -2519,7 +2519,7 @@ class Test_calc(unittest.TestCase):
                       [1.0,  nan,  1.0,  0.0,  -1.0]])
         with np.errstate(invalid='ignore', divide='ignore'):
             p = self.l5.move_ranking(2, axis=0)
-        label = [range(2), range(5)]
+        label = [list(range(2)), list(range(5))]
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode
@@ -2534,7 +2534,7 @@ class Test_calc(unittest.TestCase):
                       [nan, -1.0]])
         with np.errstate(invalid='ignore', divide='ignore'):
             p = self.l7.move_ranking(2)
-        label = [range(3), range(2)]
+        label = [list(range(3)), list(range(2))]
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode
@@ -2547,7 +2547,7 @@ class Test_calc(unittest.TestCase):
         a = np.array([[-1., -1.,  1., -1.],
                       [ 1.,  1., -1., -1.],
                       [-1., -1., -1.,  1.]])
-        desired = larry(a, [range(3), range(4)])
+        desired = larry(a, [list(range(3)), list(range(4))])
         actual = self.l1.quantile(2)
         ale(actual, desired, "quantile", original=self.l1)
 
@@ -2556,7 +2556,7 @@ class Test_calc(unittest.TestCase):
         a = np.array([[ 0.,  0.,  1., -1.],
                       [ 1.,  1.,  0.,  0.],
                       [-1., -1., -1.,  1.]])
-        desired = larry(a, [range(3), range(4)])
+        desired = larry(a, [list(range(3)), list(range(4))])
         actual = self.l1.quantile(3)
         ale(actual, desired, "quantile", original=self.l1)
 
@@ -2565,7 +2565,7 @@ class Test_calc(unittest.TestCase):
         a = np.array([[ 0.,  0.,  1., -1.],
                       [ 1.,  1.,  1., -1.],
                       [-1., -1.,  0.,  0.]])
-        desired = larry(a, [range(3), range(4)])
+        desired = larry(a, [list(range(3)), list(range(4))])
         actual = self.l1.quantile(3, axis=None)
         ale(actual, desired, "quantile", original=self.l1)
 
@@ -2593,7 +2593,7 @@ class Test_calc(unittest.TestCase):
                       [ 1.0, nan, 2.0, nan, nan],
                       [ 2.0, 2.0, nan, nan, nan],
                       [ 3.0, 3.0, 3.0, 3.0, nan]])
-        label = [range(4), range(5)]
+        label = [list(range(4)), list(range(5))]
         p = self.l4.cut_missing(0.9, axis=0)
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
@@ -2608,7 +2608,7 @@ class Test_calc(unittest.TestCase):
                       [ 1.0, nan, 2.0, nan, nan],
                       [ 2.0, 2.0, nan, nan, nan],
                       [ 3.0, 3.0, 3.0, 3.0, nan]])
-        label = [range(4), range(5)]
+        label = [list(range(4)), list(range(5))]
         p = self.l4.cut_missing(0.9, axis=1)
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
@@ -2623,7 +2623,7 @@ class Test_calc(unittest.TestCase):
                       [ 1.0, nan, 2.0],
                       [ 2.0, 2.0, nan],
                       [ 3.0, 3.0, 3.0]])
-        label = [range(4), range(3)]
+        label = [list(range(4)), list(range(3))]
         p = self.l4.cut_missing(0.5, axis=0)
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
@@ -2636,7 +2636,7 @@ class Test_calc(unittest.TestCase):
         "larry.cut_missing_4"
         t = np.array([[ nan, 1.0, 2.0, 3.0, 4.0],
                       [ 3.0, 3.0, 3.0, 3.0, nan]])
-        label = [[0, 3], range(5)]
+        label = [[0, 3], list(range(5))]
         p = self.l4.cut_missing(0.5, axis=1)
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode

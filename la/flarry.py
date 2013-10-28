@@ -640,7 +640,7 @@ def intersection(axis, *args):
 
     """
     rc = frozenset(args[0].label[axis])
-    for i in xrange(1, len(args)):
+    for i in range(1, len(args)):
         arg = args[i]
         if isinstance(arg, larry):
             rc = rc.intersection(arg.label[axis])
