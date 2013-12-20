@@ -7,6 +7,7 @@ import datetime
 
 import numpy as np
 nan = np.nan
+import h5py
 
 import la
 from la import larry
@@ -28,82 +29,84 @@ class Test_io(unittest.TestCase):
 
     def test_io_1(self):
         "io_general"
-        with IO(self.filename) as io:
-            x = larry([1,2,3])
-            io['x'] = x
-            self.assertTrue('x' in io, 'key missing')
-            self.assertTrue((x == io['x'][:]).all(), 'save and load difference')
-            self.assertTrue(['x'] == list(io.keys()), 'keys are different')
-            self.assertTrue(x.dtype == io['x'].dtype, 'dtype changed')
-            del io['x']
-            self.assertTrue(list(io.keys()) == [], 'key still present')
+        io = IO(self.filename)
+        x = larry([1,2,3])
+        io['x'] = x
+        self.assertTrue('x' in io, 'key missing')
+        self.assertTrue((x == io['x'][:]).all(), 'save and load difference')
+        self.assertTrue(['x'] == list(io.keys()), 'keys are different')
+        self.assertTrue(x.dtype == io['x'].dtype, 'dtype changed')
+        del io['x']
+        self.assertTrue(list(io.keys()) == [], 'key still present')
 
     def test_io_2(self):
         "io_repack"
-        with IO(self.filename) as io:
-            io['larry'] = la.rand(100, 100)
-            fs1 = io.freespace
-            sp1 = io.space
-            del io['larry']
-            io.repack()
-            fs2 = io.freespace
-            sp2 = io.space
-            self.assertTrue(fs2 < fs1, 'repack did not reduce freespace')
-            self.assertTrue(sp2 < sp1, 'repack did not reduce space')
+        io = IO(self.filename)
+        io['larry'] = la.rand(100, 100)
+        fs1 = io.freespace
+        sp1 = io.space
+        del io['larry']
+        io.repack()
+        fs2 = io.freespace
+        sp2 = io.space
+        self.assertTrue(fs2 < fs1, 'repack did not reduce freespace')
+        self.assertTrue(sp2 < sp1, 'repack did not reduce space')
 
     def test_io_3(self):
         "io_keys"
-        with IO(self.filename) as io:
-            io['1'] = larry([1,2,3])
-            io['2'] = larry([1,2,3])
-            io.f['3'] = [1,2,3]
-            io['1/2/3/4'] = larry([1,2,3])
-            keys = list(io.keys())
-            keys.sort()
-            theory = ['1', '1/2/3/4', '2']
-            self.assertTrue(keys == theory, 'keys do not match')
+        io = IO(self.filename)
+        io['1'] = larry([1,2,3])
+        io['2'] = larry([1,2,3])
+        f = h5py.File(self.filename)
+        f['3'] = [1,2,3]
+        f.close()
+        io['1/2/3/4'] = larry([1,2,3])
+        keys = list(io.keys())
+        keys.sort()
+        theory = ['1', '1/2/3/4', '2']
+        self.assertTrue(keys == theory, 'keys do not match')
 
     def test_io_4(self):
         "io_dates"
-        with IO(self.filename) as io:
-            x = [1, 2]
-            label = [[datetime.date(2010,3,1), datetime.date(2010,3,2)]]
-            desired = larry(x, label)
-            io['desired'] = desired
-            actual = io['desired'][:]
-            assert_larry_equal(actual, desired)
+        io = IO(self.filename)
+        x = [1, 2]
+        label = [[datetime.date(2010,3,1), datetime.date(2010,3,2)]]
+        desired = larry(x, label)
+        io['desired'] = desired
+        actual = io['desired'][:]
+        assert_larry_equal(actual, desired)
 
     def test_io_5(self):
         "io_datetimes"
-        with IO(self.filename) as io:
-            x = [1, 2]
-            label = [[datetime.datetime(2010,3,1,13,15,59,9998),
-                      datetime.datetime(2010,3,2,11,23)]]
-            desired = larry(x, label)
-            io['desired'] = desired
-            actual = io['desired'][:]
-            assert_larry_equal(actual, desired)
+        io = IO(self.filename)
+        x = [1, 2]
+        label = [[datetime.datetime(2010,3,1,13,15,59,9998),
+                  datetime.datetime(2010,3,2,11,23)]]
+        desired = larry(x, label)
+        io['desired'] = desired
+        actual = io['desired'][:]
+        assert_larry_equal(actual, desired)
 
     def test_io_6(self):
         "io_datetimes"
-        with IO(self.filename) as io:
-            x = [1, 2]
-            label = [[datetime.time(13,15,59,9998),
-                      datetime.time(11,23)]]
-            desired = larry(x, label)
-            io['desired'] = desired
-            actual = io['desired'][:]
-            assert_larry_equal(actual, desired)
+        io = IO(self.filename)
+        x = [1, 2]
+        label = [[datetime.time(13,15,59,9998),
+                  datetime.time(11,23)]]
+        desired = larry(x, label)
+        io['desired'] = desired
+        actual = io['desired'][:]
+        assert_larry_equal(actual, desired)
 
     def test_io_7(self):
         "io_empty (gh #68)"
-        with IO(self.filename) as io:
-            desired = larry([])
-            io['desired'] = desired
-            actual = io['desired']
-            if actual.size == 0:
-                actual = la.larry([])
-            assert_larry_equal(actual, desired)
+        io = IO(self.filename)
+        desired = larry([])
+        io['desired'] = desired
+        actual = io['desired']
+        if actual.size == 0:
+            actual = la.larry([])
+        assert_larry_equal(actual, desired)
 
 # nose tests ----------------------------------------------------------------
 

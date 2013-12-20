@@ -18,7 +18,7 @@ __all__ = ['IO', 'save', 'load', 'repack', 'is_archived_larry',
 class IO(object):
     "Save and load larrys in HDF5 format using a dictionary-like interface."
 
-    def __init__(self, filename, max_freespace=np.inf):
+    def __init__(self, filename):
         """
         Save and load larrys in HDF5 format using a dictionary-like interface.
 
@@ -114,12 +114,11 @@ class IO(object):
             False
 
         """
-        self.f = h5py.File(filename)
-        self.max_freespace = max_freespace
+        self.filename = filename
 
     def keys(self):
         "Return a list of larry names (keys) in archive."
-        return archive_directory(self.f)
+        return archive_directory(self.filename)
 
     def values(self):
         "Return a list of larry objects (values) in archive."
@@ -172,30 +171,20 @@ class IO(object):
         del self.f[key]
         self[key] = lar2
         
-    def close(self):
-        self.f.close()
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.close()
-
-    def __iter__(self):
-        return iter(self.keys())
-
     def __len__(self):
         return len(self.keys())
 
     def __getitem__(self, key):
-        if key in self.f:
-            if _is_archived_larry(self.f[key]):
-                return lara(self.f[key])
+        f = h5py.File(self.filename, 'r')
+        if key in f:
+            if _is_archived_larry(f[key]):
+                return lara(f[key])
             else:
                 msg = "%s is in the archive but it is not a larry."
                 raise KeyError(msg % key)
         else:
             raise KeyError("A larry named %s is not in the archive." % key)
+        f.close()
 
     def __setitem__(self, key, value):
 
@@ -205,17 +194,21 @@ class IO(object):
         if not isinstance(value, larry):
             raise TypeError('value must be a larry.')
 
+        f = h5py.File(self.filename, 'w')
+
         # Does an item (larry or otherwise) with given key already exist? If
-        # so delete. Note that self.f.keys() [all keys] is used instead of
+        # so delete. Note that f.keys() [all keys] is used instead of
         # self.keys() [keys that are larrys].
-        if key in self.f.keys():
+        if key in f.keys():
             self.__delitem__(key)
 
         # If you've made it this far the data looks OK so save it
-        save(self.f, value, key)
+        save(f, value, key)
+
+        f.close()
 
     def __delitem__(self, key):
-        delete(self.f, key)
+        delete(self.filename, key)
 
     def __repr__(self):
         table = [['larry', 'dtype', 'shape']]
@@ -232,13 +225,14 @@ class IO(object):
     @property
     def space(self):
         "The number of bytes used by the archive."
-        self.f.flush()
-        return self.f.fid.get_filesize()
+        f = h5py.File(self.filename, 'r')
+        size = f.fid.get_filesize()
+        f.close()
+        return size
 
     @property
     def freespace(self):
         "The number of bytes of freespace in the archive."
-        self.f.flush()
         global size
         size = 0
         def sizefinder(key, value):
@@ -246,8 +240,11 @@ class IO(object):
             global size
             if isinstance(value, h5py.Dataset):
                 size += value.id.get_storage_size()
-        self.f.visititems(sizefinder)
-        return self.space - size
+        f = h5py.File(self.filename, 'r')
+        f.visititems(sizefinder)
+        fs = f.space - size
+        f.close()
+        return fs
 
     def repack(self):
         """
@@ -258,12 +255,7 @@ class IO(object):
         freespace across openening and closing of the archive.
 
         """
-        self.f = repack(self.f)
-
-    @property
-    def filename(self):
-        "filename of archive."
-        return self.f.filename
+        repack(self.filename)
 
 class lara(object):
     """
