@@ -56,13 +56,6 @@ class IO(object):
         filename : str
             The `filename` is the path to the archive. If the file does not
             exists, it will be created.
-        max_freespace : scalar
-            If the size of the freespace (unused archive space) exceeds
-            `max_freespace` bytes after a larry is deleted from the archive,
-            then the archive is repacked. The default (np.inf) is to never
-            repack. Repack means to transfer all the larrys to a new archive
-            (with the same name) and delete the old archive. HDF5 does not
-            reuse the freespace across openening and closing of the archive.
 
         Returns
         -------
@@ -81,8 +74,7 @@ class IO(object):
         - Deleting a larry from the archive only unlinks it. You won't be able
           to reuse the unlinked space if you close the connection. This is
           a limitation of the HDF5 format, not a limitation of the IO class
-          or h5py. You can repack the archive with the repack method or have
-          it done automatically for you: see `freespace` above.
+          or h5py. You can repack the archive with the repack method.
 
         Examples
         --------
@@ -162,7 +154,6 @@ class IO(object):
         """
         for key in self:
             self.__delitem__(key)
-        self._repack_conditional()
 
     def merge(self, key, lar, update=False):
         """
@@ -225,7 +216,6 @@ class IO(object):
 
     def __delitem__(self, key):
         delete(self.f, key)
-        self._repack_conditional()
 
     def __repr__(self):
         table = [['larry', 'dtype', 'shape']]
@@ -260,14 +250,15 @@ class IO(object):
         return self.space - size
 
     def repack(self):
-        "Repack archive to remove freespace."
-        self.f = repack(self.f)
+        """
+        Repack archive to remove freespace.
 
-    def _repack_conditional(self):
-        "Repack if `max_freespace` is exceeded."
-        if np.isfinite(self.max_freespace):
-            if self.freespace() > self.max_freespace:
-                self.f = self.repack()
+        Repack means to transfer all the larrys to a new archive (with the
+        same name) and delete the old archive. HDF5 does not reuse the
+        freespace across openening and closing of the archive.
+
+        """
+        self.f = repack(self.f)
 
     @property
     def filename(self):
