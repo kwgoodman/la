@@ -178,13 +178,14 @@ class IO(object):
         f = h5py.File(self.filename, 'r')
         if key in f:
             if _is_archived_larry(f[key]):
-                return lara(f[key])
+                x = lara(f[key])
+                f.close()
+                return x
             else:
                 msg = "%s is in the archive but it is not a larry."
                 raise KeyError(msg % key)
         else:
             raise KeyError("A larry named %s is not in the archive." % key)
-        f.close()
 
     def __setitem__(self, key, value):
 
@@ -209,6 +210,11 @@ class IO(object):
 
     def __delitem__(self, key):
         delete(self.filename, key)
+
+    def __contains__(self, key):
+        if key in self.keys():
+            return True
+        return False
 
     def __repr__(self):
         table = [['larry', 'dtype', 'shape']]
