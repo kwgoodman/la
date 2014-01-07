@@ -99,11 +99,11 @@ class IO(object):
 
         >>> y = io['x']  # <-- Load
         >>> type(y)
-            <class 'la.io.io.lara'>
+            la.io.io.lara
         >>> type(y[:])
-            <class 'la.deflarry.larry'>
+            la.deflarry.larry
         >>> type(y[2:])
-            <class 'la.deflarry.larry'>
+            la.deflarry.larry
 
         Test if x is in the archive:
 
@@ -288,8 +288,10 @@ class lara(object):
 
         Parameters
         ----------
-        group : h5py.Group
-            An instance of the h5py Group object that contains a larry.
+        filename : str
+            The `filename` is the path to the archive.
+        key : str
+            Name of larry in archive.
 
         Example
         -------
@@ -306,18 +308,16 @@ class lara(object):
         Actually, only the labels are loaded. y is a lara object:
 
         >>> type(y)
-            <class 'la.io.io.lara'>
-        >>> type(y.x)
-            <class 'h5py.highlevel.Dataset'>
+            la.io.lara
         >>> type(y.label)
-            <type 'list'>
+            list
 
         To convert y into a larry just index into y:
 
         >>> type(y[:])
-            <class 'la.deflarry.larry'>
+            la.deflarry.larry
         >>> type(y[2:])
-            <class 'la.deflarry.larry'>
+            la.deflarry.larry
 
         """
 
