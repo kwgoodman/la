@@ -220,12 +220,15 @@ class IO(object):
         table = [['larry', 'dtype', 'shape']]
         keys = self.keys()
         keys.sort()  # Display in alphabetical order
+        f = h5py.File(self.filename, 'r')
         for key in keys:
             # Code would be neater if I wrote shape = str(self[key].shape)
             # but I don't want to load the array, I just want the shape
-            shape = str(self.f[key]['x'].shape)
-            dtype = str(self.f[key]['x'].dtype)
+            x = f[key]['x']
+            shape = str(x.shape)
+            dtype = str(x.dtype)
             table.append([key, dtype, shape])
+        f.close()
         return indent(table, hasHeader=True, delim='  ')
 
     @property
@@ -317,6 +320,7 @@ class lara(object):
             <class 'la.deflarry.larry'>
 
         """
+
         self.x = group['x']
         self.label = _load_label(group, len(self.x.shape))
 
