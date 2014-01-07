@@ -178,8 +178,8 @@ class IO(object):
         f = h5py.File(self.filename, 'r')
         if key in f:
             if _is_archived_larry(f[key]):
-                x = lara(f[key])
                 f.close()
+                x = lara(self.filename, key)
                 return x
             else:
                 msg = "%s is in the archive but it is not a larry."
@@ -195,7 +195,7 @@ class IO(object):
         if not isinstance(value, larry):
             raise TypeError('value must be a larry.')
 
-        f = h5py.File(self.filename, 'w')
+        f = h5py.File(self.filename)
 
         # Does an item (larry or otherwise) with given key already exist? If
         # so delete. Note that f.keys() [all keys] is used instead of
@@ -251,7 +251,7 @@ class IO(object):
                 size += value.id.get_storage_size()
         f = h5py.File(self.filename, 'r')
         f.visititems(sizefinder)
-        fs = f.space - size
+        fs = self.space - size
         f.close()
         return fs
 
@@ -282,7 +282,7 @@ class lara(object):
 
     """
 
-    def __init__(self, group):
+    def __init__(self, filename, key):
         """
         Meet lara, she's a larry-like archive object.
 
@@ -321,27 +321,55 @@ class lara(object):
 
         """
 
-        self.x = group['x']
-        self.label = _load_label(group, len(self.x.shape))
+        self.key = key
+        self.filename = filename
+        self.label = _load_label(filename, key)
+        self.x = None
 
     # Grab these methods from larry
     if sys.version_info[0] < 3:
-        __getitem__ = larry.__getitem__.im_func
-        __setitem__ = larry.__setitem__.im_func
+        _larry_getitem = larry.__getitem__.im_func
+        _larry_setitem = larry.__setitem__.im_func
         maxlabel = larry.maxlabel.im_func
         minlabel = larry.minlabel.im_func
         getlabel = larry.getlabel.im_func
         labelindex = larry.labelindex.im_func
     else:
-        __getitem__ = larry.__getitem__
-        __setitem__ = larry.__setitem__
+        _larry_getitem = larry.__getitem__
+        _larry_setitem = larry.__setitem__
         maxlabel = larry.maxlabel
         minlabel = larry.minlabel
         getlabel = larry.getlabel
         labelindex = larry.labelindex
 
-    shape = larry.shape
-    dtype = larry.dtype
+    def __getitem__(self, index):
+        f = h5py.File(self.filename, 'r')
+        self.x = f[self.key]['x']
+        lar = self._larry_getitem(index)
+        f.close()
+        self.x = None
+        return lar
+
+    def __setitem__(self, index, value):
+        f = h5py.File(self.filename)
+        self.x = f[self.key]['x']
+        self._larry_setitem(index, value)
+        self.x = None
+        f.close()
+
+    @property
+    def shape(self):
+        f = h5py.File(self.filename, 'r')
+        s = f[self.key]['x'].shape
+        f.close()
+        return s
+
+    @property
+    def dtype(self):
+        f = h5py.File(self.filename, 'r')
+        dt = f[self.key]['x'].dtype
+        f.close()
+        return dt
 
     @property
     def ndim(self):
@@ -618,8 +646,11 @@ def archive_directory(file):
 
 # Utility functions for internal use ----------------------------------------
 
-def _load_label(group, ndim):
+def _load_label(file, key):
     "Load larry labels from archive given the hpy5.Group object of the larry."
+    f, opened = _openfile(file)
+    ndim = len(f[key + '/x'].shape)
+    group = f[key]
     label = []
     for i in range(ndim):
         g = group[str(i)]
@@ -635,6 +666,8 @@ def _load_label(group, ndim):
             elif datetime_type == 'datetime':
                 labellist = list(map(tuple2datetime, labellist))
         label.append(labellist)
+    if opened:
+        f.close()
     return label
 
 def _list2array(x):
