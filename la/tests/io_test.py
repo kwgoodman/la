@@ -108,6 +108,90 @@ class Test_io(unittest.TestCase):
             actual = la.larry([])
         assert_larry_equal(actual, desired)
 
+    def test_io_values(self):
+        "io_values"
+        io = IO(self.filename)
+        x = larry([1,2,3])
+        y = larry([7,8,9])
+        io['x'] = x
+        io['y'] = y
+        values = io.values()
+        values = [v[:] for v in values]
+        assert_larry_equal(values[0], x)
+        assert_larry_equal(values[1], y)
+
+    def test_io_items(self):
+        "io_items"
+        io = IO(self.filename)
+        x = larry([1,2,3])
+        y = larry([7,8,9])
+        io['x'] = x
+        io['y'] = y
+        items = io.items()
+        values = [v[1][:] for v in items]
+        assert_larry_equal(values[0], x)
+        assert_larry_equal(values[1], y)       
+        keys = [v[0] for v in items]
+        self.assertTrue(keys == ['x', 'y'], 'keys do not match')
+
+    def test_io_iterkeys(self):
+        "io_iterkeys"
+        io = IO(self.filename)
+        x = larry([1,2,3])
+        y = larry([7,8,9])
+        io['x'] = x
+        io['y'] = y
+        itk = io.iterkeys()
+        keys = [k for k in itk]
+        self.assertTrue(keys == ['x', 'y'], 'keys do not match')
+
+    def test_io_itervalues(self):
+        "io_itervalues"
+        io = IO(self.filename)
+        x = larry([1,2,3])
+        y = larry([7,8,9])
+        io['x'] = x
+        io['y'] = y
+        itv = io.itervalues()
+        values = [v[:] for v in itv]
+        assert_larry_equal(values[0], x)
+        assert_larry_equal(values[1], y)       
+
+    def test_io_iteritems(self):
+        "io_iteritems"
+        io = IO(self.filename)
+        x = larry([1,2,3])
+        y = larry([7,8,9])
+        io['x'] = x
+        io['y'] = y
+        iti = io.iteritems()
+        items = [i for i in iti]
+        values = [v[1][:] for v in items]
+        assert_larry_equal(values[0], x)
+        assert_larry_equal(values[1], y)       
+        keys = [v[0] for v in items]
+        self.assertTrue(keys == ['x', 'y'], 'keys do not match')
+
+    def test_io_haskey(self):
+        "io_haskey"
+        io = IO(self.filename)
+        x = larry([1,2,3])
+        y = larry([7,8,9])
+        io['x'] = x
+        io['y'] = y
+        self.assertTrue(io.has_key('x'), 'keys do not match')
+        self.assertTrue(io.has_key('y'), 'keys do not match')
+        self.assertTrue(~io.has_key('z'), 'keys do not match')
+
+    def test_io_len(self):
+        "io_len"
+        io = IO(self.filename)
+        x = larry([1,2,3])
+        y = larry([7,8,9])
+        io['x'] = x
+        io['y'] = y
+        self.assertTrue(len(io) == 2, 'number of keys is wrong')
+
 # nose tests ----------------------------------------------------------------
 
 def datetime_test():

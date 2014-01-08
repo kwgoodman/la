@@ -170,7 +170,10 @@ class IO(object):
         lar2 = lar1.merge(lar, update=update)
         del self.f[key]
         self[key] = lar2
-        
+
+    def __iter__(self):
+        return iter(self.keys())        
+    
     def __len__(self):
         return len(self.keys())
 
