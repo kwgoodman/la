@@ -154,23 +154,6 @@ class IO(object):
         for key in self:
             self.__delitem__(key)
 
-    def merge(self, key, lar, update=False):
-        """
-        Merge, or optionally update, a larry with a second larry.
-
-        See larry.merge for details.
-
-        Note: the entire larry is loaded from the archive, merged with `lar`
-        and then the merged larry is saved back to the archive. The resize
-        function of h5py is not used. In other words, this function might not
-        be practical for very large larrys.
-
-        """
-        lar1 = self[key][:]
-        lar2 = lar1.merge(lar, update=update)
-        del self.f[key]
-        self[key] = lar2
-
     def __iter__(self):
         return iter(self.keys())
 

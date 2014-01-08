@@ -28,6 +28,7 @@ la 0.7
 - la now supports Python 3 (thanks to Benjamin Root for initial porting)
 - Can now index into a larry with a 1d bool larry
 - Added setitem ability to label indexing (lix)
+- la.IO no longer keeps the archive connection open between calls
 - C files generated with Cython 0.19.1 instead of 0.15.1
 
 **Breakage from la 0.6**
@@ -36,6 +37,7 @@ la 0.7
 - deprecated lar.movingsum() removed (use faster lar.move_sum() instead)
 - deprecated lar.movingrank() removed (use faster lar.move_ranking() instead)
 - la.stack() now sorts labels
+- merge method of the la.IO class has been removed
 
 **Bug fixes**
 
