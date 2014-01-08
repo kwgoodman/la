@@ -172,8 +172,8 @@ class IO(object):
         self[key] = lar2
 
     def __iter__(self):
-        return iter(self.keys())        
-    
+        return iter(self.keys())
+
     def __len__(self):
         return len(self.keys())
 

@@ -130,7 +130,7 @@ class Test_io(unittest.TestCase):
         items = io.items()
         values = [v[1][:] for v in items]
         assert_larry_equal(values[0], x)
-        assert_larry_equal(values[1], y)       
+        assert_larry_equal(values[1], y)
         keys = [v[0] for v in items]
         self.assertTrue(keys == ['x', 'y'], 'keys do not match')
 
@@ -155,7 +155,7 @@ class Test_io(unittest.TestCase):
         itv = io.itervalues()
         values = [v[:] for v in itv]
         assert_larry_equal(values[0], x)
-        assert_larry_equal(values[1], y)       
+        assert_larry_equal(values[1], y)
 
     def test_io_iteritems(self):
         "io_iteritems"
@@ -168,7 +168,7 @@ class Test_io(unittest.TestCase):
         items = [i for i in iti]
         values = [v[1][:] for v in items]
         assert_larry_equal(values[0], x)
-        assert_larry_equal(values[1], y)       
+        assert_larry_equal(values[1], y)
         keys = [v[0] for v in items]
         self.assertTrue(keys == ['x', 'y'], 'keys do not match')
 
