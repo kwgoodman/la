@@ -18,7 +18,7 @@ __all__ = ['IO', 'save', 'load', 'repack', 'is_archived_larry',
 class IO(object):
     "Save and load larrys in HDF5 format using a dictionary-like interface."
 
-    def __init__(self, filename, max_freespace=np.inf):
+    def __init__(self, filename):
         """
         Save and load larrys in HDF5 format using a dictionary-like interface.
 
@@ -56,13 +56,6 @@ class IO(object):
         filename : str
             The `filename` is the path to the archive. If the file does not
             exists, it will be created.
-        max_freespace : scalar
-            If the size of the freespace (unused archive space) exceeds
-            `max_freespace` bytes after a larry is deleted from the archive,
-            then the archive is repacked. The default (np.inf) is to never
-            repack. Repack means to transfer all the larrys to a new archive
-            (with the same name) and delete the old archive. HDF5 does not
-            reuse the freespace across openening and closing of the archive.
 
         Returns
         -------
@@ -79,10 +72,9 @@ class IO(object):
           overwritten when assigning a (key, value) pair if the key already
           exists in the archive.
         - Deleting a larry from the archive only unlinks it. You won't be able
-          to reuse the unlinked space if you close the connection. This is
-          a limitation of the HDF5 format, not a limitation of the IO class
-          or h5py. You can repack the archive with the repack method or have
-          it done automatically for you: see `freespace` above.
+          to reuse the unlinked space. This is a limitation of the HDF5
+          format, not a limitation of the IO class or h5py. You can repack
+          the archive with the repack method to reclaim the space.
 
         Examples
         --------
@@ -107,11 +99,11 @@ class IO(object):
 
         >>> y = io['x']  # <-- Load
         >>> type(y)
-            <class 'la.io.io.lara'>
+            la.io.io.lara
         >>> type(y[:])
-            <class 'la.deflarry.larry'>
+            la.deflarry.larry
         >>> type(y[2:])
-            <class 'la.deflarry.larry'>
+            la.deflarry.larry
 
         Test if x is in the archive:
 
@@ -122,12 +114,11 @@ class IO(object):
             False
 
         """
-        self.f = h5py.File(filename)
-        self.max_freespace = max_freespace
+        self.filename = filename
 
     def keys(self):
         "Return a list of larry names (keys) in archive."
-        return archive_directory(self.f)
+        return archive_directory(self.filename)
 
     def values(self):
         "Return a list of larry objects (values) in archive."
@@ -162,33 +153,6 @@ class IO(object):
         """
         for key in self:
             self.__delitem__(key)
-        self._repack_conditional()
-
-    def merge(self, key, lar, update=False):
-        """
-        Merge, or optionally update, a larry with a second larry.
-
-        See larry.merge for details.
-
-        Note: the entire larry is loaded from the archive, merged with `lar`
-        and then the merged larry is saved back to the archive. The resize
-        function of h5py is not used. In other words, this function might not
-        be practical for very large larrys.
-
-        """
-        lar1 = self[key][:]
-        lar2 = lar1.merge(lar, update=update)
-        del self.f[key]
-        self[key] = lar2
-        
-    def close(self):
-        self.f.close()
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.close()
 
     def __iter__(self):
         return iter(self.keys())
@@ -197,9 +161,12 @@ class IO(object):
         return len(self.keys())
 
     def __getitem__(self, key):
-        if key in self.f:
-            if _is_archived_larry(self.f[key]):
-                return lara(self.f[key])
+        f = h5py.File(self.filename, 'r')
+        if key in f:
+            if _is_archived_larry(f[key]):
+                f.close()
+                x = lara(self.filename, key)
+                return x
             else:
                 msg = "%s is in the archive but it is not a larry."
                 raise KeyError(msg % key)
@@ -214,41 +181,53 @@ class IO(object):
         if not isinstance(value, larry):
             raise TypeError('value must be a larry.')
 
+        f = h5py.File(self.filename)
+
         # Does an item (larry or otherwise) with given key already exist? If
-        # so delete. Note that self.f.keys() [all keys] is used instead of
+        # so delete. Note that f.keys() [all keys] is used instead of
         # self.keys() [keys that are larrys].
-        if key in self.f.keys():
+        if key in f.keys():
             self.__delitem__(key)
 
         # If you've made it this far the data looks OK so save it
-        save(self.f, value, key)
+        save(f, value, key)
+
+        f.close()
 
     def __delitem__(self, key):
-        delete(self.f, key)
-        self._repack_conditional()
+        delete(self.filename, key)
+
+    def __contains__(self, key):
+        if key in self.keys():
+            return True
+        return False
 
     def __repr__(self):
         table = [['larry', 'dtype', 'shape']]
         keys = self.keys()
         keys.sort()  # Display in alphabetical order
+        f = h5py.File(self.filename, 'r')
         for key in keys:
             # Code would be neater if I wrote shape = str(self[key].shape)
             # but I don't want to load the array, I just want the shape
-            shape = str(self.f[key]['x'].shape)
-            dtype = str(self.f[key]['x'].dtype)
+            x = f[key]['x']
+            shape = str(x.shape)
+            dtype = str(x.dtype)
             table.append([key, dtype, shape])
+        f.close()
         return indent(table, hasHeader=True, delim='  ')
 
     @property
     def space(self):
         "The number of bytes used by the archive."
-        self.f.flush()
-        return self.f.fid.get_filesize()
+        f = h5py.File(self.filename, 'r')
+        size = f.fid.get_filesize()
+        f.close()
+        return size
 
     @property
     def freespace(self):
         "The number of bytes of freespace in the archive."
-        self.f.flush()
         global size
         size = 0
         def sizefinder(key, value):
@@ -256,23 +235,22 @@ class IO(object):
             global size
             if isinstance(value, h5py.Dataset):
                 size += value.id.get_storage_size()
-        self.f.visititems(sizefinder)
-        return self.space - size
+        f = h5py.File(self.filename, 'r')
+        f.visititems(sizefinder)
+        fs = self.space - size
+        f.close()
+        return fs
 
     def repack(self):
-        "Repack archive to remove freespace."
-        self.f = repack(self.f)
+        """
+        Repack archive to remove freespace.
 
-    def _repack_conditional(self):
-        "Repack if `max_freespace` is exceeded."
-        if np.isfinite(self.max_freespace):
-            if self.freespace() > self.max_freespace:
-                self.f = self.repack()
+        Repack means to transfer all the larrys to a new archive (with the
+        same name) and delete the old archive. HDF5 does not reuse the
+        freespace across openening and closing of the archive.
 
-    @property
-    def filename(self):
-        "filename of archive."
-        return self.f.filename
+        """
+        repack(self.filename)
 
 class lara(object):
     """
@@ -290,14 +268,16 @@ class lara(object):
 
     """
 
-    def __init__(self, group):
+    def __init__(self, filename, key):
         """
         Meet lara, she's a larry-like archive object.
 
         Parameters
         ----------
-        group : h5py.Group
-            An instance of the h5py Group object that contains a larry.
+        filename : str
+            The `filename` is the path to the archive.
+        key : str
+            Name of larry in archive.
 
         Example
         -------
@@ -314,41 +294,68 @@ class lara(object):
         Actually, only the labels are loaded. y is a lara object:
 
         >>> type(y)
-            <class 'la.io.io.lara'>
-        >>> type(y.x)
-            <class 'h5py.highlevel.Dataset'>
+            la.io.lara
         >>> type(y.label)
-            <type 'list'>
+            list
 
         To convert y into a larry just index into y:
 
         >>> type(y[:])
-            <class 'la.deflarry.larry'>
+            la.deflarry.larry
         >>> type(y[2:])
-            <class 'la.deflarry.larry'>
+            la.deflarry.larry
 
         """
-        self.x = group['x']
-        self.label = _load_label(group, len(self.x.shape))
+
+        self.key = key
+        self.filename = filename
+        self.label = _load_label(filename, key)
+        self.x = None
 
     # Grab these methods from larry
     if sys.version_info[0] < 3:
-        __getitem__ = larry.__getitem__.im_func
-        __setitem__ = larry.__setitem__.im_func
+        _larry_getitem = larry.__getitem__.im_func
+        _larry_setitem = larry.__setitem__.im_func
         maxlabel = larry.maxlabel.im_func
         minlabel = larry.minlabel.im_func
         getlabel = larry.getlabel.im_func
         labelindex = larry.labelindex.im_func
     else:
-        __getitem__ = larry.__getitem__
-        __setitem__ = larry.__setitem__
+        _larry_getitem = larry.__getitem__
+        _larry_setitem = larry.__setitem__
         maxlabel = larry.maxlabel
         minlabel = larry.minlabel
         getlabel = larry.getlabel
         labelindex = larry.labelindex
 
-    shape = larry.shape
-    dtype = larry.dtype
+    def __getitem__(self, index):
+        f = h5py.File(self.filename, 'r')
+        self.x = f[self.key]['x']
+        lar = self._larry_getitem(index)
+        f.close()
+        self.x = None
+        return lar
+
+    def __setitem__(self, index, value):
+        f = h5py.File(self.filename)
+        self.x = f[self.key]['x']
+        self._larry_setitem(index, value)
+        self.x = None
+        f.close()
+
+    @property
+    def shape(self):
+        f = h5py.File(self.filename, 'r')
+        s = f[self.key]['x'].shape
+        f.close()
+        return s
+
+    @property
+    def dtype(self):
+        f = h5py.File(self.filename, 'r')
+        dt = f[self.key]['x'].dtype
+        f.close()
+        return dt
 
     @property
     def ndim(self):
@@ -625,8 +632,11 @@ def archive_directory(file):
 
 # Utility functions for internal use ----------------------------------------
 
-def _load_label(group, ndim):
+def _load_label(file, key):
     "Load larry labels from archive given the hpy5.Group object of the larry."
+    f, opened = _openfile(file)
+    ndim = len(f[key + '/x'].shape)
+    group = f[key]
     label = []
     for i in range(ndim):
         g = group[str(i)]
@@ -642,6 +652,8 @@ def _load_label(group, ndim):
             elif datetime_type == 'datetime':
                 labellist = list(map(tuple2datetime, labellist))
         label.append(labellist)
+    if opened:
+        f.close()
     return label
 
 def _list2array(x):
