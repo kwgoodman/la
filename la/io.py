@@ -72,9 +72,9 @@ class IO(object):
           overwritten when assigning a (key, value) pair if the key already
           exists in the archive.
         - Deleting a larry from the archive only unlinks it. You won't be able
-          to reuse the unlinked space if you close the connection. This is
-          a limitation of the HDF5 format, not a limitation of the IO class
-          or h5py. You can repack the archive with the repack method.
+          to reuse the unlinked space. This is a limitation of the HDF5
+          format, not a limitation of the IO class or h5py. You can repack
+          the archive with the repack method to reclaim the space.
 
         Examples
         --------
