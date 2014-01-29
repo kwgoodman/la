@@ -509,7 +509,7 @@ def load(file, key):
     # Load larry
     group = f[key]
     x = group['x'][:]
-    label = _load_label(group, x.ndim)
+    label = _load_label(f, key)
 
     # Close if file is a filename
     if opened:

@@ -47,6 +47,7 @@ la 0.7
 - #68 h5py prevents archiving of empty larrys
 - #69, #70 Unit test failures on Windows
 - #71 la.stack() Python 3.3 unit test failure
+- #73 la.load() crashes due to typo
 
 Older versions
 ==============

@@ -192,6 +192,23 @@ class Test_io(unittest.TestCase):
         io['y'] = y
         self.assertTrue(len(io) == 2, 'number of keys is wrong')
 
+    def test_io_load_1(self):
+        "io.load_1"
+        d = larry([1,2,3])
+        la.save(self.filename, d, 'd')
+        a = la.load(self.filename, 'd')
+        assert_larry_equal(a, d)
+        la.io.delete(self.filename, 'd')
+
+    def test_io_load_2(self):
+        "io.load_2"
+        f = h5py.File(self.filename)
+        d = larry([1,2,3])
+        la.save(f, d, 'd')
+        a = la.load(f, 'd')
+        assert_larry_equal(a, d)
+        la.io.delete(f, 'd')
+
 # nose tests ----------------------------------------------------------------
 
 def datetime_test():
