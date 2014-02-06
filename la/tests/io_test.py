@@ -208,6 +208,7 @@ class Test_io(unittest.TestCase):
         a = la.load(f, 'd')
         assert_larry_equal(a, d)
         la.io.delete(f, 'd')
+        f.close()
 
 # nose tests ----------------------------------------------------------------
 
