@@ -331,7 +331,18 @@ class lara(object):
     def __getitem__(self, index):
         f = h5py.File(self.filename, 'r')
         self.x = f[self.key]['x']
-        lar = self._larry_getitem(index)
+        if isinstance(index, list):
+            # at this point self.x is a h5py Dataset object, which doesn't
+            # have a take method, so do the indexing here instead of asking
+            # larry to do it.
+            label = list(self.label)
+            lab = [label[0][int(i)] for i in index]
+            if len(set(lab)) != len(lab):
+                raise IndexError("Duplicate labels along axis 0.")
+            label[0] = lab
+            lar = larry(self.x[index], label, validate=False)
+        else:
+            lar = self._larry_getitem(index)
         f.close()
         self.x = None
         return lar

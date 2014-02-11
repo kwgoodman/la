@@ -210,6 +210,15 @@ class Test_io(unittest.TestCase):
         la.io.delete(f, 'd')
         f.close()
 
+    def test_io_lara_1(self):
+        "lara indexing bug #40"
+        io = IO(self.filename)
+        io['a'] = la.lrange(3)
+        b = io['a']
+        # b[[0, 2]] raised:
+        # AttributeError: 'Dataset' object has no attribute 'take'
+        b[[0,2]]
+
 # nose tests ----------------------------------------------------------------
 
 def datetime_test():
