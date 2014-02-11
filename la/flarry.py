@@ -300,8 +300,18 @@ def align_raw(lar1, lar2, join='inner', cast=True):
                 list3.sort()
                 idx1, idx1_miss = listmap_fill(list1, list3, fill=0)
                 idx2, idx2_miss = listmap_fill(list2, list3, fill=0)
-                x1 = x1.take(idx1, ax)
-                x2 = x2.take(idx2, ax)
+                if x1.size == 0:
+                    shape = list(x1.shape)
+                    shape[ax] = len(idx1)
+                    x1 = np.ones(shape, dtype=x1.dtype)
+                else:
+                    x1 = x1.take(idx1, ax)
+                if x2.size == 0:
+                    shape = list(x2.shape)
+                    shape[ax] = len(idx2)
+                    x2 = np.ones(shape, dtype=x2.dtype)
+                else:
+                    x2 = x2.take(idx2, ax)
                 if len(idx1_miss) > 0:
                     if miss1 == undefined:
                         miss1 = missing_marker(lar1)
@@ -332,7 +342,12 @@ def align_raw(lar1, lar2, join='inner', cast=True):
             list3 = list(list1)
             if list1 != list2:
                 idx2, idx2_miss = listmap_fill(list2, list3, fill=0)
-                x2 = x2.take(idx2, ax)
+                if x2.size == 0:
+                    shape = list(x2.shape)
+                    shape[ax] = len(idx2)
+                    x2 = np.ones(shape, dtype=x2.dtype)
+                else:
+                    x2 = x2.take(idx2, ax)
                 if len(idx2_miss) > 0:
                     if miss2 == undefined:
                         miss2 = missing_marker(lar2)
@@ -354,7 +369,12 @@ def align_raw(lar1, lar2, join='inner', cast=True):
             list3 = list(list2)
             if list1 != list2:
                 idx1, idx1_miss = listmap_fill(list1, list3, fill=0)
-                x1 = x1.take(idx1, ax)
+                if x1.size == 0:
+                    shape = list(x1.shape)
+                    shape[ax] = len(idx1)
+                    x1 = np.ones(shape, dtype=x1.dtype)
+                else:
+                    x1 = x1.take(idx1, ax)
                 if len(idx1_miss) > 0:
                     if miss1 == undefined:
                         miss1 = missing_marker(lar1)

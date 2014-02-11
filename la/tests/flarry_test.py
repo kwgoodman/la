@@ -401,6 +401,16 @@ class Test_align_1d(unittest.TestCase):
         ale(a1, d1, msg % 'left', original=y1)
         ale(a2, d2, msg % 'right', original=y2)
 
+    def test_1d22(self):
+        "la.align() crash with empty larrys (gh #67)"
+        a = larry([])
+        b = larry([1, 2, 3])
+        for j in ('inner', 'outer', 'left', 'right', 'skip'):
+            align(a, a, join=j)
+            align(b, b, join=j)
+            align(a, b, join=j)
+            align(b, a, join=j)
+
 class Test_align_2d(unittest.TestCase):
     "Test 2d alignment of larrys"
 
@@ -515,6 +525,16 @@ class Test_align_2d(unittest.TestCase):
         msg = "align 2d fail on %s larry"
         ale(a1, d1, msg % 'left', original=y1)
         ale(a2, d2, msg % 'right', original=y2)
+
+    def test_2d22(self):
+        "la.align() crash with empty larrys (gh #67)"
+        a = larry([[]])
+        b = larry([[1, 2, 3], [4, 5, 6]])
+        for j in ('inner', 'outer', 'left', 'right', 'skip'):
+            align(a, a, join=j)
+            align(b, b, join=j)
+            align(a, b, join=j)
+            align(b, a, join=j)
 
 class Test_align_axis(unittest.TestCase):
     "Test align_axis on larrys"

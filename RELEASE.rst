@@ -45,6 +45,7 @@ la 0.7
 - #59 Proper int promotion in larry.cumsum() and larry.cumprod()
 - #62 la.cov() overwrites NaNs in input array
 - #65 lar.any() and lar.all() return wrong dtype with size=0 input
+- #67 la.align() crash with empty larrys
 - #68 h5py prevents archiving of empty larrys
 - #69, #70 Unit test failures on Windows
 - #71 la.stack() Python 3.3 unit test failure
