@@ -6,33 +6,36 @@ import string
 import numpy as np
 from la.flabel import list2index
 
-        
+
 C = string.ascii_letters + string.digits
+
+
 def randstring(n):
     "Random characters string selected from lower, upper letters and digits."
     s = []
     nc = len(C) - 1
     for i in range(n):
         s.append(C[random.randint(0, nc)])
-    return ''.join(s) 
-    
+    return ''.join(s)
+
+
 def isint(x):
     """Returns True if input is an integer; False otherwise.
-    
+
     Parameters
     ----------
     x : any
         Input can be of any type.
-        
+
     Returns
     -------
     y : bool
         True is `x` is an integer, False otherwise.
-        
+
     Notes
     -----
     A table showing what isint returns for various types:
-    
+
     ========== =======
        type     isint
     ========== =======
@@ -45,7 +48,7 @@ def isint(x):
     complex      False
     str          False
     bool         False
-    
+
     Examples
     --------
     >>> isint(1)
@@ -57,28 +60,29 @@ def isint(x):
     >>> isint(1j)
     False
     >>> isint('a')
-    False     
-                
+    False
+
     """
     return np.issubdtype(type(x), int)
-    
+
+
 def isfloat(x):
     """Returns True if input is a float; False otherwise.
-    
+
     Parameters
     ----------
     x : any
         Input can be of any type.
-        
+
     Returns
     -------
     y : bool
         True is `x` is a float, False otherwise.
-        
+
     Notes
     -----
     A table showing what isfloat returns for various types:
-    
+
     ========== =======
        type     isint
     ========== =======
@@ -91,7 +95,7 @@ def isfloat(x):
     complex      False
     str          False
     bool         False
-    
+
     Examples
     --------
     >>> isfloat(1)
@@ -103,28 +107,29 @@ def isfloat(x):
     >>> isfloat(1.1j)
     False
     >>> isfloat('a')
-    False   
-                
+    False
+
     """
     return np.issubdtype(type(x), float)
-    
+
+
 def isscalar(x):
     """Returns True if input is a scalar; False otherwise.
-    
+
     Parameters
     ----------
     x : any
         Input can be of any type.
-        
+
     Returns
     -------
     y : bool
         True is `x` is a scalar, False otherwise.
-        
+
     Notes
     -----
     A table showing what isscalar returns for various types:
-    
+
     ========== =======
        type     isint
     ========== =======
@@ -137,7 +142,7 @@ def isscalar(x):
     complex      False
     str          False
     bool         False
-    
+
     Examples
     --------
     >>> isscalar(1)
@@ -149,19 +154,21 @@ def isscalar(x):
     >>> isscalar(1j)
     False
     >>> isscalar('a')
-    False 
-                
+    False
+
     """
     return isfloat(x) or isint(x)
-    
+
+
 def isstring(s):
     "Return True if input is a str or np.string_."
     return issubclass(type(s), str)
 
+
 def fromlists(xs, labels):
     """
     Convert list of values and list of label tuples to larry label and x.
-    
+
     Parameters
     ----------
     xs : {tuple, list}
@@ -170,14 +177,14 @@ def fromlists(xs, labels):
     labels : list of tuples
         A list of tuples, one tuple per dimension of the output array, that
         give the label (coordinates) of the corresponding elements in `xs`.
-        
+
     Returns
     -------
     x : Numpy ndarray
         A Numpy array with order and shape given by `labels`.
     label : list
         The label that corresponds to `x`.
-        
+
     Examples
     --------
     >>> from la.util.misc import fromlists
@@ -189,10 +196,7 @@ def fromlists(xs, labels):
            [ 3.,  4.]])
     >>> label
     [['a', 'b'], ['a', 'b']]
-    >>> x
-    array([[ 1.,  2.],
-           [ 3.,  4.]])                    
-    
+
     """
     if (len(xs) == 0) and (len(labels) == 0):
         x = np.array([])
@@ -206,7 +210,9 @@ def fromlists(xs, labels):
             shape.append(len(label_unique))
             index.append(labelidx)
             label.append(label_unique)
+        if len(set(zip(*index))) != len(index[0]):
+            raise ValueError('Overlap in data')
         x = np.empty(shape)
         x.fill(np.nan)
-        x[index] = xs 
-    return x, label 
+        x[index] = xs
+    return x, label
