@@ -1,6 +1,6 @@
 
 import numpy as np
-from numpy.testing import assert_equal, assert_raises
+from numpy.testing import assert_raises
 
 from la import larry
 from la.util.testing import assert_larry_equal as ale
@@ -48,7 +48,7 @@ class Test_Testing_Assert_Larry(object):
         ale(y, y, 'identity', original=yc, iscopy=True)
     
         
-    def test_assert_larry_norefr(self):
+    def test_assert_larry_norefr2(self):
         y, x, yc = self.y, self.x, self.yc
         assert_raises(AssertionError, ale, 
                       y, y, 'raise noreference in c', original=y, iscopy=True)
