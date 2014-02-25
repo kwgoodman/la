@@ -454,8 +454,18 @@ def save(file, lar, key):
     fkey.attrs['larry'] = True
     fkey['x'] = lar.x
     for i in range(lar.ndim):
-        fkey[str(i)], datetime_type = _list2array(lar.label[i])
-        fkey[str(i)].attrs['datetime_type'] = datetime_type
+        arrays, datetime_types = _label2arrays(lar.label[i])
+        if len(arrays) <= 1:
+            fkey[str(i)] = arrays[0]
+            fkey[str(i)].attrs['datetime_type'] = datetime_types[0]
+        else:
+            # label elements are tuples
+            g = fkey.create_group(str(i))
+            n = len(arrays)
+            g.attrs['ntuple'] = n  # number of elements in tuple
+            for j in range(n):
+                g[str(j)] = arrays[j]
+                g[str(j)].attrs['datetime_type'] = datetime_types[j]
 
     # Close if file is a filename
     if opened:
@@ -650,22 +660,57 @@ def _load_label(file, key):
     group = f[key]
     label = []
     for i in range(ndim):
-        g = group[str(i)]
-        if g.size == 0:
-            labellist = []
+        obj = group[str(i)]
+        if isinstance(obj, h5py.Group):
+            # label elements are tuples
+            labellists = []
+            n = obj.attrs['ntuple']
+            for j in range(n):
+                d = obj[str(j)]  # label array
+                if d.size == 0:
+                    labellist = []
+                else:
+                    labellist = d[:].tolist()
+                    datetime_type = obj[str(j)].attrs['datetime_type']
+                    labellist = _date_coverter(labellist, datetime_type)
+                labellists.append(labellist)
+            label.append(zip(*labellists))
         else:
-            labellist = g[:].tolist()
-            datetime_type = group[str(i)].attrs['datetime_type']
-            if datetime_type == 'date':
-                labellist = list(map(datetime.date.fromordinal, labellist))
-            elif datetime_type == 'time':
-                labellist = list(map(tuple2time, labellist))
-            elif datetime_type == 'datetime':
-                labellist = list(map(tuple2datetime, labellist))
-        label.append(labellist)
+            if obj.size == 0:
+                labellist = []
+            else:
+                labellist = obj[:].tolist()
+                datetime_type = group[str(i)].attrs['datetime_type']
+                labellist = _date_coverter(labellist, datetime_type)
+            label.append(labellist)
     if opened:
         f.close()
     return label
+
+def _date_coverter(labellist, datetime_type):
+    if datetime_type == 'date':
+        labellist = list(map(datetime.date.fromordinal, labellist))
+    elif datetime_type == 'time':
+        labellist = list(map(tuple2time, labellist))
+    elif datetime_type == 'datetime':
+        labellist = list(map(tuple2datetime, labellist))
+    return labellist
+
+def _label2arrays(label):
+    "Convert label to list of arrays; multiple arrays if elements are tuples"
+    if len(label) == 0:
+        return [np.array([])], 'not_datetime'
+    if isinstance(label[0], tuple):
+        sublabels = zip(*label)
+    else:
+        sublabels = [label]
+    arrays = []
+    datetime_types = []
+    for lab in sublabels:
+        a, d = _list2array(list(lab))
+        arrays.append(a)
+        datetime_types.append(d)
+    return arrays, datetime_types
 
 def _list2array(x):
     "Convert list to array if elements are of the same type, raise otherwise."
@@ -762,4 +807,3 @@ def time2tuple(t):
 def tuple2time(i):
     "Convert tuple to a datetime.time object."
     return datetime.time(*i)
-

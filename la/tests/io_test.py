@@ -12,7 +12,8 @@ import h5py
 import la
 from la import larry
 from la import IO
-from la.io import datetime2tuple, tuple2datetime, time2tuple, tuple2time
+from la.io import (datetime2tuple, tuple2datetime, time2tuple, tuple2time,
+                   _list2array)
 from la.util.testing import assert_larry_equal
 
 
@@ -219,6 +220,24 @@ class Test_io(unittest.TestCase):
         # AttributeError: 'Dataset' object has no attribute 'take'
         b[[0,2]]
 
+    def test_tuple_label_1(self):
+        "io with tuple labels #1"
+        label = [(1, datetime.date(2001,1,10)), (2, datetime.date(2012,1,1))]
+        d = la.larry([1, 2], [label])
+        io = la.IO(self.filename)
+        io['a'] = d
+        a = io['a'][:]
+        assert_larry_equal(a, d)
+
+    def test_tuple_label_2(self):
+        "io with tuple labels #2"
+        label = [(1, datetime.date(2001,1,10)), (2, datetime.date(2012,1,1))]
+        d = la.larry([[1, 2], [3, 4]], [label, label])
+        io = la.IO(self.filename)
+        io['a'] = d
+        a = io['a'][:]
+        assert_larry_equal(a, d)
+
 # nose tests ----------------------------------------------------------------
 
 def datetime_test():
@@ -236,6 +255,7 @@ def datetime_test():
         d = tuple2datetime(i)
         msg = "datetime.datetime to tuple roundtrip failed."
         np.testing.assert_equal(d, date, msg)
+
 
 def time_test():
     "Test datetime.datetime conversion"
