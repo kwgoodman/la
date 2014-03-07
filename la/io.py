@@ -168,9 +168,11 @@ class IO(object):
                 x = lara(self.filename, key)
                 return x
             else:
+                f.close()
                 msg = "%s is in the archive but it is not a larry."
                 raise KeyError(msg % key)
         else:
+            f.close()
             raise KeyError("A larry named %s is not in the archive." % key)
 
     def __setitem__(self, key, value):
