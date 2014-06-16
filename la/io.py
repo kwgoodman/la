@@ -524,7 +524,7 @@ def load(file, key):
     # Check input
     if type(key) != str:
         raise TypeError('key must be a string.')
-    f, opened = _openfile(file)
+    f, opened = _openfile(file, 'r')
     if key not in f:
         raise KeyError("A larry named '%s' is not in archive." % key)
     if not _is_archived_larry(f[key]):
@@ -633,7 +633,7 @@ def repack(file):
 
 def is_archived_larry(file, key):
     "True if the key (larry name) is in the archive, False otherwise."
-    f, opened = _openfile(file)
+    f, opened = _openfile(file, 'r')
     if key in f:
         answer = _is_archived_larry(f[key])
     else:
@@ -644,7 +644,7 @@ def is_archived_larry(file, key):
 
 def archive_directory(file):
     "Return a list of the keys (larry names) in the archive."
-    f, opened = _openfile(file)
+    f, opened = _openfile(file, 'r')
     keys = []
     def append_larrys(name, obj):
         if _is_archived_larry(obj):
@@ -658,7 +658,7 @@ def archive_directory(file):
 
 def _load_label(file, key):
     "Load larry labels from archive given the hpy5.Group object of the larry."
-    f, opened = _openfile(file)
+    f, opened = _openfile(file, 'r')
     ndim = len(f[key + '/x'].shape)
     group = f[key]
     label = []
@@ -741,7 +741,7 @@ def _list2array(x):
         dtype = ','.join(["i4" for i in range(len(x[0]))])
     return np.asarray(x, dtype=dtype), datetime_type
 
-def _openfile(file):
+def _openfile(file, mode='a'):
     """
     Open an archive if input is a path.
 
@@ -762,7 +762,7 @@ def _openfile(file):
         f = file
         opened = False
     elif type(file) == str:
-        f = h5py.File(file)
+        f = h5py.File(file, mode=mode)
         opened = True
     else:
         msg = "file must be a h5py.File object or a string (path)."
