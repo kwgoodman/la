@@ -470,11 +470,11 @@ def save(file, lar, key):
                 g[str(j)] = arrays[j]
                 g[str(j)].attrs['datetime_type'] = datetime_types[j]
 
+    f.flush()
+
     # Close if file is a filename
     if opened:
         f.close()
-    else:
-        f.flush()
 
 def load(file, key):
     """
