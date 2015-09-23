@@ -3560,8 +3560,6 @@ class larry(object):
 
         Raises
         ------
-        ValueError
-            If nlag < 0.
         IndexError
             If the axis is None.
 
