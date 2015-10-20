@@ -677,7 +677,11 @@ def _load_label(file, key):
                     datetime_type = obj[str(j)].attrs['datetime_type']
                     labellist = _date_coverter(labellist, datetime_type)
                 labellists.append(labellist)
-            label.append(zip(*labellists))
+            z = zip(*labellists)
+            if not isinstance(z, list):
+                # for python3
+                z = list(z)
+            label.append(z)
         else:
             if obj.size == 0:
                 labellist = []
