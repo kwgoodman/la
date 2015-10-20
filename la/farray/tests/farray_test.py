@@ -2,7 +2,7 @@
 
 # For support of python 2.5
 from __future__ import with_statement
-
+import warnings
 import unittest
 
 import numpy as np
@@ -499,16 +499,16 @@ class Test_correlation(unittest.TestCase):
         "farray.correlation_1"
         x = np.array([])
         y = np.array([])
-        with np.errstate(invalid='ignore'):
-            corr = correlation(x, y) 
+        warnings.simplefilter("ignore")
+        corr = correlation(x, y)
         aae(corr, np.nan, err_msg="Empty correlation should be NaN")
         
     def test_correlation_2(self):
         "farray.correlation_2"        
         x = np.array([nan, nan])
         y = np.array([nan, nan])
-        with np.errstate(invalid='ignore'):
-            corr = correlation(x, y) 
+        warnings.simplefilter("ignore")
+        corr = correlation(x, y)
         aae(corr, np.nan, err_msg="All NaN correlation should be NaN")
         
     def test_correlation_3(self):
