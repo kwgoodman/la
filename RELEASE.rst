@@ -30,7 +30,7 @@ la 0.7
 - Added setitem ability to label indexing (lix)
 - la.IO no longer keeps the archive connection open between calls
 - Can now archive larrys that have tuple labels
-- C files generated with Cython 0.19.1 instead of 0.15.1
+- C files generated with Cython 0.21.1 instead of 0.15.1
 - misc.fromlists() now raises on overlapping input data
 
 **Breakage from la 0.6**
