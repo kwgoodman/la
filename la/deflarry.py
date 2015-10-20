@@ -2734,7 +2734,10 @@ class larry(object):
         array([ NaN,   3.,   2.,   4.])
 
         """
-        x = bn.move_nansum(self.x, window, axis=axis)
+        x = bn.move_sum(self.x, window, axis=axis, min_count=1)
+        idx = [slice(None)] * x.ndim
+        idx[axis] = slice(0, window - 1)
+        x[idx] = np.nan
         return larry(x, self.copylabel(), validate=False)
 
     def move_mean(self, window, axis=-1):
@@ -2769,7 +2772,10 @@ class larry(object):
         array([ NaN,  1.5,  2. ,  4. ])
 
         """
-        x = bn.move_nanmean(self.x, window, axis=axis)
+        x = bn.move_mean(self.x, window, axis=axis, min_count=1)
+        idx = [slice(None)] * x.ndim
+        idx[axis] = slice(0, window - 1)
+        x[idx] = np.nan
         return larry(x, self.copylabel(), validate=False)
 
     def move_std(self, window, axis=-1):
@@ -2806,7 +2812,10 @@ class larry(object):
         array([ NaN,  NaN,  0.5,  1. ,  0.5])
 
         """
-        x = bn.move_nanstd(self.x, window, axis=axis)
+        x = bn.move_std(self.x, window, axis=axis, min_count=1)
+        idx = [slice(None)] * x.ndim
+        idx[axis] = slice(0, window - 1)
+        x[idx] = np.nan
         return larry(x, self.copylabel(), validate=False)
 
     def move_min(self, window, axis=-1):
@@ -2841,7 +2850,10 @@ class larry(object):
         array([ NaN,   1.,   2.,   4.])
 
         """
-        x = bn.move_nanmin(self.x, window, axis=axis)
+        x = bn.move_min(self.x, window, axis=axis, min_count=1)
+        idx = [slice(None)] * x.ndim
+        idx[axis] = slice(0, window - 1)
+        x[idx] = np.nan
         return larry(x, self.copylabel(), validate=False)
 
     def move_max(self, window, axis=-1):
@@ -2876,7 +2888,10 @@ class larry(object):
         array([ NaN,   2.,   2.,   4.])
 
         """
-        x = bn.move_nanmax(self.x, window, axis=axis)
+        x = bn.move_max(self.x, window, axis=axis, min_count=1)
+        idx = [slice(None)] * x.ndim
+        idx[axis] = slice(0, window - 1)
+        x[idx] = np.nan
         return larry(x, self.copylabel(), validate=False)
 
     def move_ranking(self, window, axis=-1, method='strides'):

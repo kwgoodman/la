@@ -10,7 +10,7 @@ nan = np.nan
 import bottleneck as bn
 
 from la import larry
-from la.farray import move_nanranking, move_nanmedian 
+from la.farray import move_nanranking, move_nanmedian
 
 
 def move_unit_maker(attr, func, methods):
@@ -21,7 +21,7 @@ def move_unit_maker(attr, func, methods):
                      [2.0, 2.0, 0.1, nan, 1.0, nan],
                      [3.0, 9.0, 2.0, nan, nan, nan],
                      [4.0, 4.0, 3.0, 9.0, 2.0, nan],
-                     [5.0, 5.0, 4.0, 4.0, nan, nan]]) 
+                     [5.0, 5.0, 4.0, 4.0, nan, nan]])
     arr3 = np.arange(60).reshape(3, 4, 5)
     arr4 = np.array([nan, nan, nan])
     arrs = [arr1, arr2, arr3, arr4]
@@ -35,13 +35,16 @@ def move_unit_maker(attr, func, methods):
                             a = func(arr, window=w, axis=axis, method=method)
                     else:
                         with np.errstate(invalid='ignore', divide='ignore'):
-                            a = func(arr, window=w, axis=axis)
+                            a = func(arr, window=w, axis=axis, min_count=1)
+                            idx = [slice(None)] * a.ndim
+                            idx[axis] = slice(0, w - 1)
+                            a[idx] = np.nan
                     d = larry(arr)
                     d = getattr(d, attr)
                     if method is not None:
                         with np.errstate(invalid='ignore', divide='ignore'):
                             d = d(window=w, axis=axis, method=method)
-                    else:    
+                    else:
                         with np.errstate(invalid='ignore', divide='ignore'):
                             d = d(window=w, axis=axis)
                     err_msg = msg % (func.__name__, method, arr.ndim, w, axis)
@@ -49,35 +52,35 @@ def move_unit_maker(attr, func, methods):
 
 def test_move_sum():
     "Test move_sum."
-    methods = (None,) 
-    yield move_unit_maker, 'move_sum', bn.move_nansum, methods 
+    methods = (None,)
+    yield move_unit_maker, 'move_sum', bn.move_sum, methods
 
 def test_move_mean():
     "Test move_mean."
-    methods = (None,) 
-    yield move_unit_maker, 'move_mean', bn.move_nanmean, methods 
+    methods = (None,)
+    yield move_unit_maker, 'move_mean', bn.move_mean, methods
 
 def test_move_std():
     "Test move_std."
-    methods = (None,) 
-    yield move_unit_maker, 'move_std', bn.move_nanstd, methods 
+    methods = (None,)
+    yield move_unit_maker, 'move_std', bn.move_std, methods
 
 def test_move_max():
     "Test move_max."
-    methods = (None,) 
-    yield move_unit_maker, 'move_max', bn.move_nanmax, methods 
+    methods = (None,)
+    yield move_unit_maker, 'move_max', bn.move_max, methods
 
 def test_move_min():
     "Test move_min."
-    methods = (None,) 
-    yield move_unit_maker, 'move_min', bn.move_nanmin, methods 
+    methods = (None,)
+    yield move_unit_maker, 'move_min', bn.move_min, methods
 
 def test_move_ranking():
     "Test move_nanranking."
     methods = ('strides', 'loop')
-    yield move_unit_maker, 'move_ranking', move_nanranking, methods 
+    yield move_unit_maker, 'move_ranking', move_nanranking, methods
 
 def test_move_median():
     "Test move_median."
-    methods = ('strides', 'loop') 
-    yield move_unit_maker, 'move_median', move_nanmedian, methods 
+    methods = ('strides', 'loop')
+    yield move_unit_maker, 'move_median', move_nanmedian, methods

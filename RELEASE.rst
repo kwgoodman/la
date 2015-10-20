@@ -35,6 +35,7 @@ la 0.7
 
 **Breakage from la 0.6**
 
+- Numpy 1.10 and Bottleneck 1.0 are now required
 - Numpy array version of move_median() removed since bottleneck now used
 - deprecated lar.movingsum() removed (use faster lar.move_sum() instead)
 - deprecated lar.movingrank() removed (use faster lar.move_ranking() instead)
