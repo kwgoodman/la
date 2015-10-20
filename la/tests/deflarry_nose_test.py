@@ -306,7 +306,8 @@ class est_groups_moving(object):
         "larry.group_mean"  #not in deflarry_test
         t = self.tmean1
         label = self.label
-        p = self.lar.group_mean(self.sectors)
+        with np.errstate(invalid='ignore'):
+            p = self.lar.group_mean(self.sectors)
         self.check_function(t, label, p, self.lar)
 
     def test_groupmedian(self):
@@ -320,7 +321,8 @@ class est_groups_moving(object):
         "larry.group_mean_3d"  #not in deflarry_test
         t = self.tmean3
         label = self.label3
-        p = self.lar3.group_mean(self.sectors)
+        with np.errstate(invalid='ignore'):
+            p = self.lar3.group_mean(self.sectors)
         self.check_function(t, label, p, self.lar3)
 
     def test_groupmedian3(self):

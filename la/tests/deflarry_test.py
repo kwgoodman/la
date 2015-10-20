@@ -1052,7 +1052,7 @@ class Test_reduce(unittest.TestCase):
         t = np.array([ nan,  1.0, -1.0])
         label = [[0, 1, 2]]
         t = larry(t, label)
-        with np.errstate(divide='ignore'):
+        with np.errstate(divide='ignore', invalid='ignore'):
             p = self.l3.lastrank()
         t[np.isnan(t.x)] = self.nancode
         p[p.isnan()] = self.nancode
@@ -1067,7 +1067,7 @@ class Test_reduce(unittest.TestCase):
         t = np.array([ nan, 1.0, -1.0])
         label = [[0, 1, 2]]
         t = larry(t, label)
-        with np.errstate(divide='ignore'):
+        with np.errstate(divide='ignore', invalid='ignore'):
             p = self.l3.lastrank(decay=0)
         t[np.isnan(t.x)] = self.nancode
         p[p.isnan()] = self.nancode
@@ -1082,7 +1082,8 @@ class Test_reduce(unittest.TestCase):
         t = np.array([ nan, 1.0, -1.0])
         label = [[0, 1, 2]]
         t = larry(t, label)
-        p = self.l3.lastrank(decay=10)
+        with np.errstate(invalid='ignore'):
+            p = self.l3.lastrank(decay=10)
         t[np.isnan(t.x)] = self.nancode
         p[p.isnan()] = self.nancode
         msg = printfail(t.x, p.x, 'x')
@@ -1225,7 +1226,8 @@ class Test_comparison(unittest.TestCase):
         t = np.array([[False, False],
                       [False, False],
                       [False, False]])
-        p = self.l < 1.0
+        with np.errstate(invalid='ignore'):
+            p = self.l < 1.0
         msg = printfail(t, p.x, 'x')
         self.assertTrue((t == p.x).all(), msg)
         label = [[0, 1, 2], [0, 1]]
@@ -1236,7 +1238,8 @@ class Test_comparison(unittest.TestCase):
         t = np.array([[False, False],
                       [False, False],
                       [False, False]])
-        p = self.l < self.y
+        with np.errstate(invalid='ignore'):
+            p = self.l < self.y
         msg = printfail(t, p.x, 'x')
         self.assertTrue((t == p.x).all(), msg)
         label = [[0, 1, 2], [0, 1]]
@@ -1247,7 +1250,8 @@ class Test_comparison(unittest.TestCase):
         t = np.array([[False, False],
                       [False, False],
                       [False, False]])
-        p = self.l < self.l
+        with np.errstate(invalid='ignore'):
+            p = self.l < self.l
         msg = printfail(t, p.x, 'x')
         self.assertTrue((t == p.x).all(), msg)
         label = [[0, 1, 2], [0, 1]]
@@ -1263,7 +1267,8 @@ class Test_comparison(unittest.TestCase):
         t = np.array([[False, False],
                       [False, False],
                       [False,  True]])
-        p = self.l > 1.0
+        with np.errstate(invalid='ignore'):
+            p = self.l > 1.0
         msg = printfail(t, p.x, 'x')
         self.assertTrue((t == p.x).all(), msg)
         label = [[0, 1, 2], [0, 1]]
@@ -1274,7 +1279,8 @@ class Test_comparison(unittest.TestCase):
         t = np.array([[ True, False],
                       [False, False],
                       [False,  True]])
-        p = self.l > self.y
+        with np.errstate(invalid='ignore'):
+            p = self.l > self.y
         msg = printfail(t, p.x, 'x')
         self.assertTrue((t == p.x).all(), msg)
         label = [[0, 1, 2], [0, 1]]
@@ -1285,7 +1291,8 @@ class Test_comparison(unittest.TestCase):
         t = np.array([[False, False],
                       [False, False],
                       [False, False]])
-        p = self.l > self.l
+        with np.errstate(invalid='ignore'):
+            p = self.l > self.l
         msg = printfail(t, p.x, 'x')
         self.assertTrue((t == p.x).all(), msg)
         label = [[0, 1, 2], [0, 1]]
@@ -1301,7 +1308,8 @@ class Test_comparison(unittest.TestCase):
         t = np.array([[ True, False],
                       [ True,  True],
                       [ True, False]])
-        p = self.l <= 1.0
+        with np.errstate(invalid='ignore'):
+            p = self.l <= 1.0
         msg = printfail(t, p.x, 'x')
         self.assertTrue((t == p.x).all(), msg)
         label = [[0, 1, 2], [0, 1]]
@@ -1312,7 +1320,8 @@ class Test_comparison(unittest.TestCase):
         t = np.array([[False, False],
                       [ True,  True],
                       [ True, False]])
-        p = self.l <= self.y
+        with np.errstate(invalid='ignore'):
+            p = self.l <= self.y
         msg = printfail(t, p.x, 'x')
         self.assertTrue((t == p.x).all(), msg)
         label = [[0, 1, 2], [0, 1]]
@@ -1323,7 +1332,8 @@ class Test_comparison(unittest.TestCase):
         t = np.array([[ True, False],
                       [ True,  True],
                       [ True,  True]])
-        p = self.l <= self.l
+        with np.errstate(invalid='ignore'):
+            p = self.l <= self.l
         msg = printfail(t, p.x, 'x')
         self.assertTrue((t == p.x).all(), msg)
         label = [[0, 1, 2], [0, 1]]
@@ -1339,7 +1349,8 @@ class Test_comparison(unittest.TestCase):
         t = np.array([[ True, False],
                       [ True,  True],
                       [ True,  True]])
-        p = self.l >= 1.0
+        with np.errstate(invalid='ignore'):
+            p = self.l >= 1.0
         msg = printfail(t, p.x, 'x')
         self.assertTrue((t == p.x).all(), msg)
         label = [[0, 1, 2], [0, 1]]
@@ -1350,7 +1361,8 @@ class Test_comparison(unittest.TestCase):
         t = np.array([[ True, False],
                       [ True,  True],
                       [ True,  True]])
-        p = self.l >= self.y
+        with np.errstate(invalid='ignore'):
+            p = self.l >= self.y
         msg = printfail(t, p.x, 'x')
         self.assertTrue((t == p.x).all(), msg)
         label = [[0, 1, 2], [0, 1]]
@@ -1361,7 +1373,8 @@ class Test_comparison(unittest.TestCase):
         t = np.array([[ True, False],
                       [ True,  True],
                       [ True,  True]])
-        p = self.l >= self.l
+        with np.errstate(invalid='ignore'):
+            p = self.l >= self.l
         msg = printfail(t, p.x, 'x')
         self.assertTrue((t == p.x).all(), msg)
         label = [[0, 1, 2], [0, 1]]
@@ -1501,7 +1514,8 @@ class Test_getset(unittest.TestCase):
         t = np.array([[ 1.0, nan],
                       [-1.0,-1.0],
                       [-1.0,-1.0]])
-        idx = self.l.x.sum(1) > 2
+        with np.errstate(invalid='ignore'):
+            idx = self.l.x.sum(1) > 2
         idx = np.where(idx)[0]
         p = self.l
         p[idx,:] = -1
@@ -2014,7 +2028,8 @@ class Test_calc(unittest.TestCase):
                       [ 2.0, 2.0, 2.0, 2.0, nan],
                       [ 3.0, 3.0, 3.0, 3.0, 3.0]])
         label = [[0, 1, 2, 3], [0, 1, 2, 3, 4]]
-        p = self.l4.push(2)
+        with np.errstate(invalid='ignore'):
+            p = self.l4.push(2)
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode
@@ -2029,7 +2044,8 @@ class Test_calc(unittest.TestCase):
                       [ 2.0, 2.0, nan, nan, nan],
                       [ 3.0, 3.0, 3.0, 3.0, nan]])
         label = [[0, 1, 2, 3], [0, 1, 2, 3, 4]]
-        p = self.l4.push(0)
+        with np.errstate(invalid='ignore'):
+            p = self.l4.push(0)
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode
@@ -2044,7 +2060,8 @@ class Test_calc(unittest.TestCase):
                       [ 2.0, 2.0, 2.0, nan, nan],
                       [ 3.0, 3.0, 3.0, 3.0, 3.0]])
         label = [[0, 1, 2, 3], [0, 1, 2, 3, 4]]
-        p = self.l4.push(1)
+        with np.errstate(invalid='ignore'):
+            p = self.l4.push(1)
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode
         p[p.isnan()] = self.nancode
@@ -2490,7 +2507,8 @@ class Test_calc(unittest.TestCase):
     def test_move_ranking_1(self):
         "larry.move_ranking_1"
         t = self.x6
-        p = self.l6.move_ranking(2)
+        with np.errstate(invalid='ignore'):
+            p = self.l6.move_ranking(2)
         label = [list(range(2)), list(range(5))]
         msg = printfail(t, p.x, 'x')
         t[np.isnan(t)] = self.nancode

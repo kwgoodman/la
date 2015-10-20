@@ -75,7 +75,8 @@ class Test_group_mean(unittest.TestCase):
                             [ 2.0, 0.5,  1.5, nan,  nan, nan],
                             [ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
                             [ 5.0, 5.0,  4.0, 4.0,  nan, nan]])
-        actual = group_mean(self.x, sectors)
+        with np.errstate(invalid='ignore'):
+            actual = group_mean(self.x, sectors)
         assert_almost_equal(actual, desired)
         
     def test_group_mean_2(self):
@@ -87,7 +88,8 @@ class Test_group_mean(unittest.TestCase):
                             [ 2.0, 0.5,  1.5, nan,  nan, nan],
                             [ 2.0, 3.0,  1.5, 0.0,  1.0, nan],
                             [ nan, nan,  nan, nan,  nan, nan]])
-        actual = group_mean(self.x, sectors)
+        with np.errstate(invalid='ignore'):
+            actual = group_mean(self.x, sectors)
         assert_almost_equal(actual, desired)
 
     def test_group_mean_3(self):
@@ -401,14 +403,16 @@ class Test_geometric_mean(unittest.TestCase):
     def test_geometric_mean_5(self):
         "farray.geometric_mean #5"
         desired = np.array([ 3.1301691601465746, 2.6390158215457888])
-        actual = geometric_mean(self.x, 1)
+        with np.errstate(invalid='ignore'):
+            actual = geometric_mean(self.x, 1)
         assert_almost_equal(actual, desired)
 
     def test_geometric_mean_6(self):
         "farray.geometric_mean #6"
         desired = np.array([ 1.4142135623730951, 4.0, 6.9282032302755088, 2.0,
                                                          2.8284271247461903])
-        actual = geometric_mean(self.x, 0)
+        with np.errstate(invalid='ignore'):
+            actual = geometric_mean(self.x, 0)
         assert_almost_equal(actual, desired)
         
     def test_geometric_mean_7(self):
