@@ -208,14 +208,15 @@ def push(x, n, axis=-1):
     fidx = np.isfinite(y)
     recent = np.nan * np.ones(y.shape[:-1])  
     count = np.nan * np.ones(y.shape[:-1])          
-    for i in range(y.shape[-1]):
-        idx = (i - count) > n
-        recent[idx] = np.nan
-        idx = ~fidx[...,i]
-        y[idx, i] = recent[idx]
-        idx = fidx[...,i]
-        count[idx] = i
-        recent[idx] = y[idx, i]
+    with np.errstate(invalid='ignore'):
+        for i in range(y.shape[-1]):
+            idx = (i - count) > n
+            recent[idx] = np.nan
+            idx = ~fidx[...,i]
+            y[idx, i] = recent[idx]
+            idx = fidx[...,i]
+            count[idx] = i
+            recent[idx] = y[idx, i]
     if axis != -1 or axis != x.ndim-1:
         y = np.rollaxis(y, x.ndim-1, axis)
     if x.ndim == 1:
